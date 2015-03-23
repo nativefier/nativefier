@@ -1,6 +1,6 @@
 {
   "name": "atom-shell-packager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "package and distribute your atom-shell app in OS executables (.app, .exe, etc) via JS or CLI",
   "main": "index.js",
   "bin": {
