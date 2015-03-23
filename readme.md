@@ -36,3 +36,4 @@ these are optional CLI options you can pass in
 - `app-bundle-id` - bundle identifier to use in the app plist
 - `helper-bundle-id` - bundle identifier to use in the app helper plist
 - `ignore` (default none) - do not copy files into App whose filenames regex .match this string
+- `prune` - runs `npm prune --production` on the app
