@@ -1,5 +1,5 @@
 {
-  "name": "atom-shell-app",
+  "name": "atom-shell-packager",
   "version": "1.0.0",
   "description": "package and distribute your atom-shell app in OS executables (.app, .exe, etc) via JS or CLI",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/maxogden/atom-shell-app.git"
+    "url": "https://github.com/maxogden/atom-shell-packager.git"
   },
   "author": "max ogden",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/maxogden/atom-shell-app/issues"
+    "url": "https://github.com/maxogden/atom-shell-packager/issues"
   },
-  "homepage": "https://github.com/maxogden/atom-shell-app",
+  "homepage": "https://github.com/maxogden/atom-shell-packager",
   "dependencies": {
     "extract-zip": "^1.0.3",
     "minimist": "^1.1.1",
