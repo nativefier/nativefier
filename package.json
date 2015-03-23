@@ -24,5 +24,9 @@
     "nugget": "^1.4.1",
     "plist": "^1.1.0",
     "rimraf": "^2.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
