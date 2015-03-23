@@ -88,13 +88,24 @@ module.exports = function packager (opts, cb) {
     // copy users app into .app
     ncp(opts.dir, paths.app, {filter: filter}, function copied (err) {
       if (err) return cb(err)
-      
-      // finally, move app into cwd
-      var finalPath = opts.out || process.cwd()
-      // TODO dont spawn, but I couldn't find a good module
-      child.exec('mv "' + newApp + '" "' + finalPath + '"', function moved (err) {
-        cb(err, path.join(finalPath, opts.name + '.app'))
-      })
+
+      function moveApp (err) {
+        if (err) return cb(err)
+
+        // finally, move app into cwd
+        var finalPath = opts.out || process.cwd()
+        // TODO dont spawn, but I couldn't find a good module
+        child.exec('mv "' + newApp + '" "' + finalPath + '"', function moved (err) {
+          cb(err, path.join(finalPath, opts.name + '.app'))
+        })
+      }
+
+      // run npm prune
+      if (opts.prune) {
+        child.exec('npm prune --production', { cwd: paths.app }, moveApp)
+      } else {
+        moveApp()
+      }
     })
   }
 }
