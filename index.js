@@ -74,8 +74,19 @@ module.exports = function packager (opts, cb) {
     fs.writeFileSync(paths.info1, plist.build(pl1))
     fs.writeFileSync(paths.info2, plist.build(pl2))
     
+    function filter(file) {
+      var ignore = opts.ignore || []
+      if (!Array.isArray(ignore)) ignore = [ignore]
+      for (var i = 0; i < ignore.length; i++) {
+        if (file.match(ignore[i])) {
+          return false
+        }
+      }
+      return true
+    }
+    
     // copy users app into .app
-    ncp(opts.dir, paths.app, opts, function copied (err) {
+    ncp(opts.dir, paths.app, {filter: filter}, function copied (err) {
       if (err) return cb(err)
       
       // finally, move app into cwd

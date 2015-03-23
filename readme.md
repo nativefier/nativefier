@@ -23,6 +23,8 @@ This will:
 
 You should be able to double-click `AppName.app` to launch the app. If not, check your settings and try again.
 
+**Be careful** not to include node_modules you don't want into your final app. For example, do not include the `node_modules/atom-shell-packager` folder or `node_modules/atom-shell`. You can use `--ignore=node_modules/atom-shell` to ignore of these
+
 ### options
 
 these are optional CLI options you can pass in
@@ -31,5 +33,4 @@ these are optional CLI options you can pass in
 - `version` (default hardcoded in source) - atom-shell version to use
 - `app-bundle-id` - bundle identifier to use in the app plist
 - `helper-bundle-id` - bundle identifier to use in the app helper plist
-
-also, the entire `options` objects gets passed into the [`ncp`](https://npmjs.org/ncp) instance when copying your app source directory into the app container, so you can pass in any `ncp` options you want as well
+- `ignore` (default none) - do not copy files into App whose filenames regex .match this string
