@@ -12,6 +12,7 @@ For an example project using this, check out [Monu](https://github.com/maxogden/
 
 ```
 npm i atom-shell-packager
+npm i atom-shell # if you dont have it already
 ```
 
 ### usage
@@ -22,8 +23,8 @@ $ atom-shell-packager my-app-source-dir AppName
 
 This will:
 
-- Download latest version of Atom Shell
-- Create a Mac app in `cwd` called `AppName.app`
+- Find the closest local version of `atom-shell` installed (using `require.resolve`)
+- Use that version of atom-shell to create a Mac app in `cwd` called `AppName.app`
 
 You should be able to double-click `AppName.app` to launch the app. If not, check your settings and try again.
 
