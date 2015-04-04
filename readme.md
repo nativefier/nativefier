@@ -4,6 +4,8 @@ Build a distributable app from an atom-shell app source code directory. **Curren
 
 [![NPM](https://nodei.co/npm/atom-shell-packager.png)](https://nodei.co/npm/atom-shell-packager/)
 
+[![Build Status](https://travis-ci.org/maxogden/atom-shell-packager.svg?branch=master)](https://travis-ci.org/maxogden/atom-shell-packager)
+
 For an example project using this, check out [Monu](https://github.com/maxogden/monu)
 
 ### installation

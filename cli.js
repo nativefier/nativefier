@@ -13,8 +13,8 @@ if (!args.dir || !args.name) {
 packager(args, function done (err, appPath) {
   if (err) {
     console.error(err)
-    process.exit(1) 
+    process.exit(1)
   }
-  
+
   console.error('Wrote new app to', appPath)
 })
