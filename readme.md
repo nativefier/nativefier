@@ -11,8 +11,14 @@ For an example project using this, check out [Monu](https://github.com/maxogden/
 ### installation
 
 ```
-npm i atom-shell-packager
-npm i atom-shell # if you dont have it already
+# for use in npm scripts
+npm i atom-shell-packager --save-dev
+
+# for use from cli
+npm i atom-shell-packager -g
+
+# you also need atom-shell installed
+npm i atom-shell
 ```
 
 ### usage
