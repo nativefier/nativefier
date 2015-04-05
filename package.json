@@ -23,7 +23,9 @@
     "plist": "^1.1.0",
     "rimraf": "^2.3.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "standard": "^3.3.2"
+  },
   "scripts": {
     "test": "standard"
   }
