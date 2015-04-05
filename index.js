@@ -9,11 +9,18 @@ var rimraf = require('rimraf')
 var ncp = require('ncp').ncp
 
 module.exports = function packager (opts, cb) {
+  var atomShellPath
+
   try {
-    var atomShellPath = require.resolve('atom-shell')
+    atomShellPath = require.resolve('atom-shell')
     atomShellPath = path.join(atomShellPath, '..')
   } catch (e) {
-    cb(new Error('Cannot find atom-shell from here, please install it from npm'))
+    try {
+      atomShellPath = require.resolve(path.join(process.execPath, '../../lib/node_modules/atom-shell'))
+      atomShellPath = path.join(atomShellPath, '..')
+    } catch (e) {
+      cb(new Error('Cannot find atom-shell from here, please install it from npm'))
+    }
   }
 
   var atomPkg = require(path.join(atomShellPath, 'package.json'))
