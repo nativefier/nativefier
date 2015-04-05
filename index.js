@@ -57,6 +57,15 @@ module.exports = function packager (opts, cb) {
     pl2.CFBundleIdentifier = bundleHelperId
     pl2.CFBundleName = opts.name
 
+    if (opts.protocols) {
+      pl2.CFBundleURLTypes = pl1.CFBundleURLTypes = opts.protocols.map(function (protocol) {
+        return {
+          CFBundleURLName: protocol.name,
+          CFBundleURLSchemes: [].concat(protocol.schemes)
+        }
+      })
+    }
+
     fs.writeFileSync(paths.info1, plist.build(pl1))
     fs.writeFileSync(paths.info2, plist.build(pl2))
 
