@@ -5,11 +5,11 @@ var packager = require('./')
 args.dir = args._[0]
 args.name = args._[1]
 
-var protocolSchemes = args.protocol
-var protocolNames = args['protocol-names']
+var protocolSchemes = [].concat(args.protocol || [])
+var protocolNames = [].concat(args['protocol-name'] || [])
 
 if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes.length) {
-  args.protocol = protocolSchemes.map(function (scheme, i) {
+  args.protocols = protocolSchemes.map(function (scheme, i) {
     return {schemes: [scheme], name: protocolNames[i]}
   })
 }
