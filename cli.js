@@ -5,6 +5,15 @@ var packager = require('./')
 args.dir = args._[0]
 args.name = args._[1]
 
+var protocolSchemes = args.protocol
+var protocolNames = args['protocol-names']
+
+if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes.length) {
+  args.protocol = protocolSchemes.map(function (scheme, i) {
+    return {schemes: [scheme], name: protocolNames[i]}
+  })
+}
+
 if (!args.dir || !args.name) {
   console.error('Usage: atom-shell-packager <sourcedir> <Appname>')
   process.exit(1)
