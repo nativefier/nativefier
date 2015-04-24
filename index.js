@@ -57,12 +57,17 @@ module.exports = function packager (opts, cb) {
 
     var bundleId = opts['app-bundle-id'] || 'com.atom-shell.' + opts.name.toLowerCase()
     var bundleHelperId = opts['helper-bundle-id'] || 'com.atom-shell.' + opts.name.toLowerCase() + '.helper'
+    var appVersion = opts['app-version']
 
     pl1.CFBundleDisplayName = opts.name
     pl1.CFBundleIdentifier = bundleId
     pl1.CFBundleName = opts.name
     pl2.CFBundleIdentifier = bundleHelperId
     pl2.CFBundleName = opts.name
+
+    if (appVersion) {
+      pl1.CFBundleVersion = appVersion
+    }
 
     if (opts.protocols) {
       pl2.CFBundleURLTypes = pl1.CFBundleURLTypes = opts.protocols.map(function (protocol) {
