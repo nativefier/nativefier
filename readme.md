@@ -45,6 +45,7 @@ these are optional CLI options you can pass in
 - `out` (default current working dir) - the dir to put the app into at the end
 - `icon` - the icon file to use as the icon for the app
 - `app-bundle-id` - bundle identifier to use in the app plist
+- `app-version` - version to set for the app
 - `helper-bundle-id` - bundle identifier to use in the app helper plist
 - `ignore` (default none) - do not copy files into App whose filenames regex .match this string
 - `prune` - runs `npm prune --production` on the app
