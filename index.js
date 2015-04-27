@@ -109,9 +109,22 @@ module.exports = function packager (opts, cb) {
         var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
 
         fs.rename(newApp, finalPath, function moved (err) {
-          cb(err, finalPath)
+          if (err) return cb(err)
+          updateMacIcon()
         })
       }
+    })
+  }
+
+  function updateMacIcon () {
+    var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
+
+    if (!opts.icon) {
+      return cb(null, finalPath)
+    }
+
+    ncp(opts.icon, path.join(finalPath, 'Contents', 'Resources', 'atom.icns'), function copied (err) {
+      cb(err, finalPath)
     })
   }
 }
