@@ -43,7 +43,7 @@ You should be able to double-click `AppName.app` to launch the app. If not, chec
 these are optional CLI options you can pass in
 
 - `out` (default current working dir) - the dir to put the app into at the end
-- `version` (default hardcoded in source) - electron version to use
+- `icon` - the icon file to use as the icon for the app
 - `app-bundle-id` - bundle identifier to use in the app plist
 - `helper-bundle-id` - bundle identifier to use in the app helper plist
 - `ignore` (default none) - do not copy files into App whose filenames regex .match this string
