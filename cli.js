@@ -15,7 +15,7 @@ if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes
 }
 
 if (!args.dir || !args.name) {
-  console.error('Usage: atom-shell-packager <sourcedir> <Appname>')
+  console.error('Usage: electron-packager <sourcedir> <Appname>')
   process.exit(1)
 }
 

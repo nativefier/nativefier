@@ -9,25 +9,25 @@ var rimraf = require('rimraf')
 var ncp = require('ncp').ncp
 
 module.exports = function packager (opts, cb) {
-  var atomShellPath
+  var electronPath
 
   try {
-    atomShellPath = require.resolve('atom-shell')
-    atomShellPath = path.join(atomShellPath, '..')
+    electronPath = require.resolve('electron-prebuilt')
+    electronPath = path.join(electronPath, '..')
   } catch (e) {
     try {
-      atomShellPath = require.resolve(path.join(process.execPath, '../../lib/node_modules/atom-shell'))
-      atomShellPath = path.join(atomShellPath, '..')
+      electronPath = require.resolve(path.join(process.execPath, '../../lib/node_modules/electron-prebuilt'))
+      electronPath = path.join(electronPath, '..')
     } catch (e) {
-      cb(new Error('Cannot find atom-shell from here, please install it from npm'))
+      cb(new Error('Cannot find electron-prebuilt from here, please install it from npm'))
     }
   }
 
-  var atomPkg = require(path.join(atomShellPath, 'package.json'))
-  console.error('Using atom-shell version', atomPkg.version, 'from', atomShellPath)
+  var electronPkg = require(path.join(electronPath, 'package.json'))
+  console.error('Using electron-prebuilt version', electronPkg.version, 'from', electronPath)
 
-  var atomShellApp = path.join(atomShellPath, 'dist', 'Atom.app')
-  var tmpDir = path.join(os.tmpdir(), 'atom-shell-packager-mac')
+  var electronApp = path.join(electronPath, 'dist', 'Electron.app')
+  var tmpDir = path.join(os.tmpdir(), 'electron-packager-mac')
 
   var newApp = path.join(tmpDir, opts.name + '.app')
 
@@ -37,7 +37,7 @@ module.exports = function packager (opts, cb) {
     mkdirp(newApp, function mkdirpd () {
       // ignore errors
       // copy .app folder and use as template (this is exactly what Atom editor does)
-      ncp(atomShellApp, newApp, function copied (err) {
+      ncp(electronApp, newApp, function copied (err) {
         if (err) return cb(err)
         buildMacApp()
       })
@@ -47,7 +47,7 @@ module.exports = function packager (opts, cb) {
   function buildMacApp () {
     var paths = {
       info1: path.join(newApp, 'Contents', 'Info.plist'),
-      info2: path.join(newApp, 'Contents', 'Frameworks', 'Atom Helper.app', 'Contents', 'Info.plist'),
+      info2: path.join(newApp, 'Contents', 'Frameworks', 'Electron Helper.app', 'Contents', 'Info.plist'),
       app: path.join(newApp, 'Contents', 'Resources', 'app')
     }
 
@@ -55,8 +55,8 @@ module.exports = function packager (opts, cb) {
     var pl1 = plist.parse(fs.readFileSync(paths.info1).toString())
     var pl2 = plist.parse(fs.readFileSync(paths.info2).toString())
 
-    var bundleId = opts['app-bundle-id'] || 'com.atom-shell.' + opts.name.toLowerCase()
-    var bundleHelperId = opts['helper-bundle-id'] || 'com.atom-shell.' + opts.name.toLowerCase() + '.helper'
+    var bundleId = opts['app-bundle-id'] || 'com.electron.' + opts.name.toLowerCase()
+    var bundleHelperId = opts['helper-bundle-id'] || 'com.electron.' + opts.name.toLowerCase() + '.helper'
 
     pl1.CFBundleDisplayName = opts.name
     pl1.CFBundleIdentifier = bundleId
