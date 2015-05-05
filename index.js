@@ -22,6 +22,7 @@ module.exports = function packager (opts, cb) {
 
   switch (os.platform()) {
     case 'darwin': platform = require('./mac'); break
+    case 'linux': platform = require('./linux'); break
     default: cb(new Error('Unsupported platform'))
   }
 
