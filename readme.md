@@ -1,6 +1,6 @@
 # electron-packager
 
-Build a distributable app from an electron app source code directory. **Currently only Mac OS is implemented** but you can send PRs to implement windows/linux :)
+Build a distributable app from an electron app source code directory. **Currently only Mac OS and Linux are implemented** but you can send PRs to implement windows :)
 
 *formerly known as atom-shell-packager*
 
