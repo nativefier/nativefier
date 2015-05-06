@@ -18,10 +18,10 @@ if (!args.dir || !args.name) {
   console.error('Usage: electron-packager <sourcedir> <Appname>')
   process.exit(1)
 }
-
+console.log('args', args)
 packager(args, function done (err, appPath) {
   if (err) {
-    console.error(err)
+    console.error(err.stack)
     process.exit(1)
   }
 
