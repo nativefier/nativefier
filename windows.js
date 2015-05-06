@@ -1,6 +1,5 @@
 var os = require('os')
 var path = require('path')
-var fs = require('fs')
 var child = require('child_process')
 
 var mkdirp = require('mkdirp')
@@ -25,12 +24,12 @@ module.exports = {
         // copy .app folder and use as template (this is exactly what Atom editor does)
         ncp(electronApp, newApp, function copied (err) {
           if (err) return cb(err)
-            // rename electron.exe
-            mv(path.join(newApp,'electron.exe'), path.join(newApp, opts.name+'.exe'), function (err) {
-              if (err) return cb(err)
-                
-              buildWinApp(opts, cb, newApp)
-            })
+          // rename electron.exe
+          mv(path.join(newApp, 'electron.exe'), path.join(newApp, opts.name + '.exe'), function (err) {
+            if (err) return cb(err)
+
+            buildWinApp(opts, cb, newApp)
+          })
         })
       })
     })
@@ -50,7 +49,7 @@ function copy (from, to, cb) {
 
 function buildWinApp (opts, cb, newApp) {
   var paths = {
-    app: path.join(newApp, 'resources','app')
+    app: path.join(newApp, 'resources', 'app')
   }
 
   function filter (file) {
@@ -105,7 +104,7 @@ function buildWinApp (opts, cb, newApp) {
         return cb(null, finalPath)
       }
 
-      var exePath = path.join(opts.out || process.cwd(), opts.name + '.app', opts.name+'.exe')
+      var exePath = path.join(opts.out || process.cwd(), opts.name + '.app', opts.name + '.exe')
 
       rcedit(exePath, {icon: opts.icon}, function (err) {
         cb(err, finalPath)
