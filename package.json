@@ -1,6 +1,6 @@
 {
   "name": "electron-packager",
-  "version": "3.2.0",
+  "version": "3.3.0",
   "description": "package and distribute your electron app in OS executables (.app, .exe, etc) via JS or CLI",
   "main": "index.js",
   "bin": {
