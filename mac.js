@@ -7,6 +7,7 @@ var plist = require('plist')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
 var ncp = require('ncp').ncp
+var asar = require('asar')
 
 module.exports = {
   createApp: function createApp (opts, cb, electronPath) {
@@ -101,7 +102,14 @@ function buildMacApp (opts, cb, newApp) {
 
       fs.rename(newApp, finalPath, function moved (err) {
         if (err) return cb(err)
-        updateMacIcon()
+        if (opts.asar) {
+          asarApp(function (err) {
+            if (err) return cb(err)
+            updateMacIcon()
+          })
+        } else {
+          updateMacIcon()
+        }
       })
     }
 
@@ -114,6 +122,16 @@ function buildMacApp (opts, cb, newApp) {
 
       ncp(opts.icon, path.join(finalPath, 'Contents', 'Resources', 'atom.icns'), function copied (err) {
         cb(err, finalPath)
+      })
+    }
+
+    function asarApp (cb) {
+      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
+      var src = path.join(finalPath, 'app')
+      var dest = path.join(finalPath, 'app.asar')
+      asar.createPackage(src, dest, function (err) {
+        if (err) return cb(err)
+        rimraf(src, cb)
       })
     }
   })
