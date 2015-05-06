@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var args = require('minimist')(process.argv.slice(2))
+var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar']})
 var packager = require('./')
 
 args.dir = args._[0]
