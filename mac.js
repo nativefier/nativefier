@@ -98,18 +98,22 @@ function buildMacApp (opts, cb, newApp) {
 
     function moveApp () {
       // finally, move app into cwd
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
+      var outdir = opts.out || process.cwd()
+      var finalPath = path.join(outdir, opts.name + '.app')
 
-      fs.rename(newApp, finalPath, function moved (err) {
+      mkdirp(outdir, function mkoutdirp () {
         if (err) return cb(err)
-        if (opts.asar) {
-          asarApp(function (err) {
-            if (err) return cb(err)
+        fs.rename(newApp, finalPath, function moved (err) {
+          if (err) return cb(err)
+          if (opts.asar) {
+            asarApp(function (err) {
+              if (err) return cb(err)
+              updateMacIcon()
+            })
+          } else {
             updateMacIcon()
-          })
-        } else {
-          updateMacIcon()
-        }
+          }
+        })
       })
     }
 
