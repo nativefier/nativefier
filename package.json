@@ -1,7 +1,7 @@
 {
   "name": "electron-packager",
   "version": "3.4.0",
-  "description": "package and distribute your electron app in OS executables (.app, .exe, etc) via JS or CLI",
+  "description": "package your electron app in OS executables (.app, .exe, etc) via JS or CLI",
   "main": "index.js",
   "bin": {
     "electron-packager": "cli.js"
@@ -18,6 +18,8 @@
   "homepage": "https://github.com/maxogden/electron-packager",
   "dependencies": {
     "asar": "^0.6.1",
+    "electron-download": "^1.0.0",
+    "extract-zip": "^1.0.3",
     "minimist": "^1.1.1",
     "mkdirp": "^0.5.0",
     "mv": "^2.0.3",

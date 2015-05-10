@@ -1,6 +1,8 @@
 #!/usr/bin/env node
+var fs = require('fs')
 var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar']})
 var packager = require('./')
+var usage = fs.readFileSync(__dirname + '/usage.txt').toString()
 
 args.dir = args._[0]
 args.name = args._[1]
@@ -14,14 +16,14 @@ if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes
   })
 }
 
-if (!args.dir || !args.name) {
-  console.error('Usage: electron-packager <sourcedir> <Appname>')
+if (!args.dir || !args.name || !args.platform || !args.arch || !args.version) {
+  console.error(usage)
   process.exit(1)
 }
-console.log('args', args)
+
 packager(args, function done (err, appPath) {
   if (err) {
-    console.error(err.stack)
+    console.error(err, err.stack)
     process.exit(1)
   }
 

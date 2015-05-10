@@ -1,0 +1,20 @@
+Usage: electron-packager <sourcedir> <appname> --platform=<platform> --arch=<arch> --version=<version>
+  
+Required options
+
+platform           linux, win32, darwin
+arch               ia32, x64
+version            see https://github.com/atom/electron/releases
+                  
+Example            electron-packager ./ FooBar --platform=darwin --arch=x64 --version=0.25.1
+
+Optional options
+
+out                the dir to put the app into at the end. defaults to current working dir
+icon               the icon file to use as the icon for the app
+app-bundle-id      bundle identifier to use in the app plist
+app-version        version to set for the app
+helper-bundle-id   bundle identifier to use in the app helper plist
+ignore             do not copy files into App whose filenames regex .match this string
+prune              runs `npm prune --production` on the app
+asar               packages the source code within your app into an archive

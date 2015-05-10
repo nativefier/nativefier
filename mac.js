@@ -10,8 +10,8 @@ var ncp = require('ncp').ncp
 var asar = require('asar')
 
 module.exports = {
-  createApp: function createApp (opts, cb, electronPath) {
-    var electronApp = path.join(electronPath, 'dist', 'Electron.app')
+  createApp: function createApp (opts, electronPath, cb) {
+    var electronApp = path.join(electronPath, 'Electron.app')
     var tmpDir = path.join(os.tmpdir(), 'electron-packager-mac')
 
     var newApp = path.join(tmpDir, opts.name + '.app')

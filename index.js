@@ -1,31 +1,48 @@
-var os = require('os')
 var path = require('path')
+var os = require('os')
+
+var download = require('electron-download')
+var extract = require('extract-zip')
+var mkdirp = require('mkdirp')
+var rimraf = require('rimraf')
+
+var mac = require('./mac.js')
+var linux = require('./linux.js')
+var win32 = require('./win32.js')
 
 module.exports = function packager (opts, cb) {
-  var electronPath
-  var platform
+  var packager
+  var platform = opts.platform
+  var arch = opts.arch
+  var version = opts.version
 
-  try {
-    electronPath = require.resolve('electron-prebuilt')
-    electronPath = path.join(electronPath, '..')
-  } catch (e) {
-    try {
-      electronPath = require.resolve(path.join(process.execPath, '../../lib/node_modules/electron-prebuilt'))
-      electronPath = path.join(electronPath, '..')
-    } catch (e) {
-      cb(new Error('Cannot find electron-prebuilt from here, please install it from npm'))
-    }
-  }
+  if (!platform || !arch || !version) cb(new Error('Must specify platform, arch and version'))
 
-  var electronPkg = require(path.join(electronPath, 'package.json'))
-  console.error('Using electron-prebuilt version', electronPkg.version, 'from', electronPath)
-
-  switch (os.platform()) {
-    case 'darwin': platform = require('./mac'); break
-    case 'linux': platform = require('./linux'); break
-    case 'win32': platform = require('./windows'); break
+  switch (platform) {
+    case 'darwin': packager = mac; break
+    case 'linux': packager = linux; break
+    case 'win32': packager = win32; break
     default: cb(new Error('Unsupported platform'))
   }
 
-  platform.createApp(opts, cb, electronPath)
+  download({
+    platform: platform,
+    arch: arch,
+    version: version
+  }, function (err, zipPath) {
+    if (err) return cb(err)
+    console.error('Packaging app for platform', platform + ' ' + arch, 'using electron v' + version)
+    // extract zip into tmp so that packager can use it as a template
+    var tmpDir = path.join(os.tmpdir(), 'electron-packager-' + platform + '-template')
+    rimraf(tmpDir, function (err) {
+      if (err) {} // ignore err
+      mkdirp(tmpDir, function (err) {
+        if (err) return cb(err)
+        extract(zipPath, {dir: tmpDir}, function (err) {
+          if (err) return cb(err)
+          packager.createApp(opts, tmpDir, cb)
+        })
+      })
+    })
+  })
 }

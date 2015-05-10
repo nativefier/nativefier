@@ -10,18 +10,16 @@ var mv = require('mv')
 var rcedit = require('rcedit')
 
 module.exports = {
-  createApp: function createApp (opts, cb, electronPath) {
-    var electronApp = path.join(electronPath, 'dist')
+  createApp: function createApp (opts, electronApp, cb) {
     var tmpDir = path.join(os.tmpdir(), 'electron-packager-windows')
 
-    var newApp = path.join(tmpDir, opts.name + '.app')
-    console.log('newApp', newApp)
+    var newApp = path.join(tmpDir, opts.name + '-win32')
     // reset build folders + copy template app
     rimraf(tmpDir, function rmrfd () {
       // ignore errors
       mkdirp(newApp, function mkdirpd () {
         // ignore errors
-        // copy .app folder and use as template (this is exactly what Atom editor does)
+        // copy app folder and use as template (this is exactly what Atom editor does)
         ncp(electronApp, newApp, function copied (err) {
           if (err) return cb(err)
           // rename electron.exe
@@ -82,8 +80,7 @@ function buildWinApp (opts, cb, newApp) {
 
     function moveApp () {
       // finally, move app into cwd
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
-      console.log('finalPath', finalPath)
+      var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32')
       copy(newApp, finalPath, function moved (err) {
         if (err) return cb(err)
         if (opts.asar) {
@@ -98,13 +95,13 @@ function buildWinApp (opts, cb, newApp) {
     }
 
     function updateIcon () {
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
+      var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32')
 
       if (!opts.icon) {
         return cb(null, finalPath)
       }
 
-      var exePath = path.join(opts.out || process.cwd(), opts.name + '.app', opts.name + '.exe')
+      var exePath = path.join(opts.out || process.cwd(), opts.name + '-win32', opts.name + '.exe')
 
       rcedit(exePath, {icon: opts.icon}, function (err) {
         cb(err, finalPath)
@@ -113,7 +110,7 @@ function buildWinApp (opts, cb, newApp) {
     }
 
     function asarApp (cb) {
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'resources')
+      var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32', 'resources')
       var src = path.join(finalPath, 'app')
       var dest = path.join(finalPath, 'app.asar')
       asar.createPackage(src, dest, function (err) {

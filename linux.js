@@ -7,9 +7,8 @@ var rimraf = require('rimraf')
 var asar = require('asar')
 
 module.exports = {
-  createApp: function createApp (opts, cb, electronPath) {
-    var templateApp = path.join(electronPath, 'dist')
-    var finalDir = opts.out || path.join(process.cwd(), 'dist')
+  createApp: function createApp (opts, templateApp, cb) {
+    var finalDir = opts.out || path.join(process.cwd(), opts.name + '-linux')
     var userAppDir = path.join(finalDir, 'resources', 'default_app')
     var originalBinary = path.join(finalDir, 'electron')
     var finalBinary = path.join(finalDir, opts.name)
@@ -48,7 +47,7 @@ module.exports = {
         if (opts.asar) {
           asarApp(cb)
         } else {
-          cb()
+          cb(null, finalBinary)
         }
       })
     }
@@ -78,7 +77,10 @@ module.exports = {
       var dest = path.join(finalDir, 'resources', 'app.asar')
       asar.createPackage(src, dest, function (err) {
         if (err) return cb(err)
-        rimraf(src, cb)
+        rimraf(src, function (err) {
+          if (err) return cb(err)
+          cb(null, dest)
+        })
       })
     }
 
