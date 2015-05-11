@@ -23,7 +23,8 @@ if (!args.dir || !args.name || !args.platform || !args.arch || !args.version) {
 
 packager(args, function done (err, appPath) {
   if (err) {
-    console.error(err, err.stack)
+    if (err.message) console.error(err.message)
+    else console.error(err, err.stack)
     process.exit(1)
   }
 
