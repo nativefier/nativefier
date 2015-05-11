@@ -51,3 +51,7 @@ This will:
 You should be able to launch the app on the platform you built for. If not, check your settings and try again.
 
 **Be careful** not to include node_modules you don't want into your final app. For example, do not include the `node_modules/electron-packager` folder or `node_modules/electron-prebuilt`. You can use `--ignore=node_modules/electron-prebuilt` to ignore of these
+
+### related
+
+- [grunt-electron](https://github.com/sindresorhus/grunt-electron) - grunt plugin for electron-packager
