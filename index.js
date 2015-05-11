@@ -18,6 +18,12 @@ module.exports = function packager (opts, cb) {
 
   if (!platform || !arch || !version) cb(new Error('Must specify platform, arch and version'))
 
+  switch (arch) {
+    case 'ia32': break
+    case 'x64': break
+    default: cb(new Error('Unsupported arch'))
+  }
+
   switch (platform) {
     case 'darwin': packager = mac; break
     case 'linux': packager = linux; break
