@@ -52,6 +52,10 @@ You should be able to launch the app on the platform you built for. If not, chec
 
 **Be careful** not to include node_modules you don't want into your final app. For example, do not include the `node_modules/electron-packager` folder or `node_modules/electron-prebuilt`. You can use `--ignore=node_modules/electron-prebuilt` to ignore of these
 
+### Building windows apps from non-windows platforms
+
+If you run this on windows and you want to set the icon for your app using the `--icon` option, it requires running a thing called `rcedit.exe` (via [this](https://github.com/atom/node-rcedit)), which means you will need to install `wine` and have it available in your path. To do this on Mac OS you can `brew install wine`.
+
 ### related
 
 - [grunt-electron](https://github.com/sindresorhus/grunt-electron) - grunt plugin for electron-packager
