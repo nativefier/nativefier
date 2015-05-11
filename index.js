@@ -21,14 +21,14 @@ module.exports = function packager (opts, cb) {
   switch (arch) {
     case 'ia32': break
     case 'x64': break
-    default: cb(new Error('Unsupported arch'))
+    default: return cb(new Error('Unsupported arch. Must be either ia32 or x64'))
   }
 
   switch (platform) {
     case 'darwin': packager = mac; break
     case 'linux': packager = linux; break
     case 'win32': packager = win32; break
-    default: cb(new Error('Unsupported platform'))
+    default: return cb(new Error('Unsupported platform. Must be either darwin, linux, or win32'))
   }
 
   download({
