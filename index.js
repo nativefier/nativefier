@@ -32,9 +32,9 @@ module.exports = function packager (opts, cb) {
   }
 
   // Ignore this and related modules by default
-  var default_ignores = ['node_modules/electron-prebuilt', 'node_modules/electron-packager', '.git']
+  var defaultIgnores = ['node_modules/electron-prebuilt', 'node_modules/electron-packager', '.git']
   if (opts.ignore && !Array.isArray(opts.ignore)) opts.ignore = [opts.ignore]
-  opts.ignore = (opts.ignore) ? opts.ignore.concat(default_ignores) : default_ignores
+  opts.ignore = (opts.ignore) ? opts.ignore.concat(defaultIgnores) : defaultIgnores
 
   download({
     platform: platform,
