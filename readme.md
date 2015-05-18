@@ -41,6 +41,7 @@ helper-bundle-id   bundle identifier to use in the app helper plist
 ignore             do not copy files into App whose filenames regex .match this string
 prune              runs `npm prune --production` on the app
 asar               packages the source code within your app into an archive
+sign               should contain the identity to be used when running `codesign` (OS X only)
 ```
 
 This will:

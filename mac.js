@@ -108,24 +108,30 @@ function buildMacApp (opts, cb, newApp) {
           if (opts.asar) {
             asarApp(function (err) {
               if (err) return cb(err)
-              updateMacIcon()
+              updateMacIcon(function (err) {
+                if (err) return cb(err)
+                codesign()
+              })
             })
           } else {
-            updateMacIcon()
+            updateMacIcon(function (err) {
+              if (err) return cb(err)
+              codesign()
+            })
           }
         })
       })
     }
 
-    function updateMacIcon () {
+    function updateMacIcon (cb) {
       var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
 
       if (!opts.icon) {
-        return cb(null, finalPath)
+        return cb(null)
       }
 
       ncp(opts.icon, path.join(finalPath, 'Contents', 'Resources', 'atom.icns'), function copied (err) {
-        cb(err, finalPath)
+        cb(err)
       })
     }
 
@@ -136,6 +142,16 @@ function buildMacApp (opts, cb, newApp) {
       asar.createPackage(src, dest, function (err) {
         if (err) return cb(err)
         rimraf(src, cb)
+      })
+    }
+
+    function codesign () {
+      var appPath = path.join(opts.out || process.cwd(), opts.name + '.app')
+
+      if (!opts.sign) return cb(null, appPath)
+
+      child.exec('codesign --deep --force --sign ' + opts.sign + ' ' + appPath, function (err, stdout, stderr) {
+        cb(err, appPath)
       })
     }
   })
