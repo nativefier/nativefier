@@ -31,6 +31,11 @@ module.exports = function packager (opts, cb) {
     default: return cb(new Error('Unsupported platform. Must be either darwin, linux, or win32'))
   }
 
+  // Ignore this and related modules by default
+  var default_ignores = ['node_modules/electron-prebuilt', 'node_modules/electron-packager', '.git']
+  if (opts.ignore && !Array.isArray(opts.ignore)) opts.ignore = [opts.ignore]
+  opts.ignore = (opts.ignore) ? opts.ignore.concat(default_ignores) : default_ignores
+
   download({
     platform: platform,
     arch: arch,
