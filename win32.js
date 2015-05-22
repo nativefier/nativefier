@@ -62,7 +62,7 @@ function buildWinApp (opts, cb, newApp) {
   }
 
   // copy users app into .app
-  ncp(opts.dir, paths.app, {filter: filter}, function copied (err) {
+  ncp(opts.dir, paths.app, {filter: filter, dereference: true}, function copied (err) {
     if (err) return cb(err)
 
     if (opts.prune) {
