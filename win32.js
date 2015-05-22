@@ -51,6 +51,9 @@ function buildWinApp (opts, cb, newApp) {
   }
 
   function filter (file) {
+    // convert slashes so unix-format ignores work
+    file = file.replace(/\\/g, '/')
+
     var ignore = opts.ignore || []
     if (!Array.isArray(ignore)) ignore = [ignore]
     for (var i = 0; i < ignore.length; i++) {
