@@ -86,7 +86,7 @@ Semver, see https://github.com/atom/electron/releases
 
 `app-bundle-id` - *String*
 
-`app-versionv` - *String*
+`app-version` - *String*
 
 `helper-bundle-id` - *String*
 
