@@ -53,6 +53,59 @@ You should be able to launch the app on the platform you built for. If not, chec
 
 **Be careful** not to include node_modules you don't want into your final app. `Electron-packager`, `electron-prebuilt` and `.git` will be ignored by default. You can use `--ignore` to ignore files and folders (`--ignore=node_modules/electron-packager`).
 
+### API
+```javascript
+var packager = require('electron-packager')
+packager(opts, function done (err, appPath) {
+
+})
+```
+#### packager(opts, callback)
+
+##### opts
+**Required**  
+`dir` - *String*  
+The source directory.
+
+`name` - *String*  
+The application name.
+
+`platform` - *String*  
+Allowed values: *linux, win32, darwin*
+
+`arch` - *String*  
+Allowed values: *ia32, x64*
+
+`version` - *String*  
+Semver, see https://github.com/atom/electron/releases
+
+** Optional **  
+`out` - *String*
+
+`icon` - *String*
+
+`app-bundle-id` - *String*
+
+`app-versionv` - *String*
+
+`helper-bundle-id` - *String*
+
+`ignore` - *String*
+
+`prune` - *Boolean*
+
+`asar` - *Boolean*
+
+`sign` - *String*
+
+##### callback
+
+`err` - *Error*  
+Contains errors if any.
+
+`appPath` - *String*  
+Path to the newly created application.
+
 ### Building windows apps from non-windows platforms
 
 If you run this on windows and you want to set the icon for your app using the `--icon` option, it requires running a thing called `rcedit.exe` (via [this](https://github.com/atom/node-rcedit)), which means you will need to install `wine` and have it available in your path. To do this on Mac OS you can `brew install wine`.
