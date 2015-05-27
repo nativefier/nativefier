@@ -51,7 +51,7 @@ This will:
 
 You should be able to launch the app on the platform you built for. If not, check your settings and try again.
 
-**Be careful** not to include node_modules you don't want into your final app. For example, do not include the `node_modules/electron-packager` folder or `node_modules/electron-prebuilt`. You can use `--ignore=node_modules/electron-prebuilt` to ignore of these
+**Be careful** not to include node_modules you don't want into your final app. `Electron-packager`, `electron-prebuilt` and `.git` will be ignored by default. You can use `--ignore` to ignore files and folders (`--ignore=node_modules/electron-packager`).
 
 ### Building windows apps from non-windows platforms
 
