@@ -51,6 +51,7 @@ function buildWinApp (opts, cb, newApp) {
   }
 
   function filter (file) {
+    file = file.split(path.resolve(opts.dir))[1]
     // convert slashes so unix-format ignores work
     file = file.replace(/\\/g, '/')
 

@@ -61,6 +61,8 @@ module.exports = {
     }
 
     function userFilter (file) {
+      file = file.split(path.resolve(opts.dir))[1]
+
       var ignore = opts.ignore || []
       if (!Array.isArray(ignore)) ignore = [ignore]
       ignore = ignore.concat([finalDir])
