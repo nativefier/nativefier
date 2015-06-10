@@ -50,22 +50,8 @@ function buildWinApp (opts, cb, newApp) {
     app: path.join(newApp, 'resources', 'app')
   }
 
-  function filter (file) {
-    // convert slashes so unix-format ignores work
-    file = file.replace(/\\/g, '/')
-
-    var ignore = opts.ignore || []
-    if (!Array.isArray(ignore)) ignore = [ignore]
-    for (var i = 0; i < ignore.length; i++) {
-      if (file.match(ignore[i])) {
-        return false
-      }
-    }
-    return true
-  }
-
   // copy users app into destination path
-  ncp(opts.dir, paths.app, {filter: filter, dereference: true}, function copied (err) {
+  ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts, true), dereference: true}, function copied (err) {
     if (err) return cb(err)
 
     if (opts.prune) {

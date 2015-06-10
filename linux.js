@@ -27,7 +27,7 @@ module.exports = {
     }
 
     function copyUserApp () {
-      ncp(opts.dir, userAppDir, {filter: userFilter, dereference: true}, function copied (err) {
+      ncp(opts.dir, userAppDir, {filter: common.userIgnoreFilter(opts, false, finalDir), dereference: true}, function copied (err) {
         if (err) return cb(err)
         if (opts.prune) {
           prune(function pruned (err) {
@@ -57,18 +57,6 @@ module.exports = {
 
     function appFilter (file) {
       return file.match(/default_app/) === null
-    }
-
-    function userFilter (file) {
-      var ignore = opts.ignore || []
-      if (!Array.isArray(ignore)) ignore = [ignore]
-      ignore = ignore.concat([finalDir])
-      for (var i = 0; i < ignore.length; i++) {
-        if (file.match(ignore[i])) {
-          return false
-        }
-      }
-      return true
     }
 
     copyApp()

@@ -68,19 +68,8 @@ function buildMacApp (opts, cb, newApp) {
   fs.writeFileSync(paths.info1, plist.build(pl1))
   fs.writeFileSync(paths.info2, plist.build(pl2))
 
-  function filter (file) {
-    var ignore = opts.ignore || []
-    if (!Array.isArray(ignore)) ignore = [ignore]
-    for (var i = 0; i < ignore.length; i++) {
-      if (file.match(ignore[i])) {
-        return false
-      }
-    }
-    return true
-  }
-
   // copy users app into .app
-  ncp(opts.dir, paths.app, {filter: filter, dereference: true}, function copied (err) {
+  ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts), dereference: true}, function copied (err) {
     if (err) return cb(err)
 
     if (opts.prune) {
