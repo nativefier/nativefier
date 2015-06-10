@@ -1,6 +1,5 @@
 var path = require('path')
 var fs = require('fs')
-var child = require('child_process')
 var mkdirp = require('mkdirp')
 var ncp = require('ncp').ncp
 var common = require('./common')
@@ -29,14 +28,7 @@ module.exports = {
     function copyUserApp () {
       ncp(opts.dir, userAppDir, {filter: common.userIgnoreFilter(opts, false, finalDir), dereference: true}, function copied (err) {
         if (err) return cb(err)
-        if (opts.prune) {
-          prune(function pruned (err) {
-            if (err) return cb(err)
-            renameElectronBinary()
-          })
-        } else {
-          renameElectronBinary()
-        }
+        common.prune(opts, userAppDir, cb, renameElectronBinary)
       })
     }
 
@@ -49,10 +41,6 @@ module.exports = {
           cb(null, finalBinary)
         }
       })
-    }
-
-    function prune (cb) {
-      child.exec('npm prune --production', { cwd: userAppDir }, cb)
     }
 
     function appFilter (file) {

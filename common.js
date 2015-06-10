@@ -1,4 +1,5 @@
 var asar = require('asar')
+var child = require('child_process')
 var path = require('path')
 var rimraf = require('rimraf')
 
@@ -13,6 +14,17 @@ module.exports = {
         cb(null, dest)
       })
     })
+  },
+
+  prune: function prune (opts, cwd, cb, nextStep) {
+    if (opts.prune) {
+      child.exec('npm prune --production', { cwd: cwd }, function pruned (err) {
+        if (err) return cb(err)
+        nextStep()
+      })
+    } else {
+      nextStep()
+    }
   },
 
   userIgnoreFilter: function userIgnoreFilter (opts, is_win32, finalDir) {

@@ -72,19 +72,6 @@ function buildMacApp (opts, cb, newApp) {
   ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts), dereference: true}, function copied (err) {
     if (err) return cb(err)
 
-    if (opts.prune) {
-      prune(function pruned (err) {
-        if (err) return cb(err)
-        moveApp()
-      })
-    } else {
-      moveApp()
-    }
-
-    function prune (cb) {
-      child.exec('npm prune --production', { cwd: paths.app }, cb)
-    }
-
     function moveApp () {
       // finally, move app into cwd
       var outdir = opts.out || process.cwd()
@@ -134,5 +121,7 @@ function buildMacApp (opts, cb, newApp) {
         cb(err, appPath)
       })
     }
+
+    common.prune(opts, paths.app, cb, moveApp)
   })
 }

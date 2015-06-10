@@ -1,6 +1,5 @@
 var os = require('os')
 var path = require('path')
-var child = require('child_process')
 
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
@@ -54,19 +53,6 @@ function buildWinApp (opts, cb, newApp) {
   ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts, true), dereference: true}, function copied (err) {
     if (err) return cb(err)
 
-    if (opts.prune) {
-      prune(function pruned (err) {
-        if (err) return cb(err)
-        moveApp()
-      })
-    } else {
-      moveApp()
-    }
-
-    function prune (cb) {
-      child.exec('npm prune --production', { cwd: paths.app }, cb)
-    }
-
     function moveApp () {
       // finally, move app into cwd
       var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32')
@@ -97,5 +83,7 @@ function buildWinApp (opts, cb, newApp) {
         cb(err, finalPath)
       })
     }
+
+    common.prune(opts, paths.app, cb, moveApp)
   })
 }
