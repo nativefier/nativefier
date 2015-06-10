@@ -3,8 +3,7 @@ var fs = require('fs')
 var child = require('child_process')
 var mkdirp = require('mkdirp')
 var ncp = require('ncp').ncp
-var rimraf = require('rimraf')
-var asar = require('asar')
+var common = require('./common')
 
 module.exports = {
   createApp: function createApp (opts, templateApp, cb) {
@@ -45,7 +44,7 @@ module.exports = {
       fs.rename(originalBinary, finalBinary, function electronRenamed (err) {
         if (err) return cb(err)
         if (opts.asar) {
-          asarApp(cb)
+          common.asarApp(finalDir, cb)
         } else {
           cb(null, finalBinary)
         }
@@ -70,18 +69,6 @@ module.exports = {
         }
       }
       return true
-    }
-
-    function asarApp (cb) {
-      var src = path.join(finalDir, 'resources', 'app')
-      var dest = path.join(finalDir, 'resources', 'app.asar')
-      asar.createPackage(src, dest, function (err) {
-        if (err) return cb(err)
-        rimraf(src, function (err) {
-          if (err) return cb(err)
-          cb(null, dest)
-        })
-      })
     }
 
     copyApp()
