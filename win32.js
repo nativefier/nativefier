@@ -1,13 +1,12 @@
 var os = require('os')
 var path = require('path')
-var child = require('child_process')
 
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
 var ncp = require('ncp').ncp
-var asar = require('asar')
 var mv = require('mv')
 var rcedit = require('rcedit')
+var common = require('./common')
 
 module.exports = {
   createApp: function createApp (opts, electronApp, cb) {
@@ -50,36 +49,9 @@ function buildWinApp (opts, cb, newApp) {
     app: path.join(newApp, 'resources', 'app')
   }
 
-  function filter (file) {
-    // convert slashes so unix-format ignores work
-    file = file.replace(/\\/g, '/')
-
-    var ignore = opts.ignore || []
-    if (!Array.isArray(ignore)) ignore = [ignore]
-    for (var i = 0; i < ignore.length; i++) {
-      if (file.match(ignore[i])) {
-        return false
-      }
-    }
-    return true
-  }
-
-  // copy users app into .app
-  ncp(opts.dir, paths.app, {filter: filter, dereference: true}, function copied (err) {
+  // copy users app into destination path
+  ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts, true), dereference: true}, function copied (err) {
     if (err) return cb(err)
-
-    if (opts.prune) {
-      prune(function pruned (err) {
-        if (err) return cb(err)
-        moveApp()
-      })
-    } else {
-      moveApp()
-    }
-
-    function prune (cb) {
-      child.exec('npm prune --production', { cwd: paths.app }, cb)
-    }
 
     function moveApp () {
       // finally, move app into cwd
@@ -87,7 +59,8 @@ function buildWinApp (opts, cb, newApp) {
       copy(newApp, finalPath, function moved (err) {
         if (err) return cb(err)
         if (opts.asar) {
-          asarApp(function (err) {
+          var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32', 'resources')
+          common.asarApp(finalPath, function (err) {
             if (err) return cb(err)
             updateIcon()
           })
@@ -109,17 +82,8 @@ function buildWinApp (opts, cb, newApp) {
       rcedit(exePath, {icon: opts.icon}, function (err) {
         cb(err, finalPath)
       })
-
     }
 
-    function asarApp (cb) {
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32', 'resources')
-      var src = path.join(finalPath, 'app')
-      var dest = path.join(finalPath, 'app.asar')
-      asar.createPackage(src, dest, function (err) {
-        if (err) return cb(err)
-        rimraf(src, cb)
-      })
-    }
+    common.prune(opts, paths.app, cb, moveApp)
   })
 }

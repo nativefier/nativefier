@@ -7,7 +7,7 @@ var plist = require('plist')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
 var ncp = require('ncp').ncp
-var asar = require('asar')
+var common = require('./common')
 
 module.exports = {
   createApp: function createApp (opts, electronPath, cb) {
@@ -68,33 +68,9 @@ function buildMacApp (opts, cb, newApp) {
   fs.writeFileSync(paths.info1, plist.build(pl1))
   fs.writeFileSync(paths.info2, plist.build(pl2))
 
-  function filter (file) {
-    var ignore = opts.ignore || []
-    if (!Array.isArray(ignore)) ignore = [ignore]
-    for (var i = 0; i < ignore.length; i++) {
-      if (file.match(ignore[i])) {
-        return false
-      }
-    }
-    return true
-  }
-
   // copy users app into .app
-  ncp(opts.dir, paths.app, {filter: filter, dereference: true}, function copied (err) {
+  ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts), dereference: true}, function copied (err) {
     if (err) return cb(err)
-
-    if (opts.prune) {
-      prune(function pruned (err) {
-        if (err) return cb(err)
-        moveApp()
-      })
-    } else {
-      moveApp()
-    }
-
-    function prune (cb) {
-      child.exec('npm prune --production', { cwd: paths.app }, cb)
-    }
 
     function moveApp () {
       // finally, move app into cwd
@@ -106,7 +82,8 @@ function buildMacApp (opts, cb, newApp) {
         fs.rename(newApp, finalPath, function moved (err) {
           if (err) return cb(err)
           if (opts.asar) {
-            asarApp(function (err) {
+            var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
+            common.asarApp(finalPath, function (err) {
               if (err) return cb(err)
               updateMacIcon(function (err) {
                 if (err) return cb(err)
@@ -135,16 +112,6 @@ function buildMacApp (opts, cb, newApp) {
       })
     }
 
-    function asarApp (cb) {
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
-      var src = path.join(finalPath, 'app')
-      var dest = path.join(finalPath, 'app.asar')
-      asar.createPackage(src, dest, function (err) {
-        if (err) return cb(err)
-        rimraf(src, cb)
-      })
-    }
-
     function codesign () {
       var appPath = path.join(opts.out || process.cwd(), opts.name + '.app')
 
@@ -154,5 +121,7 @@ function buildMacApp (opts, cb, newApp) {
         cb(err, appPath)
       })
     }
+
+    common.prune(opts, paths.app, cb, moveApp)
   })
 }
