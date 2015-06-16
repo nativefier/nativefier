@@ -117,7 +117,7 @@ function buildMacApp (opts, cb, newApp) {
 
       if (!opts.sign) return cb(null, appPath)
 
-      child.exec('codesign --deep --force --sign ' + opts.sign + ' ' + appPath, function (err, stdout, stderr) {
+      child.exec('codesign --deep --force --sign "' + opts.sign + '" ' + appPath, function (err, stdout, stderr) {
         cb(err, appPath)
       })
     }
