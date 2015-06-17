@@ -73,7 +73,7 @@ function buildWinApp (opts, cb, newApp) {
     function updateResourceData () {
       var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32')
 
-      if (!opts.icon) {
+      if (!opts.icon && !opts['version-string']) {
         return cb(null, finalPath)
       }
 
