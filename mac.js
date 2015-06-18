@@ -79,24 +79,39 @@ function buildMacApp (opts, cb, newApp) {
 
       mkdirp(outdir, function mkoutdirp () {
         if (err) return cb(err)
-        fs.rename(newApp, finalPath, function moved (err) {
+        var deploy = function (err) {
           if (err) return cb(err)
-          if (opts.asar) {
-            var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
-            common.asarApp(finalPath, function (err) {
-              if (err) return cb(err)
+          fs.rename(newApp, finalPath, function moved (err) {
+            if (err) return cb(err)
+            if (opts.asar) {
+              var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
+              common.asarApp(finalPath, function (err) {
+                if (err) return cb(err)
+                updateMacIcon(function (err) {
+                  if (err) return cb(err)
+                  codesign()
+                })
+              })
+            } else {
               updateMacIcon(function (err) {
                 if (err) return cb(err)
                 codesign()
               })
-            })
-          } else {
-            updateMacIcon(function (err) {
-              if (err) return cb(err)
-              codesign()
-            })
-          }
-        })
+            }
+          })
+        }
+        if (opts.overwrite) {
+          fs.exists(finalPath, function (exists) {
+            if (exists) {
+              console.log('Overwriting existing ' + finalPath + ' ...')
+              rimraf(finalPath, deploy)
+            } else {
+              deploy()
+            }
+          })
+        } else {
+          deploy()
+        }
       })
     }
 
