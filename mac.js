@@ -1,160 +1,87 @@
-var os = require('os')
 var path = require('path')
 var fs = require('fs')
 var child = require('child_process')
 
 var plist = require('plist')
-var mkdirp = require('mkdirp')
-var rimraf = require('rimraf')
 var mv = require('mv')
 var ncp = require('ncp').ncp
+var series = require('run-series')
 var common = require('./common')
 
 module.exports = {
-  createApp: function createApp (opts, electronPath, cb) {
-    var electronApp = path.join(electronPath, 'Electron.app')
-    var tmpDir = path.join(os.tmpdir(), 'electron-packager-mac')
+  createApp: function createApp (opts, templatePath, callback) {
+    var appRelativePath = path.join('Electron.app', 'Contents', 'Resources', 'app')
+    common.initializeApp(opts, templatePath, appRelativePath, function buildMacApp (err, tempPath) {
+      if (err) return callback(err)
 
-    var newApp = path.join(tmpDir, opts.name + '.app')
+      var contentsPath = path.join(tempPath, 'Electron.app', 'Contents')
+      var helperPath = path.join(contentsPath, 'Frameworks', 'Electron Helper.app')
+      var appPlistFilename = path.join(contentsPath, 'Info.plist')
+      var helperPlistFilename = path.join(helperPath, 'Contents', 'Info.plist')
+      var appPlist = plist.parse(fs.readFileSync(appPlistFilename).toString())
+      var helperPlist = plist.parse(fs.readFileSync(helperPlistFilename).toString())
 
-    // reset build folders + copy template app
-    rimraf(tmpDir, function rmrfd () {
-      // ignore errors
-      mkdirp(newApp, function mkdirpd () {
-        // ignore errors
-        // copy .app folder and use as template (this is exactly what Atom editor does)
-        ncp(electronApp, newApp, function copied (err) {
-          if (err) return cb(err)
-          buildMacApp(opts, cb, newApp)
+      // Update plist files
+      var defaultBundleName = 'com.electron.' + opts.name.toLowerCase().replace(/ /g, '_')
+      var appVersion = opts['app-version']
+
+      appPlist.CFBundleDisplayName = opts.name
+      appPlist.CFBundleIdentifier = opts['app-bundle-id'] || defaultBundleName
+      appPlist.CFBundleName = opts.name
+      helperPlist.CFBundleIdentifier = opts['helper-bundle-id'] || defaultBundleName + '.helper'
+      helperPlist.CFBundleName = opts.name
+
+      if (appVersion) {
+        appPlist.CFBundleVersion = appVersion
+      }
+
+      if (opts.protocols) {
+        helperPlist.CFBundleURLTypes = appPlist.CFBundleURLTypes = opts.protocols.map(function (protocol) {
+          return {
+            CFBundleURLName: protocol.name,
+            CFBundleURLSchemes: [].concat(protocol.schemes)
+          }
         })
+      }
+
+      fs.writeFileSync(appPlistFilename, plist.build(appPlist))
+      fs.writeFileSync(helperPlistFilename, plist.build(helperPlist))
+
+      var operations = []
+
+      if (opts.icon) {
+        operations.push(function (cb) {
+          common.normalizeExt(opts.icon, '.icns', function (err, icon) {
+            if (err) {
+              // Ignore error if icon doesn't exist, in case it's only available for other OS
+              cb(null)
+            } else {
+              ncp(icon, path.join(contentsPath, 'Resources', 'atom.icns'), cb)
+            }
+          })
+        })
+      }
+
+      // Move Helper binary, then Helper.app, then top-level .app
+      var finalAppPath = path.join(tempPath, opts.name + '.app')
+      operations.push(function (cb) {
+        var helperBinaryPath = path.join(helperPath, 'Contents', 'MacOS')
+        mv(path.join(helperBinaryPath, 'Electron Helper'), path.join(helperBinaryPath, opts.name + ' Helper'), cb)
+      }, function (cb) {
+        mv(helperPath, path.join(path.dirname(helperPath), opts.name + ' Helper.app'), cb)
+      }, function (cb) {
+        mv(path.dirname(contentsPath), finalAppPath, cb)
+      })
+
+      if (opts.sign) {
+        operations.push(function (cb) {
+          child.exec('codesign --deep --force --sign "' + opts.sign + '" ' + finalAppPath, cb)
+        })
+      }
+
+      series(operations, function () {
+        common.moveApp(opts, tempPath, callback)
       })
     })
   }
-}
-
-function buildMacApp (opts, cb, newApp) {
-  var paths = {
-    info1: path.join(newApp, 'Contents', 'Info.plist'),
-    info2: path.join(newApp, 'Contents', 'Frameworks', 'Electron Helper.app', 'Contents', 'Info.plist'),
-    app: path.join(newApp, 'Contents', 'Resources', 'app'),
-    helper: path.join(newApp, 'Contents', 'Frameworks', 'Electron Helper.app')
-  }
-
-  // update plist files
-  var pl1 = plist.parse(fs.readFileSync(paths.info1).toString())
-  var pl2 = plist.parse(fs.readFileSync(paths.info2).toString())
-
-  var bundleId = opts['app-bundle-id'] || 'com.electron.' + opts.name.toLowerCase()
-  var bundleHelperId = opts['helper-bundle-id'] || 'com.electron.' + opts.name.toLowerCase() + '.helper'
-  var appVersion = opts['app-version']
-
-  pl1.CFBundleDisplayName = opts.name
-  pl1.CFBundleIdentifier = bundleId
-  pl1.CFBundleName = opts.name
-  pl2.CFBundleIdentifier = bundleHelperId
-  pl2.CFBundleName = opts.name
-
-  if (appVersion) {
-    pl1.CFBundleVersion = appVersion
-  }
-
-  if (opts.protocols) {
-    pl2.CFBundleURLTypes = pl1.CFBundleURLTypes = opts.protocols.map(function (protocol) {
-      return {
-        CFBundleURLName: protocol.name,
-        CFBundleURLSchemes: [].concat(protocol.schemes)
-      }
-    })
-  }
-
-  fs.writeFileSync(paths.info1, plist.build(pl1))
-  fs.writeFileSync(paths.info2, plist.build(pl2))
-
-  // copy users app into .app
-  ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts), dereference: true}, function copied (err) {
-    if (err) return cb(err)
-
-    function moveHelper () {
-      // Move helper binary before moving the parent helper app directory itself
-      var helperDestination = path.join(path.dirname(paths.helper), opts.name + ' Helper.app')
-      var helperBinary = path.join(paths.helper, 'Contents', 'MacOS', 'Electron Helper')
-      var helperBinaryDestination = path.join(path.dirname(helperBinary), opts.name + ' Helper')
-
-      fs.rename(helperBinary, helperBinaryDestination, function (err) {
-        if (err) return cb(err)
-        fs.rename(paths.helper, helperDestination, function (err) {
-          if (err) return cb(err)
-          moveApp()
-        })
-      })
-    }
-
-    function moveApp () {
-      // finally, move app into cwd
-      var outdir = opts.out || process.cwd()
-      var finalPath = path.join(outdir, opts.name + '.app')
-
-      mkdirp(outdir, function mkoutdirp () {
-        if (err) return cb(err)
-        if (opts.overwrite) {
-          fs.exists(finalPath, function (exists) {
-            if (exists) {
-              console.log('Overwriting existing ' + finalPath + ' ...')
-              rimraf(finalPath, deploy)
-            } else {
-              deploy()
-            }
-          })
-        } else {
-          deploy()
-        }
-
-        function deploy (err) {
-          if (err) return cb(err)
-          mv(newApp, finalPath, function moved (err) {
-            if (err) return cb(err)
-            if (opts.asar) {
-              var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
-              common.asarApp(finalPath, function (err) {
-                if (err) return cb(err)
-                updateMacIcon(function (err) {
-                  if (err) return cb(err)
-                  codesign()
-                })
-              })
-            } else {
-              updateMacIcon(function (err) {
-                if (err) return cb(err)
-                codesign()
-              })
-            }
-          })
-        }
-      })
-    }
-
-    function updateMacIcon (cb) {
-      var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app')
-
-      if (!opts.icon) {
-        return cb(null)
-      }
-
-      ncp(opts.icon, path.join(finalPath, 'Contents', 'Resources', 'atom.icns'), function copied (err) {
-        cb(err)
-      })
-    }
-
-    function codesign () {
-      var appPath = path.join(opts.out || process.cwd(), opts.name + '.app')
-
-      if (!opts.sign) return cb(null, appPath)
-
-      child.exec('codesign --deep --force --sign "' + opts.sign + '" ' + appPath, function (err, stdout, stderr) {
-        cb(err, appPath)
-      })
-    }
-
-    common.prune(opts, paths.app, cb, moveHelper)
-  })
 }
