@@ -34,9 +34,11 @@ module.exports = {
 
     function renameElectronBinary () {
       fs.rename(originalBinary, finalBinary, function electronRenamed (err) {
+        var asarDir
         if (err) return cb(err)
         if (opts.asar) {
-          common.asarApp(finalDir, cb)
+          asarDir = path.join(finalDir, 'resources')
+          common.asarApp(asarDir, cb)
         } else {
           cb(null, finalBinary)
         }
