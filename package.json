@@ -8,10 +8,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/maxogden/electron-packager.git"
+    "url": "git+https://github.com/maxogden/electron-packager.git"
   },
   "author": "max ogden",
-  "license": "BSD",
+  "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/maxogden/electron-packager/issues"
   },
