@@ -26,7 +26,7 @@ module.exports = {
     }
 
     function copyUserApp () {
-      ncp(opts.dir, userAppDir, {filter: common.userIgnoreFilter(opts, false, finalDir), dereference: true}, function copied (err) {
+      ncp(opts.dir, userAppDir, {filter: common.userIgnoreFilter(opts, finalDir), dereference: true}, function copied (err) {
         if (err) return cb(err)
         common.prune(opts, userAppDir, cb, renameElectronBinary)
       })
