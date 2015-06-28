@@ -36,7 +36,8 @@ function buildMacApp (opts, cb, newApp) {
   var paths = {
     info1: path.join(newApp, 'Contents', 'Info.plist'),
     info2: path.join(newApp, 'Contents', 'Frameworks', 'Electron Helper.app', 'Contents', 'Info.plist'),
-    app: path.join(newApp, 'Contents', 'Resources', 'app')
+    app: path.join(newApp, 'Contents', 'Resources', 'app'),
+    helper: path.join(newApp, 'Contents', 'Frameworks', 'Electron Helper.app')
   }
 
   // update plist files
@@ -72,6 +73,21 @@ function buildMacApp (opts, cb, newApp) {
   // copy users app into .app
   ncp(opts.dir, paths.app, {filter: common.userIgnoreFilter(opts), dereference: true}, function copied (err) {
     if (err) return cb(err)
+
+    function moveHelper () {
+      // Move helper binary before moving the parent helper app directory itself
+      var helperDestination = path.join(path.dirname(paths.helper), opts.name + ' Helper.app')
+      var helperBinary = path.join(paths.helper, 'Contents', 'MacOS', 'Electron Helper')
+      var helperBinaryDestination = path.join(path.dirname(helperBinary), opts.name + ' Helper')
+
+      fs.rename(helperBinary, helperBinaryDestination, function (err) {
+        if (err) return cb(err)
+        fs.rename(paths.helper, helperDestination, function (err) {
+          if (err) return cb(err)
+          moveApp()
+        })
+      })
+    }
 
     function moveApp () {
       // finally, move app into cwd
@@ -139,6 +155,6 @@ function buildMacApp (opts, cb, newApp) {
       })
     }
 
-    common.prune(opts, paths.app, cb, moveApp)
+    common.prune(opts, paths.app, cb, moveHelper)
   })
 }
