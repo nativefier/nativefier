@@ -2,6 +2,7 @@ var path = require('path')
 var fs = require('fs')
 var mkdirp = require('mkdirp')
 var ncp = require('ncp').ncp
+var rimraf = require('rimraf')
 var common = require('./common')
 
 module.exports = {
@@ -12,10 +13,25 @@ module.exports = {
     var finalBinary = path.join(finalDir, opts.name)
 
     function copyApp () {
-      mkdirp(finalDir, function AppFolderCreated (err) {
+      var createApp = function (err) {
         if (err) return cb(err)
-        copyAppTemplate()
-      })
+        mkdirp(finalDir, function AppFolderCreated (err) {
+          if (err) return cb(err)
+          copyAppTemplate()
+        })
+      }
+      if (opts.overwrite) {
+        fs.exists(finalDir, function (exists) {
+          if (exists) {
+            console.log('Overwriting existing ' + finalDir + ' ...')
+            rimraf(finalDir, createApp)
+          } else {
+            createApp()
+          }
+        })
+      } else {
+        createApp()
+      }
     }
 
     function copyAppTemplate () {
