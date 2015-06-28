@@ -1,6 +1,6 @@
 {
   "name": "electron-packager",
-  "version": "4.1.3",
+  "version": "4.2.0",
   "description": "package your electron app in OS executables (.app, .exe, etc) via JS or CLI",
   "main": "index.js",
   "bin": {
@@ -36,6 +36,8 @@
     "test": "standard && node test/test.js"
   },
   "standard": {
-    "ignore": ["test/dist"]
+    "ignore": [
+      "test/dist"
+    ]
   }
 }
