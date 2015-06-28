@@ -62,24 +62,27 @@ function buildWinApp (opts, cb, newApp) {
           var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32', 'resources')
           common.asarApp(finalPath, function (err) {
             if (err) return cb(err)
-            updateIcon()
+            updateResourceData()
           })
         } else {
-          updateIcon()
+          updateResourceData()
         }
       })
     }
 
-    function updateIcon () {
+    function updateResourceData () {
       var finalPath = path.join(opts.out || process.cwd(), opts.name + '-win32')
 
-      if (!opts.icon) {
+      if (!opts.icon && !opts['version-string']) {
         return cb(null, finalPath)
       }
 
       var exePath = path.join(opts.out || process.cwd(), opts.name + '-win32', opts.name + '.exe')
-
-      rcedit(exePath, {icon: opts.icon}, function (err) {
+      var rcOptions = {
+        icon: opts.icon,
+        'version-string': opts['version-string']
+      }
+      rcedit(exePath, rcOptions, function (err) {
         cb(err, finalPath)
       })
     }

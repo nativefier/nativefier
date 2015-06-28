@@ -42,6 +42,17 @@ ignore             do not copy files into App whose filenames regex .match this 
 prune              runs `npm prune --production` on the app
 asar               packages the source code within your app into an archive
 sign               should contain the identity to be used when running `codesign` (OS X only)
+version-string     should contain a hash of the application metadata to be embedded into the executable (Windows only). Keys supported
+                   - CompanyName
+                   - LegalCopyright
+                   - FileDescription
+                   - OriginalFilename
+                   - FileVersion
+                   - ProductVersion
+                   - ProductName
+                   - InternalName
+                   
+
 ```
 
 This will:
