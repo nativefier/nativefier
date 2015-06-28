@@ -27,9 +27,9 @@ module.exports = {
     }
   },
 
-  userIgnoreFilter: function userIgnoreFilter (opts, is_win32, finalDir) {
+  userIgnoreFilter: function userIgnoreFilter (opts, finalDir) {
     return function filter (file) {
-      if (is_win32) {
+      if (path.sep === '\\') {
         // convert slashes so unix-format ignores work
         file = file.replace(/\\/g, '/')
       }
