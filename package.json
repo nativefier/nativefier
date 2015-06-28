@@ -29,9 +29,13 @@
     "rimraf": "^2.3.2"
   },
   "devDependencies": {
-    "standard": "^3.3.2"
+    "standard": "^3.3.2",
+    "tape": "^4.0.0"
   },
   "scripts": {
-    "test": "standard"
+    "test": "standard && node test/test.js"
+  },
+  "standard": {
+    "ignore": ["test/dist"]
   }
 }

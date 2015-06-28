@@ -7,7 +7,7 @@ var common = require('./common')
 
 module.exports = {
   createApp: function createApp (opts, templateApp, cb) {
-    var finalDir = opts.out || path.join(process.cwd(), opts.name + '-linux')
+    var finalDir = path.join(opts.out || process.cwd(), opts.name + '-linux')
     var userAppDir = path.join(finalDir, 'resources', 'default_app')
     var originalBinary = path.join(finalDir, 'electron')
     var finalBinary = path.join(finalDir, opts.name)

@@ -108,7 +108,7 @@ function buildMacApp (opts, cb, newApp) {
         } else {
           deploy()
         }
-        
+
         function deploy (err) {
           if (err) return cb(err)
           mv(newApp, finalPath, function moved (err) {

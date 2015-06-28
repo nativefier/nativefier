@@ -88,7 +88,7 @@ Allowed values: *linux, win32, darwin*
 Allowed values: *ia32, x64*
 
 `version` - *String*  
-Semver, see https://github.com/atom/electron/releases
+Electron version (without the 'v'). See https://github.com/atom/electron/releases
 
 **Optional**  
 `out` - *String*
