@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var fs = require('fs')
-var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar']})
+var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar', 'overwrite']})
 var packager = require('./')
 var usage = fs.readFileSync(__dirname + '/usage.txt').toString()
 
