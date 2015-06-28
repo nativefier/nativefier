@@ -6,6 +6,7 @@ var child = require('child_process')
 var plist = require('plist')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
+var mv = require('mv')
 var ncp = require('ncp').ncp
 var common = require('./common')
 
@@ -79,7 +80,7 @@ function buildMacApp (opts, cb, newApp) {
 
       mkdirp(outdir, function mkoutdirp () {
         if (err) return cb(err)
-        fs.rename(newApp, finalPath, function moved (err) {
+        mv(newApp, finalPath, function moved (err) {
           if (err) return cb(err)
           if (opts.asar) {
             var finalPath = path.join(opts.out || process.cwd(), opts.name + '.app', 'Contents', 'Resources')
