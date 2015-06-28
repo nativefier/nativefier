@@ -58,7 +58,7 @@ version-string     should contain a hash of the application metadata to be embed
 This will:
 
 - Find or download the correct release of Electron
-- Use that version of electron to create a app in `cwd` named using `appname` for the platform you specified
+- Use that version of electron to create a app in `<out>/<appname>-<platform>`
 
 You should be able to launch the app on the platform you built for. If not, check your settings and try again.
 
