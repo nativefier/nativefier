@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var fs = require('fs')
-var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar', 'overwrite']})
+var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar', 'all', 'overwrite']})
 var packager = require('./')
 var usage = fs.readFileSync(__dirname + '/usage.txt').toString()
 
@@ -16,17 +16,18 @@ if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes
   })
 }
 
-if (!args.dir || !args.name || !args.platform || !args.arch || !args.version) {
+if (!args.dir || !args.name || !args.version || (!args.all && (!args.platform || !args.arch))) {
   console.error(usage)
   process.exit(1)
 }
 
-packager(args, function done (err, appPath) {
+packager(args, function done (err, appPaths) {
   if (err) {
     if (err.message) console.error(err.message)
     else console.error(err, err.stack)
     process.exit(1)
   }
 
-  console.error('Wrote new app to', appPath)
+  if (appPaths.length > 1) console.error('Wrote new apps to:\n' + appPaths.join('\n'))
+  else if (appPaths.length === 1) console.error('Wrote new app to', appPaths[0])
 })

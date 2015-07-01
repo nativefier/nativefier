@@ -25,14 +25,15 @@ Usage: electron-packager <sourcedir> <appname> --platform=<platform> --arch=<arc
   
 Required options
 
-platform           linux, win32, darwin
-arch               ia32, x64
+platform           all, or one or more of: linux, win32, darwin (comma-delimited if multiple)
+arch               all, ia32, x64
 version            see https://github.com/atom/electron/releases
                   
 Example            electron-packager ./ FooBar --platform=darwin --arch=x64 --version=0.25.1
 
 Optional options
 
+all                equivalent to --platform=all --arch=all
 out                the dir to put the app into at the end. defaults to current working dir
 icon               the icon file to use as the icon for the app
 app-bundle-id      bundle identifier to use in the app plist
@@ -40,6 +41,7 @@ app-version        version to set for the app
 helper-bundle-id   bundle identifier to use in the app helper plist
 ignore             do not copy files into App whose filenames regex .match this string
 prune              runs `npm prune --production` on the app
+overwrite          if output directory for a platform already exists, replaces it rather than skipping it
 asar               packages the source code within your app into an archive
 sign               should contain the identity to be used when running `codesign` (OS X only)
 version-string     should contain a hash of the application metadata to be embedded into the executable (Windows only). Keys supported
@@ -58,7 +60,7 @@ version-string     should contain a hash of the application metadata to be embed
 This will:
 
 - Find or download the correct release of Electron
-- Use that version of electron to create a app in `<out>/<appname>-<platform>`
+- Use that version of electron to create a app in `<out>/<appname>-<platform>-<arch>`
 
 You should be able to launch the app on the platform you built for. If not, check your settings and try again.
 
@@ -80,15 +82,21 @@ The source directory.
 The application name.
 
 `platform` - *String*  
-Allowed values: *linux, win32, darwin*
+Allowed values: *linux, win32, darwin, all*  
+Not required if `all` is used.  
+Arbitrary combinations of individual platforms are also supported via a comma-delimited string or array of strings.
 
 `arch` - *String*  
-Allowed values: *ia32, x64*
+Allowed values: *ia32, x64, all*  
+Not required if `all` is used.
 
 `version` - *String*  
 Electron version (without the 'v'). See https://github.com/atom/electron/releases
 
 **Optional**  
+`all` - *Boolean*  
+Shortcut for `--arch=all --platform=all`
+
 `out` - *String*
 
 `icon` - *String*
@@ -103,9 +111,22 @@ Electron version (without the 'v'). See https://github.com/atom/electron/release
 
 `prune` - *Boolean*
 
+`overwrite` - *Boolean*
+
 `asar` - *Boolean*
 
 `sign` - *String*
+
+`version-string` - *Object*  
+Object hash of application metadata to embed into the executable (Windows only):  
+* `CompanyName`
+* `LegalCopyright`
+* `FileDescription`
+* `OriginalFilename`
+* `FileVersion`
+* `ProductVersion`
+* `ProductName`
+* `InternalName`
 
 ##### callback
 

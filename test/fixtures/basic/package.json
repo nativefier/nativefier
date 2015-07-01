@@ -1,0 +1,9 @@
+{
+  "main": "main.js",
+  "dependencies": {
+    "run-series": "^1.1.1"
+  },
+  "devDependencies": {
+    "run-waterfall": "^1.1.1"
+  }
+}

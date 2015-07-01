@@ -26,18 +26,20 @@
     "ncp": "^2.0.0",
     "plist": "^1.1.0",
     "rcedit": "^0.3.0",
-    "rimraf": "^2.3.2"
+    "rimraf": "^2.3.2",
+    "run-series": "^1.1.1"
   },
   "devDependencies": {
+    "run-waterfall": "^1.1.1",
     "standard": "^3.3.2",
     "tape": "^4.0.0"
   },
   "scripts": {
-    "test": "standard && node test/test.js"
+    "test": "standard && tape test"
   },
   "standard": {
     "ignore": [
-      "test/dist"
+      "test/fixtures/**/node_modules"
     ]
   }
 }
