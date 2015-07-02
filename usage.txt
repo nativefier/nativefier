@@ -21,3 +21,15 @@ prune              runs `npm prune --production` on the app
 overwrite          if output directory for a platform already exists, replaces it rather than skipping it
 asar               packages the source code within your app into an archive
 sign               should contain the identity to be used when running `codesign` (OS X only)
+version-string     should contain a hash of the application metadata to be embedded into the executable (Windows only).
+                   These can be specified on the command line via dot notation,
+                   e.g. --version-string.CompanyName="Company Inc." --version-string.ProductName="Product"
+                   Keys supported:
+                   - CompanyName
+                   - LegalCopyright
+                   - FileDescription
+                   - OriginalFilename
+                   - FileVersion
+                   - ProductVersion
+                   - ProductName
+                   - InternalName
