@@ -9,6 +9,10 @@ Simply a fork with a small layer of abstraction on top of [electron-packager](ht
 
 I did this because I was tired of having to `⌘-tab or alt-tab` to my browser and then search through the numerous tabs open when I was using [Whatsapp Web](http://web.whatsapp.com) or [Facebook Messenger](http://messenger.com).
 
+### Notes
+
+A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
+
 ## Installation
 
 ```bash
@@ -70,3 +74,4 @@ $ nativefier Messenger --platform=darwin --arch=x64 --version=0.29.1 --target='h
 ## Todo
 
 - Set the app icon from a url in the CLI
+- Set the app window dimensions from the CLI
