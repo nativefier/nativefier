@@ -35,7 +35,7 @@ var appArgs = {
     name: args.name,
     targetUrl: args.target
 };
-fs.writeFileSync('./app/targetUrl.txt', JSON.stringify(appArgs));
+fs.writeFileSync(__dirname +  '/app/targetUrl.txt', JSON.stringify(appArgs));
 
 
 packager(args, function done(err, appPaths) {
