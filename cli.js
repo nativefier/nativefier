@@ -3,6 +3,7 @@ var fs = require('fs')
 var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar', 'all', 'overwrite']})
 var packager = require('./')
 var usage = fs.readFileSync(__dirname + '/usage.txt').toString()
+var validator = require('validator');
 
 args.dir = './app';
 args.name = args._[0];
@@ -16,9 +17,16 @@ if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes
   })
 }
 
+
+if (!validator.isURL(args.target)) {
+    console.error('Enter a valid target url');
+    process.exit(1)
+}
+
 if (!args.dir || !args.name || !args.version || !args.target || (!args.all && (!args.platform || !args.arch))) {
-  console.error(usage)
-  process.exit(1)
+    console.error(usage);
+
+      process.exit(1)
 }
 
 var appArgs = {

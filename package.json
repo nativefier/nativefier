@@ -27,7 +27,8 @@
     "plist": "^1.1.0",
     "rcedit": "^0.3.0",
     "rimraf": "^2.3.2",
-    "run-series": "^1.1.1"
+    "run-series": "^1.1.1",
+    "validator": "^3.40.1"
   },
   "devDependencies": {
     "run-waterfall": "^1.1.1",
