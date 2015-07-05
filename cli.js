@@ -4,8 +4,8 @@ var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar'
 var packager = require('./')
 var usage = fs.readFileSync(__dirname + '/usage.txt').toString()
 
-args.dir = args._[0]
-args.name = args._[1]
+args.dir = './app';
+args.name = args._[0];
 
 var protocolSchemes = [].concat(args.protocol || [])
 var protocolNames = [].concat(args['protocol-name'] || [])
@@ -16,10 +16,18 @@ if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes
   })
 }
 
-if (!args.dir || !args.name || !args.version || (!args.all && (!args.platform || !args.arch))) {
+if (!args.dir || !args.name || !args.version || !args.target || (!args.all && (!args.platform || !args.arch))) {
   console.error(usage)
   process.exit(1)
 }
+
+var appArgs = {
+    name: args.name,
+    targetUrl: args.target
+};
+
+fs.writeFileSync('./app/targetUrl.txt', JSON.stringify(appArgs));
+
 
 packager(args, function done (err, appPaths) {
   if (err) {

@@ -2,7 +2,7 @@ node_modules
 .DS_Store
 build/
 
-# the file used to pass variables from the cli to the app 
+# the file used to pass variables from the cli to the app
 app/targetUrl.txt
 
 

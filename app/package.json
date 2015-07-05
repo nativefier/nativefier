@@ -1,0 +1,19 @@
+{
+  "name": "NativeFier",
+  "version": "0.0.1",
+  "description": "Wrap single-page web apps natiely",
+  "main": "main.js",
+  "dependencies": {
+    "electron-prebuilt": "^0.29.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "desktop",
+    "electron"
+  ],
+  "author": "Jia Hao",
+  "license": "ISC"
+}
