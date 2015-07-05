@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skewedlines/Nativefier"
+    "url": "https://github.com/skewedlines/Nativefier"
   },
   "author": "Jia Hao",
   "license": "BSD-2-Clause",
@@ -42,5 +42,8 @@
     "ignore": [
       "test/fixtures/**/node_modules"
     ]
+  },
+  "directories": {
+    "test": "test"
   }
 }
