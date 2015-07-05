@@ -1,35 +1,35 @@
-# electron-packager
+# Nativefier
 
-Package your electron app in OS executables (.app, .exe, etc) via JS or CLI. Supports building Windows, Linux or Mac executables.
+## Introduction
+[![NPM](https://nodei.co/npm/nativefier.png)](https://nodei.co/npm/nativefier/)
 
-*formerly known as atom-shell-packager*
+Package and wraps a single-page web app in an [electron](http://electron.atom.io) OS executable (.app, .exe, etc) via the command line. 
 
-[![NPM](https://nodei.co/npm/electron-packager.png)](https://nodei.co/npm/electron-packager/)
+Simply a fork with a small layer of abstraction on top of [electron-packager](https://github.com/maxogden/electron-packager) for the CLI.
 
-[![Build Status](https://travis-ci.org/maxogden/electron-packager.svg?branch=master)](https://travis-ci.org/maxogden/electron-packager)
+I did this because I was tired of having to `⌘-tab or alt-tab` to my browser and then search through the numerous tabs open when I was using [Whatsapp Web](http://web.whatsapp.com) or [Facebook Messenger](http://messenger.com).
 
-### installation
+## Installation
 
-```
-# for use in npm scripts
-npm i electron-packager --save-dev
-
+```bash
 # for use from cli
-npm i electron-packager -g
+npm install nativefier -g
 ```
 
-### usage
+## Usage
 
-```
-Usage: electron-packager <sourcedir> <appname> --platform=<platform> --arch=<arch> --version=<version>
-  
+```css
+Usage: nativefier <appname> --target=<url> --platform=<platform> --arch=<arch> --version=<version>
+
 Required options
 
+appname            name for the app
+target             target url for the single page app
 platform           all, or one or more of: linux, win32, darwin (comma-delimited if multiple)
 arch               all, ia32, x64
 version            see https://github.com/atom/electron/releases
-                  
-Example            electron-packager ./ FooBar --platform=darwin --arch=x64 --version=0.25.1
+
+Example            nativefier Messenger --target=http://messenger.com --platform=darwin --arch=x64 --version=0.28.2
 
 Optional options
 
@@ -56,93 +56,17 @@ version-string     should contain a hash of the application metadata to be embed
                    - ProductVersion
                    - ProductName
                    - InternalName
-                   
-
 ```
 
-This will:
+See [electron-packager](https://github.com/maxogden/electron-packager) for more details.
+## Examples
 
-- Find or download the correct release of Electron
-- Use that version of electron to create a app in `<out>/<appname>-<platform>-<arch>`
+Creating a native wrapper of `http://messenger.com` for `OSX x64`:
 
-You should be able to launch the app on the platform you built for. If not, check your settings and try again.
-
-**Be careful** not to include node_modules you don't want into your final app. `electron-packager`, `electron-prebuilt` and `.git` will be ignored by default. You can use `--ignore` to ignore files and folders, e.g. `--ignore=node_modules/electron-packager` or `--ignore="node_modules/(electron-packager|electron-prebuilt)"`.
-
-### API
-```javascript
-var packager = require('electron-packager')
-packager(opts, function done (err, appPath) { })
+```bash
+$ nativefier Messenger --platform=darwin --arch=x64 --version=0.29.1 --target='http://messenger.com' --overwrite
 ```
-#### packager(opts, callback)
 
-##### opts
-**Required**  
-`dir` - *String*  
-The source directory.
+## Todo
 
-`name` - *String*  
-The application name.
-
-`platform` - *String*  
-Allowed values: *linux, win32, darwin, all*  
-Not required if `all` is used.  
-Arbitrary combinations of individual platforms are also supported via a comma-delimited string or array of strings.
-
-`arch` - *String*  
-Allowed values: *ia32, x64, all*  
-Not required if `all` is used.
-
-`version` - *String*  
-Electron version (without the 'v'). See https://github.com/atom/electron/releases
-
-**Optional**  
-`all` - *Boolean*  
-Shortcut for `--arch=all --platform=all`
-
-`out` - *String*
-
-`icon` - *String*
-
-`app-bundle-id` - *String*
-
-`app-version` - *String*
-
-`helper-bundle-id` - *String*
-
-`ignore` - *String*
-
-`prune` - *Boolean*
-
-`overwrite` - *Boolean*
-
-`asar` - *Boolean*
-
-`sign` - *String*
-
-`version-string` - *Object*  
-Object hash of application metadata to embed into the executable (Windows only):  
-* `CompanyName`
-* `LegalCopyright`
-* `FileDescription`
-* `OriginalFilename`
-* `FileVersion`
-* `ProductVersion`
-* `ProductName`
-* `InternalName`
-
-##### callback
-
-`err` - *Error*  
-Contains errors if any.
-
-`appPath` - *String*  
-Path to the newly created application.
-
-### Building windows apps from non-windows platforms
-
-If you run this on windows and you want to set the icon for your app using the `--icon` option, it requires running a thing called `rcedit.exe` (via [this](https://github.com/atom/node-rcedit)), which means you will need to install `wine` and have it available in your path. To do this on Mac OS you can `brew install wine`.
-
-### related
-
-- [grunt-electron](https://github.com/sindresorhus/grunt-electron) - grunt plugin for electron-packager
+- Set the app icon from a url in the CLI

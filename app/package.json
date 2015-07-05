@@ -1,7 +1,7 @@
 {
-  "name": "NativeFier",
+  "name": "Nativefier Placeholder",
   "version": "0.0.1",
-  "description": "Wrap single-page web apps natiely",
+  "description": "Placeholder for the nativefier cli to override with a target url",
   "main": "main.js",
   "dependencies": {
     "electron-prebuilt": "^0.29.1"

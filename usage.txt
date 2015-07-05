@@ -2,12 +2,13 @@ Usage: nativefier <appname> --target=<url> --platform=<platform> --arch=<arch> -
 
 Required options
 
+appname            name for the app
 target             target url for the single page app
 platform           all, or one or more of: linux, win32, darwin (comma-delimited if multiple)
 arch               all, ia32, x64
 version            see https://github.com/atom/electron/releases
 
-Example            electron-packager FooBar --target=http://messenger.com --platform=darwin --arch=x64 --version=0.28.2
+Example            nativefier Messenger --target=http://messenger.com --platform=darwin --arch=x64 --version=0.28.2
 
 Optional options
 
