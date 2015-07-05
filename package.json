@@ -1,6 +1,6 @@
 {
   "name": "nativefier",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Wrap single-page web apps natively",
   "main": "index.js",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/skewedlines/Nativefier"
+    "url": "git+https://github.com/skewedlines/Nativefier.git"
   },
   "author": "Jia Hao",
   "license": "BSD-2-Clause",
@@ -45,5 +45,11 @@
   },
   "directories": {
     "test": "test"
-  }
+  },
+  "keywords": [
+    "native",
+    "electron",
+    "package",
+    "cli"
+  ]
 }
