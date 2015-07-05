@@ -3,15 +3,18 @@
 ## Introduction
 [![NPM](https://nodei.co/npm/nativefier.png)](https://nodei.co/npm/nativefier/)
 
-Package and wraps a single-page web app in an [electron](http://electron.atom.io) OS executable (.app, .exe, etc) via the command line. 
+Packages and wraps a single-page web app in an [Electron](http://electron.atom.io) OS executable (.app, .exe, etc) via the command line. 
 
-Simply a fork with a small layer of abstraction on top of [electron-packager](https://github.com/maxogden/electron-packager) for the CLI.
+Simply a fork with a small layer of abstraction on top of [electron-packager](https://github.com/maxogden/electron-packager) for the command line.
 
 I did this because I was tired of having to `⌘-tab or alt-tab` to my browser and then search through the numerous tabs open when I was using [Whatsapp Web](http://web.whatsapp.com) or [Facebook Messenger](http://messenger.com).
 
 ### Notes
 
 A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
+
+
+*Tested only on OSX*
 
 ## Installation
 
@@ -22,7 +25,7 @@ npm install nativefier -g
 
 ## Usage
 
-```css
+```
 Usage: nativefier <appname> --target=<url> --platform=<platform> --arch=<arch> --version=<version>
 
 Required options
@@ -39,7 +42,7 @@ Optional options
 
 all                equivalent to --platform=all --arch=all
 out                the dir to put the app into at the end. defaults to current working dir
-icon               the icon file to use as the icon for the app
+icon               the icon file to use as the icon for the app (should be a .icns file on OSX)
 app-bundle-id      bundle identifier to use in the app plist
 app-version        version to set for the app
 helper-bundle-id   bundle identifier to use in the app helper plist
@@ -75,3 +78,4 @@ $ nativefier Messenger --platform=darwin --arch=x64 --version=0.29.1 --target='h
 
 - Set the app icon from a url in the CLI
 - Set the app window dimensions from the CLI
+- Dock badges
