@@ -1,4 +1,4 @@
-Usage: electron-packager <appname> --target=<url> --platform=<platform> --arch=<arch> --version=<version>
+Usage: nativefier <appname> --target=<url> --platform=<platform> --arch=<arch> --version=<version>
 
 Required options
 
