@@ -1,21 +1,21 @@
 {
-  "name": "electron-packager",
-  "version": "5.0.0",
-  "description": "package your electron app in OS executables (.app, .exe, etc) via JS or CLI",
+  "name": "nativefier",
+  "version": "1.0.0",
+  "description": "Wrap single-page web apps natively",
   "main": "index.js",
   "bin": {
-    "electron-packager": "cli.js"
+    "nativefier": "cli.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maxogden/electron-packager.git"
+    "url": "git+https://github.com/skewedlines/Nativefier"
   },
-  "author": "max ogden",
+  "author": "Jia Hao",
   "license": "BSD-2-Clause",
   "bugs": {
-    "url": "https://github.com/maxogden/electron-packager/issues"
+    "url": "https://github.com/skewedlines/Nativefier/issues"
   },
-  "homepage": "https://github.com/maxogden/electron-packager",
+  "homepage": "https://github.com/skewedlines/Nativefier",
   "dependencies": {
     "asar": "^0.6.1",
     "electron-download": "^1.0.0",
