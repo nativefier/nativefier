@@ -17,23 +17,24 @@ if (protocolSchemes && protocolNames && protocolNames.length === protocolSchemes
     })
 }
 
-
-if (!validator.isURL(args.target)) {
-    console.error('Enter a valid target url');
-    process.exit(1);
-}
-
 if (!args.dir || !args.name || !args.version || !args.target || (!args.all && (!args.platform || !args.arch))) {
     console.error(usage);
 
     process.exit(1);
 }
 
+
+if (!validator.isURL(args.target)) {
+    console.error('Enter a valid target url');
+    process.exit(1);
+}
+
+// writes parameters for the app into a text file
+// I'm not exactly sure how to pass these as an argument through code
 var appArgs = {
     name: args.name,
     targetUrl: args.target
 };
-
 fs.writeFileSync('./app/targetUrl.txt', JSON.stringify(appArgs));
 
 
