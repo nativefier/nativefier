@@ -1,6 +1,6 @@
 {
   "name": "nativefier",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Wrap single-page web apps natively",
   "main": "index.js",
   "bin": {
