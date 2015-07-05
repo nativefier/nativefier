@@ -18,6 +18,10 @@ ipc.on('params', function(message) {
     webView.setAttribute('minwidth', '600');
     webView.setAttribute('minheight', '800');
 
+    webView.addEventListener('new-window', function(e) {
+        require('shell').openExternal(e.url);
+    });
+
     var webViewDiv = document.getElementById('webViewDiv');
     webViewDiv.appendChild(webView);
 
@@ -45,5 +49,8 @@ ipc.on('params', function(message) {
         var webView = document.getElementById('webView');
         webView.undo();
     });
+
+
+
 });
 

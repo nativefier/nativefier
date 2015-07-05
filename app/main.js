@@ -31,7 +31,7 @@ app.on('ready', function() {
     );
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
-    mainWindow.openDevTools();
+    //mainWindow.openDevTools();
     mainWindow.webContents.on('did-finish-load', function() {
         fs.readFile(APP_ARGS_FILE_PATH, 'utf8', function (error, data) {
             if (error) {
