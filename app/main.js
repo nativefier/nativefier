@@ -31,13 +31,12 @@ app.on('ready', function() {
     );
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
-    //mainWindow.openDevTools();
     mainWindow.webContents.on('did-finish-load', function() {
-
-        fs.readFile(__dirname + '/targetUrl.txt', 'utf8', function (error, data) {
+        fs.readFile(APP_ARGS_FILE_PATH, 'utf8', function (error, data) {
             if (error) {
                 console.error('Error reading file: ' + error);
             } else {
+                console.log(data);
                 mainWindow.webContents.send('params', data);
             }
 

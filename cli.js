@@ -4,8 +4,10 @@ var args = require('minimist')(process.argv.slice(2), {boolean: ['prune', 'asar'
 var packager = require('./');
 var usage = fs.readFileSync(__dirname + '/usage.txt').toString();
 var validator = require('validator');
+var tempDir = require('./tempDir');
 
-args.dir = './app';
+
+args.dir = 'blah'; // set to true first
 args.name = args._[0];
 
 var protocolSchemes = [].concat(args.protocol || []);
@@ -29,22 +31,24 @@ if (!validator.isURL(args.target)) {
     process.exit(1);
 }
 
-// writes parameters for the app into a text file
-// I'm not exactly sure how to pass these as an argument through code
-var appArgs = {
-    name: args.name,
-    targetUrl: args.target
-};
-fs.writeFileSync(__dirname +  '/app/targetUrl.txt', JSON.stringify(appArgs));
+tempDir(args.name, args.target, function (error, appDir) {
 
-
-packager(args, function done(err, appPaths) {
-    if (err) {
-        if (err.message) console.error(err.message);
-        else console.error(err, err.stack);
+    if (error) {
+        console.error(error);
         process.exit(1);
+    } else {
+
+        args.dir = appDir;
+        packager(args, function done(err, appPaths) {
+            if (err) {
+                if (err.message) console.error(err.message);
+                else console.error(err, err.stack);
+                process.exit(1);
+            }
+
+            if (appPaths.length > 1) console.error('Wrote new apps to:\n' + appPaths.join('\n'));
+            else if (appPaths.length === 1) console.error('Wrote new app to', appPaths[0]);
+        });
     }
 
-    if (appPaths.length > 1) console.error('Wrote new apps to:\n' + appPaths.join('\n'));
-    else if (appPaths.length === 1) console.error('Wrote new app to', appPaths[0]);
 });

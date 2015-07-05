@@ -28,6 +28,7 @@
     "rcedit": "^0.3.0",
     "rimraf": "^2.3.2",
     "run-series": "^1.1.1",
+    "temp": "^0.8.3",
     "validator": "^3.40.1"
   },
   "devDependencies": {
