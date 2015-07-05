@@ -6,7 +6,6 @@ var fs = require('fs');
 var temp = require('temp').track();
 var ncp = require('ncp').ncp;
 
-
 /**
  * @callback tempDirCallback
  * @param error
@@ -24,10 +23,10 @@ var ncp = require('ncp').ncp;
 module.exports = function (name, targetURL, callback) {
 
     var tempDir = temp.path();
-
-    ncp('./app', tempDir, function (error) {
+    ncp(__dirname + '/app', tempDir, function (error) {
         if (error) {
-            callback('Error creating temporary directory', null);
+            console.error(error);
+            callback('Error Copying temporary directory\n' + error, null);
 
         } else {
 
