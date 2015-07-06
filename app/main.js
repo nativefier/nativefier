@@ -2,10 +2,10 @@
  * Created by JiaHao on 4/7/15.
  */
 
-
 var app = require('app');
 var fs = require('fs');
 var BrowserWindow = require('browser-window');
+var ipc = require('ipc');
 
 const APP_ARGS_FILE_PATH = __dirname + '/targetUrl.txt';
 require('crash-reporter').start();
@@ -31,7 +31,7 @@ app.on('ready', function() {
     );
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
-    //mainWindow.openDevTools();
+    mainWindow.openDevTools();
     mainWindow.webContents.on('did-finish-load', function() {
         fs.readFile(APP_ARGS_FILE_PATH, 'utf8', function (error, data) {
             if (error) {
@@ -45,9 +45,22 @@ app.on('ready', function() {
         })
     });
 
+    // if the window is focused, clear the badge
+    mainWindow.on('focus', function () {
+        app.dock.setBadge('');
+    });
 
     mainWindow.on('closed', function() {
         mainWindow = null;
-    })
+    });
+});
 
+// listen for a notification message
+ipc.on('notification-message', function(event, arg) {
+    console.log(arg);  // prints "ping"
+    if (arg === 'TITLE_CHANGED') {
+        if (!mainWindow.isFocused()) {
+            app.dock.setBadge('●');
+        }
+    }
 });

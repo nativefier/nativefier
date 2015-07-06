@@ -22,6 +22,12 @@ ipc.on('params', function(message) {
         require('shell').openExternal(e.url);
     });
 
+    // We check for desktop notifications by listening to a title change in the webview
+    // Not elegant, but it will have to do
+    webView.addEventListener('page-title-set', function(event) {
+        ipc.send('notification-message', 'TITLE_CHANGED');
+    });
+
     var webViewDiv = document.getElementById('webViewDiv');
     webViewDiv.appendChild(webView);
 
@@ -49,8 +55,5 @@ ipc.on('params', function(message) {
         var webView = document.getElementById('webView');
         webView.undo();
     });
-
-
-
 });
 
