@@ -7,7 +7,7 @@ var ipc = require('ipc');
 ipc.on('params', function(message) {
 
     var appArgs = JSON.parse(message);
-
+    console.log(appArgs);
     document.title = appArgs.name;
 
     var webView = document.createElement('webview');
@@ -24,9 +24,11 @@ ipc.on('params', function(message) {
 
     // We check for desktop notifications by listening to a title change in the webview
     // Not elegant, but it will have to do
-    webView.addEventListener('page-title-set', function(event) {
-        ipc.send('notification-message', 'TITLE_CHANGED');
-    });
+    if (appArgs.badge) {
+        webView.addEventListener('page-title-set', function(event) {
+            ipc.send('notification-message', 'TITLE_CHANGED');
+        });
+    }
 
     var webViewDiv = document.getElementById('webViewDiv');
     webViewDiv.appendChild(webView);
