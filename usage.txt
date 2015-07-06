@@ -36,3 +36,5 @@ version-string     should contain a hash of the application metadata to be embed
                    - ProductName
                    - InternalName
 badge              if the target app should show badges in the OSX dock on receipt of desktop notifications
+width              window width (default=1280)
+height             window height (default=800)

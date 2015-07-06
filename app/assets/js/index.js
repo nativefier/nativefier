@@ -15,8 +15,8 @@ ipc.on('params', function(message) {
     webView.setAttribute('id', 'webView');
     webView.setAttribute('src', appArgs.targetUrl);
     webView.setAttribute('autosize', 'on');
-    webView.setAttribute('minwidth', '600');
-    webView.setAttribute('minheight', '800');
+    webView.setAttribute('minwidth', '100');
+    webView.setAttribute('minheight', '100');
 
     webView.addEventListener('new-window', function(e) {
         require('shell').openExternal(e.url);

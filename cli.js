@@ -32,7 +32,7 @@ if (!validator.isURL(args.target)) {
     process.exit(1);
 }
 
-tempDir(args.name, args.target, args.badge, function (error, appDir) {
+tempDir(args.name, args.target, args.badge, args.width, args.height, function (error, appDir) {
 
     if (error) {
         console.error(error);

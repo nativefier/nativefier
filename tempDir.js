@@ -18,9 +18,12 @@ var ncp = require('ncp').ncp;
  *
  * @param {string} name
  * @param {string} targetURL
+ * @param {boolean} badge
+ * @param width
+ * @param height
  * @param {tempDirCallback} callback
  */
-module.exports = function (name, targetURL, badge, callback) {
+module.exports = function (name, targetURL, badge, width, height, callback) {
 
     var tempDir = temp.path();
     ncp(__dirname + '/app', tempDir, function (error) {
@@ -33,7 +36,9 @@ module.exports = function (name, targetURL, badge, callback) {
             var appArgs = {
                 name: name,
                 targetUrl: targetURL,
-                badge: badge
+                badge: badge,
+                width: width,
+                height: height
             };
 
             fs.writeFileSync(tempDir + '/targetUrl.txt', JSON.stringify(appArgs));

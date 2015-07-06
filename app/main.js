@@ -12,6 +12,8 @@ require('crash-reporter').start();
 
 var mainWindow = null;
 
+var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
 app.on('window-all-closed', function() {
     if (process.platform != 'darwin') {
         app.quit();
@@ -21,8 +23,8 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
     mainWindow = new BrowserWindow(
         {
-            width: 1280,
-            height: 800,
+            width: appArgs.width || 1280,
+            height: appArgs.height || 800,
             'web-preferences': {
                 javascript: true,
                 plugins: true,
@@ -33,16 +35,8 @@ app.on('ready', function() {
 
     //mainWindow.openDevTools();
     mainWindow.webContents.on('did-finish-load', function() {
-        fs.readFile(APP_ARGS_FILE_PATH, 'utf8', function (error, data) {
-            if (error) {
-                console.error('Error reading app config file: ' + error);
-            } else {
-                console.log(data);
-                mainWindow.webContents.send('params', data);
 
-            }
-
-        })
+        mainWindow.webContents.send('params', JSON.stringify(appArgs));
     });
 
     // if the window is focused, clear the badge

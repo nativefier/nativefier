@@ -63,11 +63,17 @@ version-string     should contain a hash of the application metadata to be embed
                    - ProductName
                    - InternalName
 badge              if the target app should show badges in the OSX dock on receipt of desktop notifications
+width              window width (default=1280)
+height             window height (default=800)
 ```
 
 See [electron-packager](https://github.com/maxogden/electron-packager) for more details.
+### Icon
+On OSX, the icon parameter should be a path to an `.icns` file. [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
-#### OSX Dock Badge
+To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
+
+### OSX Dock Badge
 
 On OSX, it is desired for the App dock icon to show a badge on the receipt of a desktop notification. 
 
@@ -91,7 +97,6 @@ Creating an native wrapper for Facebook Messenger with the following arguments:
 $ nativefier Messenger http://messenger.com --platform=darwin --arch=x64 --version=0.29.1 --overwrite --badge
 ```
 
-## Todo
+## Issues
 
-- Set the app icon from a url in the CLI
-- Set the app window dimensions from the CLI
+- Better workaround for desktop notifications and OSX dock badges
