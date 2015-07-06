@@ -9,6 +9,7 @@ var tempDir = require('./tempDir');
 
 args.dir = 'blah'; // set to true first
 args.name = args._[0];
+args.target = args._[1];
 
 var protocolSchemes = [].concat(args.protocol || []);
 var protocolNames = [].concat(args['protocol-name'] || []);

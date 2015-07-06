@@ -10,23 +10,22 @@ Simply a fork with a small layer of abstraction on top of [electron-packager](ht
 I did this because I was tired of having to `⌘-tab or alt-tab` to my browser and then search through the numerous tabs open when I was using [Whatsapp Web](http://web.whatsapp.com) or [Facebook Messenger](http://messenger.com).
 
 ### Notes
-
+*Tested only on OSX, but should work for windows and linux*
+#### Back Button
 A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
 
-
-*Tested only on OSX*
 
 ## Installation
 
 ```bash
 # for use from cli
-npm install nativefier -g
+$ npm install nativefier -g
 ```
 
 ## Usage
 
 ```
-Usage: nativefier <appname> --target=<url> --platform=<platform> --arch=<arch> --version=<version>
+Usage: nativefier <appname> <target> --platform=<platform> --arch=<arch> --version=<version>
 
 Required options
 
@@ -63,19 +62,36 @@ version-string     should contain a hash of the application metadata to be embed
                    - ProductVersion
                    - ProductName
                    - InternalName
+badge              if the target app should show badges in the OSX dock on receipt of desktop notifications
 ```
 
 See [electron-packager](https://github.com/maxogden/electron-packager) for more details.
+
+#### OSX Dock Badge
+
+On OSX, it is desired for the App dock icon to show a badge on the receipt of a desktop notification. 
+
+There is no known way to intercept and set an event listener for a desktop notification triggered by the [`<webview>`](https://github.com/atom/electron/blob/master/docs/api/web-view-tag.md), the current workaround is to listen for `document.title` changes within the `<webview>`. Typical web apps like Facebook Messenger will change the `document.title` to "John sent a message..." on the receipt of a desktop notification, and this is what we will listen for to trigger the app badge on the dock.
+
+However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood. 
+
 ## Examples
 
-Creating a native wrapper of `http://messenger.com` for `OSX x64`:
+Creating an native wrapper for Facebook Messenger with the following arguments:
+
+- App Name: `Messenger`
+- Target Url: `http://messenger.com`
+- Platform: `darwin` (OSX)
+- Architecture: `x64`
+- Electron Version: `0.29.1`
+- Override existing app (if any)
+- OSX dock badges on (See notes above)
 
 ```bash
-$ nativefier Messenger --platform=darwin --arch=x64 --version=0.29.1 --target='http://messenger.com' --overwrite
+$ nativefier Messenger http://messenger.com --platform=darwin --arch=x64 --version=0.29.1 --overwrite --badge
 ```
 
 ## Todo
 
 - Set the app icon from a url in the CLI
 - Set the app window dimensions from the CLI
-- Dock badges

@@ -1,4 +1,4 @@
-Usage: nativefier <appname> --target=<url> --platform=<platform> --arch=<arch> --version=<version>
+Usage: nativefier <appname> <target> --platform=<platform> --arch=<arch> --version=<version>
 
 Required options
 
@@ -35,3 +35,4 @@ version-string     should contain a hash of the application metadata to be embed
                    - ProductVersion
                    - ProductName
                    - InternalName
+badge              if the target app should show badges in the OSX dock on receipt of desktop notifications
