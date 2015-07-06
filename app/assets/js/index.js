@@ -25,8 +25,10 @@ ipc.on('params', function(message) {
     // We check for desktop notifications by listening to a title change in the webview
     // Not elegant, but it will have to do
     if (appArgs.badge) {
-        webView.addEventListener('page-title-set', function(event) {
-            ipc.send('notification-message', 'TITLE_CHANGED');
+        webView.addEventListener('did-finish-load', function(e) {
+            webView.addEventListener('page-title-set', function(event) {
+                ipc.send('notification-message', 'TITLE_CHANGED');
+            });
         });
     }
 
