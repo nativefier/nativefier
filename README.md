@@ -1,19 +1,15 @@
 # Nativefier
 
+![Dock Screenshot](https://raw.githubusercontent.com/skewedlines/Nativefier/master/screenshots/Dock%20Screenshot.png)
+
 ## Introduction
 [![NPM](https://nodei.co/npm/nativefier.png)](https://nodei.co/npm/nativefier/)
 
 Packages and wraps a single-page web app in an [Electron](http://electron.atom.io) OS executable (.app, .exe, etc) via the command line. 
 
-Simply a fork with a small layer of abstraction on top of [electron-packager](https://github.com/maxogden/electron-packager) for the command line.
+I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
 
-I did this because I was tired of having to `⌘-tab or alt-tab` to my browser and then search through the numerous tabs open when I was using [Whatsapp Web](http://web.whatsapp.com) or [Facebook Messenger](http://messenger.com).
-
-### Notes
-*Tested only on OSX, but should work for windows and linux*
-#### Back Button
-A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
-
+*A fork of the awesome [electron-packager](https://github.com/maxogden/electron-packager).*
 
 ## Installation
 
@@ -68,6 +64,7 @@ height             window height (default=800)
 ```
 
 See [electron-packager](https://github.com/maxogden/electron-packager) for more details.
+
 ### Icon
 On OSX, the icon parameter should be a path to an `.icns` file. [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
@@ -96,6 +93,17 @@ Creating an native wrapper for Facebook Messenger with the following arguments:
 ```bash
 $ nativefier Messenger http://messenger.com --platform=darwin --arch=x64 --version=0.29.1 --overwrite --badge
 ```
+
+## How It Works
+
+A template app with the appropriate event listeners and callbacks set up is included in the `/app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and the core methods of `electron-packager` is called on that directory.
+
+## Notes
+
+Tested only on OSX, but should work for windows and linux.
+
+### Back Button
+A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
 
 ## Issues
 
