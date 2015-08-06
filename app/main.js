@@ -41,7 +41,9 @@ app.on('ready', function() {
 
     // if the window is focused, clear the badge
     mainWindow.on('focus', function () {
-        app.dock.setBadge('');
+        if (process.platform === 'darwin') {
+            app.dock.setBadge('');
+        }
     });
 
     mainWindow.on('closed', function() {
@@ -51,9 +53,8 @@ app.on('ready', function() {
 
 // listen for a notification message
 ipc.on('notification-message', function(event, arg) {
-    console.log(arg);  // prints "ping"
     if (arg === 'TITLE_CHANGED') {
-        if (!mainWindow.isFocused()) {
+        if (process.platform === 'darwin' && !mainWindow.isFocused()) {
             app.dock.setBadge('●');
         }
     }
