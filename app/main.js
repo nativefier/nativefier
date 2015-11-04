@@ -59,7 +59,3 @@ ipc.on('notification-message', function(event, arg) {
         }
     }
 });
-
-app.on('window-all-closed', function() {
-    app.quit();
-});
