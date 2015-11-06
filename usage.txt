@@ -8,7 +8,7 @@ platform           all, or one or more of: linux, win32, darwin (comma-delimited
 arch               all, ia32, x64
 version            see https://github.com/atom/electron/releases
 
-Example            nativefier Messenger --target=http://messenger.com --platform=darwin --arch=x64 --version=0.28.2
+Example            nativefier Messenger "http://messenger.com" --platform=darwin --arch=x64 --version=0.28.2
 
 Optional options
 
