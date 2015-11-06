@@ -45,6 +45,21 @@ app.on('ready', function() {
             app.dock.setBadge('');
         }
     });
+    
+    // on Mac OS X hide window instead of clising
+    mainWindow.on('close', function(e) {
+        if (process.platform === 'darwin') {
+            mainWindow.hide();
+            e.preventDefault();
+        }
+    });
+
+    // on Mac OSX X show window when clicked on icon
+    if (process.platform === 'darwin') {
+        app.on('activate', function(e) {
+            mainWindow.show();
+        });
+    }
 
     mainWindow.on('closed', function() {
         mainWindow = null;
