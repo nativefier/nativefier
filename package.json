@@ -2,11 +2,14 @@
   "name": "nativefier",
   "version": "6.0.0",
   "description": "Wrap web apps natively",
-  "main": "index.js",
+  "main": "lib/buildApp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
     "watch": "babel --watch src -d lib"
+  },
+  "bin": {
+    "nativefier": "lib/cli.js"
   },
   "repository": {
     "type": "git",
