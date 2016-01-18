@@ -2,6 +2,7 @@
 
 import path from 'path';
 import program from 'commander';
+import async from 'async';
 
 import optionsFactory from './options';
 import buildApp from './buildApp';
@@ -9,21 +10,28 @@ import buildApp from './buildApp';
 const packageJson = require(path.join('..', 'package'));
 
 function main(program) {
-    const options = optionsFactory(
-        program.appName,
-        program.targetUrl,
-        program.platform,
-        program.arch,
-        program.electronVersion,
-        program.outDir,
-        program.overwrite,
-        program.conceal,
-        program.icon,
-        program.badge,
-        program.width,
-        program.height);
 
-    buildApp(options, (error, appPath) => {
+    async.waterfall([
+        callback => {
+            optionsFactory(
+                program.appName,
+                program.targetUrl,
+                program.platform,
+                program.arch,
+                program.electronVersion,
+                program.outDir,
+                program.overwrite,
+                program.conceal,
+                program.icon,
+                program.badge,
+                program.width,
+                program.height, callback);
+        },
+
+        (options, callback) => {
+            buildApp(options, callback);
+        }
+    ], (error, appPath) => {
         if (error) {
             console.error(error);
             return;

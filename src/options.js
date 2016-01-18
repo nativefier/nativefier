@@ -1,12 +1,15 @@
 import os from 'os';
 import path from 'path';
 
+import request from 'request';
+import cheerio from 'cheerio';
 import validator from 'validator';
 
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
+const DEFAULT_APP_NAME = 'My App';
 
-function optionsFactory(name = 'MyApp',
+function optionsFactory(name,
                         targetUrl = 'http://google.com',
                         platform = detectPlatform(),
                         arch = detectArch(),
@@ -17,13 +20,13 @@ function optionsFactory(name = 'MyApp',
                         icon,
                         badge = false,
                         width = 1280,
-                        height = 800) {
+                        height = 800, callback) {
 
     if (!validator.isURL(targetUrl, {require_protocol: true})) {
         throw 'Your Url is invalid!, did you remember to include \'http://\'?';
     }
 
-    return {
+    const options = {
         dir: TEMPLATE_APP_DIR,
 
         name: name,
@@ -45,6 +48,23 @@ function optionsFactory(name = 'MyApp',
         width: width,
         height: height
     }
+
+    if (name && name.length > 0) {
+        options.name = name;
+        callback(null, options);
+        return;
+    }
+
+    getTitle(options.targetUrl, function (error, pageTitle) {
+        if (error) {
+            console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
+            options.name = DEFAULT_APP_NAME;
+        } else {
+            options.name = pageTitle;
+        }
+
+        callback(null, options);
+    });
 }
 
 function detectPlatform() {
@@ -63,6 +83,19 @@ function detectArch() {
         throw `Incompatible architecture ${arch} detected`;
     }
     return os.arch();
+}
+
+function getTitle(url, callback) {
+    request(url, (error, response, body) => {
+        if (error || response.statusCode !== 200) {
+            callback(`Request Error: ${error}, Status Code ${response.statusCode}`);
+            return;
+        }
+
+        const $ = cheerio.load(body);
+        const pageTitle = $("title").text();
+        callback(null, pageTitle);
+    });
 }
 
 export default optionsFactory;
