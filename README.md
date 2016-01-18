@@ -1,106 +1,150 @@
 # Nativefier
 
-![Dock Screenshot](https://raw.githubusercontent.com/skewedlines/Nativefier/master/screenshots/Dock%20Screenshot.png)
+![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
 ## Introduction
-[![NPM](https://nodei.co/npm/nativefier.png)](https://nodei.co/npm/nativefier/)
+Create a desktop application for any single page web application by wrapping it in an OS executable (`.app`, `.exe`, etc.).
 
-Packages and wraps a single-page web app in an [Electron](http://electron.atom.io) OS executable (.app, .exe, etc) via the command line. 
+Applications are packaged with [Electron](http://electron.atom.io) by simply running a simple command.
 
 I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
-
-*A fork of the awesome [electron-packager](https://github.com/maxogden/electron-packager).*
 
 ## Installation
 
 ```bash
-# for use from cli
+# for use from the command line
 $ npm install nativefier -g
 ```
 
 ## Usage
 
-```
-Usage: nativefier <appname> <target> --platform=<platform> --arch=<arch> --version=<version>
+Creating an native desktop app for [medium.com](medium.com):
 
-Required options
-
-appname            name for the app
-target             target url for the single page app
-platform           all, or one or more of: linux, win32, darwin (comma-delimited if multiple)
-arch               all, ia32, x64
-version            see https://github.com/atom/electron/releases
-
-Example            nativefier Messenger --target=http://messenger.com --platform=darwin --arch=x64 --version=0.28.2
-
-Optional options
-
-all                equivalent to --platform=all --arch=all
-out                the dir to put the app into at the end. defaults to current working dir
-icon               the icon file to use as the icon for the app (should be a .icns file on OSX)
-app-bundle-id      bundle identifier to use in the app plist
-app-version        version to set for the app
-helper-bundle-id   bundle identifier to use in the app helper plist
-ignore             do not copy files into App whose filenames regex .match this string
-prune              runs `npm prune --production` on the app
-overwrite          if output directory for a platform already exists, replaces it rather than skipping it
-asar               packages the source code within your app into an archive
-sign               should contain the identity to be used when running `codesign` (OS X only)
-version-string     should contain a hash of the application metadata to be embedded into the executable (Windows only).
-                   These can be specified on the command line via dot notation,
-                   e.g. --version-string.CompanyName="Company Inc." --version-string.ProductName="Product"
-                   Keys supported:
-                   - CompanyName
-                   - LegalCopyright
-                   - FileDescription
-                   - OriginalFilename
-                   - FileVersion
-                   - ProductVersion
-                   - ProductName
-                   - InternalName
-badge              if the target app should show badges in the OSX dock on receipt of desktop notifications
-width              window width (default=1280)
-height             window height (default=800)
+```bash
+$ nativefier http://medium.com
 ```
 
-See [electron-packager](https://github.com/maxogden/electron-packager) for more details.
+Note that nativefier will intelligently attempt to determine the app name. If desired, the app name or other options can be overwritten by specifying the `--name=Medium` as part of the command line options, as such.
 
-### Icon
+```
+$ nativefier --app-name='Some Awesome App' http://medium.com
+```
+
+Other command line options are listed below.
+
+## Options
+```bash
+$ nativefier [options] <targetUrl> [dest]
+```
+
+#### Target Url
+
+The url to point the application at. Take note that you have to enter the full url, i.e. `http://google.com`, and simply entering `google.com` will not work.
+
+#### [dest]
+
+Specifies the destination directory to build the app to, defaults to the current working directory.
+
+#### Help
+
+```
+-h, --help
+```
+
+Prints the usage information.
+
+#### [App Name]
+
+```
+-n, --app-name <value>
+```
+
+The name of the application, which will affect strings in titles and the icon.
+
+#### [platform]
+
+```
+-p, --platform <value>
+```
+Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `win32`, or `darwin`.
+
+#### [architecture]
+
+```
+-a, --arch <value>
+```
+
+Automatically determined based on the current OS. Can be overwritten by specifying either `ia32` or `x64`.
+
+#### [Electron Version]
+
+```
+-e, --electron-version <value>
+```
+
+Electron version without the `v`, see https://github.com/atom/electron/releases.
+
+
+#### [Overwrite]
+
+```
+-o, --overwrite
+```
+
+Specifies if the destination directory should be overwritten.
+
+#### [Conceal]
+
+```
+-c, --conceal
+```
+
+Specifies if the source code within the nativefied app should be packaged into an archive, defaults to false, [read more](http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/).
+
+#### [Icon]
+
+```
+-i, --icon <path>
+```
+
 On OSX, the icon parameter should be a path to an `.icns` file. [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
 To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
 
-### OSX Dock Badge
+#### [badge]
 
-On OSX, it is desired for the App dock icon to show a badge on the receipt of a desktop notification. 
+```
+-b, --badge
+```
+
+On OSX, it is desired for the App dock icon to show a badge on the receipt of a desktop notification.
 
 There is no known way to intercept and set an event listener for a desktop notification triggered by the [`<webview>`](https://github.com/atom/electron/blob/master/docs/api/web-view-tag.md), the current workaround is to listen for `document.title` changes within the `<webview>`. Typical web apps like Facebook Messenger will change the `document.title` to "John sent a message..." on the receipt of a desktop notification, and this is what we will listen for to trigger the app badge on the dock.
 
-However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood. 
+However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood.
 
-## Examples
+#### [width]
 
-Creating an native wrapper for Facebook Messenger with the following arguments:
-
-- App Name: `Messenger`
-- Target Url: `http://messenger.com`
-- Platform: `darwin` (OSX)
-- Architecture: `x64`
-- Electron Version: `0.29.1`
-- Override existing app (if any)
-- OSX dock badges on (See notes above)
-
-```bash
-$ nativefier Messenger http://messenger.com --platform=darwin --arch=x64 --version=0.29.1 --overwrite --badge
 ```
+-w, --width <value>
+```
+
+Width of the packaged application, defaults to `1280px`.
+#### [height]
+
+```
+-h, --height <value>
+```
+
+Height of the packaged application, defaults to `800px`.
 
 ## How It Works
 
-A template app with the appropriate event listeners and callbacks set up is included in the `/app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and the core methods of `electron-packager` is called on that directory.
+A template app with the appropriate event listeners and callbacks set up is included in the `./app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and is packaged into an app with [Electron Packager](https://github.com/maxogden/electron-packager).
 
 ## Notes
 
-Tested only on OSX, but should work for windows and linux.
+Tested mostly on OSX, but should work for windows and linux.
 
 ### Back Button
 A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
