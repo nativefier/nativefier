@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
-    "watch": "babel --watch src -d lib"
+    "watch": "babel --watch src -d lib",
+    "prepublish": "npm run build"
   },
   "bin": {
     "nativefier": "lib/cli.js"
