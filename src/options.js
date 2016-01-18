@@ -10,7 +10,7 @@ const ELECTRON_VERSION = '0.36.4';
 const DEFAULT_APP_NAME = 'My App';
 
 function optionsFactory(name,
-                        targetUrl = 'http://google.com',
+                        targetUrl,
                         platform = detectPlatform(),
                         arch = detectArch(),
                         version = ELECTRON_VERSION,
@@ -47,7 +47,7 @@ function optionsFactory(name,
         badge: badge,
         width: width,
         height: height
-    }
+    };
 
     if (name && name.length > 0) {
         options.name = name;
