@@ -27,7 +27,8 @@
     "commander": "^2.9.0",
     "electron-packager": "^5.2.1",
     "ncp": "^2.0.0",
-    "tmp": "0.0.28"
+    "tmp": "0.0.28",
+    "validator": "^4.5.0"
   },
   "babel": {
     "presets": [

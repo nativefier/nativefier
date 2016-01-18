@@ -1,6 +1,8 @@
 import os from 'os';
 import path from 'path';
 
+import validator from 'validator';
+
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
 
@@ -16,6 +18,11 @@ function optionsFactory(name = 'MyApp',
                         badge = false,
                         width = 1280,
                         height = 800) {
+
+    if (!validator.isURL(targetUrl, {require_protocol: true})) {
+        throw 'Your Url is invalid!, did you remember to include \'http://\'?';
+    }
+
     return {
         dir: TEMPLATE_APP_DIR,
 
