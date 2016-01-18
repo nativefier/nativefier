@@ -1,56 +1,37 @@
 {
   "name": "nativefier",
-  "version": "5.1.1",
-  "description": "Wrap single-page web apps natively",
+  "version": "6.0.0",
+  "description": "Wrap web apps natively",
   "main": "index.js",
-  "bin": {
-    "nativefier": "cli.js"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d lib",
+    "watch": "babel --watch src -d lib"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/skewedlines/Nativefier.git"
+    "url": "git+https://github.com/jiahaog/nativefier.git"
   },
-  "author": "Jia Hao",
-  "license": "BSD-2-Clause",
+  "author": "",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/skewedlines/Nativefier/issues"
+    "url": "https://github.com/jiahaog/nativefier/issues"
   },
-  "homepage": "https://github.com/skewedlines/Nativefier",
+  "homepage": "https://github.com/jiahaog/nativefier#readme",
   "dependencies": {
-    "asar": "^0.6.1",
-    "electron-download": "^1.0.0",
-    "extract-zip": "^1.0.3",
-    "minimist": "^1.1.1",
-    "mkdirp": "^0.5.0",
-    "mv": "^2.0.3",
+    "async": "^1.5.2",
+    "commander": "^2.9.0",
+    "electron-packager": "^5.2.1",
     "ncp": "^2.0.0",
-    "plist": "^1.1.0",
-    "rcedit": "^0.3.0",
-    "rimraf": "^2.3.2",
-    "run-series": "^1.1.1",
-    "temp": "^0.8.3",
-    "validator": "^3.40.1"
+    "tmp": "0.0.28"
   },
-  "devDependencies": {
-    "run-waterfall": "^1.1.1",
-    "standard": "^3.3.2",
-    "tape": "^4.0.0"
-  },
-  "scripts": {
-    "test": "standard && tape test"
-  },
-  "standard": {
-    "ignore": [
-      "test/fixtures/**/node_modules"
+  "babel": {
+    "presets": [
+      "es2015"
     ]
   },
-  "directories": {
-    "test": "test"
-  },
-  "keywords": [
-    "native",
-    "electron",
-    "package",
-    "cli"
-  ]
+  "devDependencies": {
+    "babel-cli": "^6.4.0",
+    "babel-preset-es2015": "^6.3.13"
+  }
 }
