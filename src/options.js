@@ -4,16 +4,15 @@ import path from 'path';
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
 
-
 function optionsFactory(name = 'MyApp',
                         targetUrl = 'http://google.com',
                         platform = detectPlatform(),
-                        architecture = detectArch(),
+                        arch = detectArch(),
                         version = ELECTRON_VERSION,
-                        outDir = os.homedir(),
+                        outDir = process.cwd(),
                         overwrite = true,
-                        conceal = true,
-                        iconDir,
+                        conceal = false,
+                        icon,
                         badge = false,
                         width = 1280,
                         height = 800) {
@@ -24,7 +23,7 @@ function optionsFactory(name = 'MyApp',
         targetUrl: targetUrl,
 
         platform: platform,
-        arch: architecture,
+        arch: arch,
         version: version,
 
         out: outDir,
@@ -32,7 +31,7 @@ function optionsFactory(name = 'MyApp',
         // optionals
         overwrite: overwrite,
         asar: conceal,
-        icon: iconDir,
+        icon: icon,
 
         // app configuration
         badge: badge,
@@ -40,7 +39,6 @@ function optionsFactory(name = 'MyApp',
         height: height
     }
 }
-
 
 function detectPlatform() {
     const platform = os.platform();

@@ -27,8 +27,6 @@ function buildApp(options, callback) {
 
     async.waterfall([
         function (callback) {
-            console.log("Dir: ", tmpobj.name);
-
             copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, callback);
         },
         function (tempDir, callback) {
