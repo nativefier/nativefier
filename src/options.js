@@ -15,7 +15,7 @@ function optionsFactory(name,
                         arch = detectArch(),
                         version = ELECTRON_VERSION,
                         outDir = process.cwd(),
-                        overwrite = true,
+                        overwrite = false,
                         conceal = false,
                         icon,
                         badge = false,
@@ -23,7 +23,15 @@ function optionsFactory(name,
                         height = 800, callback) {
 
     if (!validator.isURL(targetUrl, {require_protocol: true})) {
-        throw 'Your Url is invalid!, did you remember to include \'http://\'?';
+        throw `Your Url ${targetUrl} is invalid!, did you remember to include 'http://'?`;
+    }
+
+    if (!width) {
+        width = 1280;
+    }
+
+    if (!height) {
+        height = 800;
     }
 
     const options = {
