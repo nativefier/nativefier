@@ -26,15 +26,16 @@ function buildApp(options, callback) {
     const tmpPath = tmpobj.name;
 
     async.waterfall([
-        function (callback) {
+        callback => {
             copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, callback);
         },
-        function (tempDir, callback) {
-            console.log('copied to ', tempDir);
+
+        (tempDir, callback) => {
             options.dir = tempDir;
             packager(options, callback);
         },
-        function (appPath, callback) {
+
+        (appPath, callback) => {
             tmpobj.removeCallback();
             callback(null, appPath);
         }
@@ -45,7 +46,7 @@ function buildApp(options, callback) {
 /**
  * @callback tempDirCallback
  * @param error
- * @param [tempDirPath]
+ * @param {string} [tempDirPath]
  */
 
 /**
@@ -62,7 +63,7 @@ function buildApp(options, callback) {
  * @param {tempDirCallback} callback
  */
 function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, callback) {
-    copy(srcAppDir, tempDir, function (error) {
+    copy(srcAppDir, tempDir, error => {
 
         if (error) {
             console.error(error);
