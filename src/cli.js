@@ -23,8 +23,6 @@ function main(program) {
         program.width,
         program.height);
 
-    console.log(`Using Electron v${options.version}`);
-    console.log(options);
     buildApp(options, (error, appPath) => {
         if (error) {
             console.error(error);
@@ -44,8 +42,8 @@ if (require.main === module) {
             program.outDir = appDir;
         })
         .option('-n, --appName [value]', 'app name')
-        .option('-p, --platform [platform]', 'linux, win32, or darwin')
-        .option('-a, --arch [architecture]', 'ia32 or x64')
+        .option('-p, --platform [platform]', '\'linux\', \'win32\', or \'darwin\'')
+        .option('-a, --arch [architecture]', '\'ia32\' or \'x64\'')
         .option('-e, --electron-version', 'electron version to package, without the \'v\', see https://github.com/atom/electron/releases')
         .option('-o, --overwrite', 'if output directory for a platform already exists, replaces it rather than skipping it, defaults to true')
         .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')
