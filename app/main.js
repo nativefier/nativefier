@@ -2,10 +2,12 @@
  * Created by JiaHao on 4/7/15.
  */
 
-var app = require('app');
 var fs = require('fs');
-var BrowserWindow = require('browser-window');
-var ipc = require('ipc');
+var electron = require('electron');
+
+var app = electron.app;
+var BrowserWindow = electron.BrowserWindow;
+var ipc = electron.ipcMain;
 
 const APP_ARGS_FILE_PATH = __dirname + '/targetUrl.txt';
 require('crash-reporter').start();

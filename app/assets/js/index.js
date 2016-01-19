@@ -2,12 +2,10 @@
  * Created by JiaHao on 5/7/15.
  */
 
-var ipc = require('ipc');
+var ipc = require('electron').ipcRenderer;
 
-ipc.on('params', function(message) {
-
+ipc.on('params', function(event, message) {
     var appArgs = JSON.parse(message);
-    console.log(appArgs);
     document.title = appArgs.name;
 
     var webView = document.createElement('webview');
