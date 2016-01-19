@@ -17,7 +17,7 @@ ipc.on('params', function(event, message) {
     webView.setAttribute('minheight', '100');
 
     if (appArgs.userAgent) {
-        webView.addEventListener('did-start-loading', function() {
+        webView.addEventListener('dom-ready', function() {
             webView.setUserAgent(appArgs.userAgent);
         });
     }
