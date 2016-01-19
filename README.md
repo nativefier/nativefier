@@ -21,13 +21,13 @@ $ npm install nativefier -g
 Creating an native desktop app for [medium.com](medium.com):
 
 ```bash
-$ nativefier http://medium.com
+$ nativefier "http://medium.com"
 ```
 
 Note that nativefier will intelligently attempt to determine the app name. If desired, the app name or other options can be overwritten by specifying the `--name=Medium` as part of the command line options, as such.
 
 ```
-$ nativefier --app-name='Some Awesome App' http://medium.com
+$ nativefier --app-name 'Some Awesome App' "http://medium.com"
 ```
 
 Other command line options are listed below.
