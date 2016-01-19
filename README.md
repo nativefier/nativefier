@@ -2,12 +2,17 @@
 
 ![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
+You want to make a native wrapper for Google Maps (or any web page).
+
+```bash
+$ nativefier maps.google.com
+```
+
+You're done.
+
 ## Introduction
-Create a desktop application for any single page web application by wrapping it in an OS executable (`.app`, `.exe`, etc.).
 
-Applications are packaged with [Electron](http://electron.atom.io) by simply running a simple command.
-
-I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
+I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com). Nativefier creates a desktop application for any single page web application by wrapping it in an OS executable (`.app`, `.exe`, etc.), and they are packaged with [Electron](http://electron.atom.io) by simply running a simple command.
 
 ## Installation
 
@@ -24,10 +29,10 @@ Creating an native desktop app for [medium.com](medium.com):
 $ nativefier "http://medium.com"
 ```
 
-Note that nativefier will intelligently attempt to determine the app name. If desired, the app name or other options can be overwritten by specifying the `--name=Medium` as part of the command line options, as such.
+Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name=Medium` as part of the command line options, as such.
 
 ```
-$ nativefier --app-name 'Some Awesome App' "http://medium.com"
+$ nativefier --app-name "Some Awesome App" "http://medium.com"
 ```
 
 Other command line options are listed below.
