@@ -5,6 +5,7 @@ import packager from 'electron-packager';
 import tmp from 'tmp';
 import ncp from 'ncp';
 import async from 'async';
+import _ from 'lodash';
 
 const copy = ncp.ncp;
 
@@ -85,7 +86,7 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
         // change name of packageJson so that temporary files will not be shared across different app instances
         const packageJsonPath = path.join(tempDir, '/package.json');
         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-        packageJson.name = appArgs.name + '-nativefier';
+        packageJson.name = _.kebabCase(appArgs.name + '-nativefier');
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 
         callback(null, tempDir);
