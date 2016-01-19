@@ -22,21 +22,24 @@ ipc.on('params', function (event, message) {
         if (appArgs.userAgent) {
             webView.setUserAgent(appArgs.userAgent);
         }
-
     });
     webView.addEventListener('new-window', function (e) {
         require('shell').openExternal(e.url);
     });
 
-    // We check for desktop notifications by listening to a title change in the webview
-    // Not elegant, but it will have to do
-    if (appArgs.badge) {
-        webView.addEventListener('did-finish-load', function (e) {
+    webView.addEventListener('did-finish-load', function (e) {
+        var loadingContainer = document.getElementById('loading-container');
+        loadingContainer.parentNode.removeChild(loadingContainer);
+
+        // We check for desktop notifications by listening to a title change in the webview
+        // Not elegant, but it will have to do
+        if (appArgs.badge) {
             webView.addEventListener('page-title-set', function (event) {
                 ipc.send('notification-message', 'TITLE_CHANGED');
             });
-        });
-    }
+        }
+    });
+
 
     var webViewDiv = document.getElementById('webViewDiv');
     webViewDiv.appendChild(webView);
