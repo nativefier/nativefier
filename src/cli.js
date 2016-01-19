@@ -25,7 +25,9 @@ function main(program) {
                 program.icon,
                 program.badge,
                 program.width,
-                program.height, callback);
+                program.height,
+                program.userAgent,
+                callback);
         },
 
         (options, callback) => {
@@ -59,6 +61,7 @@ if (require.main === module) {
         .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX)')
         .option('-w, --width <value>', 'set window width, defaults to 1280px', parseInt)
         .option('-h, --height <value>', 'set window height, defaults to 800px', parseInt)
+        .option('-u, --user-agent <value>', 'set the user agent string for the app')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {

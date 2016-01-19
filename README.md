@@ -53,7 +53,7 @@ Specifies the destination directory to build the app to, defaults to the current
 
 Prints the usage information.
 
-#### [App Name]
+#### [app-name]
 
 ```
 -n, --app-name <value>
@@ -68,15 +68,15 @@ The name of the application, which will affect strings in titles and the icon.
 ```
 Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `win32`, or `darwin`.
 
-#### [architecture]
+#### [arch]
 
 ```
 -a, --arch <value>
 ```
 
-Automatically determined based on the current OS. Can be overwritten by specifying either `ia32` or `x64`.
+Processor architecture, automatically determined based on the current OS. Can be overwritten by specifying either `ia32` or `x64`.
 
-#### [Electron Version]
+#### [electron-version]
 
 ```
 -e, --electron-version <value>
@@ -85,7 +85,7 @@ Automatically determined based on the current OS. Can be overwritten by specifyi
 Electron version without the `v`, see https://github.com/atom/electron/releases.
 
 
-#### [Overwrite]
+#### [overwrite]
 
 ```
 -o, --overwrite
@@ -93,7 +93,7 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 
 Specifies if the destination directory should be overwritten.
 
-#### [Conceal]
+#### [conceal]
 
 ```
 -c, --conceal
@@ -101,7 +101,7 @@ Specifies if the destination directory should be overwritten.
 
 Specifies if the source code within the nativefied app should be packaged into an archive, defaults to false, [read more](http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/).
 
-#### [Icon]
+#### [icon]
 
 ```
 -i, --icon <path>
@@ -130,6 +130,7 @@ However, this would cause issues when the command line argument `target` is set 
 ```
 
 Width of the packaged application, defaults to `1280px`.
+
 #### [height]
 
 ```
@@ -137,6 +138,15 @@ Width of the packaged application, defaults to `1280px`.
 ```
 
 Height of the packaged application, defaults to `800px`.
+
+#### [user-agent]
+
+```
+-u, --user-agent <value>
+```
+
+Set the user agent to run the created app with.
+
 
 ## How It Works
 

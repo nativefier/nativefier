@@ -27,7 +27,7 @@ function buildApp(options, callback) {
 
     async.waterfall([
         callback => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, callback);
+            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, options.userAgent, callback);
         },
 
         (tempDir, callback) => {
@@ -58,11 +58,12 @@ function buildApp(options, callback) {
  * @param {string} name
  * @param {string} targetURL
  * @param {boolean} badge
- * @param {number} [width]
- * @param {number} [height]
+ * @param {number} width
+ * @param {number} height
+ * @param {string} userAgent
  * @param {tempDirCallback} callback
  */
-function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, callback) {
+function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, userAgent, callback) {
     copy(srcAppDir, tempDir, error => {
 
         if (error) {
@@ -76,7 +77,8 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
             targetUrl: targetURL,
             badge: badge,
             width: width,
-            height: height
+            height: height,
+            userAgent: userAgent
         };
 
         fs.writeFileSync(path.join(tempDir, '/targetUrl.txt'), JSON.stringify(appArgs));

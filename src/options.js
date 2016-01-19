@@ -20,7 +20,9 @@ function optionsFactory(name,
                         icon,
                         badge = false,
                         width = 1280,
-                        height = 800, callback) {
+                        height = 800,
+                        userAgent,
+                        callback) {
 
     if (!validator.isURL(targetUrl, {require_protocol: true})) {
         throw `Your Url ${targetUrl} is invalid!, did you remember to include 'http://'?`;
@@ -54,7 +56,8 @@ function optionsFactory(name,
         // app configuration
         badge: badge,
         width: width,
-        height: height
+        height: height,
+        userAgent: userAgent
     };
 
     if (name && name.length > 0) {
