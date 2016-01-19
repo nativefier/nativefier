@@ -1,5 +1,6 @@
 var electron = require('electron');
 var Menu = electron.Menu;
+var shell = electron.shell;
 
 module.exports = function (app, mainWindow) {
     if (Menu.getApplicationMenu())
@@ -119,27 +120,15 @@ module.exports = function (app, mainWindow) {
             role: 'help',
             submenu: [
                 {
-                    label: 'Learn More',
-                    click: function() { shell.openExternal('http://electron.atom.io') }
+                    label: 'Learn More About Nativefier',
+                    click: function() { shell.openExternal('https://github.com/jiahaog/nativefier') }
                 },
                 {
-                    label: 'Documentation',
-                    click: function() {
-                        shell.openExternal(
-                            `https://github.com/atom/electron/tree/v${process.versions.electron}/docs#readme`
-                        )
-                    }
-                },
-                {
-                    label: 'Community Discussions',
-                    click: function() { shell.openExternal('https://discuss.atom.io/c/electron') }
-                },
-                {
-                    label: 'Search Issues',
-                    click: function() { shell.openExternal('https://github.com/atom/electron/issues') }
+                    label: 'Report an Issue',
+                    click: function() { shell.openExternal('https://github.com/jiahaog/nativefier/issues') }
                 }
             ]
-        },
+        }
     ];
 
     if (process.platform == 'darwin') {
