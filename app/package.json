@@ -1,6 +1,6 @@
 {
-  "name": "Nativefier Placeholder",
-  "version": "0.0.1",
+  "name": "nativefier-placeholder",
+  "version": "1.0.0",
   "description": "Placeholder for the nativefier cli to override with a target url",
   "main": "main.js",
   "dependencies": {
