@@ -14,7 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
     "watch": "babel --watch src -d lib",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "debug": "node lib/cli.js http://www.medium.com ~/Desktop --overwrite"
   },
   "bin": {
     "nativefier": "lib/cli.js"
