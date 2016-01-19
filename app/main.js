@@ -9,7 +9,7 @@ var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var ipc = electron.ipcMain;
 
-const APP_ARGS_FILE_PATH = __dirname + '/targetUrl.txt';
+const APP_ARGS_FILE_PATH = __dirname + '/nativefier.json';
 require('crash-reporter').start();
 
 var mainWindow = null;

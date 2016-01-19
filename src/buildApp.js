@@ -83,7 +83,7 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
             showDevTools: showDevTools
         };
 
-        fs.writeFileSync(path.join(tempDir, '/targetUrl.txt'), JSON.stringify(appArgs));
+        fs.writeFileSync(path.join(tempDir, '/nativefier.json'), JSON.stringify(appArgs));
         callback(null, tempDir);
     });
 };
