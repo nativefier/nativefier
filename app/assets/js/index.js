@@ -4,6 +4,9 @@
 
 var ipc = require('electron').ipcRenderer;
 
+var webViewDiv = document.getElementById('webViewDiv');
+webViewDiv.style.visibility = 'hidden';
+
 var webView;
 
 ipc.on('params', function (event, message) {
@@ -11,7 +14,6 @@ ipc.on('params', function (event, message) {
     document.title = appArgs.name;
 
     webView = document.createElement('webview');
-
     webView.setAttribute('id', 'webView');
     webView.setAttribute('src', appArgs.targetUrl);
     webView.setAttribute('autosize', 'on');
@@ -28,6 +30,7 @@ ipc.on('params', function (event, message) {
     });
 
     webView.addEventListener('did-finish-load', function (e) {
+        webViewDiv.style.visibility = 'visible';
         var loadingContainer = document.getElementById('loading-container');
         loadingContainer.parentNode.removeChild(loadingContainer);
 
@@ -41,7 +44,7 @@ ipc.on('params', function (event, message) {
     });
 
 
-    var webViewDiv = document.getElementById('webViewDiv');
+
     webViewDiv.appendChild(webView);
 });
 
