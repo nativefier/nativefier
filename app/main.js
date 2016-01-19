@@ -39,7 +39,7 @@ app.on('ready', function() {
         mainWindow.openDevTools();
     }
 
-    mainWindow.loadUrl('file://' + __dirname + '/index.html', { userAgent: appArgs.userAgent});
+    mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
     mainWindow.webContents.on('did-finish-load', function() {
         mainWindow.webContents.send('params', JSON.stringify(appArgs));
