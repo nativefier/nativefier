@@ -1,5 +1,6 @@
 import os from 'os';
 import path from 'path';
+import url from 'url';
 
 import request from 'request';
 import cheerio from 'cheerio';
@@ -24,9 +25,7 @@ function optionsFactory(name,
                         userAgent,
                         callback) {
 
-    if (!validator.isURL(targetUrl, {require_protocol: true})) {
-        throw `Your Url ${targetUrl} is invalid!, did you remember to include 'http://'?`;
-    }
+    targetUrl = normalizeUrl(targetUrl);
 
     if (!width) {
         width = 1280;
@@ -107,6 +106,19 @@ function getTitle(url, callback) {
         const pageTitle = $("title").text();
         callback(null, pageTitle);
     });
+}
+
+function normalizeUrl(testUrl) {
+    // add protocol if protocol not found
+    let normalized = testUrl;
+    const parsed = url.parse(normalized);
+    if (!parsed.protocol) {
+        normalized = 'http://' + normalized;
+    }
+    if (!validator.isURL(normalized, {require_protocol: true})) {
+        throw `Your Url: "${normalized}" is invalid!`;
+    }
+    return normalized;
 }
 
 export default optionsFactory;
