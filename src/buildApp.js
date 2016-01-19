@@ -81,6 +81,13 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
         };
 
         fs.writeFileSync(path.join(tempDir, '/nativefier.json'), JSON.stringify(appArgs));
+
+        // change name of packageJson so that temporary files will not be shared across different app instances
+        const packageJsonPath = path.join(tempDir, '/package.json');
+        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+        packageJson.name = appArgs.name + '-nativefier';
+        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
+
         callback(null, tempDir);
     });
 };
