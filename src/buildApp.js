@@ -22,8 +22,8 @@ const copy = ncp.ncp;
 function buildApp(options, callback) {
     // pre process app
 
-    var tmpobj = tmp.dirSync({unsafeCleanup: true});
-    const tmpPath = tmpobj.name;
+    var tmpObj = tmp.dirSync({unsafeCleanup: true});
+    const tmpPath = tmpObj.name;
 
     async.waterfall([
         callback => {
@@ -36,7 +36,6 @@ function buildApp(options, callback) {
         },
 
         (appPath, callback) => {
-            tmpobj.removeCallback();
             callback(null, appPath);
         }
     ], callback);
