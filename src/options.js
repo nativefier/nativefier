@@ -22,6 +22,7 @@ function optionsFactory(name,
                         width = 1280,
                         height = 800,
                         userAgent,
+                        showDevTools,
                         callback) {
 
     if (!validator.isURL(targetUrl, {require_protocol: true})) {
@@ -57,7 +58,8 @@ function optionsFactory(name,
         badge: badge,
         width: width,
         height: height,
-        userAgent: userAgent
+        userAgent: userAgent,
+        showDevTools: showDevTools
     };
 
     if (name && name.length > 0) {

@@ -147,6 +147,13 @@ Height of the packaged application, defaults to `800px`.
 
 Set the user agent to run the created app with.
 
+#### [show-dev-tools]
+
+```
+'-d, --show-dev-tools'
+```
+
+Show developer tools when running the app.
 
 ## How It Works
 
