@@ -40,30 +40,5 @@ ipc.on('params', function(event, message) {
 
     var webViewDiv = document.getElementById('webViewDiv');
     webViewDiv.appendChild(webView);
-
-    Mousetrap.bind('mod+c', function(e) {
-        var webView = document.getElementById('webView');
-        webView.copy();
-    });
-
-    Mousetrap.bind('mod+x', function(e) {
-        var webView = document.getElementById('webView');
-        webView.cut();
-    });
-
-    Mousetrap.bind('mod+v', function(e) {
-        var webView = document.getElementById('webView');
-        webView.paste();
-    });
-
-    Mousetrap.bind('mod+a', function(e) {
-        var webView = document.getElementById('webView');
-        webView.selectAll();
-    });
-
-    Mousetrap.bind('mod+z', function(e) {
-        var webView = document.getElementById('webView');
-        webView.undo();
-    });
 });
 

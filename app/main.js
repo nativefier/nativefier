@@ -9,6 +9,8 @@ var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var ipc = electron.ipcMain;
 
+var buildMenu = require('./buildMenu');
+
 const APP_ARGS_FILE_PATH = __dirname + '/nativefier.json';
 require('crash-reporter').start();
 
@@ -23,6 +25,7 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
+    buildMenu(app);
     mainWindow = new BrowserWindow(
         {
             width: appArgs.width || 1280,
