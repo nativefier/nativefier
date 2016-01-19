@@ -34,10 +34,8 @@ app.on('ready', function() {
         }
     );
 
-
-    if (appArgs.showDevTools) {
-        mainWindow.openDevTools();
-    }
+    // uncomment to show dev tools for the main window
+    //mainWindow.openDevTools();
 
     mainWindow.loadUrl('file://' + __dirname + '/index.html');
 

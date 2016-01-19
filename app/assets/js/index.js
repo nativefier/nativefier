@@ -16,12 +16,14 @@ ipc.on('params', function(event, message) {
     webView.setAttribute('minwidth', '100');
     webView.setAttribute('minheight', '100');
 
-    if (appArgs.userAgent) {
         webView.addEventListener('dom-ready', function() {
-            webView.setUserAgent(appArgs.userAgent);
+            if (appArgs.userAgent) {
+                webView.setUserAgent(appArgs.userAgent);
+            }
+            if (appArgs.showDevTools) {
+                webView.openDevTools();
+            }
         });
-    }
-
     webView.addEventListener('new-window', function(e) {
         require('shell').openExternal(e.url);
     });
