@@ -35,7 +35,7 @@ app.on('ready', function() {
             }
         }
     );
-    
+
     buildMenu(app, mainWindow);
 
     // uncomment to show dev tools for the main window

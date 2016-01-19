@@ -147,14 +147,6 @@ Height of the packaged application, defaults to `800px`.
 
 Set the user agent to run the created app with.
 
-#### [show-dev-tools]
-
-```
-'-d, --show-dev-tools'
-```
-
-Show developer tools when running the app.
-
 ## How It Works
 
 A template app with the appropriate event listeners and callbacks set up is included in the `./app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and is packaged into an app with [Electron Packager](https://github.com/maxogden/electron-packager).

@@ -27,7 +27,7 @@ function buildApp(options, callback) {
 
     async.waterfall([
         callback => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, options.userAgent, options.showDevTools, callback);
+            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, options.userAgent, callback);
         },
 
         (tempDir, callback) => {
@@ -60,10 +60,9 @@ function buildApp(options, callback) {
  * @param {number} width
  * @param {number} height
  * @param {string} userAgent
- * @param {boolean} showDevTools
  * @param {tempDirCallback} callback
  */
-function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, userAgent, showDevTools, callback) {
+function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, userAgent, callback) {
     copy(srcAppDir, tempDir, error => {
 
         if (error) {
@@ -78,8 +77,7 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
             badge: badge,
             width: width,
             height: height,
-            userAgent: userAgent,
-            showDevTools: showDevTools
+            userAgent: userAgent
         };
 
         fs.writeFileSync(path.join(tempDir, '/nativefier.json'), JSON.stringify(appArgs));

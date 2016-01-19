@@ -27,7 +27,6 @@ function main(program) {
                 program.width,
                 program.height,
                 program.userAgent,
-                program.showDevTools,
                 callback);
         },
 
@@ -63,7 +62,6 @@ if (require.main === module) {
         .option('-w, --width <value>', 'set window width, defaults to 1280px', parseInt)
         .option('-h, --height <value>', 'set window height, defaults to 800px', parseInt)
         .option('-u, --user-agent <value>', 'set the user agent string for the app')
-        .option('-d, --show-dev-tools', 'show developer tools when running the app')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {
