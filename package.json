@@ -2,6 +2,13 @@
   "name": "nativefier",
   "version": "6.2.0",
   "description": "Wrap web apps natively",
+  "keywords": [
+    "desktop",
+    "electron",
+    "app",
+    "native",
+    "wrapper"
+  ],
   "main": "lib/buildApp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -37,6 +44,7 @@
       "es2015"
     ]
   },
+
   "devDependencies": {
     "babel-cli": "^6.4.0",
     "babel-preset-es2015": "^6.3.13"
