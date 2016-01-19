@@ -4,11 +4,13 @@
 
 var ipc = require('electron').ipcRenderer;
 
-ipc.on('params', function(event, message) {
+var webView;
+
+ipc.on('params', function (event, message) {
     var appArgs = JSON.parse(message);
     document.title = appArgs.name;
 
-    var webView = document.createElement('webview');
+    webView = document.createElement('webview');
 
     webView.setAttribute('id', 'webView');
     webView.setAttribute('src', appArgs.targetUrl);
@@ -16,23 +18,21 @@ ipc.on('params', function(event, message) {
     webView.setAttribute('minwidth', '100');
     webView.setAttribute('minheight', '100');
 
-        webView.addEventListener('dom-ready', function() {
-            if (appArgs.userAgent) {
-                webView.setUserAgent(appArgs.userAgent);
-            }
-            if (appArgs.showDevTools) {
-                webView.openDevTools();
-            }
-        });
-    webView.addEventListener('new-window', function(e) {
+    webView.addEventListener('dom-ready', function () {
+        if (appArgs.userAgent) {
+            webView.setUserAgent(appArgs.userAgent);
+        }
+
+    });
+    webView.addEventListener('new-window', function (e) {
         require('shell').openExternal(e.url);
     });
 
     // We check for desktop notifications by listening to a title change in the webview
     // Not elegant, but it will have to do
     if (appArgs.badge) {
-        webView.addEventListener('did-finish-load', function(e) {
-            webView.addEventListener('page-title-set', function(event) {
+        webView.addEventListener('did-finish-load', function (e) {
+            webView.addEventListener('page-title-set', function (event) {
                 ipc.send('notification-message', 'TITLE_CHANGED');
             });
         });
@@ -42,3 +42,13 @@ ipc.on('params', function(event, message) {
     webViewDiv.appendChild(webView);
 });
 
+ipc.on('toggle-dev-tools', function (event, message) {
+    if (!message) {
+        return;
+    }
+    if (webView.isDevToolsOpened()) {
+        webView.closeDevTools();
+    } else {
+        webView.openDevTools();
+    }
+});

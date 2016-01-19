@@ -25,7 +25,6 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
-    buildMenu(app);
     mainWindow = new BrowserWindow(
         {
             width: appArgs.width || 1280,
@@ -36,6 +35,8 @@ app.on('ready', function() {
             }
         }
     );
+    
+    buildMenu(app, mainWindow);
 
     // uncomment to show dev tools for the main window
     //mainWindow.openDevTools();

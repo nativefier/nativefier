@@ -1,7 +1,7 @@
 var electron = require('electron');
 var Menu = electron.Menu;
 
-module.exports = function (app) {
+module.exports = function (app, mainWindow) {
     if (Menu.getApplicationMenu())
         return;
 
@@ -90,8 +90,10 @@ module.exports = function (app) {
                             return 'Ctrl+Shift+J';
                     })(),
                     click: function(item, focusedWindow) {
-                        if (focusedWindow)
-                            focusedWindow.toggleDevTools();
+                        if (focusedWindow) {
+                            mainWindow.webContents.send('toggle-dev-tools', true);
+                        }
+
                     }
                 },
             ]
