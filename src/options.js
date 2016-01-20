@@ -103,7 +103,7 @@ function getTitle(url, callback) {
         }
 
         const $ = cheerio.load(body);
-        const pageTitle = $("title").text();
+        const pageTitle = $("title").text().replace(/\//g, "");
         callback(null, pageTitle);
     });
 }
