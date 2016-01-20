@@ -5,7 +5,7 @@
 You want to make a native wrapper for Google Maps (or any web page).
 
 ```bash
-$ nativefier maps.google.com
+$ nativefier https://maps.google.com
 ```
 
 You're done.
