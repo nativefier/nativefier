@@ -115,7 +115,7 @@ function normalizeUrl(testUrl) {
     if (!parsed.protocol) {
         normalized = 'http://' + normalized;
     }
-    if (!validator.isURL(normalized, {require_protocol: true})) {
+    if (!validator.isURL(normalized, {require_protocol: true, require_tld: true})) {
         throw `Your Url: "${normalized}" is invalid!`;
     }
     return normalized;
