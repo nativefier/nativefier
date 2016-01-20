@@ -44,7 +44,7 @@ $ nativefier [options] <targetUrl> [dest]
 
 #### Target Url
 
-The url to point the application at. Take note that you have to enter the full url, i.e. `http://google.com`, and simply entering `google.com` will not work.
+The url to point the application at.
 
 #### [dest]
 
