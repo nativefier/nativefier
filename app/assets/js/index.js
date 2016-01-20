@@ -38,7 +38,13 @@ ipc.on('params', function (event, message) {
         // Not elegant, but it will have to do
         if (appArgs.badge) {
             webView.addEventListener('page-title-set', function (event) {
-                ipc.send('notification-message', 'TITLE_CHANGED');
+                var itemCountRegex = /[\(](.*?)[\)]/;
+                var match = itemCountRegex.exec(webView.getTitle());
+                if (match != null) {
+                    ipc.send('notification-message', 'TITLE_CHANGED', match[1]);
+                }else{
+                    ipc.send('notification-message', 'TITLE_CHANGED', '●');
+                }
             });
         }
     });

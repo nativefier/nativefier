@@ -60,10 +60,10 @@ app.on('ready', function() {
 });
 
 // listen for a notification message
-ipc.on('notification-message', function(event, arg) {
+ipc.on('notification-message', function(event, arg, count) {
     if (arg === 'TITLE_CHANGED') {
         if (process.platform === 'darwin' && !mainWindow.isFocused()) {
-            app.dock.setBadge('●');
+            app.dock.setBadge(count);
         }
     }
 });
