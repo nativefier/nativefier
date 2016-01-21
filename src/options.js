@@ -103,7 +103,7 @@ function getTitle(url, callback) {
         }
 
         const $ = cheerio.load(body);
-        const pageTitle = $("title").text();
+        const pageTitle = $("title").text().replace(/\//g, "");
         callback(null, pageTitle);
     });
 }
@@ -115,7 +115,7 @@ function normalizeUrl(testUrl) {
     if (!parsed.protocol) {
         normalized = 'http://' + normalized;
     }
-    if (!validator.isURL(normalized, {require_protocol: true})) {
+    if (!validator.isURL(normalized, {require_protocol: true, require_tld: false})) {
         throw `Your Url: "${normalized}" is invalid!`;
     }
     return normalized;
