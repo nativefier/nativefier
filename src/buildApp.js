@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 import packager from 'electron-packager';
 import tmp from 'tmp';
@@ -86,11 +87,18 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
         // change name of packageJson so that temporary files will not be shared across different app instances
         const packageJsonPath = path.join(tempDir, '/package.json');
         const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-        packageJson.name = _.kebabCase(appArgs.name + '-nativefier');
+        packageJson.name = normalizeAppName(appArgs.name);
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 
         callback(null, tempDir);
     });
-};
+}
+
+function normalizeAppName(appName) {
+    // use a simple 3 byte random string to prevent collision
+    const postFixHash = crypto.randomBytes(3).toString('hex');
+    const normalized = _.kebabCase(appName.toLowerCase());
+    return `${normalized}-nativefier-${postFixHash}`;
+}
 
 export default buildApp;
