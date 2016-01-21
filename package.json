@@ -15,7 +15,7 @@
     "build": "babel src -d lib",
     "watch": "babel --watch src -d lib",
     "prepublish": "npm run build",
-    "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite",
+    "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
     "start-placeholder": "electron app"
   },
   "bin": {
