@@ -104,7 +104,12 @@ app.on('ready', function () {
 
 app.on('login', function(event, webContents, request, authInfo, callback) {
     event.preventDefault();
-    var loginWindow = new BrowserWindow();
+    var loginWindow = new BrowserWindow({
+        width: 300,
+        height: 400,
+        frame: false,
+        resizable: false
+    });
     loginWindow.loadURL('file://' + __dirname + '/components/login/login.html');
 
     ipcMain.once('login-message', function(event, usernameAndPassword) {
