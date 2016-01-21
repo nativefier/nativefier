@@ -10,6 +10,7 @@ var wurl = require('wurl');
 var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
+var ipcMain = electron.ipcMain;
 
 var buildMenu = require('./buildMenu');
 
@@ -98,6 +99,17 @@ app.on('ready', function () {
             e.preventDefault();
             mainWindow.hide();
         }
+    });
+});
+
+app.on('login', function(event, webContents, request, authInfo, callback) {
+    event.preventDefault();
+    var loginWindow = new BrowserWindow();
+    loginWindow.loadURL('file://' + __dirname + '/components/login/login.html');
+
+    ipcMain.once('login-message', function(event, usernameAndPassword) {
+        callback(usernameAndPassword[0], usernameAndPassword[1]);
+        loginWindow.close();
     });
 });
 
