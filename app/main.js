@@ -12,7 +12,6 @@ var ipc = electron.ipcMain;
 var buildMenu = require('./buildMenu');
 
 const APP_ARGS_FILE_PATH = __dirname + '/nativefier.json';
-require('crash-reporter').start();
 
 var mainWindow = null;
 
@@ -38,10 +37,8 @@ app.on('ready', function() {
 
     buildMenu(app, mainWindow);
 
-    // uncomment to show dev tools for the main window
-    //mainWindow.openDevTools();
 
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
 
     mainWindow.webContents.on('did-finish-load', function() {
         mainWindow.webContents.send('params', JSON.stringify(appArgs));
