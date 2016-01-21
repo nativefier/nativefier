@@ -5,6 +5,8 @@
 var fs = require('fs');
 var os = require('os');
 var electron = require('electron');
+
+var wurl = require('wurl');
 var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
@@ -74,7 +76,10 @@ app.on('ready', function () {
         }
     });
 
-    mainWindow.webContents.on('new-window', function (event, url) {
+    mainWindow.webContents.on('new-window', function (event, urlToGo) {
+        if (linkIsInternal(appArgs.targetUrl, urlToGo)) {
+            return;
+        }
         event.preventDefault();
         shell.openExternal(url);
     });
@@ -98,4 +103,10 @@ app.on('ready', function () {
 
 function isOSX() {
     return os.platform() === 'darwin';
+}
+
+function linkIsInternal(currentUrl, newUrl) {
+    var currentDomain = wurl('domain', currentUrl);
+    var newDomain = wurl('domain', newUrl);
+    return currentDomain === newDomain;
 }
