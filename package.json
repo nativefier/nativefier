@@ -16,7 +16,8 @@
     "watch": "babel --watch src -d lib",
     "prepublish": "npm run build",
     "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
-    "start-placeholder": "electron app"
+    "start-placeholder": "electron app",
+    "debug-auth": "npm run build && node lib/cli.js http://feedly.com/i/welcome ~/Desktop --overwrite --app-name feedly && open ~/Desktop/feedly-darwin-x64/feedly.app"
   },
   "bin": {
     "nativefier": "lib/cli.js"
