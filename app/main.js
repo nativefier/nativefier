@@ -57,7 +57,7 @@ app.on('ready', function () {
         }
     );
 
-    buildMenu(app, mainWindow);
+    buildMenu(mainWindow, appArgs.nativefierVersion, app.quit);
 
     mainWindow.loadURL('file://' + __dirname + '/index.html');
 

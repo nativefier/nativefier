@@ -2,7 +2,7 @@ var electron = require('electron');
 var Menu = electron.Menu;
 var shell = electron.shell;
 
-module.exports = function (app, mainWindow) {
+module.exports = function (mainWindow, nativefierVersion, onQuit) {
     if (Menu.getApplicationMenu())
         return;
 
@@ -120,7 +120,7 @@ module.exports = function (app, mainWindow) {
             role: 'help',
             submenu: [
                 {
-                    label: 'Learn More About Nativefier',
+                    label: `Built with Nativefier v${nativefierVersion}`,
                     click: function() { shell.openExternal('https://github.com/jiahaog/nativefier') }
                 },
                 {
@@ -136,13 +136,6 @@ module.exports = function (app, mainWindow) {
             label: 'Electron',
             submenu: [
                 {
-                    label: 'About Electron',
-                    role: 'about'
-                },
-                {
-                    type: 'separator'
-                },
-                {
                     label: 'Services',
                     role: 'services',
                     submenu: []
@@ -151,7 +144,7 @@ module.exports = function (app, mainWindow) {
                     type: 'separator'
                 },
                 {
-                    label: 'Hide Electron',
+                    label: 'Hide App',
                     accelerator: 'Command+H',
                     role: 'hide'
                 },
@@ -170,7 +163,7 @@ module.exports = function (app, mainWindow) {
                 {
                     label: 'Quit',
                     accelerator: 'Command+Q',
-                    click: function() { app.quit(); }
+                    click: function() { onQuit(); }
                 },
             ]
         });

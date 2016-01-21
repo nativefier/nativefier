@@ -8,6 +8,8 @@ import ncp from 'ncp';
 import async from 'async';
 import _ from 'lodash';
 
+import packageJson from './../package.json';
+
 const copy = ncp.ncp;
 
 /**
@@ -65,8 +67,8 @@ function buildApp(options, callback) {
  * @param {tempDirCallback} callback
  */
 function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, userAgent, callback) {
-    copy(srcAppDir, tempDir, error => {
-
+    const loadedPackageJson = packageJson;
+    copy(srcAppDir, tempDir, function(error) {
         if (error) {
             console.error(error);
             callback(`Error Copying temporary directory: ${error}`);
@@ -79,7 +81,8 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
             badge: badge,
             width: width,
             height: height,
-            userAgent: userAgent
+            userAgent: userAgent,
+            nativefierVersion: loadedPackageJson.version
         };
 
         fs.writeFileSync(path.join(tempDir, '/nativefier.json'), JSON.stringify(appArgs));
