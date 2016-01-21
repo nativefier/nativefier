@@ -2,6 +2,7 @@
   "name": "Google",
   "targetUrl": "http:\/\/www.google.com",
   "badge": false,
+  "counter": false,
   "width": 1280,
   "height": 800,
   "showDevTools": false

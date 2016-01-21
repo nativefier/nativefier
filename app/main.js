@@ -49,7 +49,7 @@ app.on('ready', function() {
 
     // if the window is focused, clear the badge
     mainWindow.on('focus', function () {
-        if (process.platform === 'darwin') {
+        if (process.platform === 'darwin' && appArgs.counter == true) {
             app.dock.setBadge('');
         }
     });
@@ -62,7 +62,9 @@ app.on('ready', function() {
 // listen for a notification message
 ipc.on('notification-message', function(event, arg, count) {
     if (arg === 'TITLE_CHANGED') {
-        if (process.platform === 'darwin' && !mainWindow.isFocused()) {
+        if (process.platform === 'darwin' && appArgs.counter == true) {
+            app.dock.setBadge(count);
+        } else if (process.platform === 'darwin' && ! mainWindow.isFocused()) {
             app.dock.setBadge(count);
         }
     }

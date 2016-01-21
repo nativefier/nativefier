@@ -16,7 +16,8 @@
     "watch": "babel --watch src -d lib",
     "prepublish": "npm run build",
     "debug": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite",
-    "debug-gmail": "npm run build && node lib/cli.js https://gmail.com ~/Desktop --overwrite --badge"
+    "debug-gmail": "npm run build && node lib/cli.js https://gmail.com ~/Desktop --overwrite --counter",
+    "debug-gmail-badge": "npm run build && node lib/cli.js https://gmail.com ~/Desktop --overwrite --badge"
   },
   "bin": {
     "nativefier": "lib/cli.js"

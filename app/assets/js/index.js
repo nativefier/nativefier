@@ -36,13 +36,15 @@ ipc.on('params', function (event, message) {
 
         // We check for desktop notifications by listening to a title change in the webview
         // Not elegant, but it will have to do
-        if (appArgs.badge) {
+        if (appArgs.badge || appArgs.counter) {
             webView.addEventListener('page-title-set', function (event) {
                 var itemCountRegex = /[\(](.*?)[\)]/;
                 var match = itemCountRegex.exec(webView.getTitle());
                 if (match != null) {
                     ipc.send('notification-message', 'TITLE_CHANGED', match[1]);
-                }else{
+                }else if (appArgs.counter){
+                    ipc.send('notification-message', 'TITLE_CHANGED', '');
+                }else {
                     ipc.send('notification-message', 'TITLE_CHANGED', '●');
                 }
             });

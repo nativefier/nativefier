@@ -24,6 +24,7 @@ function main(program) {
                 program.conceal,
                 program.icon,
                 program.badge,
+                program.counter,
                 program.width,
                 program.height,
                 program.userAgent,
@@ -58,6 +59,7 @@ if (require.main === module) {
         .option('-o, --overwrite', 'if output directory for a platform already exists, replaces it rather than skipping it, defaults to false')
         .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')
         .option('-b, --badge', 'if the target app should show badges in the dock on receipt of desktop notifications (OSX only), defaults to false')
+        .option('-r, --counter', 'if the target app should use a persistant counter badge in the dock (OSX only), defaults to false')
         .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX)')
         .option('-w, --width <value>', 'set window width, defaults to 1280px', parseInt)
         .option('-h, --height <value>', 'set window height, defaults to 800px', parseInt)
