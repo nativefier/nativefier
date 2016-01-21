@@ -22,6 +22,7 @@ function optionsFactory(name,
                         badge = false,
                         width = 1280,
                         height = 800,
+                        windowNotResizable = false,
                         userAgent,
                         pretend,
                         callback) {
@@ -61,6 +62,7 @@ function optionsFactory(name,
         badge: badge,
         width: width,
         height: height,
+        windowNotResizable: windowNotResizable,
         userAgent: userAgent
     };
 

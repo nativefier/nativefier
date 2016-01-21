@@ -50,6 +50,7 @@ app.on('ready', function () {
         {
             width: appArgs.width || 1280,
             height: appArgs.height || 800,
+            resizable: appArgs.windowNotResizable,
             'web-preferences': {
                 javascript: true,
                 plugins: true,

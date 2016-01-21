@@ -26,6 +26,7 @@ function main(program) {
                 program.badge,
                 program.width,
                 program.height,
+                program.windowNotResizable,
                 program.userAgent,
                 program.pretend,
                 callback);
@@ -62,6 +63,7 @@ if (require.main === module) {
         .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX)')
         .option('-w, --width <value>', 'set window width, defaults to 1280px', parseInt)
         .option('-h, --height <value>', 'set window height, defaults to 800px', parseInt)
+        .option('-r, --window-not-resizable', 'disable manual resizing of the window')
         .option('-u, --user-agent <value>', 'set the user agent string for the app')
         .option('-p, --pretend', 'pretends to be a normal chrome browser')
         .parse(process.argv);
