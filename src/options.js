@@ -98,7 +98,7 @@ function detectArch() {
 function getTitle(url, callback) {
     request(url, (error, response, body) => {
         if (error || response.statusCode !== 200) {
-            callback(`Request Error: ${error}, Status Code ${response.statusCode}`);
+            callback(`Request Error: ${error}, Status Code ${response ? response.statusCode : 'No Response'}`);
             return;
         }
 
