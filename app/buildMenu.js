@@ -81,22 +81,7 @@ module.exports = function (mainWindow, nativefierVersion, onQuit) {
                         if (focusedWindow)
                             focusedWindow.toggleDevTools();
                     }
-                },
-                {
-                    label: 'Toggle Web Developer Tools',
-                    accelerator: (function() {
-                        if (process.platform == 'darwin')
-                            return 'Alt+Command+J';
-                        else
-                            return 'Ctrl+Shift+J';
-                    })(),
-                    click: function(item, focusedWindow) {
-                        if (focusedWindow) {
-                            mainWindow.webContents.send('toggle-dev-tools', true);
-                        }
-
-                    }
-                },
+                }
             ]
         },
         {

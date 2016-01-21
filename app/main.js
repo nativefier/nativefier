@@ -5,10 +5,9 @@
 var fs = require('fs');
 var os = require('os');
 var electron = require('electron');
-
 var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
-var ipc = electron.ipcMain;
+var shell = electron.shell;
 
 var buildMenu = require('./buildMenu');
 
@@ -53,18 +52,34 @@ app.on('ready', function () {
             'web-preferences': {
                 javascript: true,
                 plugins: true,
+                nodeIntegration: false,
+                preload: __dirname + '/assets/js/index.js'
             }
         }
     );
 
     buildMenu(mainWindow, appArgs.nativefierVersion, app.quit);
 
-    mainWindow.loadURL('file://' + __dirname + '/index.html');
+    if (appArgs.userAgent) {
+        mainWindow.webContents.setUserAgent(appArgs.userAgent);
+    }
 
     mainWindow.webContents.on('did-finish-load', function () {
         mainWindow.webContents.send('params', JSON.stringify(appArgs));
     });
 
+    mainWindow.on('page-title-updated', function () {
+        if (isOSX() && !mainWindow.isFocused()) {
+            app.dock.setBadge('●');
+        }
+    });
+
+    mainWindow.webContents.on('new-window', function (event, url) {
+        event.preventDefault();
+        shell.openExternal(url);
+    });
+
+    mainWindow.loadURL(appArgs.targetUrl);
     // if the window is focused, clear the badge
     mainWindow.on('focus', function () {
         if (isOSX()) {
@@ -79,15 +94,6 @@ app.on('ready', function () {
             mainWindow.hide();
         }
     });
-});
-
-// listen for a notification message
-ipc.on('notification-message', function (event, arg) {
-    if (arg === 'TITLE_CHANGED') {
-        if (isOSX() && !mainWindow.isFocused()) {
-            app.dock.setBadge('●');
-        }
-    }
 });
 
 function isOSX() {
