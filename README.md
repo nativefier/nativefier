@@ -35,6 +35,14 @@ Nativefier will intelligently attempt to determine the app name, your OS and pro
 $ nativefier --app-name "Some Awesome App" "http://medium.com"
 ```
 
+Certain websites such as WhatsApp Web might say that your browser is unsupported. To get around this, simply pass in the `--pretend` flag, as such:
+
+```
+$ nativefier --pretend "http://web.whatsapp.com"
+```
+
+This will use a preset user agent string to make the website think you're accessing it from a regular Google Chrome browser.
+
 Other command line options are listed below.
 
 ## Options
@@ -151,6 +159,13 @@ Height of the packaged application, defaults to `800px`.
 ```
 
 Set the user agent to run the created app with.
+
+### [pretend]
+```
+-p, --pretend
+```
+
+Uses a preset user agent string for your OS and pretends to be a regular Google Chrome browser.
 
 ## How It Works
 

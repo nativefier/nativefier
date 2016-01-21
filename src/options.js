@@ -23,6 +23,7 @@ function optionsFactory(name,
                         width = 1280,
                         height = 800,
                         userAgent,
+                        pretend,
                         callback) {
 
     targetUrl = normalizeUrl(targetUrl);
@@ -33,6 +34,10 @@ function optionsFactory(name,
 
     if (!height) {
         height = 800;
+    }
+
+    if (!userAgent && pretend) {
+        userAgent = getFakeUserAgent();
     }
 
     const options = {
@@ -119,6 +124,22 @@ function normalizeUrl(testUrl) {
         throw `Your Url: "${normalized}" is invalid!`;
     }
     return normalized;
+}
+
+function getFakeUserAgent() {
+    let userAgent;
+    switch (os.platform()) {
+        case 'darwin':
+            userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36';
+            break;
+        case 'win32':
+            userAgent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
+            break;
+        case 'linux':
+            userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36';
+            break;
+    }
+    return userAgent;
 }
 
 export default optionsFactory;
