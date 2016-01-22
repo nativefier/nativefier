@@ -29,9 +29,15 @@ function buildApp(options, callback) {
     var tmpObj = tmp.dirSync({unsafeCleanup: true});
     const tmpPath = tmpObj.name;
 
+    var windowNotResizable = true;
+
+    if (options.windowNotResizable) {
+        windowNotResizable = false;
+    }
+
     async.waterfall([
         callback => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, options.userAgent, callback);
+            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.width, options.height, windowNotResizable, options.userAgent, callback);
         },
 
         (tempDir, callback) => {
@@ -63,10 +69,11 @@ function buildApp(options, callback) {
  * @param {boolean} badge
  * @param {number} width
  * @param {number} height
+ * @param {boolean} windowNotResizable
  * @param {string} userAgent
  * @param {tempDirCallback} callback
  */
-function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, userAgent, callback) {
+function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, height, windowNotResizable, userAgent, callback) {
     const loadedPackageJson = packageJson;
     copy(srcAppDir, tempDir, function(error) {
         if (error) {
@@ -81,6 +88,7 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, width, h
             badge: badge,
             width: width,
             height: height,
+            windowNotResizable: windowNotResizable,
             userAgent: userAgent,
             nativefierVersion: loadedPackageJson.version
         };
