@@ -97,7 +97,7 @@ app.on('ready', function () {
             return;
         }
         event.preventDefault();
-        shell.openExternal(url);
+        shell.openExternal(urlToGo);
     });
 
     mainWindow.loadURL(appArgs.targetUrl);
