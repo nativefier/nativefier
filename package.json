@@ -12,11 +12,13 @@
   "main": "lib/buildApp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d lib",
+    "build-app": "browserify app/src/main.js --node --ignore-missing --detect-globals false --debug -o app/lib/main.js && cp app/src/preload.js app/lib/preload.js",
+    "build-module": "babel src -d lib",
+    "build": "npm run build-app && npm run build-module",
     "watch": "babel --watch src -d lib",
     "prepublish": "npm run build",
     "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
-    "start-placeholder": "electron app",
+    "start-placeholder": "npm run build && electron app",
     "debug-auth": "npm run build && node lib/cli.js http://feedly.com/i/welcome ~/Desktop --overwrite --app-name feedly && open ~/Desktop/feedly-darwin-x64/feedly.app"
   },
   "bin": {
@@ -51,6 +53,7 @@
   "devDependencies": {
     "babel-cli": "^6.4.0",
     "babel-preset-es2015": "^6.3.13",
+    "browserify": "^13.0.0",
     "electron-prebuilt": "^0.36.4"
   }
 }
