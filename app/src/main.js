@@ -54,6 +54,7 @@ app.on('ready', function () {
         {
             width: appArgs.width || 1280,
             height: appArgs.height || 800,
+            'auto-hide-menu-bar': ! appArgs.showMenuBar,
             'web-preferences': {
                 javascript: true,
                 plugins: true,

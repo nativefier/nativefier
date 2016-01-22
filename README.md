@@ -158,6 +158,14 @@ Width of the packaged application, defaults to `1280px`.
 
 Height of the packaged application, defaults to `800px`.
 
+#### [show-menu-bar]
+
+```
+-m, --show-menu-bar
+```
+
+Specifies if the menu bar should be shown.
+
 #### [user-agent]
 
 ```

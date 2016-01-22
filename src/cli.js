@@ -27,6 +27,7 @@ function main(program) {
                 program.counter,
                 program.width,
                 program.height,
+                program.showMenuBar,
                 program.userAgent,
                 program.honest,
                 callback);
@@ -40,7 +41,6 @@ function main(program) {
             console.error(error);
             return;
         }
-
         console.log(`App built to ${appPath}`);
     });
 }
@@ -64,6 +64,7 @@ if (require.main === module) {
         .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX)')
         .option('-w, --width <value>', 'set window width, defaults to 1280px', parseInt)
         .option('-h, --height <value>', 'set window height, defaults to 800px', parseInt)
+        .option('-m, --show-menu-bar', 'set menu bar visible, defaults to false')
         .option('-u, --user-agent <value>', 'set the user agent string for the app')
         .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
         .parse(process.argv);

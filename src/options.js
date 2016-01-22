@@ -23,6 +23,7 @@ function optionsFactory(name,
                         counter = false,
                         width = 1280,
                         height = 800,
+                        showMenuBar = false,
                         userAgent,
                         honest = false,
                         callback) {
@@ -63,6 +64,7 @@ function optionsFactory(name,
         counter: counter,
         width: width,
         height: height,
+        showMenuBar: showMenuBar,
         userAgent: userAgent
     };
 

@@ -31,7 +31,7 @@ function buildApp(options, callback) {
 
     async.waterfall([
         callback => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.counter, options.width, options.height, options.userAgent, callback);
+            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.badge, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, callback);
         },
 
         (tempDir, callback) => {
@@ -64,10 +64,11 @@ function buildApp(options, callback) {
  * @param {boolean} counter
  * @param {number} width
  * @param {number} height
+ * @param {boolean} showMenuBar
  * @param {string} userAgent
  * @param {tempDirCallback} callback
  */
-function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, counter, width, height, userAgent, callback) {
+function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, counter, width, height, showMenuBar, userAgent, callback) {
     const loadedPackageJson = packageJson;
     copy(srcAppDir, tempDir, function(error) {
         if (error) {
@@ -83,6 +84,7 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, badge, counter,
             counter: counter,
             width: width,
             height: height,
+            showMenuBar: showMenuBar,
             userAgent: userAgent,
             nativefierVersion: loadedPackageJson.version
         };
