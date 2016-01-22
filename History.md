@@ -1,4 +1,12 @@
 
+6.5.5 / 2016-01-22
+==================
+
+  * Implement script to set up dev environment
+  * Fix bug in invalid parameter for link in default browser
+  * App is now precompiled with browserify as a workaround for an extremely annoying npm issue
+  * Reorganised folder of app
+
 6.5.4 / 2016-01-22
 ==================
 
