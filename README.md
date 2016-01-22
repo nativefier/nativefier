@@ -35,14 +35,6 @@ Nativefier will intelligently attempt to determine the app name, your OS and pro
 $ nativefier --app-name "Some Awesome App" "http://medium.com"
 ```
 
-Certain websites such as WhatsApp Web might say that your browser is unsupported. To get around this, simply pass in the `--pretend` flag, as such:
-
-```
-$ nativefier --pretend "http://web.whatsapp.com"
-```
-
-This will use a preset user agent string to make the website think you're accessing it from a regular Google Chrome browser.
-
 Other command line options are listed below.
 
 ## Options
@@ -136,7 +128,7 @@ There is no known way to intercept and set an event listener for a desktop notif
 
 However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood.
 
-#### [counter[
+#### [counter]
 
 ```
 --counter
@@ -168,12 +160,14 @@ Height of the packaged application, defaults to `800px`.
 
 Set the user agent to run the created app with.
 
-### [pretend]
-```
--p, --pretend
-```
+### [honest]
 
-Uses a preset user agent string for your OS and pretends to be a regular Google Chrome browser.
+```
+--honest
+```
+By default, nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
+
+If this flag is passed, it will not override the user agent.
 
 ## How It Works
 
