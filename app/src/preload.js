@@ -1,5 +1,5 @@
 /**
- * Created by JiaHao on 5/7/15.
+ Preload file that will be executed in the renderer process
  */
 
 var ipc = require('electron').ipcRenderer;
@@ -10,4 +10,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 ipc.on('params', function (event, message) {
     var appArgs = JSON.parse(message);
+    console.log('nativefier.json', appArgs);
 });

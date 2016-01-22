@@ -4,6 +4,7 @@
 
 var fs = require('fs');
 var os = require('os');
+var path = require('path');
 var electron = require('electron');
 
 var wurl = require('wurl');
@@ -13,9 +14,9 @@ var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
 var ipcMain = electron.ipcMain;
 
-var buildMenu = require('./buildMenu');
+var buildMenu = require('./components/menu/menu');
 
-const APP_ARGS_FILE_PATH = __dirname + '/nativefier.json';
+const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 
 var mainWindow = null;
 
@@ -57,7 +58,7 @@ app.on('ready', function () {
                 javascript: true,
                 plugins: true,
                 nodeIntegration: false,
-                preload: __dirname + '/assets/js/index.js'
+                preload: path.join(__dirname, 'preload.js')
             }
         }
     );
