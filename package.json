@@ -11,6 +11,7 @@
   ],
   "main": "lib/buildApp.js",
   "scripts": {
+    "postinstall": "cd app && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "babel src -d lib",
     "watch": "babel --watch src -d lib",
