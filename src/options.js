@@ -130,7 +130,7 @@ function normalizeUrl(testUrl) {
     if (!parsed.protocol) {
         normalized = 'http://' + normalized;
     }
-    if (!validator.isURL(normalized, {require_protocol: true, require_tld: false})) {
+    if (!validator.isURL(normalized, {protocols: ['http','https','ftp', 'file'], require_protocol: true, require_tld: false})) {
         throw `Your Url: "${normalized}" is invalid!`;
     }
     return normalized;
