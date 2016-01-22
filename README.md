@@ -16,6 +16,8 @@ Nativefier is a command line tool that allows you to easily create a desktop app
 
 I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
 
+View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/History.md).
+
 ## Installation
 
 With [Node.js](https://nodejs.org/) installed,
