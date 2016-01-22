@@ -12,9 +12,13 @@ You're done.
 
 ## Introduction
 
-I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com). Nativefier creates a desktop application for any single page web application by wrapping it in an OS executable (`.app`, `.exe`, etc.), and they are packaged with [Electron](http://electron.atom.io) by simply running a simple command.
+Nativefier is a command line tool that allows you to easily create a desktop application for any web site with succinct and minimal configuration. Apps are wrapped by [Electron](http://electron.atom.io) in an OS executable (`.app`, `.exe`, etc.) for use on Windows, OSX and Linux.
+
+I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
 
 ## Installation
+
+With [Node.js](https://nodejs.org/) installed,
 
 ```bash
 # for use from the command line
@@ -29,7 +33,7 @@ Creating a native desktop app for [medium.com](http://medium.com):
 $ nativefier "http://medium.com"
 ```
 
-Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name=Medium` as part of the command line options, as such.
+Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--app-name "Medium"` as part of the command line options, as such.
 
 ```
 $ nativefier --app-name "Some Awesome App" "http://medium.com"
@@ -38,6 +42,7 @@ $ nativefier --app-name "Some Awesome App" "http://medium.com"
 Other command line options are listed below.
 
 ## Options
+
 ```bash
 $ nativefier [options] <targetUrl> [dest]
 ```
@@ -89,7 +94,6 @@ Processor architecture, automatically determined based on the current OS. Can be
 
 Electron version without the `v`, see https://github.com/atom/electron/releases.
 
-
 #### [overwrite]
 
 ```
@@ -134,7 +138,7 @@ However, this would cause issues when the command line argument `target` is set 
 --counter
 ```
 
-Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. GMail).  Same limitations as the badge option (above).
+Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).  Same limitations as the badge option (above).
 
 #### [width]
 
@@ -179,7 +183,3 @@ Tested mostly on OSX, but should work for windows and linux.
 
 ### Back Button
 A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can be built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
-
-## Issues
-
-- Better workaround for desktop notifications and OSX dock badges
