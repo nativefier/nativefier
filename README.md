@@ -177,6 +177,28 @@ If this flag is passed, it will not override the user agent.
 
 A template app with the appropriate event listeners and callbacks set up is included in the `./app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and is packaged into an app with [Electron Packager](https://github.com/maxogden/electron-packager).
 
+## Development
+
+```bash
+$ git clone https://github.com/jiahaog/nativefier.git
+$ cd nativefier
+
+# Set up dev environment
+$ npm run dev-up
+
+# Sets up symlink for local files to global nativefier
+$ npm link
+
+# You can then run nativefier with your test parameters
+$ nativefier <...>
+```
+
+After changing any source files, you need to run the following command to compile them.
+
+```bash
+$ npm run build
+```
+
 ## Notes
 
 Tested mostly on OSX, but should work for windows and linux.
