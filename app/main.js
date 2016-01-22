@@ -5,7 +5,7 @@
 var fs = require('fs');
 var os = require('os');
 var electron = require('electron');
-
+var windowStateKeeper = require('electron-window-state');
 var wurl = require('./lib/wurl');
 var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
@@ -48,10 +48,17 @@ app.on('before-quit', () => {
 });
 
 app.on('ready', function () {
+    var mainWindowState = windowStateKeeper({
+        defaultWidth: appArgs.width || 1280,
+        defaultHeight: appArgs.height || 800
+    });
+
     mainWindow = new BrowserWindow(
         {
-            width: appArgs.width || 1280,
-            height: appArgs.height || 800,
+            width: mainWindowState.width,
+            height: mainWindowState.height,
+            x: mainWindowState.x,
+            y: mainWindowState.y,
             'web-preferences': {
                 javascript: true,
                 plugins: true,
@@ -60,6 +67,8 @@ app.on('ready', function () {
             }
         }
     );
+
+    mainWindowState.manage(mainWindow);
 
     buildMenu(mainWindow, appArgs.nativefierVersion, app.quit);
 
