@@ -1,4 +1,12 @@
 
+6.5.4 / 2016-01-22
+==================
+
+  * Fix #46 Url is not defined
+  * Override user agent by default, disable with `--honest` flag
+  * Implement counter which closes #33, thanks to @jfouchard
+  * Improve automatic retrieval of app name by faking a user agent to make the request
+
 6.5.0 / 2016-01-22
 ==================
 
