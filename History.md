@@ -1,4 +1,12 @@
 
+6.5.0 / 2016-01-22
+==================
+
+  * Implement support for http authentication, fixes #19
+  * Implement authentication that requires a new window to be opened (e.g. OAuth)
+  * Under the hood changes:
+    * Target web page no longer loads in a `<webview>`, the `BrowserWindow` loads the target url directly
+
 6.4.0 / 2016-01-21
 ==================
 
