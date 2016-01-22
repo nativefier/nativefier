@@ -10,10 +10,7 @@ hookNotify(function(title, opt){
 });
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  // do things here
-  Notification.requestPermission().then(function(){
-    new Notification('test')
-  })
+  // do things
 });
 
 ipc.on('params', function (event, message) {
