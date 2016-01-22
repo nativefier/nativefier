@@ -5,6 +5,7 @@
 
 # ignore src files
 src
+dist
 
 # Logs
 logs
