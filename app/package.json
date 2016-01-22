@@ -2,7 +2,7 @@
   "name": "nativefier-placeholder",
   "version": "1.0.0",
   "description": "Placeholder for the nativefier cli to override with a target url",
-  "main": "main.js",
+  "main": "lib/main.js",
   "dependencies": {
     "wurl": "^2.1.0"
   },

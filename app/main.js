@@ -6,7 +6,8 @@ var fs = require('fs');
 var os = require('os');
 var electron = require('electron');
 
-var wurl = require('./lib/wurl');
+var wurl = require('wurl');
+
 var app = electron.app;
 var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
