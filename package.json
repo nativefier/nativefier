@@ -12,7 +12,7 @@
   "main": "lib/buildApp.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-app": "browserify app/main.js --node --ignore-missing --detect-globals=false --debug -o app/lib/main.js",
+    "build-app": "browserify app/src/main.js --node --ignore-missing --detect-globals false --debug -o app/lib/main.js && cp app/src/preload.js app/lib/preload.js",
     "build-module": "babel src -d lib",
     "build": "npm run build-app && npm run build-module",
     "watch": "babel --watch src -d lib",
