@@ -23,7 +23,7 @@ $ npm install nativefier -g
 
 ## Usage
 
-Creating a native desktop app for [medium.com](medium.com):
+Creating a native desktop app for [medium.com](http://medium.com):
 
 ```bash
 $ nativefier "http://medium.com"
