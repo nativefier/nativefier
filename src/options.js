@@ -20,6 +20,7 @@ function optionsFactory(name,
                         conceal = false,
                         icon,
                         badge = false,
+                        counter = false,
                         width = 1280,
                         height = 800,
                         userAgent,
@@ -59,6 +60,7 @@ function optionsFactory(name,
 
         // app configuration
         badge: badge,
+        counter: counter,
         width: width,
         height: height,
         userAgent: userAgent

@@ -71,11 +71,26 @@ app.on('ready', function () {
         mainWindow.webContents.send('params', JSON.stringify(appArgs));
     });
 
-    mainWindow.on('page-title-updated', function () {
-        if (isOSX() && !mainWindow.isFocused()) {
+    if (appArgs.badge || appArgs.counter) {
+        mainWindow.on('page-title-updated', function () {
+
+            if (!isOSX() || mainWindow.isFocused()) {
+                return;
+            }
+
+            if (appArgs.counter) {
+                var itemCountRegex = /[\(](\d*?)[\)]/;
+                var match = itemCountRegex.exec(mainWindow.getTitle());
+                console.log(mainWindow.getTitle(), match);
+                if (match) {
+                    app.dock.setBadge(match[1]);
+                }
+                return;
+            }
+
             app.dock.setBadge('●');
-        }
-    });
+        });
+    }
 
     mainWindow.webContents.on('new-window', function (event, urlToGo) {
         if (linkIsInternal(appArgs.targetUrl, urlToGo)) {
@@ -88,7 +103,10 @@ app.on('ready', function () {
     mainWindow.loadURL(appArgs.targetUrl);
     // if the window is focused, clear the badge
     mainWindow.on('focus', function () {
-        if (isOSX()) {
+        if (!isOSX()) {
+            return;
+        }
+        if (appArgs.badge || appArgs.counter) {
             app.dock.setBadge('');
         }
     });

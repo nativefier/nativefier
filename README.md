@@ -136,6 +136,14 @@ There is no known way to intercept and set an event listener for a desktop notif
 
 However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood.
 
+#### [counter[
+
+```
+--counter
+```
+
+Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. GMail).  Same limitations as the badge option (above).
+
 #### [width]
 
 ```
