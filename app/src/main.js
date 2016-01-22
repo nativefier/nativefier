@@ -94,6 +94,14 @@ app.on('ready', function () {
         });
     }
 
+    mainWindow.on('notification', function (title) {
+        if (!isOSX() || mainWindow.isFocused()) {
+            return;
+        }
+
+        app.dock.setBadge('●');
+    });
+
     mainWindow.webContents.on('new-window', function (event, urlToGo) {
         if (linkIsInternal(appArgs.targetUrl, urlToGo)) {
             return;
@@ -108,9 +116,7 @@ app.on('ready', function () {
         if (!isOSX()) {
             return;
         }
-        if (appArgs.badge || appArgs.counter) {
-            app.dock.setBadge('');
-        }
+        app.dock.setBadge('');
     });
 
     mainWindow.on('close', (e) => {
