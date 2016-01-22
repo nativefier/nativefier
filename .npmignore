@@ -6,6 +6,9 @@
 # ignore src files
 src
 
+# ignore screenshots
+screenshots
+
 # Logs
 logs
 *.log
