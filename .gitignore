@@ -4,7 +4,12 @@
 # Node.js
 
 # ignore compiled lib files
-lib
+lib/*
+app/lib/*
+
+# commit a placeholder to keep the app/lib directory
+!app/lib/.placeholder
+
 dist
 
 # Logs

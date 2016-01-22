@@ -12,7 +12,6 @@
   "main": "lib/buildApp.js",
   "scripts": {
     "dev-up": "npm install && (cd app && npm install)",
-    "postinstall": "mkdir -p app/lib",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-app": "browserify app/src/main.js --node --ignore-missing --detect-globals false --debug -o app/lib/main.js && cp app/src/preload.js app/lib/preload.js",
     "build-module": "babel src -d lib",
