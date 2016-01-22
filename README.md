@@ -12,9 +12,13 @@ You're done.
 
 ## Introduction
 
-I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com). Nativefier creates a desktop application for any single page web application by wrapping it in an OS executable (`.app`, `.exe`, etc.), and they are packaged with [Electron](http://electron.atom.io) by simply running a simple command.
+Nativefier is a command line tool that allows you to easily create a desktop application for any web site with succinct and minimal configuration. Apps are wrapped by [Electron](http://electron.atom.io) in an OS executable (`.app`, `.exe`, etc.) for use on Windows, OSX and Linux.
+
+I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
 
 ## Installation
+
+With [Node.js](https://nodejs.org/) installed,
 
 ```bash
 # for use from the command line
@@ -29,23 +33,16 @@ Creating a native desktop app for [medium.com](http://medium.com):
 $ nativefier "http://medium.com"
 ```
 
-Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name=Medium` as part of the command line options, as such.
+Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--app-name "Medium"` as part of the command line options, as such.
 
 ```
 $ nativefier --app-name "Some Awesome App" "http://medium.com"
 ```
 
-Certain websites such as WhatsApp Web might say that your browser is unsupported. To get around this, simply pass in the `--pretend` flag, as such:
-
-```
-$ nativefier --pretend "http://web.whatsapp.com"
-```
-
-This will use a preset user agent string to make the website think you're accessing it from a regular Google Chrome browser.
-
 Other command line options are listed below.
 
 ## Options
+
 ```bash
 $ nativefier [options] <targetUrl> [dest]
 ```
@@ -97,7 +94,6 @@ Processor architecture, automatically determined based on the current OS. Can be
 
 Electron version without the `v`, see https://github.com/atom/electron/releases.
 
-
 #### [overwrite]
 
 ```
@@ -136,13 +132,13 @@ There is no known way to intercept and set an event listener for a desktop notif
 
 However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood.
 
-#### [counter[
+#### [counter]
 
 ```
 --counter
 ```
 
-Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. GMail).  Same limitations as the badge option (above).
+Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).  Same limitations as the badge option (above).
 
 #### [width]
 
@@ -168,12 +164,14 @@ Height of the packaged application, defaults to `800px`.
 
 Set the user agent to run the created app with.
 
-### [pretend]
-```
--p, --pretend
-```
+### [honest]
 
-Uses a preset user agent string for your OS and pretends to be a regular Google Chrome browser.
+```
+--honest
+```
+By default, nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
+
+If this flag is passed, it will not override the user agent.
 
 ## How It Works
 
@@ -185,7 +183,3 @@ Tested mostly on OSX, but should work for windows and linux.
 
 ### Back Button
 A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can be built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
-
-## Issues
-
-- Better workaround for desktop notifications and OSX dock badges

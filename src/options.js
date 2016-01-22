@@ -24,7 +24,7 @@ function optionsFactory(name,
                         width = 1280,
                         height = 800,
                         userAgent,
-                        pretend,
+                        honest = false,
                         callback) {
 
     targetUrl = normalizeUrl(targetUrl);
@@ -37,7 +37,7 @@ function optionsFactory(name,
         height = 800;
     }
 
-    if (!userAgent && pretend) {
+    if (!userAgent && !honest) {
         userAgent = getFakeUserAgent();
     }
 
