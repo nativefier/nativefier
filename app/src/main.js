@@ -8,7 +8,6 @@ var electron = require('electron');
 var createMainWindow = require('./components/mainWindow/mainWindow');
 var createLoginWindow = require('./components/login/loginWindow');
 var helpers = require('./helpers/helpers');
-
 var app = electron.app;
 var ipcMain = electron.ipcMain;
 var isOSX = helpers.isOSX;
@@ -66,6 +65,5 @@ ipcMain.on('notification', function(event, title, opts) {
     if (!isOSX() || mainWindow.isFocused()) {
         return;
     }
-
     setDockBadge('●');
 });

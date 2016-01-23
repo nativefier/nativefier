@@ -1,8 +1,8 @@
 var path = require('path');
 var electron = require('electron');
+var windowStateKeeper = require('electron-window-state');
 var helpers = require('./../../helpers/helpers');
 var createMenu = require('./../menu/menu');
-
 var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
 var isOSX = helpers.isOSX;
@@ -18,10 +18,16 @@ const ZOOM_INTERVAL = 0.1;
  * @returns {electron.BrowserWindow}
  */
 function createMainWindow(options, onAppQuit, setDockBadge) {
+    var mainWindowState = windowStateKeeper({
+        defaultWidth: options.width || 1280,
+        defaultHeight: options.height || 800
+    });
     var mainWindow = new BrowserWindow(
         {
-            width: options.width || 1280,
-            height: options.height || 800,
+            width: mainWindowState.width,
+            height: mainWindowState.height,
+            x: mainWindowState.x,
+            y: mainWindowState.y,
             title: options.name,
             'web-preferences': {
                 javascript: true,
@@ -29,7 +35,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
                 nodeIntegration: false,
                 preload: path.join(__dirname, 'static', 'preload.js')
             },
-            icon: options.icon || path.join(__dirname,'/icon.png') // hardcoded by default until you decide how to pass in an icon
+            icon: options.icon || path.join(__dirname, '/icon.png') // hardcoded by default until you decide how to pass in an icon
         }
     );
 
@@ -97,6 +103,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         maybeHideWindow(mainWindow, event)
     });
 
+    mainWindowState.manage(mainWindow);
     return mainWindow;
 }
 
