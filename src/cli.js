@@ -60,8 +60,8 @@ if (require.main === module) {
         .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')
         .option('--counter', 'if the target app should use a persistant counter badge in the dock (OSX only), defaults to false')
         .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX)')
-        .option('-w, --width <value>', 'set window width, defaults to 1280px', parseInt)
-        .option('-h, --height <value>', 'set window height, defaults to 800px', parseInt)
+        .option('--width <value>', 'set window width, defaults to 1280px', parseInt)
+        .option('--height <value>', 'set window height, defaults to 800px', parseInt)
         .option('-u, --user-agent <value>', 'set the user agent string for the app')
         .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
         .parse(process.argv);

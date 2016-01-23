@@ -146,7 +146,7 @@ Use a counter that persists even with window focus for the application badge for
 #### [width]
 
 ```
--w, --width <value>
+--width <value>
 ```
 
 Width of the packaged application, defaults to `1280px`.
@@ -154,7 +154,7 @@ Width of the packaged application, defaults to `1280px`.
 #### [height]
 
 ```
--h, --height <value>
+--height <value>
 ```
 
 Height of the packaged application, defaults to `800px`.
