@@ -6,13 +6,18 @@ import babel from 'gulp-babel';
 import runSequence from 'run-sequence';
 import path from 'path';
 import childProcess from 'child_process';
+import shelljs from 'shelljs'
 
 const PATHS = setUpPaths();
 
 gulp.task('default', ['build']);
 
 gulp.task('build', callback => {
-    runSequence('clean', ['build-cli', 'build-app'], callback);
+    runSequence('clean', ['build-cli', 'build-app'],'link', callback);
+});
+
+gulp.task('link', ()=>{
+    shelljs.exec('npm link');
 });
 
 gulp.task('build-app', ['build-static'], () => {
