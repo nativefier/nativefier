@@ -28,7 +28,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
                 plugins: true,
                 nodeIntegration: false,
                 preload: path.join(__dirname, 'static', 'preload.js')
-            }
+            },
+            icon: options.icon || path.join(__dirname,'/icon.png') // hardcoded by default until you decide how to pass in an icon
         }
     );
 
