@@ -2,7 +2,14 @@ var electron = require('electron');
 var Menu = electron.Menu;
 var shell = electron.shell;
 
-module.exports = function (mainWindow, nativefierVersion, onQuit, onZoomIn, onZoomOut) {
+/**
+ *
+ * @param {string} nativefierVersion
+ * @param {electron.app.quit} onQuit should be from app.quit
+ * @param {function} onZoomIn
+ * @param {function} onZoomOut
+ */
+function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut) {
     if (Menu.getApplicationMenu())
         return;
 
@@ -51,57 +58,57 @@ module.exports = function (mainWindow, nativefierVersion, onQuit, onZoomIn, onZo
                 {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
-                    click: function(item, focusedWindow) {
+                    click: function (item, focusedWindow) {
                         if (focusedWindow)
                             focusedWindow.reload();
                     }
                 },
                 {
                     label: 'Toggle Full Screen',
-                    accelerator: (function() {
+                    accelerator: (function () {
                         if (process.platform == 'darwin')
                             return 'Ctrl+Command+F';
                         else
                             return 'F11';
                     })(),
-                    click: function(item, focusedWindow) {
+                    click: function (item, focusedWindow) {
                         if (focusedWindow)
                             focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
                     }
                 },
                 {
                     label: 'Zoom In',
-                    accelerator: (function() {
+                    accelerator: (function () {
                         if (process.platform == 'darwin')
                             return 'Command+=';
                         else
                             return 'Ctrl+=';
                     })(),
-                    click: function() {
+                    click: function () {
                         onZoomIn();
                     }
                 },
                 {
                     label: 'Zoom Out',
-                    accelerator: (function() {
+                    accelerator: (function () {
                         if (process.platform == 'darwin')
                             return 'Command+-';
                         else
                             return 'Ctrl+-';
                     })(),
-                    click: function() {
+                    click: function () {
                         onZoomOut();
                     }
                 },
                 {
                     label: 'Toggle Window Developer Tools',
-                    accelerator: (function() {
+                    accelerator: (function () {
                         if (process.platform == 'darwin')
                             return 'Alt+Command+I';
                         else
                             return 'Ctrl+Shift+I';
                     })(),
-                    click: function(item, focusedWindow) {
+                    click: function (item, focusedWindow) {
                         if (focusedWindow)
                             focusedWindow.toggleDevTools();
                     }
@@ -130,11 +137,15 @@ module.exports = function (mainWindow, nativefierVersion, onQuit, onZoomIn, onZo
             submenu: [
                 {
                     label: `Built with Nativefier v${nativefierVersion}`,
-                    click: function() { shell.openExternal('https://github.com/jiahaog/nativefier') }
+                    click: function () {
+                        shell.openExternal('https://github.com/jiahaog/nativefier')
+                    }
                 },
                 {
                     label: 'Report an Issue',
-                    click: function() { shell.openExternal('https://github.com/jiahaog/nativefier/issues') }
+                    click: function () {
+                        shell.openExternal('https://github.com/jiahaog/nativefier/issues')
+                    }
                 }
             ]
         }
@@ -172,7 +183,9 @@ module.exports = function (mainWindow, nativefierVersion, onQuit, onZoomIn, onZo
                 {
                     label: 'Quit',
                     accelerator: 'Command+Q',
-                    click: function() { onQuit(); }
+                    click: function () {
+                        onQuit();
+                    }
                 },
             ]
         });
@@ -189,4 +202,6 @@ module.exports = function (mainWindow, nativefierVersion, onQuit, onZoomIn, onZo
 
     var menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
-};
+}
+
+module.exports = createMenu;

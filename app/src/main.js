@@ -3,23 +3,21 @@
  */
 
 var fs = require('fs');
-var os = require('os');
 var path = require('path');
 var electron = require('electron');
-
-var wurl = require('wurl');
+var createMainWindow = require('./components/mainWindow/mainWindow');
+var createLoginWindow = require('./components/login/loginWindow');
+var helpers = require('./helpers/helpers');
 
 var app = electron.app;
-var BrowserWindow = electron.BrowserWindow;
-var shell = electron.shell;
-var ipcMain = electron.ipcMain;
-
-var buildMenu = require('./components/menu/menu');
+var isOSX = helpers.isOSX;
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
-const ZOOM_INTERVAL = 0.1;
 
 var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
+
+var mainWindow;
 
 app.on('window-all-closed', function () {
     if (!isOSX()) {
@@ -49,112 +47,11 @@ app.on('before-quit', () => {
 });
 
 app.on('ready', function () {
-    var currentZoom = 1;
-
-    var mainWindow = new BrowserWindow(
-        {
-            width: appArgs.width || 1280,
-            height: appArgs.height || 800,
-            'web-preferences': {
-                javascript: true,
-                plugins: true,
-                nodeIntegration: false,
-                preload: path.join(__dirname, 'preload.js')
-            }
-        }
-    );
-
-    var onZoomIn = function () {
-        currentZoom += ZOOM_INTERVAL;
-        mainWindow.webContents.send('change-zoom', currentZoom);
-    };
-
-    var onZoomOut = function () {
-        currentZoom -= ZOOM_INTERVAL;
-        mainWindow.webContents.send('change-zoom', currentZoom);
-    };
-
-    buildMenu(mainWindow, appArgs.nativefierVersion, app.quit, onZoomIn, onZoomOut);
-
-    if (appArgs.userAgent) {
-        mainWindow.webContents.setUserAgent(appArgs.userAgent);
-    }
-
-    mainWindow.webContents.on('did-finish-load', function () {
-        mainWindow.webContents.send('params', JSON.stringify(appArgs));
-    });
-
-    if (appArgs.badge || appArgs.counter) {
-        mainWindow.on('page-title-updated', function () {
-
-            if (!isOSX() || mainWindow.isFocused()) {
-                return;
-            }
-
-            if (appArgs.counter) {
-                var itemCountRegex = /[\(](\d*?)[\)]/;
-                var match = itemCountRegex.exec(mainWindow.getTitle());
-                console.log(mainWindow.getTitle(), match);
-                if (match) {
-                    app.dock.setBadge(match[1]);
-                }
-                return;
-            }
-
-            app.dock.setBadge('●');
-        });
-    }
-
-    mainWindow.webContents.on('new-window', function (event, urlToGo) {
-        if (linkIsInternal(appArgs.targetUrl, urlToGo)) {
-            return;
-        }
-        event.preventDefault();
-        shell.openExternal(urlToGo);
-    });
-
-    mainWindow.loadURL(appArgs.targetUrl);
-    // if the window is focused, clear the badge
-    mainWindow.on('focus', function () {
-        if (!isOSX()) {
-            return;
-        }
-        if (appArgs.badge || appArgs.counter) {
-            app.dock.setBadge('');
-        }
-    });
-
-    mainWindow.on('close', (e) => {
-        if (isOSX()) {
-            // this is called when exiting from clicking the cross button on the window
-            e.preventDefault();
-            mainWindow.hide();
-        }
-    });
+    mainWindow = createMainWindow(appArgs, app.quit, app.dock.setBadge);
 });
 
 app.on('login', function(event, webContents, request, authInfo, callback) {
+    // for http authentication
     event.preventDefault();
-    var loginWindow = new BrowserWindow({
-        width: 300,
-        height: 400,
-        frame: false,
-        resizable: false
-    });
-    loginWindow.loadURL('file://' + __dirname + '/components/login/login.html');
-
-    ipcMain.once('login-message', function(event, usernameAndPassword) {
-        callback(usernameAndPassword[0], usernameAndPassword[1]);
-        loginWindow.close();
-    });
+    createLoginWindow(callback);
 });
-
-function isOSX() {
-    return os.platform() === 'darwin';
-}
-
-function linkIsInternal(currentUrl, newUrl) {
-    var currentDomain = wurl('domain', currentUrl);
-    var newDomain = wurl('domain', newUrl);
-    return currentDomain === newDomain;
-}

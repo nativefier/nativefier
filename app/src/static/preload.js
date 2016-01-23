@@ -17,7 +17,6 @@ ipc.on('params', function (event, message) {
 
 
 ipc.on('change-zoom', function (event, message) {
-    console.log('new zom', message);
     webFrame.setZoomFactor(message);
 });
 
