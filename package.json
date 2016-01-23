@@ -16,7 +16,7 @@
     "build-app": "browserify app/src/main.js --node --ignore-missing --detect-globals false --debug -o app/lib/main.js && cp -r app/src/static app/lib/static",
     "build-module": "babel src -d lib",
     "build": "npm run build-app && npm run build-module",
-    "watch": "babel --watch src -d lib",
+    "watch": "while true ; do gulp watch ; done",
     "prepublish": "npm run build",
     "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
     "start-placeholder": "npm run build && electron app",
