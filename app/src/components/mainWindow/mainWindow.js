@@ -2,7 +2,7 @@ var path = require('path');
 var electron = require('electron');
 var helpers = require('./../../helpers/helpers');
 var createMenu = require('./../menu/menu');
-
+var windowStateKeeper = require('electron-window-state');
 var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
 var isOSX = helpers.isOSX;
@@ -18,10 +18,16 @@ const ZOOM_INTERVAL = 0.1;
  * @returns {electron.BrowserWindow}
  */
 function createMainWindow(options, onAppQuit, setDockBadge) {
+    var mainWindowState = windowStateKeeper({
+        defaultWidth: options.width || 1280,
+        defaultHeight: options.height || 800
+    });
     var mainWindow = new BrowserWindow(
         {
-            width: options.width || 1280,
-            height: options.height || 800,
+            width: mainWindowState.width,
+            height: mainWindowState.height,
+            x: mainWindowState.x,
+            y: mainWindowState.y,
             'web-preferences': {
                 javascript: true,
                 plugins: true,
@@ -98,6 +104,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             mainWindow.hide();
         }
     });
+
+    mainWindowState.manage(mainWindow);
 
     return mainWindow;
 }
