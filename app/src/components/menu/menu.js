@@ -5,7 +5,7 @@ var shell = electron.shell;
 /**
  *
  * @param {string} nativefierVersion
- * @param {electron.app.quit} onQuit should be from app.quit
+ * @param {function} onQuit should be from app.quit
  * @param {function} onGoBack
  * @param {electron} onGoForward
  * @param {function} onZoomIn

@@ -13,8 +13,8 @@ const ZOOM_INTERVAL = 0.1;
 /**
  *
  * @param {{}} options AppArgs from nativefier.json
- * @param {electron.app.quit} onAppQuit
- * @param {electron.app.dock.setBadge} setDockBadge
+ * @param {function} onAppQuit
+ * @param {function} setDockBadge
  * @returns {electron.BrowserWindow}
  */
 function createMainWindow(options, onAppQuit, setDockBadge) {
@@ -57,7 +57,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     if (options.counter) {
         mainWindow.on('page-title-updated', function () {
 
-            if (!isOSX() || mainWindow.isFocused()) {
+            if (mainWindow.isFocused()) {
                 return;
             }
 
@@ -85,10 +85,6 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     mainWindow.loadURL(options.targetUrl);
 
     mainWindow.on('focus', function () {
-        if (!isOSX()) {
-            return;
-        }
-
         setDockBadge('');
     });
 

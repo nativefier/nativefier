@@ -19,6 +19,12 @@ var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 var mainWindow;
 
+// do nothing for setDockBadge if not OSX
+let setDockBadge = () => {};
+if (isOSX()) {
+    setDockBadge = app.dock.setBadge;
+}
+
 app.on('window-all-closed', function () {
     if (!isOSX()) {
         app.quit();
@@ -47,7 +53,7 @@ app.on('before-quit', function () {
 });
 
 app.on('ready', function () {
-    mainWindow = createMainWindow(appArgs, app.quit, app.dock.setBadge);
+    mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
 });
 
 app.on('login', function(event, webContents, request, authInfo, callback) {
@@ -61,5 +67,5 @@ ipcMain.on('notification', function(event, title, opts) {
         return;
     }
 
-    app.dock.setBadge('●');
+    setDockBadge('●');
 });
