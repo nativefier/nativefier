@@ -59,6 +59,5 @@ ipcMain.on('notification', function(event, title, opts) {
     if (!isOSX() || mainWindow.isFocused()) {
         return;
     }
-    console.log(isOSX());
     app.dock.setBadge('●');
 });
