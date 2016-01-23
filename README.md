@@ -216,6 +216,3 @@ $ npm run watch
 ## Notes
 
 Tested mostly on OSX, but should work for windows and linux.
-
-### Back Button
-A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can be built for any url, and simply pressing the `backspace` key will take the user back to the previous page.
