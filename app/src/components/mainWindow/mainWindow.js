@@ -35,18 +35,19 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
                 nodeIntegration: false,
                 preload: path.join(__dirname, 'static', 'preload.js')
             },
-            icon: options.icon || path.join(__dirname, '/icon.png') // hardcoded by default until you decide how to pass in an icon
+            // hardcoded by default until you decide how to pass in an icon
+            icon: options.icon || path.join(__dirname, '/icon.png')
         }
     );
 
     var currentZoom = 1;
 
-    var onZoomIn = function () {
+    var onZoomIn = function() {
         currentZoom += ZOOM_INTERVAL;
         mainWindow.webContents.send('change-zoom', currentZoom);
     };
 
-    var onZoomOut = function () {
+    var onZoomOut = function() {
         currentZoom -= ZOOM_INTERVAL;
         mainWindow.webContents.send('change-zoom', currentZoom);
     };
@@ -57,12 +58,12 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         mainWindow.webContents.setUserAgent(options.userAgent);
     }
 
-    mainWindow.webContents.on('did-finish-load', function () {
+    mainWindow.webContents.on('did-finish-load', function() {
         mainWindow.webContents.send('params', JSON.stringify(options));
     });
 
     if (options.counter) {
-        mainWindow.on('page-title-updated', function () {
+        mainWindow.on('page-title-updated', function() {
 
             if (mainWindow.isFocused()) {
                 return;
@@ -81,7 +82,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         });
     }
 
-    mainWindow.webContents.on('new-window', function (event, urlToGo) {
+    mainWindow.webContents.on('new-window', function(event, urlToGo) {
         if (linkIsInternal(options.targetUrl, urlToGo)) {
             return;
         }
@@ -91,7 +92,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
 
     mainWindow.loadURL(options.targetUrl);
 
-    mainWindow.on('focus', function () {
+    mainWindow.on('focus', function() {
         setDockBadge('');
     });
 
@@ -100,7 +101,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             mainWindow.setFullScreen(false);
             mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event));
         }
-        maybeHideWindow(mainWindow, event)
+        maybeHideWindow(mainWindow, event);
     });
 
     mainWindowState.manage(mainWindow);

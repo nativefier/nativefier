@@ -12,8 +12,9 @@ var shell = electron.shell;
  * @param {function} onZoomOut
  */
 function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, onZoomOut) {
-    if (Menu.getApplicationMenu())
+    if (Menu.getApplicationMenu()) {
         return;
+    }
 
     var template = [
         {
@@ -51,7 +52,7 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     label: 'Select All',
                     accelerator: 'CmdOrCtrl+A',
                     role: 'selectall'
-                },
+                }
             ]
         },
         {
@@ -59,22 +60,23 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
             submenu: [
                 {
                     label: 'Back',
-                    click: function () {
+                    click: function() {
                         onGoBack();
                     }
                 },
                 {
                     label: 'Forward',
-                    click: function () {
+                    click: function() {
                         onGoForward();
                     }
                 },
                 {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
-                    click: function (item, focusedWindow) {
-                        if (focusedWindow)
+                    click: function(item, focusedWindow) {
+                        if (focusedWindow) {
                             focusedWindow.reload();
+                        }
                     }
                 },
                 {
@@ -82,52 +84,54 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                 },
                 {
                     label: 'Toggle Full Screen',
-                    accelerator: (function () {
-                        if (process.platform == 'darwin')
+                    accelerator: (function() {
+                        if (process.platform === 'darwin') {
                             return 'Ctrl+Command+F';
-                        else
-                            return 'F11';
+                        }
+                        return 'F11';
                     })(),
-                    click: function (item, focusedWindow) {
-                        if (focusedWindow)
+                    click: function(item, focusedWindow) {
+                        if (focusedWindow) {
                             focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+                        }
                     }
                 },
                 {
                     label: 'Zoom In',
-                    accelerator: (function () {
-                        if (process.platform == 'darwin')
+                    accelerator: (function() {
+                        if (process.platform === 'darwin') {
                             return 'Command+=';
-                        else
-                            return 'Ctrl+=';
+                        }
+                        return 'Ctrl+=';
                     })(),
-                    click: function () {
+                    click: function() {
                         onZoomIn();
                     }
                 },
                 {
                     label: 'Zoom Out',
-                    accelerator: (function () {
-                        if (process.platform == 'darwin')
+                    accelerator: (function() {
+                        if (process.platform === 'darwin') {
                             return 'Command+-';
-                        else
-                            return 'Ctrl+-';
+                        }
+                        return 'Ctrl+-';
                     })(),
-                    click: function () {
+                    click: function() {
                         onZoomOut();
                     }
                 },
                 {
                     label: 'Toggle Window Developer Tools',
-                    accelerator: (function () {
-                        if (process.platform == 'darwin')
+                    accelerator: (function() {
+                        if (process.platform === 'darwin') {
                             return 'Alt+Command+I';
-                        else
-                            return 'Ctrl+Shift+I';
+                        }
+                        return 'Ctrl+Shift+I';
                     })(),
-                    click: function (item, focusedWindow) {
-                        if (focusedWindow)
+                    click: function(item, focusedWindow) {
+                        if (focusedWindow) {
                             focusedWindow.toggleDevTools();
+                        }
                     }
                 }
             ]
@@ -145,7 +149,7 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     label: 'Close',
                     accelerator: 'CmdOrCtrl+W',
                     role: 'close'
-                },
+                }
             ]
         },
         {
@@ -154,21 +158,21 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
             submenu: [
                 {
                     label: `Built with Nativefier v${nativefierVersion}`,
-                    click: function () {
-                        shell.openExternal('https://github.com/jiahaog/nativefier')
+                    click: function() {
+                        shell.openExternal('https://github.com/jiahaog/nativefier');
                     }
                 },
                 {
                     label: 'Report an Issue',
-                    click: function () {
-                        shell.openExternal('https://github.com/jiahaog/nativefier/issues')
+                    click: function() {
+                        shell.openExternal('https://github.com/jiahaog/nativefier/issues');
                     }
                 }
             ]
         }
     ];
 
-    if (process.platform == 'darwin') {
+    if (process.platform === 'darwin') {
         template.unshift({
             label: 'Electron',
             submenu: [
@@ -200,10 +204,10 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                 {
                     label: 'Quit',
                     accelerator: 'Command+Q',
-                    click: function () {
+                    click: function() {
                         onQuit();
                     }
-                },
+                }
             ]
         });
         template[3].submenu.push(

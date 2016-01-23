@@ -20,17 +20,18 @@ var mainWindow;
 
 // do nothing for setDockBadge if not OSX
 let setDockBadge = () => {};
+
 if (isOSX()) {
     setDockBadge = app.dock.setBadge;
 }
 
-app.on('window-all-closed', function () {
+app.on('window-all-closed', function() {
     if (!isOSX()) {
         app.quit();
     }
 });
 
-app.on('activate', function (event, hasVisibleWindows) {
+app.on('activate', function(event, hasVisibleWindows) {
     if (isOSX()) {
         // this is called when the dock is clicked
         if (!hasVisibleWindows) {
@@ -39,7 +40,7 @@ app.on('activate', function (event, hasVisibleWindows) {
     }
 });
 
-app.on('before-quit', function () {
+app.on('before-quit', function() {
     // not fired when the close button on the window is clicked
     if (isOSX()) {
         // need to force a quit as a workaround here to simulate the osx app hiding behaviour
@@ -51,7 +52,7 @@ app.on('before-quit', function () {
     }
 });
 
-app.on('ready', function () {
+app.on('ready', function() {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
 });
 

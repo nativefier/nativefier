@@ -20,7 +20,7 @@ const copy = ncp.ncp;
 
 /**
  *
- * @param options
+ * @param {{}} options
  * @param {buildAppCallback} callback
  */
 function buildApp(options, callback) {
@@ -44,7 +44,6 @@ function buildApp(options, callback) {
         }
     ], callback);
 }
-
 
 /**
  * @callback tempDirCallback

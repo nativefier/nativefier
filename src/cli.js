@@ -10,7 +10,6 @@ import buildApp from './buildApp';
 const packageJson = require(path.join('..', 'package'));
 
 function main(program) {
-
     async.waterfall([
         callback => {
             optionsFactory(
@@ -48,7 +47,7 @@ if (require.main === module) {
     program
         .version(packageJson.version)
         .arguments('<targetUrl> [dest]')
-        .action(function (targetUrl, appDir) {
+        .action(function(targetUrl, appDir) {
             program.targetUrl = targetUrl;
             program.outDir = appDir;
         })

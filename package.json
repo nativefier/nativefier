@@ -12,11 +12,11 @@
   "main": "lib/buildApp.js",
   "scripts": {
     "dev-up": "npm install && (cd app && npm install)",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "gulp test",
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "while true ; do gulp watch ; done",
-    "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
+    "package-placeholder": "npm run build && node lib/cli.js http://www.bennish.net/web-notifications.html ~/Desktop --overwrite --app-name notification-test && open ~/Desktop/notification-test-darwin-x64/notification-test.app",
     "start-placeholder": "npm run build && electron app",
     "release": "gulp release"
   },
@@ -55,8 +55,10 @@
     "babel-preset-es2015": "^6.3.13",
     "del": "^2.2.0",
     "electron-prebuilt": "^0.36.5",
+    "eslint-config-google": "^0.3.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
+    "gulp-eslint": "^1.1.1",
     "gulp-sourcemaps": "^1.6.0",
     "run-sequence": "^1.1.5",
     "webpack-stream": "^3.1.0"

@@ -25,7 +25,6 @@ function optionsFactory(name,
                         userAgent,
                         honest = false,
                         callback) {
-
     targetUrl = normalizeUrl(targetUrl);
 
     if (!width) {
@@ -70,7 +69,7 @@ function optionsFactory(name,
         return;
     }
 
-    getTitle(options.targetUrl, function (error, pageTitle) {
+    getTitle(options.targetUrl, function(error, pageTitle) {
         if (error) {
             console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
             options.name = DEFAULT_APP_NAME;
@@ -116,7 +115,7 @@ function getTitle(url, callback) {
         }
 
         const $ = cheerio.load(body);
-        const pageTitle = $("title").text().replace(/\//g, "");
+        const pageTitle = $('title').text().replace(/\//g, '');
         callback(null, pageTitle);
     });
 }
@@ -145,6 +144,8 @@ function getFakeUserAgent() {
             break;
         case 'linux':
             userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36';
+            break;
+        default:
             break;
     }
     return userAgent;

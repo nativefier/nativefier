@@ -6,6 +6,7 @@ import babel from 'gulp-babel';
 import runSequence from 'run-sequence';
 import path from 'path';
 import childProcess from 'child_process';
+import eslint from 'gulp-eslint';
 
 const PATHS = setUpPaths();
 
@@ -45,7 +46,7 @@ gulp.task('build-static', () => {
 });
 
 gulp.task('watch', ['build'], () => {
-    var handleError = function (error) {
+    var handleError = function(error) {
         console.error(error);
     };
     gulp.watch(PATHS.APP_ALL, ['build-app'])
@@ -61,8 +62,17 @@ gulp.task('publish', done => {
 });
 
 gulp.task('release', callback => {
-    return runSequence('build', 'publish', callback);
+    return runSequence('test', 'build', 'publish', callback);
 });
+
+gulp.task('lint', function() {
+    return gulp.src(['**/*.js', '!node_modules/**', '!app/node_modules/**', '!app/lib/**', '!lib/**'])
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError());
+});
+
+gulp.task('test', ['lint']);
 
 function setUpPaths() {
     const paths = {
