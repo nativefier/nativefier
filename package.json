@@ -1,6 +1,6 @@
 {
   "name": "nativefier",
-  "version": "6.5.3",
+  "version": "6.5.6",
   "description": "Wrap web apps natively",
   "keywords": [
     "desktop",
@@ -11,14 +11,14 @@
   ],
   "main": "lib/buildApp.js",
   "scripts": {
+    "dev-up": "npm install && (cd app && npm install)",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d lib",
-    "watch": "babel --watch src -d lib",
-    "prepublish": "npm run build",
+    "clean": "gulp clean",
+    "build": "gulp build",
+    "watch": "while true ; do gulp watch ; done",
     "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
-    "dev": "npm run build && mkdir -p dist && node lib/cli.js web.whatsapp.com ./dist --overwrite --pretend",
-    "start-placeholder": "electron app",
-    "debug-auth": "npm run build && node lib/cli.js http://feedly.com/i/welcome ~/Desktop --overwrite --app-name feedly && open ~/Desktop/feedly-darwin-x64/feedly.app"
+    "start-placeholder": "npm run build && electron app",
+    "release": "gulp release"
   },
   "bin": {
     "nativefier": "lib/cli.js"
@@ -50,8 +50,15 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.4.0",
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
     "babel-preset-es2015": "^6.3.13",
-    "electron-prebuilt": "^0.36.4"
+    "del": "^2.2.0",
+    "electron-prebuilt": "^0.36.5",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^6.1.1",
+    "gulp-sourcemaps": "^1.6.0",
+    "run-sequence": "^1.1.5",
+    "webpack-stream": "^3.1.0"
   }
 }

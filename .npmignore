@@ -7,6 +7,9 @@
 src
 dist
 
+# ignore screenshots
+screenshots
+
 # Logs
 logs
 *.log
@@ -31,10 +34,6 @@ coverage
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
-
-# Dependency directory
-# https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
-node_modules
 
 # IntelliJ project files
 .idea

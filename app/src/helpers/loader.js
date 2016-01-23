@@ -1,12 +1,7 @@
-/**
- * Created by JiaHao on 5/7/15.
- */
-
-var ipc = require('electron').ipcRenderer;
 var fs = require('fs');
 var path = require('path');
 
-var ScriptLoader = {
+export default {
     _loadScripts: function () {
         var scriptDir = path.join(__dirname, '../scripts');
         if (!fs.existsSync(scriptDir)) {
@@ -29,12 +24,3 @@ var ScriptLoader = {
         }
     }
 };
-
-document.addEventListener("DOMContentLoaded", function (event) {
-    ScriptLoader.runAll(document, event)
-});
-
-ipc.on('params', function (event, message) {
-    var appArgs = JSON.parse(message);
-});
-

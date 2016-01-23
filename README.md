@@ -1,4 +1,5 @@
 # Nativefier
+[![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
 ![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
@@ -15,6 +16,8 @@ You're done.
 Nativefier is a command line tool that allows you to easily create a desktop application for any web site with succinct and minimal configuration. Apps are wrapped by [Electron](http://electron.atom.io) in an OS executable (`.app`, `.exe`, etc.) for use on Windows, OSX and Linux.
 
 I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
+
+View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/History.md).
 
 ## Installation
 
@@ -164,7 +167,7 @@ Height of the packaged application, defaults to `800px`.
 
 Set the user agent to run the created app with.
 
-### [honest]
+#### [honest]
 
 ```
 --honest
@@ -177,9 +180,39 @@ If this flag is passed, it will not override the user agent.
 
 A template app with the appropriate event listeners and callbacks set up is included in the `./app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and is packaged into an app with [Electron Packager](https://github.com/maxogden/electron-packager).
 
+## Development
+
+Setting up the project
+
+```bash
+$ git clone https://github.com/jiahaog/nativefier.git
+$ cd nativefier
+
+# Set up dependencies for the cli tool and the placeholder app
+$ npm run dev-up
+
+# Set up symlinks so that you can run `$ nativefier` for your local changes
+$ npm link
+```
+
+After doing so, you can then run nativefier with your test parameters
+
+```bash
+$ nativefier <...>
+```
+
+Don't forget to compile source files (after making changes):
+
+```bash
+$ npm run build
+```
+
+Or you can automatically watch the files for changes with:
+
+```bash
+$ npm run watch
+```
+
 ## Notes
 
 Tested mostly on OSX, but should work for windows and linux.
-
-### Back Button
-A back button is intentionally not provided because the tool is designed for single page apps. However, if desired, an executable can be built for any url, and simply pressing the `backspace` key will take the user back to the previous page.

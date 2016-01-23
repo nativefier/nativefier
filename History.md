@@ -1,4 +1,25 @@
 
+6.5.6 / 2016-01-22
+==================
+
+  * Workaround for windows `mkdir -p`, fixes #57
+
+6.5.5 / 2016-01-22
+==================
+
+  * Implement script to set up dev environment
+  * Fix bug in invalid parameter for link in default browser
+  * App is now precompiled with browserify as a workaround for an extremely annoying npm issue
+  * Reorganised folder of app
+
+6.5.4 / 2016-01-22
+==================
+
+  * Fix #46 Url is not defined
+  * Override user agent by default, disable with `--honest` flag
+  * Implement counter which closes #33, thanks to @jfouchard
+  * Improve automatic retrieval of app name by faking a user agent to make the request
+
 6.5.0 / 2016-01-22
 ==================
 
