@@ -22,6 +22,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         {
             width: options.width || 1280,
             height: options.height || 800,
+            title: options.name,
             'web-preferences': {
                 javascript: true,
                 plugins: true,
