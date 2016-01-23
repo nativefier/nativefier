@@ -15,6 +15,7 @@ var ipcMain = electron.ipcMain;
 var buildMenu = require('./buildMenu');
 
 const APP_ARGS_FILE_PATH = __dirname + '/nativefier.json';
+const APP_ARGS_ICON_PATH = __dirname + '/icon.png';
 
 var mainWindow = null;
 
@@ -64,7 +65,8 @@ app.on('ready', function () {
                 plugins: true,
                 nodeIntegration: false,
                 preload: __dirname + '/assets/js/index.js'
-            }
+            },
+            icon: APP_ARGS_ICON_PATH
         }
     );
 
@@ -106,7 +108,7 @@ app.on('ready', function () {
             return;
         }
         event.preventDefault();
-        shell.openExternal(url);
+        shell.openExternal(urlToGo);
     });
 
     mainWindow.loadURL(appArgs.targetUrl);
