@@ -2,6 +2,7 @@
  * Created by JiaHao on 4/7/15.
  */
 
+console.log('hihi');
 var fs = require('fs');
 var path = require('path');
 var electron = require('electron');
@@ -12,6 +13,7 @@ var helpers = require('./helpers/helpers');
 var app = electron.app;
 var isOSX = helpers.isOSX;
 
+console.log('dirname', __dirname);
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 
 var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
