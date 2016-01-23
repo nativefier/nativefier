@@ -92,15 +92,24 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         setDockBadge('');
     });
 
-    mainWindow.on('close', (e) => {
-        if (isOSX()) {
-            // this is called when exiting from clicking the cross button on the window
-            e.preventDefault();
-            mainWindow.hide();
+    mainWindow.on('close', event => {
+        if (mainWindow.isFullScreen()) {
+            mainWindow.setFullScreen(false);
+            mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event));
         }
+        maybeHideWindow(mainWindow, event)
     });
 
     return mainWindow;
+}
+
+function maybeHideWindow(window, event) {
+    if (isOSX()) {
+        // this is called when exiting from clicking the cross button on the window
+        event.preventDefault();
+        window.hide();
+    }
+    // will close the window on other platforms
 }
 
 module.exports = createMainWindow;
