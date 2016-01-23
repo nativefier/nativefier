@@ -1,6 +1,6 @@
 # Nativefier
+[![Build Status](https://travis-ci.org/jiahaog/nativefier.svg?branch=master)](https://travis-ci.org/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
-
 ![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
 You want to make a native wrapper for Google Maps (or any web page).
