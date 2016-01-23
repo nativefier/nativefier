@@ -6,10 +6,12 @@ var shell = electron.shell;
  *
  * @param {string} nativefierVersion
  * @param {electron.app.quit} onQuit should be from app.quit
+ * @param {function} onGoBack
+ * @param {electron} onGoForward
  * @param {function} onZoomIn
  * @param {function} onZoomOut
  */
-function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut) {
+function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, onZoomOut) {
     if (Menu.getApplicationMenu())
         return;
 
@@ -56,12 +58,27 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut) {
             label: 'View',
             submenu: [
                 {
+                    label: 'Back',
+                    click: function () {
+                        onGoBack();
+                    }
+                },
+                {
+                    label: 'Forward',
+                    click: function () {
+                        onGoForward();
+                    }
+                },
+                {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
                     click: function (item, focusedWindow) {
                         if (focusedWindow)
                             focusedWindow.reload();
                     }
+                },
+                {
+                    type: 'separator'
                 },
                 {
                     label: 'Toggle Full Screen',

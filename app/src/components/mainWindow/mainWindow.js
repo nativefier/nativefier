@@ -43,7 +43,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         mainWindow.webContents.send('change-zoom', currentZoom);
     };
 
-    createMenu(options.nativefierVersion, onAppQuit, onZoomIn, onZoomOut);
+    createMenu(options.nativefierVersion, onAppQuit, mainWindow.webContents.goBack, mainWindow.webContents.goForward, onZoomIn, onZoomOut);
 
     if (options.userAgent) {
         mainWindow.webContents.setUserAgent(options.userAgent);
