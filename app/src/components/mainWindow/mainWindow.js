@@ -18,7 +18,6 @@ const ZOOM_INTERVAL = 0.1;
  * @returns {electron.BrowserWindow}
  */
 function createMainWindow(options, onAppQuit, setDockBadge) {
-    console.log(__dirname);
     var mainWindow = new BrowserWindow(
         {
             width: options.width || 1280,
@@ -64,7 +63,6 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             if (options.counter) {
                 var itemCountRegex = /[\(](\d*?)[\)]/;
                 var match = itemCountRegex.exec(mainWindow.getTitle());
-                console.log(mainWindow.getTitle(), match);
                 if (match) {
                     setDockBadge(match[1]);
                 }

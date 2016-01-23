@@ -13,16 +13,11 @@
   "scripts": {
     "dev-up": "npm install && (cd app && npm install)",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build-app": "browserify app/src/main.js --node --ignore-missing --detect-globals false --debug -o app/lib/main.js && cp -r app/src/static app/lib/static",
-    "build-module": "babel src -d lib",
-    "build": "npm run build-app && npm run build-module",
+    "build": "gulp build",
     "watch": "while true ; do gulp watch ; done",
     "prepublish": "npm run build",
     "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
     "start-placeholder": "npm run build && electron app",
-    "debug-auth": "npm run build && node lib/cli.js http://feedly.com/i/welcome ~/Desktop --overwrite --app-name feedly && open ~/Desktop/feedly-darwin-x64/feedly.app",
-    "start-webpack": "electron app",
-    "gulp": "gulp",
     "clean": "gulp clean"
   },
   "bin": {
@@ -55,10 +50,11 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.4.0",
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
     "babel-preset-es2015": "^6.3.13",
-    "babelify": "^7.2.0",
     "del": "^2.2.0",
+    "electron-prebuilt": "^0.36.5",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-sourcemaps": "^1.6.0",

@@ -25,5 +25,10 @@ module.exports = {
         global: false,
         __dirname: false
     },
-    externals: nodeModules
+    externals: nodeModules,
+    module: {
+        loaders: [
+            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"}
+        ]
+    }
 };

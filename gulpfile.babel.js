@@ -8,30 +8,7 @@ import runSequence from 'run-sequence';
 
 import path from 'path';
 
-const PATHS = {
-    WEBPACK_CONFIG: './webpack.config.js',
-    APP_SRC: 'app/src',
-    APP_DEST: 'app/lib',
-
-
-
-    CLI_SRC: 'src',
-    CLI_DEST: 'lib'
-};
-    //
-    //APP_ALL: this.APP_SRC + '/**/*',
-    //APP_STATIC_ALL: path.join(this.APP_SRC, 'static') + '/**/*',
-    //APP_STATIC_DEST: path.join(this.APP_DEST, 'static'),
-    //CLI_SRC_JS: this.CLI_SRC + '/**/*.js',
-
-PATHS.APP_MAIN_JS = path.join(PATHS.APP_SRC, '/main.js'),
-PATHS.APP_ALL = PATHS.APP_SRC + '/**/*';
-PATHS.APP_STATIC_ALL = path.join(PATHS.APP_SRC, 'static') + '/**/*';
-PATHS.APP_STATIC_DEST = path.join(PATHS.APP_DEST, 'static');
-PATHS.CLI_SRC_JS = PATHS.CLI_SRC + '/**/*.js';
-
-
-console.log(PATHS);
+const PATHS = setUpPaths();
 
 gulp.task('default', ['build']);
 
@@ -78,3 +55,21 @@ gulp.task('watch', ['build'], () => {
     gulp.watch(PATHS.CLI_SRC_JS, ['build-cli'])
         .on('error', handleError);
 });
+
+function setUpPaths() {
+    const paths = {
+        WEBPACK_CONFIG: './webpack.config.js',
+        APP_SRC: 'app/src',
+        APP_DEST: 'app/lib',
+        CLI_SRC: 'src',
+        CLI_DEST: 'lib'
+    };
+
+    paths.APP_MAIN_JS = path.join(paths.APP_SRC, '/main.js');
+    paths.APP_ALL = paths.APP_SRC + '/**/*';
+    paths.APP_STATIC_ALL = path.join(paths.APP_SRC, 'static') + '/**/*';
+    paths.APP_STATIC_DEST = path.join(paths.APP_DEST, 'static');
+    paths.CLI_SRC_JS = paths.CLI_SRC + '/**/*.js';
+
+    return paths;
+}
