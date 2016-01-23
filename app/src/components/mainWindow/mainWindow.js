@@ -31,6 +31,7 @@ function createMainWindow(options, {quit: onAppQuit, dock}) {
             height: mainWindowState.height,
             x: mainWindowState.x,
             y: mainWindowState.y,
+            title: options.name,
             'web-preferences': {
                 javascript: true,
                 plugins: true,
@@ -100,17 +101,25 @@ function createMainWindow(options, {quit: onAppQuit, dock}) {
         setDockBadge('');
     });
 
-    mainWindow.on('close', (e) => {
-        if (isOSX()) {
-            // this is called when exiting from clicking the cross button on the window
-            e.preventDefault();
-            mainWindow.hide();
+    mainWindow.on('close', event => {
+        if (mainWindow.isFullScreen()) {
+            mainWindow.setFullScreen(false);
+            mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event));
         }
+        maybeHideWindow(mainWindow, event)
     });
 
     mainWindowState.manage(mainWindow);
-
     return mainWindow;
+}
+
+function maybeHideWindow(window, event) {
+    if (isOSX()) {
+        // this is called when exiting from clicking the cross button on the window
+        event.preventDefault();
+        window.hide();
+    }
+    // will close the window on other platforms
 }
 
 module.exports = createMainWindow;
