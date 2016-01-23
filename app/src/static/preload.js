@@ -2,7 +2,9 @@
  Preload file that will be executed in the renderer process
  */
 
-var ipc = require('electron').ipcRenderer;
+var electron = require('electron');
+var ipc = electron.ipcRenderer;
+var webFrame = electron.webFrame;
 
 setNotificationCallback(function (title, opt) {
     ipc.send('notification', title, opt);
@@ -16,6 +18,11 @@ ipc.on('params', function (event, message) {
     var appArgs = JSON.parse(message);
     console.log('nativefier.json', appArgs);
 });
+
+ipc.on('change-zoom', function (event, message) {
+    webFrame.setZoomFactor(message);
+});
+
 
 /**
  * Patches window.Notification to set a callback on a new Notification

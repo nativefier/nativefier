@@ -3,6 +3,5 @@
   "targetUrl": "http:\/\/www.google.com",
   "badge": false,
   "width": 1280,
-  "height": 800,
-  "showDevTools": false
+  "height": 800
 }
