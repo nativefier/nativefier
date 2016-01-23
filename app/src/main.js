@@ -46,7 +46,7 @@ app.on('before-quit', function () {
 });
 
 app.on('ready', function () {
-    mainWindow = createMainWindow(appArgs, app.quit, app.dock.setBadge);
+    mainWindow = createMainWindow(appArgs, app);
 });
 
 app.on('login', function(event, webContents, request, authInfo, callback) {
@@ -59,6 +59,6 @@ ipcMain.on('notification', function(event, title, opts) {
     if (!isOSX() || mainWindow.isFocused()) {
         return;
     }
-
+    console.log(isOSX());
     app.dock.setBadge('●');
 });

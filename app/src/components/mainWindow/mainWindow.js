@@ -17,7 +17,10 @@ const ZOOM_INTERVAL = 0.1;
  * @param {electron.app.dock.setBadge} setDockBadge
  * @returns {electron.BrowserWindow}
  */
-function createMainWindow(options, onAppQuit, setDockBadge) {
+function createMainWindow(options, {quit: onAppQuit, dock}) {
+    if(dock){
+        setDockBadge = dock.setBadge
+    }
     var mainWindowState = windowStateKeeper({
         defaultWidth: options.width || 1280,
         defaultHeight: options.height || 800
