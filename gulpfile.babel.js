@@ -3,7 +3,6 @@ import del from 'del';
 import sourcemaps from 'gulp-sourcemaps';
 import webpack from 'webpack-stream';
 import babel from 'gulp-babel';
-import watchify from 'watchify';
 import runSequence from 'run-sequence';
 
 import path from 'path';
