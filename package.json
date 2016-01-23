@@ -13,11 +13,12 @@
   "scripts": {
     "dev-up": "npm install && (cd app && npm install)",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "gulp clean",
     "build": "gulp build",
     "watch": "while true ; do gulp watch ; done",
     "package-placeholder": "npm run build && node lib/cli.js http://www.medium.com ~/Desktop --overwrite && open ~/Desktop/Medium-darwin-x64/Medium.app",
     "start-placeholder": "npm run build && electron app",
-    "clean": "gulp clean"
+    "release": "gulp release"
   },
   "bin": {
     "nativefier": "lib/cli.js"

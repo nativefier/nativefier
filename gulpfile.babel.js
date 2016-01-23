@@ -4,8 +4,8 @@ import sourcemaps from 'gulp-sourcemaps';
 import webpack from 'webpack-stream';
 import babel from 'gulp-babel';
 import runSequence from 'run-sequence';
-
 import path from 'path';
+import childProcess from 'child_process';
 
 const PATHS = setUpPaths();
 
@@ -53,6 +53,15 @@ gulp.task('watch', ['build'], () => {
 
     gulp.watch(PATHS.CLI_SRC_JS, ['build-cli'])
         .on('error', handleError);
+});
+
+gulp.task('publish', done => {
+    childProcess.spawn('npm', ['publish'], {stdio: 'inherit'})
+        .on('close', done);
+});
+
+gulp.task('release', callback => {
+    return runSequence('build', 'publish', callback);
 });
 
 function setUpPaths() {
