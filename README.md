@@ -1,4 +1,5 @@
 # Nativefier
+[![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
 ![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
@@ -166,7 +167,7 @@ Height of the packaged application, defaults to `800px`.
 
 Set the user agent to run the created app with.
 
-### [honest]
+#### [honest]
 
 ```
 --honest
@@ -181,24 +182,35 @@ A template app with the appropriate event listeners and callbacks set up is incl
 
 ## Development
 
+Setting up the project
+
 ```bash
 $ git clone https://github.com/jiahaog/nativefier.git
 $ cd nativefier
 
-# Set up dev environment
+# Set up dependencies for the cli tool and the placeholder app
 $ npm run dev-up
 
-# Sets up symlink for local files to global nativefier
+# Set up symlinks so that you can run `$ nativefier` for your local changes
 $ npm link
+```
 
-# You can then run nativefier with your test parameters
+After doing so, you can then run nativefier with your test parameters
+
+```bash
 $ nativefier <...>
 ```
 
-After changing any source files, you need to run the following command to compile them.
+Don't forget to compile source files (after making changes):
 
 ```bash
 $ npm run build
+```
+
+Or you can automatically watch the files for changes with:
+
+```bash
+$ npm run watch
 ```
 
 ## Notes
