@@ -17,8 +17,7 @@ var ipcMain = electron.ipcMain;
 var buildMenu = require('./components/menu/menu');
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
-
-var mainWindow = null;
+const ZOOM_INTERVAL = 0.1;
 
 var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
@@ -50,7 +49,9 @@ app.on('before-quit', () => {
 });
 
 app.on('ready', function () {
-    mainWindow = new BrowserWindow(
+    var currentZoom = 1;
+
+    var mainWindow = new BrowserWindow(
         {
             width: appArgs.width || 1280,
             height: appArgs.height || 800,
@@ -63,7 +64,17 @@ app.on('ready', function () {
         }
     );
 
-    buildMenu(mainWindow, appArgs.nativefierVersion, app.quit);
+    var onZoomIn = function () {
+        currentZoom += ZOOM_INTERVAL;
+        mainWindow.webContents.send('change-zoom', currentZoom);
+    };
+
+    var onZoomOut = function () {
+        currentZoom -= ZOOM_INTERVAL;
+        mainWindow.webContents.send('change-zoom', currentZoom);
+    };
+
+    buildMenu(mainWindow, appArgs.nativefierVersion, app.quit, onZoomIn, onZoomOut);
 
     if (appArgs.userAgent) {
         mainWindow.webContents.setUserAgent(appArgs.userAgent);

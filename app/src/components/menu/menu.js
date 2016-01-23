@@ -2,7 +2,7 @@ var electron = require('electron');
 var Menu = electron.Menu;
 var shell = electron.shell;
 
-module.exports = function (mainWindow, nativefierVersion, onQuit) {
+module.exports = function (mainWindow, nativefierVersion, onQuit, onZoomIn, onZoomOut) {
     if (Menu.getApplicationMenu())
         return;
 
@@ -67,6 +67,30 @@ module.exports = function (mainWindow, nativefierVersion, onQuit) {
                     click: function(item, focusedWindow) {
                         if (focusedWindow)
                             focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+                    }
+                },
+                {
+                    label: 'Zoom In',
+                    accelerator: (function() {
+                        if (process.platform == 'darwin')
+                            return 'Command+=';
+                        else
+                            return 'Ctrl+=';
+                    })(),
+                    click: function() {
+                        onZoomIn();
+                    }
+                },
+                {
+                    label: 'Zoom Out',
+                    accelerator: (function() {
+                        if (process.platform == 'darwin')
+                            return 'Command+-';
+                        else
+                            return 'Ctrl+-';
+                    })(),
+                    click: function() {
+                        onZoomOut();
                     }
                 },
                 {

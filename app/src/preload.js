@@ -2,7 +2,9 @@
  Preload file that will be executed in the renderer process
  */
 
-var ipc = require('electron').ipcRenderer;
+var electron = require('electron');
+var ipc = electron.ipcRenderer;
+var webFrame = electron.webFrame;
 
 document.addEventListener("DOMContentLoaded", function(event) {
     // do things
@@ -12,3 +14,10 @@ ipc.on('params', function (event, message) {
     var appArgs = JSON.parse(message);
     console.log('nativefier.json', appArgs);
 });
+
+
+ipc.on('change-zoom', function (event, message) {
+    console.log('new zom', message);
+    webFrame.setZoomFactor(message);
+});
+
