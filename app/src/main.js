@@ -8,7 +8,7 @@ var electron = require('electron');
 var createMainWindow = require('./components/mainWindow/mainWindow');
 var createLoginWindow = require('./components/login/loginWindow');
 var helpers = require('./helpers/helpers');
-
+var windowStateKeeper = require('electron-window-state');
 var app = electron.app;
 var ipcMain = electron.ipcMain;
 var isOSX = helpers.isOSX;
@@ -47,7 +47,12 @@ app.on('before-quit', function () {
 });
 
 app.on('ready', function () {
+    var mainWindowState = windowStateKeeper({
+        defaultWidth: appArgs.width || 1280,
+        defaultHeight: appArgs.height || 800
+    });
     mainWindow = createMainWindow(appArgs, app.quit, app.dock.setBadge);
+    mainWindowState.manage(mainWindow);
 });
 
 app.on('login', function(event, webContents, request, authInfo, callback) {
