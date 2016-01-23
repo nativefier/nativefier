@@ -9,7 +9,7 @@
     "native",
     "wrapper"
   ],
-  "main": "lib/buildApp.js",
+  "main": "./index.js",
   "scripts": {
     "dev-up": "npm install && (cd app && npm install)",
     "test": "echo \"Error: no test specified\" && exit 1",
