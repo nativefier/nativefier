@@ -73,7 +73,7 @@ app.on('ready', function () {
         mainWindow.webContents.send('params', JSON.stringify(appArgs));
     });
 
-    if (appArgs.badge || appArgs.counter) {
+    if (appArgs.counter) {
         mainWindow.on('page-title-updated', function () {
 
             if (!isOSX() || mainWindow.isFocused()) {
@@ -94,7 +94,7 @@ app.on('ready', function () {
         });
     }
 
-    mainWindow.on('notification', function (title) {
+    ipcMain.on('notification', function(event, title, opts) {
         if (!isOSX() || mainWindow.isFocused()) {
             return;
         }
@@ -111,7 +111,7 @@ app.on('ready', function () {
     });
 
     mainWindow.loadURL(appArgs.targetUrl);
-    // if the window is focused, clear the badge
+
     mainWindow.on('focus', function () {
         if (!isOSX()) {
             return;

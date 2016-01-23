@@ -4,13 +4,12 @@
 
 var ipc = require('electron').ipcRenderer;
 
-// monkeypatch window.Notification
-hookNotify(function(title, opt){
-  ipc.emit('notification', title, opt);
+setNotificationCallback(function (title, opt) {
+    ipc.send('notification', title, opt);
 });
 
-document.addEventListener("DOMContentLoaded", function(event) {
-  // do things
+document.addEventListener("DOMContentLoaded", function (event) {
+    // do things
 });
 
 ipc.on('params', function (event, message) {
@@ -18,18 +17,23 @@ ipc.on('params', function (event, message) {
     console.log('nativefier.json', appArgs);
 });
 
-function hookNotify(cb){
-  var oldNotify = window.Notification;
-  var newNotify = function (title, opt) {
-    cb(title, opt);
-    return new oldNotify(title, opt);
-  };
-  newNotify.requestPermission = oldNotify.requestPermission.bind(oldNotify);
-  Object.defineProperty(newNotify, 'permission', {
-    get: function() {
-      return oldNotify.permission;
-    }
-  });
+/**
+ * Patches window.Notification to set a callback on a new Notification
+ * @param callback
+ */
+function setNotificationCallback(callback) {
 
-  window.Notification = newNotify;
+    var oldNotify = window.Notification;
+    var newNotify = function (title, opt) {
+        callback(title, opt);
+        return new oldNotify(title, opt);
+    };
+    newNotify.requestPermission = oldNotify.requestPermission.bind(oldNotify);
+    Object.defineProperty(newNotify, 'permission', {
+        get: function () {
+            return oldNotify.permission;
+        }
+    });
+
+    window.Notification = newNotify;
 }
