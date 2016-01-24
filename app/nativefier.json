@@ -3,5 +3,6 @@
   "targetUrl": "http:\/\/www.google.com",
   "badge": false,
   "width": 1280,
-  "height": 800
+  "height": 800,
+  "showMenuBar": false,
 }
