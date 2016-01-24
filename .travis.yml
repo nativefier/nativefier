@@ -13,3 +13,7 @@ node_js:
   - "0.12"
   - "0.10"
   - "iojs"
+install:
+  - npm run dev-up
+script:
+  - npm run ci
