@@ -4,8 +4,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import nativefier from './../../lib/index';
+import _ from 'lodash';
+import async from 'async';
 
 let assert = chai.assert;
+
+const PLATFORMS = ['darwin', 'linux', 'win32'];
 
 function checkApp(appPath, inputOptions, callback) {
     try {
@@ -37,34 +41,38 @@ function checkApp(appPath, inputOptions, callback) {
 }
 
 describe('Nativefier Module', function() {
-    this.timeout(20000);
+    this.timeout(30000);
     it('Can build an app from a target url', function(done) {
-        try {
-            var tmpObj = tmp.dirSync({unsafeCleanup: true});
-            after(function() {
-                tmpObj.removeCallback();
-            });
 
-            const tmpPath = tmpObj.name;
-            const options = {
-                appName: 'google-test-app',
-                targetUrl: 'http://google.com',
-                outDir: tmpPath,
-                overwrite: true,
-                platform: 'win32'
-            };
-            nativefier(options, (error, appPath) => {
+        var tmpObj = tmp.dirSync({unsafeCleanup: true});
+        after(function() {
+            tmpObj.removeCallback();
+        });
+
+        const tmpPath = tmpObj.name;
+        const options = {
+            appName: 'google-test-app',
+            targetUrl: 'http://google.com',
+            outDir: tmpPath,
+            overwrite: true,
+            platform: null
+        };
+
+        async.each(PLATFORMS, (platform, callback) => {
+            let platformOptions = _.clone(options);
+            platformOptions.platform = platform;
+            nativefier(platformOptions, (error, appPath) => {
                 if (error) {
-                    done(error);
+                    callback(error);
                     return;
                 }
 
-                checkApp(appPath, options, error => {
-                    done(error);
+                checkApp(appPath, platformOptions, error => {
+                    callback(error);
                 });
             });
-        } catch (exception) {
-            done(exception);
-        }
+        }, error => {
+            done(error);
+        });
     });
 });
