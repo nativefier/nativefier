@@ -5,7 +5,8 @@
   "main": "lib/main.js",
   "dependencies": {
     "electron-window-state": "^2.0.0",
-    "wurl": "^2.1.0"
+    "wurl": "^2.1.0",
+    "source-map-support": "^0.4.0"
   },
   "devDependencies": {},
   "scripts": {

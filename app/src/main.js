@@ -2,6 +2,8 @@
  * Created by JiaHao on 4/7/15.
  */
 
+import 'source-map-support/register';
+
 var fs = require('fs');
 var path = require('path');
 var electron = require('electron');
