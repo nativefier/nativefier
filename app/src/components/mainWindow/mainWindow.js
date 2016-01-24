@@ -28,6 +28,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             height: mainWindowState.height,
             x: mainWindowState.x,
             y: mainWindowState.y,
+            'auto-hide-menu-bar': !options.showMenuBar,
             title: options.name,
             'web-preferences': {
                 javascript: true,
