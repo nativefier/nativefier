@@ -42,13 +42,14 @@ Nativefier will intelligently attempt to determine the app name, your OS and pro
 $ nativefier --app-name "Some Awesome App" "http://medium.com"
 ```
 
-Other command line options are listed below.
+**For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
 
 ## Options
 
 ```bash
 $ nativefier [options] <targetUrl> [dest]
 ```
+Command line options are listed below.
 
 #### Target Url
 
@@ -223,4 +224,4 @@ $ npm run watch
 
 ## Notes
 
-Tested mostly on OSX, but should work for windows and linux.
+Tested mostly on OSX, but should work for Windows and Linux.
