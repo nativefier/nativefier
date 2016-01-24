@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 
+import optionsFactory from './options';
 import packager from 'electron-packager';
 import tmp from 'tmp';
 import ncp from 'ncp';
@@ -31,10 +32,30 @@ function buildApp(options, callback) {
 
     async.waterfall([
         callback => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, callback);
+            optionsFactory(
+                options.appName,
+                options.targetUrl,
+                options.platform,
+                options.arch,
+                options.electronVersion,
+                options.outDir,
+                options.overwrite,
+                options.conceal,
+                options.icon,
+                options.counter,
+                options.width,
+                options.height,
+                options.showMenuBar,
+                options.userAgent,
+                options.honest,
+                callback);
         },
-
-        (tempDir, callback) => {
+        (options, callback) => {
+            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, (error, tempDirPath) => {
+                callback(error, tempDirPath, options);
+            });
+        },
+        (tempDir, options, callback) => {
             options.dir = tempDir;
             packager(options, callback);
         },

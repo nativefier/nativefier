@@ -2,46 +2,8 @@
 
 import path from 'path';
 import program from 'commander';
-import async from 'async';
-
-import optionsFactory from './options';
 import buildApp from './buildApp';
-
 const packageJson = require(path.join('..', 'package'));
-
-function main(program) {
-    async.waterfall([
-        callback => {
-            optionsFactory(
-                program.appName,
-                program.targetUrl,
-                program.platform,
-                program.arch,
-                program.electronVersion,
-                program.outDir,
-                program.overwrite,
-                program.conceal,
-                program.icon,
-                program.counter,
-                program.width,
-                program.height,
-                program.showMenuBar,
-                program.userAgent,
-                program.honest,
-                callback);
-        },
-
-        (options, callback) => {
-            buildApp(options, callback);
-        }
-    ], (error, appPath) => {
-        if (error) {
-            console.error(error);
-            return;
-        }
-        console.log(`App built to ${appPath}`);
-    });
-}
 
 if (require.main === module) {
     program
@@ -70,5 +32,11 @@ if (require.main === module) {
         program.help();
     }
 
-    main(program);
+    buildApp(program, (error, appPath) => {
+        if (error) {
+            console.error(error);
+            return;
+        }
+        console.log(`App built to ${appPath}`);
+    });
 }
