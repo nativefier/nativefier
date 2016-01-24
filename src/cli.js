@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 
+import 'source-map-support/register';
+
 import path from 'path';
 import program from 'commander';
 import buildApp from './buildApp';
