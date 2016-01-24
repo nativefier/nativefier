@@ -9,7 +9,7 @@
     "native",
     "wrapper"
   ],
-  "main": "lib/buildApp.js",
+  "main": "lib/index.js",
   "scripts": {
     "dev-up": "npm install && (cd app && npm install) && npm run build",
     "test": "gulp test",
