@@ -36,9 +36,9 @@ function checkApp(appPath, inputOptions, callback) {
     }
 }
 
-describe('index module', function () {
+describe('Nativefier Module', function() {
     this.timeout(20000);
-    it('Can build an app from a target url', function (done) {
+    it('Can build an app from a target url', function(done) {
         try {
             var tmpObj = tmp.dirSync({unsafeCleanup: true});
             after(function() {
