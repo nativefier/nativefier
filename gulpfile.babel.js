@@ -7,6 +7,7 @@ import runSequence from 'run-sequence';
 import path from 'path';
 import childProcess from 'child_process';
 import eslint from 'gulp-eslint';
+import mocha from 'gulp-mocha';
 
 const PATHS = setUpPaths();
 
@@ -65,14 +66,21 @@ gulp.task('release', callback => {
     return runSequence('test', 'build', 'publish', callback);
 });
 
-gulp.task('lint', function() {
+gulp.task('lint', () => {
     return gulp.src(['**/*.js', '!node_modules/**', '!app/node_modules/**', '!app/lib/**', '!lib/**'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
 });
 
-gulp.task('test', ['lint']);
+gulp.task('test', ['build'], () => {
+    return gulp.src('test/**/*js', {read: false})
+        .pipe(mocha({compilers: 'js:babel-register'}));
+});
+
+gulp.task('ci', callback => {
+    return runSequence('test', 'lint', callback);
+});
 
 function setUpPaths() {
     const paths = {
