@@ -8,7 +8,7 @@
   * Exposes buildApp as a programmatic api for npm
   * Remove shorthand command for height and width to fix conflicts with `-h`. Closes #30, closes #64 and closes #67
   * Automatically hide the menu bar by default on Windows. Users can press `alt` to show it
-  * Implement proper build system with ES6 support to facilitate developmenet
+  * Implement proper build system with ES6 support to facilitate development
   * App window now remembers its previous position 
   * Fix #59 Fullscreen goes to a black screen when clicking close
   * Set window title immediately when the window is created, fixes #54
