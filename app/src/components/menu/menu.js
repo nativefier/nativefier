@@ -1,6 +1,7 @@
 var electron = require('electron');
 var Menu = electron.Menu;
 var shell = electron.shell;
+const clipboard = electron.clipboard;
 
 /**
  *
@@ -10,8 +11,9 @@ var shell = electron.shell;
  * @param {electron} onGoForward
  * @param {function} onZoomIn
  * @param {function} onZoomOut
+ * @param {function} getUrl
  */
-function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, onZoomOut) {
+function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, onZoomOut, getUrl) {
     if (Menu.getApplicationMenu()) {
         return;
     }
@@ -42,6 +44,14 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     label: 'Copy',
                     accelerator: 'CmdOrCtrl+C',
                     role: 'copy'
+                },
+                {
+                    label: 'Copy Current URL',
+                    accelerator: 'CmdOrCtrl+C',
+                    click: () => {
+                        const currentURL = getUrl();
+                        clipboard.writeText(currentURL);
+                    }
                 },
                 {
                     label: 'Paste',
