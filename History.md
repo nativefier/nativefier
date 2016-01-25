@@ -1,4 +1,22 @@
 
+6.6.0 / 2016-01-25
+==================
+  * Add CI Integration with travis
+  * Add tests and lints
+  * Fixes bug where electron packager returns appPath as an array instead of a string
+  * Add sourcemaps support
+  * Exposes buildApp as a programmatic api for npm
+  * Remove shorthand command for height and width to fix conflicts with `-h`. Closes #30, closes #64 and closes #67
+  * Automatically hide the menu bar by default on Windows. Users can press `alt` to show it
+  * Implement proper build system with ES6 support to facilitate developmenet
+  * App window now remembers its previous position 
+  * Fix #59 Fullscreen goes to a black screen when clicking close
+  * Set window title immediately when the window is created, fixes #54
+  * Implement navigating backward and forward from the application menu
+  * Implement proper notification listeners to change the badge
+  * Refactor main.js into separate files, and put static files such as preload and login.html into `app/src/static`
+  * Implement changing of zoom which fixes #17
+  
 6.5.6 / 2016-01-22
 ==================
 
