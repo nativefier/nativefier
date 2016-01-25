@@ -1,4 +1,12 @@
 
+6.6.1 / 2016-01-25
+==================
+
+  * Remove unused files
+  * Fix #76 where all placeholder app modules are treated as externals
+  * Add contributing
+  * Update gulp release to also run lints
+
 6.6.0 / 2016-01-25
 ==================
   * Add CI Integration with travis
