@@ -20,6 +20,10 @@ var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 var mainWindow;
 
+// Flash plugin
+app.commandLine.appendSwitch('ppapi-flash-path', path.join(__dirname, '../plugins', 'libpepflashplayer.so'));
+app.commandLine.appendSwitch('ppapi-flash-version', '16.0.0.305');
+
 // do nothing for setDockBadge if not OSX
 let setDockBadge = () => {};
 
