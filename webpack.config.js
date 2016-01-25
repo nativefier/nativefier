@@ -1,18 +1,50 @@
-var fs = require('fs');
+var electronPublicApi = [
+    'electron',
+    // for modules which use deprecated api
+    // modules are taken from https://github.com/atom/electron/tree/master/docs/api
+    'app',
+    'screen'
 
-// http://jlongster.com/Backend-Apps-with-Webpack--Part-I
-// set all modules in node_modules as external
+    // Uncomment as needed if some external module uses the deprecated api
+
+    // 'accelerator',
+    // 'auto-updater',
+    // 'browser-window',
+    // 'chrome-command-line-switches',
+    // 'clipboard',
+    // 'content-tracing',
+    // 'crash-reporter',
+    // 'desktop-capturer',
+    // 'dialog',
+    // 'download-item',
+    // 'environment-variables',
+    // 'file-object',
+    // 'frameless-window',
+    // 'global-shortcut',
+    // 'ipc-main',
+    // 'ipc-renderer',
+    // 'menu-item',
+    // 'menu',
+    // 'native-image',
+    // 'power-monitor',
+    // 'power-save-blocker',
+    // 'process',
+    // 'protocol',
+    // 'remote',
+    // 'session',
+    // 'shell',
+    // 'synopsis',
+    // 'tray',
+    // 'web-contents',
+    // 'web-frame',
+    // 'web-view-tag',
+    // 'window-open'
+];
+
 var nodeModules = {};
-fs.readdirSync('./app/node_modules')
-    .filter(function(x) {
-        return ['.bin'].indexOf(x) === -1;
-    })
-    .forEach(function(mod) {
-        nodeModules[mod] = 'commonjs ' + mod;
-    });
-
-// add electron to external module
-nodeModules.electron = 'commonjs electron';
+electronPublicApi.forEach(apiString => {
+    nodeModules[apiString] = 'commonjs ' + apiString;
+});
 
 module.exports = {
     target: 'node',
