@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', function(event) {
         const targetElement = event.srcElement;
         const targetHref = targetElement.href;
 
+        if (!targetHref) {
+            ipc.once('contextMenuClosed', () => {
+                clickSelector(event.target);
+                ipc.send('cancelNewWindowOverride');
+            });
+        }
+
         ipc.send('contextMenuOpened', targetHref);
     }, false);
 

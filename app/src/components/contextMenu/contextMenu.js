@@ -10,19 +10,23 @@ function initContextMenu(mainWindow, sendMessage) {
             {
                 label: 'Open in default browser',
                 click: function() {
-                    if (!targetHref) {
+                    if (targetHref) {
+                        shell.openExternal(targetHref);
                         return;
                     }
-                    shell.openExternal(targetHref);
+
                 }
             },
             {
                 label: 'Open in new window',
                 click: function() {
-                    if (!targetHref) {
+                    if (targetHref) {
+                        new BrowserWindow().loadURL(targetHref);
                         return;
                     }
-                    new BrowserWindow().loadURL(targetHref);
+
+                    mainWindow.useDefaultWindowBehaviour = true;
+                    mainWindow.webContents.send('contextMenuClosed');
                 }
             }
         ];

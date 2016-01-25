@@ -5,6 +5,7 @@ var helpers = require('./../../helpers/helpers');
 var createMenu = require('./../menu/menu');
 var BrowserWindow = electron.BrowserWindow;
 var shell = electron.shell;
+const ipcMain = electron.ipcMain;
 var isOSX = helpers.isOSX;
 var linkIsInternal = helpers.linkIsInternal;
 
@@ -86,6 +87,11 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     }
 
     mainWindow.webContents.on('new-window', function(event, urlToGo) {
+        if (mainWindow.useDefaultWindowBehaviour) {
+            mainWindow.useDefaultWindowBehaviour = false;
+            return;
+        }
+
         if (linkIsInternal(options.targetUrl, urlToGo)) {
             return;
         }
@@ -110,6 +116,13 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     mainWindowState.manage(mainWindow);
     return mainWindow;
 }
+
+ipcMain.on('cancelNewWindowOverride', () => {
+    const allWindows = BrowserWindow.getAllWindows();
+    allWindows.forEach(window => {
+        window.useDefaultWindowBehaviour = false;
+    });
+});
 
 function maybeHideWindow(window, event) {
     if (isOSX()) {
