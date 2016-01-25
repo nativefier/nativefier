@@ -40,9 +40,19 @@ gulp.task('build-cli', done => {
         .pipe(gulp.dest('lib'));
 });
 
-gulp.task('build-static', () => {
-    // copy any html files in source/ to public/
-    return gulp.src(PATHS.APP_STATIC_ALL)
+gulp.task('build-static', ['build-static-js', 'build-static-not-js']);
+
+gulp.task('build-static-not-js', () => {
+    return gulp.src([PATHS.APP_STATIC_ALL, '!**/*.js'])
+        .pipe(gulp.dest(PATHS.APP_STATIC_DEST));
+});
+
+gulp.task('build-static-js', done => {
+    return gulp.src(PATHS.APP_STATIC_JS)
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .on('error', done)
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(PATHS.APP_STATIC_DEST));
 });
 
@@ -94,6 +104,7 @@ function setUpPaths() {
     paths.APP_MAIN_JS = path.join(paths.APP_SRC, '/main.js');
     paths.APP_ALL = paths.APP_SRC + '/**/*';
     paths.APP_STATIC_ALL = path.join(paths.APP_SRC, 'static') + '/**/*';
+    paths.APP_STATIC_JS = path.join(paths.APP_SRC, 'static') + '/**/*.js';
     paths.APP_STATIC_DEST = path.join(paths.APP_DEST, 'static');
     paths.CLI_SRC_JS = paths.CLI_SRC + '/**/*.js';
 
