@@ -25,6 +25,7 @@ function optionsFactory(name,
                         showMenuBar = false,
                         userAgent,
                         honest = false,
+                        insecure = false,
                         callback) {
     targetUrl = normalizeUrl(targetUrl);
 
@@ -62,7 +63,8 @@ function optionsFactory(name,
         width: width,
         height: height,
         showMenuBar: showMenuBar,
-        userAgent: userAgent
+        userAgent: userAgent,
+        insecure: insecure
     };
 
     if (name && name.length > 0) {

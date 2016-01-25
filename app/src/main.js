@@ -20,6 +20,10 @@ var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 var mainWindow;
 
+if (appArgs.insecure) {
+    app.commandLine.appendSwitch('ignore-certificate-errors');
+}
+
 // do nothing for setDockBadge if not OSX
 let setDockBadge = () => {};
 

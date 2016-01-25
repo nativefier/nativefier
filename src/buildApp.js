@@ -48,10 +48,11 @@ function buildApp(options, callback) {
                 options.showMenuBar,
                 options.userAgent,
                 options.honest,
+                options.insecure,
                 callback);
         },
         (options, callback) => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, (error, tempDirPath) => {
+            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, options.insecure, (error, tempDirPath) => {
                 callback(error, tempDirPath, options);
             });
         },
@@ -92,7 +93,7 @@ function buildApp(options, callback) {
  * @param {string} userAgent
  * @param {tempDirCallback} callback
  */
-function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, counter, width, height, showMenuBar, userAgent, callback) {
+function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, counter, width, height, showMenuBar, userAgent, insecure, callback) {
     const loadedPackageJson = packageJson;
     copy(srcAppDir, tempDir, function(error) {
         if (error) {
@@ -109,7 +110,8 @@ function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, counter, width,
             height: height,
             showMenuBar: showMenuBar,
             userAgent: userAgent,
-            nativefierVersion: loadedPackageJson.version
+            nativefierVersion: loadedPackageJson.version,
+            insecure: insecure
         };
 
         fs.writeFileSync(path.join(tempDir, '/nativefier.json'), JSON.stringify(appArgs));
