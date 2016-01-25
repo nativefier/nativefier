@@ -63,8 +63,8 @@ function buildApp(options, callback) {
 
         (appPathArray, callback) => {
             // somehow appPathArray is a 1 element array
-            if (appPathArray.length !== 1) {
-                console.warn('Warning: Packaged app path contains more than one element', appPathArray);
+            if (appPathArray.length > 1) {
+                console.warn('Warning: Packaged app path contains more than one element:', appPathArray);
             }
             const appPath = appPathArray[0];
             callback(null, appPath);
