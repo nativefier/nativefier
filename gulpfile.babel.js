@@ -63,7 +63,7 @@ gulp.task('publish', done => {
 });
 
 gulp.task('release', callback => {
-    return runSequence('test', 'build', 'publish', callback);
+    return runSequence('test', 'lint', 'build', 'publish', callback);
 });
 
 gulp.task('lint', () => {
