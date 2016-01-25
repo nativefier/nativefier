@@ -1,8 +1,7 @@
 /**
  Preload file that will be executed in the renderer process
  */
-
-var electron = require('electron');
+import electron from 'electron';
 var ipc = electron.ipcRenderer;
 var webFrame = electron.webFrame;
 
@@ -12,6 +11,15 @@ setNotificationCallback(function(title, opt) {
 
 document.addEventListener('DOMContentLoaded', function(event) {
     // do things
+
+    window.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        const targetElement = event.srcElement;
+        const targetHref = targetElement.href;
+
+        ipc.send('contextMenuOpened', targetHref);
+    }, false);
+
 });
 
 ipc.on('params', function(event, message) {
@@ -42,4 +50,9 @@ function setNotificationCallback(callback) {
     });
 
     window.Notification = newNotify;
+}
+
+function clickSelector(element) {
+    const mouseEvent = new MouseEvent('click');
+    element.dispatchEvent(mouseEvent);
 }

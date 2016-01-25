@@ -8,6 +8,8 @@ var shell = electron.shell;
 var isOSX = helpers.isOSX;
 var linkIsInternal = helpers.linkIsInternal;
 
+import initContextMenu from './../contextMenu/contextMenu';
+
 const ZOOM_INTERVAL = 0.1;
 
 /**
@@ -54,6 +56,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     };
 
     createMenu(options.nativefierVersion, onAppQuit, mainWindow.webContents.goBack, mainWindow.webContents.goForward, onZoomIn, onZoomOut);
+    initContextMenu(mainWindow);
 
     if (options.userAgent) {
         mainWindow.webContents.setUserAgent(options.userAgent);
@@ -65,7 +68,6 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
 
     if (options.counter) {
         mainWindow.on('page-title-updated', function() {
-
             if (mainWindow.isFocused()) {
                 return;
             }
