@@ -6,6 +6,7 @@ import request from 'request';
 import cheerio from 'cheerio';
 import validator from 'validator';
 import sanitize from 'sanitize-filename';
+import _ from 'lodash';
 
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
@@ -88,6 +89,10 @@ function optionsFactory(name,
 
 function sanitizeOptions(options) {
     options.name = sanitize(options.name);
+
+    if (options.platform === 'linux') {
+        options.name = _.upperFirst(_.camelCase(options.name));
+    }
     return options;
 }
 
