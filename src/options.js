@@ -5,6 +5,7 @@ import url from 'url';
 import request from 'request';
 import cheerio from 'cheerio';
 import validator from 'validator';
+import sanitize from 'sanitize-filename';
 
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
@@ -69,7 +70,7 @@ function optionsFactory(name,
 
     if (name && name.length > 0) {
         options.name = name;
-        callback(null, options);
+        callback(null, sanitizeOptions(options));
         return;
     }
 
@@ -81,8 +82,13 @@ function optionsFactory(name,
             options.name = pageTitle;
         }
 
-        callback(null, options);
+        callback(null, sanitizeOptions(options));
     });
+}
+
+function sanitizeOptions(options) {
+    options.name = sanitize(options.name);
+    return options;
 }
 
 function detectPlatform() {
