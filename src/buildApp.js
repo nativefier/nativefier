@@ -83,10 +83,8 @@ function buildApp(options, callback) {
                 return;
             }
 
-            console.log(options);
             if (options.platform === 'darwin') {
                 // todo mac icon copy
-                console.log('darwin exit');
                 callback(null, appPath);
                 return;
             }
