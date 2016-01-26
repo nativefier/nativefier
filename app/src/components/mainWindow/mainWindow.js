@@ -39,8 +39,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
                 nodeIntegration: false,
                 preload: path.join(__dirname, 'static', 'preload.js')
             },
-            // hardcoded by default until you decide how to pass in an icon
-            icon: options.icon || path.join(__dirname, '/icon.png')
+            // after webpack path here should reference `resources/app/`
+            icon: path.join(__dirname, '../', '/icon.png')
         }
     );
 
