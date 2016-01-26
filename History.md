@@ -1,4 +1,13 @@
 
+6.6.2 / 2016-01-26
+==================
+
+  * Fix #87, Fix #89 - Sanitize app name before packaging
+  * Add command line flag to make the packaged app ignore certificate errors, fixes #69
+  * Fix #32 Ability to copy and paste a URL
+  * Implement right click context menu for regular href links
+  * Allow es6 for app static files
+
 6.6.1 / 2016-01-25
 ==================
 
