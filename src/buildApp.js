@@ -58,16 +58,45 @@ function buildApp(options, callback) {
         },
         (tempDir, options, callback) => {
             options.dir = tempDir;
-            packager(options, callback);
+            packager(options, (error, appPathArray) => {
+                callback(error, options, appPathArray);
+            });
         },
 
-        (appPathArray, callback) => {
+        (options, appPathArray, callback) => {
             // somehow appPathArray is a 1 element array
+            if (appPathArray.length === 0) {
+                // directory already exists, --overwrite is not set
+
+                // exit here
+                callback();
+                return;
+            }
+
             if (appPathArray.length > 1) {
                 console.warn('Warning: Packaged app path contains more than one element:', appPathArray);
             }
             const appPath = appPathArray[0];
-            callback(null, appPath);
+
+            if (!options.icon) {
+                callback(null, appPath);
+                return;
+            }
+
+            console.log(options);
+            if (options.platform === 'darwin') {
+                // todo mac icon copy
+                console.log('darwin exit');
+                callback(null, appPath);
+                return;
+            }
+
+            // windows & linux
+
+            const destIconPath = path.join(appPath, 'resources/app');
+            copy(options.icon, path.join(destIconPath, 'icon.png'), error => {
+                callback(error, appPath);
+            });
         }
     ], callback);
 }

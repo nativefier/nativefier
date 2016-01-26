@@ -119,10 +119,15 @@ Specifies if the source code within the nativefied app should be packaged into a
 ```
 -i, --icon <path>
 ```
+##### OSX
 
-On OSX, the icon parameter should be a path to an `.icns` file. [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
+The icon parameter should be a path to an `.icns` file. [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
 To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
+
+##### Windows & Linux
+
+The icon parameter should be a path to a `.png` file.
 
 #### [badge]
 
