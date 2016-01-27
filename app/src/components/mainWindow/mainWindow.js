@@ -39,7 +39,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             preload: path.join(__dirname, 'static', 'preload.js')
         },
         // after webpack path here should reference `resources/app/`
-        icon: path.join(__dirname, '../', '/icon.png')
+        icon: options.icon
+        //icon: path.join(__dirname, '../', '/icon.png')
     });
 
     let currentZoom = 1;

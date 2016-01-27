@@ -10,13 +10,19 @@ const {app, ipcMain} = electron;
 const {isOSX} = helpers;
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
-
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
+const DEFAULT_ICON_PATH = path.join(__dirname, '/icon.png');
+const Tray = electron.Tray;
 
 let mainWindow;
 
 if (appArgs.insecure) {
     app.commandLine.appendSwitch('ignore-certificate-errors');
+}
+
+if(!appArgs.icon){
+    appArgs.icon = DEFAULT_ICON_PATH;
 }
 
 // do nothing for setDockBadge if not OSX
@@ -53,8 +59,11 @@ app.on('before-quit', () => {
     }
 });
 
+let appIcon = null;
 app.on('ready', () => {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
+
+    appIcon = new Tray(appArgs.icon);
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
