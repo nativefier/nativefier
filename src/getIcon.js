@@ -4,7 +4,7 @@ import tmp from 'tmp';
 
 tmp.setGracefulCleanup();
 
-const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '..', 'bin/pngToIcns.sh');
+const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '..', 'bin/pngToIcns');
 
 /**
  * @callback pngToIcnsCallback
