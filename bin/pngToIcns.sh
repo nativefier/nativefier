@@ -1,0 +1,103 @@
+#!/bin/sh
+
+# modified from https://github.com/daveish/png2icns for OSX 10.11
+
+# USAGE
+
+# ./pngToIcns <input png> <outp icns>
+# Example
+# ./pngToIcns.sh ~/sample.png ~/Desktop/converted.icns
+
+# Exec Paths
+SIPS=$(which sips)
+ICONUTIL=$(which iconutil)
+IMAGEMAGICK=$(which convert)
+if [ ! -x "${SIPS}" ]; then
+	echo "Cannot find required sips executable" >&2
+	exit 1;
+fi
+if [ ! -x "${ICONUTIL}" ]; then
+	echo "Cannot find required iconutil executable" >&2
+	exit 1;
+fi
+if [ ! -x "${IMAGEMAGICK}" ]; then
+	echo "Cannot find required ImageMagick Convert executable" >&2
+	exit 1;
+fi
+
+# Parameters
+SOURCE=$1
+echo $1
+echo $2
+
+# Get source image
+if [ -z "${SOURCE}" ]; then
+	echo "No source image specified"
+	exit 1
+fi
+
+
+# File Infrastructure
+NAME=$(basename "${SOURCE}")
+EXT="${NAME##*.}"
+BASE="${NAME%.*}"
+ICONSET="${BASE}.iconset"
+
+# Debug Info
+# echo "SOURCE: ${SOURCE}"
+# echo "NAME: $NAME"
+# echo "BASE: $BASE"
+# echo "EXT: $EXT"
+# echo "ICONSET: $ICONSET"
+
+# Get source image info
+SRCWIDTH=$( sips -g pixelWidth "${SOURCE}" | tail -n1 | awk '{print $2}')
+SRCHEIGHT=$( sips -g pixelHeight "${SOURCE}" | tail -n1 | awk '{print $2}' )
+SRCFORMAT=$( sips -g format "${SOURCE}" | tail -n1 | awk '{print $2}' )
+
+# Debug Info
+# echo "SRCWIDTH: $SRCWIDTH"
+# echo "SRCHEIGHT: $SRCHEIGHT"
+# echo "SRCFORMAT: $SRCFORMAT"
+
+# Check The Source Image
+# if [ "x${SRCWIDTH}" != "x1024" ] || [ "x${SRCHEIGHT}" != "x1024" ]; then
+# 	echo "ERR: Source image should be 1024 x 1024 pixels." >&2
+# 	exit 1;
+# fi
+if [ "x${SRCFORMAT}" != "xpng" ]; then
+	echo "ERR: Source image format should be png." >&2
+	exit 1;
+fi
+
+# Resample image into iconset
+mkdir "${ICONSET}"
+# $SIPS -s format png --resampleWidth 1024 "${SOURCE}" --out "${ICONSET}/icon_512x512@2x.png" > /dev/null 2>&1
+# $SIPS -s format png --resampleWidth 512 "${SOURCE}" --out "${ICONSET}/icon_512x512.png" > /dev/null 2>&1
+# cp  "${ICONSET}/icon_512x512.png"  "${ICONSET}/icon_256x256@2x.png"
+# $SIPS -s format png --resampleWidth 256 "${SOURCE}" --out "${ICONSET}/icon_256x256.png" > /dev/null 2>&1
+# cp  "${ICONSET}/icon_256x256.png"  "${ICONSET}/icon_128x128@2x.png"
+# $SIPS -s format png --resampleWidth 128 "${SOURCE}" --out "${ICONSET}/icon_128x128.png" > /dev/null 2>&1
+# $SIPS -s format png --resampleWidth 64 "${SOURCE}" --out "${ICONSET}/icon_32x32@2x.png" > /dev/null 2>&1
+# $SIPS -s format png --resampleWidth 32 "${SOURCE}" --out "${ICONSET}/icon_32x32.png" > /dev/null 2>&1
+# cp  "${ICONSET}/icon_32x32.png"  "${ICONSET}/icon_16x16@2x.png"
+# $SIPS -s format png --resampleWidth 16 "${SOURCE}" --out "${ICONSET}/icon_16x16.png" > /dev/null 2>&1
+
+
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 16x16 "${ICONSET}/icon_16x16.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_16x16@2x.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_32x32.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 64x64 "${ICONSET}/icon_32x32@2x.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 128x128 "${ICONSET}/icon_128x128.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_128x128@2x.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_256x256.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_256x256@2x.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_512x512.png"
+convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 1024x1024 "${ICONSET}/icon_512x512@2x.png"
+
+
+# Create an icns file lefrom the iconset
+iconutil -c icns "${ICONSET}" -o $2
+
+# Clean up the iconset
+rm -rf "${ICONSET}"

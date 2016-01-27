@@ -44,6 +44,7 @@
     "ncp": "^2.0.0",
     "request": "^2.67.0",
     "sanitize-filename": "^1.5.3",
+    "shelljs": "^0.5.3",
     "source-map-support": "^0.4.0",
     "tmp": "0.0.28",
     "validator": "^4.5.0"
