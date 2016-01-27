@@ -3,6 +3,8 @@ import path from 'path';
 import crypto from 'crypto';
 
 import optionsFactory from './options';
+import pngToIcns from './getIcon';
+import helpers from './helpers';
 import packager from 'electron-packager';
 import tmp from 'tmp';
 import ncp from 'ncp';
@@ -12,6 +14,7 @@ import _ from 'lodash';
 import packageJson from './../package.json';
 
 const copy = ncp.ncp;
+const isOSX = helpers.isOSX;
 
 /**
  * @callback buildAppCallback
@@ -57,6 +60,17 @@ function buildApp(options, callback) {
             });
         },
         (tempDir, options, callback) => {
+            if (options.platform !== 'darwin' || !isOSX()) {
+                callback(null, tempDir, options);
+                return;
+            }
+
+            pngToIcns(options.icon, (error, icnsPath) => {
+                options.icon = icnsPath;
+                callback(error, tempDir, options);
+            });
+        },
+        (tempDir, options, callback) => {
             options.dir = tempDir;
             packager(options, (error, appPathArray) => {
                 callback(error, options, appPathArray);
@@ -84,7 +98,6 @@ function buildApp(options, callback) {
             }
 
             if (options.platform === 'darwin') {
-                // todo mac icon copy
                 callback(null, appPath);
                 return;
             }
