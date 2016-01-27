@@ -6,6 +6,10 @@
 # ignore src files
 src
 
+# ignore tests
+built-tests
+test-resources
+
 # ignore screenshots
 screenshots
 

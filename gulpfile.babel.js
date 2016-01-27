@@ -83,9 +83,18 @@ gulp.task('lint', () => {
         .pipe(eslint.failAfterError());
 });
 
-gulp.task('test', ['build'], () => {
-    return gulp.src('test/**/*js', {read: false})
-        .pipe(mocha({compilers: 'js:babel-register'}));
+gulp.task('build-tests', done => {
+    return gulp.src(PATHS.TEST_SRC_JS)
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .on('error', done)
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(PATHS.TEST_DEST));
+});
+
+gulp.task('test', ['build', 'build-tests'], () => {
+    return gulp.src(PATHS.TEST_DEST_JS, {read: false})
+        .pipe(mocha());
 });
 
 gulp.task('ci', callback => {
@@ -98,7 +107,9 @@ function setUpPaths() {
         APP_SRC: 'app/src',
         APP_DEST: 'app/lib',
         CLI_SRC: 'src',
-        CLI_DEST: 'lib'
+        CLI_DEST: 'lib',
+        TEST_SRC: 'test',
+        TEST_DEST: 'built-tests'
     };
 
     paths.APP_MAIN_JS = path.join(paths.APP_SRC, '/main.js');
@@ -107,6 +118,8 @@ function setUpPaths() {
     paths.APP_STATIC_JS = path.join(paths.APP_SRC, 'static') + '/**/*.js';
     paths.APP_STATIC_DEST = path.join(paths.APP_DEST, 'static');
     paths.CLI_SRC_JS = paths.CLI_SRC + '/**/*.js';
+    paths.TEST_SRC_JS =  paths.TEST_SRC + '/**/*.js';
+    paths.TEST_DEST_JS = paths.TEST_DEST + '/**/*.js';
 
     return paths;
 }

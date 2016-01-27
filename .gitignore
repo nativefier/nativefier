@@ -6,6 +6,7 @@
 # ignore compiled lib files
 lib/*
 app/lib/*
+built-tests
 
 # commit a placeholder to keep the app/lib directory
 !app/lib/.placeholder
