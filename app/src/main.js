@@ -14,6 +14,7 @@ const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 const DEFAULT_ICON_PATH = path.join(__dirname, '/icon.png');
 const Tray = electron.Tray;
+const Menu = electron.Menu;
 
 let mainWindow;
 
@@ -33,6 +34,11 @@ if (isOSX()) {
 }
 
 app.on('window-all-closed', () => {
+    // Need a better place to store user options, unless you intend to dump everything into cli
+    // determined opts
+    if(appArgs.minimizeToTray){
+        mainWindow.hide();
+    }
     if (!isOSX()) {
         app.quit();
     }
@@ -64,6 +70,19 @@ app.on('ready', () => {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
 
     appIcon = new Tray(appArgs.icon);
+    let menu = Menu.buildFromTemplate([
+        {
+            label: 'Minimize to Tray',
+            type: 'checkbox',
+            checked: appArgs.minimizeToTray || true,
+            click: function (menuItem) {
+                appArgs.minimizeToTray = menuItem.checked = !menuItem.checked;
+                fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(appArgs));
+            }
+        }
+    ]);
+    appIcon.setContextMenu(menu);
+
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
