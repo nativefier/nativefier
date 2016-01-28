@@ -3,7 +3,6 @@ import path from 'path';
 import crypto from 'crypto';
 
 import optionsFactory from './options';
-import pngToIcns from './pngToIcns';
 import iconBuild from './iconBuild';
 import packager from 'electron-packager';
 import tmp from 'tmp';

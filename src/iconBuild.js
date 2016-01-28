@@ -28,14 +28,13 @@ function iconBuild(options, callback) {
     }
 
     if (options.platform !== 'darwin') {
-        if (!iconIsPng(options.icon)) {
+        if (iconIsPng(options.icon)) {
+            returnCallback();
+        } else {
             console.warn('Icon should be a png for Linux and Windows apps');
             returnCallback();
-            return;
-        } else {
-            returnCallback();
-            return;
         }
+        return;
     }
 
     if (iconIsIcns(options.icon)) {

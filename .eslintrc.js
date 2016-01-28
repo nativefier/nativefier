@@ -12,7 +12,7 @@ module.exports = {
         indent: [
             2,
             4,
-            {"SwitchCase": 1}
+            {SwitchCase: 1}
         ],
         quotes: [
             2,

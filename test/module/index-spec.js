@@ -1,7 +1,6 @@
 import tmp from 'tmp';
 import chai from 'chai';
 import fs from 'fs';
-import os from 'os';
 import path from 'path';
 import nativefier from './../../lib/index';
 import _ from 'lodash';
@@ -34,7 +33,7 @@ function checkApp(appPath, inputOptions, callback) {
 
         assert.strictEqual(inputOptions.targetUrl, nativefierConfig.targetUrl, 'Packaged app must have the same targetUrl as the input parameters');
         // app name is not consistent for linux
-        //assert.strictEqual(inputOptions.appName, nativefierConfig.name, 'Packaged app must have the same name as the input parameters');
+        // assert.strictEqual(inputOptions.appName, nativefierConfig.name, 'Packaged app must have the same name as the input parameters');
         callback();
     } catch (exception) {
         callback(exception);

@@ -77,7 +77,7 @@ gulp.task('release', callback => {
 });
 
 gulp.task('lint', () => {
-    return gulp.src(['**/*.js', '!node_modules/**', '!app/node_modules/**', '!app/lib/**', '!lib/**'])
+    return gulp.src(['**/*.js', '!node_modules/**', '!app/node_modules/**', '!app/lib/**', '!lib/**', '!built-tests/**'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
@@ -118,7 +118,7 @@ function setUpPaths() {
     paths.APP_STATIC_JS = path.join(paths.APP_SRC, 'static') + '/**/*.js';
     paths.APP_STATIC_DEST = path.join(paths.APP_DEST, 'static');
     paths.CLI_SRC_JS = paths.CLI_SRC + '/**/*.js';
-    paths.TEST_SRC_JS =  paths.TEST_SRC + '/**/*.js';
+    paths.TEST_SRC_JS = paths.TEST_SRC + '/**/*.js';
     paths.TEST_DEST_JS = paths.TEST_DEST + '/**/*.js';
 
     return paths;

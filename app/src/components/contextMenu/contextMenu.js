@@ -4,7 +4,7 @@ const ipcMain = electron.ipcMain;
 const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
 
-function initContextMenu(mainWindow, sendMessage) {
+function initContextMenu(mainWindow) {
     ipcMain.on('contextMenuOpened', function(event, targetHref) {
         const contextMenuTemplate = [
             {
