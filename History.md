@@ -1,4 +1,13 @@
 
+6.7.0 / 2016-01-28
+==================
+
+  * Allow using png to for icon on OSX
+  * Use manual compiling of mocha so that sourcemaps can be used
+  * Convert app name to capitalized camel case if building for linux to prevent dock problems
+  * Fix the icon parameter bug for linux and windows, fix #92, fix #53
+  * Make Browserwindow always reference `app/icon.png` for the icon
+
 6.6.2 / 2016-01-26
 ==================
 
