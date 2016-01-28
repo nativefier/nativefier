@@ -17,7 +17,7 @@ function inferIconFromUrlToPath(targetUrl, outDir, callback) {
         url: BEST_ICON_API,
         qs: {
             url: targetUrl,
-            size: 1000,
+            size: 57,
             formats: 'png'
         },
         encoding: null
