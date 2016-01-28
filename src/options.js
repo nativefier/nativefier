@@ -7,10 +7,12 @@ import cheerio from 'cheerio';
 import validator from 'validator';
 import sanitize from 'sanitize-filename';
 import _ from 'lodash';
+import async from 'async';
+import inferIcon from './inferIcon';
 
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
-const DEFAULT_APP_NAME = 'My App';
+const DEFAULT_APP_NAME = 'APP';
 
 function optionsFactory(name,
                         targetUrl,
@@ -69,21 +71,41 @@ function optionsFactory(name,
         insecure: insecure
     };
 
-    if (name && name.length > 0) {
-        options.name = name;
-        callback(null, sanitizeOptions(options));
-        return;
-    }
+    async.waterfall([
+        callback => {
+            if (options.icon) {
+                callback(null, options);
+                return;
+            }
+            inferIcon(options.targetUrl, (error, pngPath) => {
+                if (error) {
+                    console.warn('Cannot automatically retrieve the app icon:', error);
+                } else {
+                    options.icon = pngPath;
+                }
+                callback(null, options);
+            });
+        },
+        (options, callback) => {
+            if (name && name.length > 0) {
+                options.name = name;
+                callback(null, options);
+                return;
+            }
 
-    getTitle(options.targetUrl, function(error, pageTitle) {
-        if (error) {
-            console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
-            options.name = DEFAULT_APP_NAME;
-        } else {
-            options.name = pageTitle;
+            getTitle(options.targetUrl, function(error, pageTitle) {
+                if (error) {
+                    console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
+                    options.name = DEFAULT_APP_NAME;
+                } else {
+                    options.name = pageTitle;
+                }
+
+                callback(null, options);
+            });
         }
-
-        callback(null, sanitizeOptions(options));
+    ], (error, options) => {
+        callback(error, sanitizeOptions(options));
     });
 }
 
