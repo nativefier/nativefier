@@ -14,7 +14,7 @@ const PATHS = setUpPaths();
 gulp.task('default', ['build']);
 
 gulp.task('build', callback => {
-    runSequence('clean', ['build-cli', 'build-app'], callback);
+    runSequence('clean', ['build-cli', 'build-app', 'build-tests'], callback);
 });
 
 gulp.task('build-app', ['build-static'], () => {
@@ -26,7 +26,9 @@ gulp.task('build-app', ['build-static'], () => {
 gulp.task('clean', callback => {
     del(PATHS.CLI_DEST).then(() => {
         del(PATHS.APP_DEST).then(() => {
-            callback();
+            del(PATHS.TEST_DEST).then(() => {
+                callback();
+            });
         });
     });
 });
@@ -65,6 +67,9 @@ gulp.task('watch', ['build'], () => {
 
     gulp.watch(PATHS.CLI_SRC_JS, ['build-cli'])
         .on('error', handleError);
+
+    gulp.watch(PATHS.TEST_SRC_JS, ['build-tests'])
+        .on('error', handleError);
 });
 
 gulp.task('publish', done => {
@@ -92,7 +97,7 @@ gulp.task('build-tests', done => {
         .pipe(gulp.dest(PATHS.TEST_DEST));
 });
 
-gulp.task('test', ['build', 'build-tests'], () => {
+gulp.task('test', ['build'], () => {
     return gulp.src(PATHS.TEST_DEST_JS, {read: false})
         .pipe(mocha());
 });
