@@ -29,16 +29,18 @@ $ npm install nativefier -g
 ```
 ### Optional Dependencies
 
+#### `.png` to `.icns` Conversion
+
 To support usage of a `.png` for a packaged OSX app icon, you need the following dependencies.
 
-#### [sips](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/sips.1.html)
+##### [sips](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/sips.1.html)
 Automatically ships with OSX
 
-#### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
+##### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
 
 You need [XCode](https://developer.apple.com/xcode/) installed.
 
-#### [imagemagick](http://www.imagemagick.org/script/index.php)
+##### [imagemagick](http://www.imagemagick.org/script/index.php)
 
 ```bash
 $ brew install imagemagick
@@ -136,18 +138,21 @@ Specifies if the source code within the nativefied app should be packaged into a
 -i, --icon <path>
 ```
 
-Specifies a path to a `.png` (Windows and Linux) or a `.icns` (OSX) file icon for the app. If you are packing an app for OSX while on the OSX operating system, you can specify a `.png` instead, nativefier will automatically convert the `.png` to a `.icns` for you, provided you have `sips`, `iconutil` and `imagemagick convert` installed in your path. Installation steps for these optional dependencies
-are listed above.
-
-##### Manually Obtaining `.icns`
-
-The icon parameter should be a path to an `.icns` file. [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
-
-To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
-
-##### Windows & Linux
+##### Packaging for Windows and Linux
 
 The icon parameter should be a path to a `.png` file.
+
+##### Packaging for OSX
+
+The icon parameter can either be a `.icns` or a `.png` file if the optional dependencies listed [above](#optional-dependencies) are installed.
+
+With the `sips`, `iconutil` and `imagemagick convert` optional dependencies in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
+
+###### Manually Converting `.icns`
+
+[iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
+
+To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
 
 #### [badge]
 
@@ -220,6 +225,8 @@ Forces the packaged app to ignore certificate errors.
 ## How It Works
 
 A template app with the appropriate event listeners and callbacks set up is included in the `./app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and is packaged into an app with [Electron Packager](https://github.com/maxogden/electron-packager).
+
+Automatic retrieval of icons is possible thanks to [besticon](https://github.com/mat/besticon).
 
 ## Development
 
