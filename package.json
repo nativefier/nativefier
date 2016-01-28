@@ -63,7 +63,6 @@
     "babel-register": "^6.4.3",
     "chai": "^3.4.1",
     "del": "^2.2.0",
-    "electron-prebuilt": "^0.36.5",
     "eslint-config-google": "^0.3.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
