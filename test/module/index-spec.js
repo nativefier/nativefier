@@ -5,6 +5,7 @@ import path from 'path';
 import nativefier from './../../lib/index';
 import _ from 'lodash';
 import async from 'async';
+tmp.setGracefulCleanup();
 
 let assert = chai.assert;
 
@@ -43,31 +44,27 @@ function checkApp(appPath, inputOptions, callback) {
 describe('Nativefier Module', function() {
     this.timeout(30000);
     it('Can build an app from a target url', function(done) {
+        async.eachSeries(PLATFORMS, (platform, callback) => {
 
-        var tmpObj = tmp.dirSync({unsafeCleanup: true});
-        after(function() {
-            tmpObj.removeCallback();
-        });
+            const tmpObj = tmp.dirSync({unsafeCleanup: true});
 
-        const tmpPath = tmpObj.name;
-        const options = {
-            appName: 'google-test-app',
-            targetUrl: 'http://google.com',
-            outDir: tmpPath,
-            overwrite: true,
-            platform: null
-        };
+            const tmpPath = tmpObj.name;
+            const options = {
+                appName: 'google-test-app',
+                targetUrl: 'http://google.com',
+                outDir: tmpPath,
+                overwrite: true,
+                platform: null
+            };
 
-        async.each(PLATFORMS, (platform, callback) => {
-            let platformOptions = _.clone(options);
-            platformOptions.platform = platform;
-            nativefier(platformOptions, (error, appPath) => {
+            options.platform = platform;
+            nativefier(options, (error, appPath) => {
                 if (error) {
                     callback(error);
                     return;
                 }
 
-                checkApp(appPath, platformOptions, error => {
+                checkApp(appPath, options, error => {
                     callback(error);
                 });
             });
@@ -76,3 +73,4 @@ describe('Nativefier Module', function() {
         });
     });
 });
+
