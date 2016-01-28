@@ -4,7 +4,7 @@ import fs from 'fs';
 import tmp from 'tmp';
 tmp.setGracefulCleanup();
 
-const BEST_ICON_API = 'http://localhost:8080/icon';
+const BEST_ICON_API = 'http://icons.better-idea.org/icon';
 /**
  *
  * @param {string} targetUrl
