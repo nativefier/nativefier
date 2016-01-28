@@ -27,8 +27,6 @@ fi
 
 # Parameters
 SOURCE=$1
-echo $1
-echo $2
 
 # Get source image
 if [ -z "${SOURCE}" ]; then

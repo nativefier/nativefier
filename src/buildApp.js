@@ -3,8 +3,8 @@ import path from 'path';
 import crypto from 'crypto';
 
 import optionsFactory from './options';
-import pngToIcns from './getIcon';
-import helpers from './helpers';
+import pngToIcns from './pngToIcns';
+import iconBuild from './iconBuild';
 import packager from 'electron-packager';
 import tmp from 'tmp';
 import ncp from 'ncp';
@@ -14,7 +14,6 @@ import _ from 'lodash';
 import packageJson from './../package.json';
 
 const copy = ncp.ncp;
-const isOSX = helpers.isOSX;
 
 /**
  * @callback buildAppCallback
@@ -60,14 +59,8 @@ function buildApp(options, callback) {
             });
         },
         (tempDir, options, callback) => {
-            if (options.platform !== 'darwin' || !isOSX()) {
-                callback(null, tempDir, options);
-                return;
-            }
-
-            pngToIcns(options.icon, (error, icnsPath) => {
-                options.icon = icnsPath;
-                callback(error, tempDir, options);
+            iconBuild(options, (error, optionsWithIcon) => {
+                callback(null, tempDir, optionsWithIcon);
             });
         },
         (tempDir, options, callback) => {
@@ -81,7 +74,6 @@ function buildApp(options, callback) {
             // somehow appPathArray is a 1 element array
             if (appPathArray.length === 0) {
                 // directory already exists, --overwrite is not set
-
                 // exit here
                 callback();
                 return;
