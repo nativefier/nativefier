@@ -3,7 +3,6 @@ import chai from 'chai';
 import fs from 'fs';
 import path from 'path';
 import nativefier from './../../lib/index';
-import _ from 'lodash';
 import async from 'async';
 tmp.setGracefulCleanup();
 

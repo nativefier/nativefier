@@ -3,12 +3,19 @@ import 'source-map-support/register';
 
 import chai from 'chai';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import pngToIcns from './../../lib/pngToIcns';
 
 let assert = chai.assert;
 
+// Prerequisite for test: to use OSX with sips, iconutil and imagemagick convert
+
 function testConvertPng(pngName, done) {
+    if (os.platform() !== 'darwin') {
+        console.warn('Skipping png conversion tests, OSX is required');
+        done();
+    }
     pngToIcns(path.join(__dirname, '../../', 'test-resources', pngName), (error, icnsPath) => {
         if (error) {
             done(error);
