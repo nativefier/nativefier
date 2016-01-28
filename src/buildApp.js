@@ -64,7 +64,14 @@ function buildApp(options, callback) {
         },
         (tempDir, options, callback) => {
             options.dir = tempDir;
-            packager(options, (error, appPathArray) => {
+
+            const packageOptions = JSON.parse(JSON.stringify(options));
+
+            if (options.platform === 'win32') {
+                // todo check if wine exists before doing this
+                packageOptions.icon = null;
+            }
+            packager(packageOptions, (error, appPathArray) => {
                 callback(error, options, appPathArray);
             });
         },
