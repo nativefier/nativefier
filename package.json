@@ -40,6 +40,7 @@
     "cheerio": "^0.19.0",
     "commander": "^2.9.0",
     "electron-packager": "^5.2.1",
+    "hasbin": "^1.2.0",
     "lodash": "^4.0.0",
     "ncp": "^2.0.0",
     "request": "^2.67.0",

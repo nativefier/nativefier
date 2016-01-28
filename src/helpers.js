@@ -4,6 +4,10 @@ function isOSX() {
     return os.platform() === 'darwin';
 }
 
+function isWindows() {
+    return os.platform() === 'windows';
+}
 export default {
-    isOSX: isOSX
+    isOSX: isOSX,
+    isWindows: isWindows
 };

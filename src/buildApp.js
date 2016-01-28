@@ -4,15 +4,18 @@ import crypto from 'crypto';
 
 import optionsFactory from './options';
 import iconBuild from './iconBuild';
+import helpers from './helpers';
 import packager from 'electron-packager';
 import tmp from 'tmp';
 import ncp from 'ncp';
 import async from 'async';
 import _ from 'lodash';
+import hasBinary from 'hasbin';
 
 import packageJson from './../package.json';
 
 const copy = ncp.ncp;
+const isWindows = helpers.isWindows;
 
 /**
  * @callback buildAppCallback
@@ -65,13 +68,11 @@ function buildApp(options, callback) {
         (tempDir, options, callback) => {
             options.dir = tempDir;
 
-            const packageOptions = JSON.parse(JSON.stringify(options));
+            // maybe skip passing icon parameter to electron packager
+            const packageOptions = maybeNoIconOption(options);
 
-            if (options.platform === 'win32') {
-                // todo check if wine exists before doing this
-                packageOptions.icon = null;
-            }
             packager(packageOptions, (error, appPathArray) => {
+                // pass options which still contains the icon to waterfall
                 callback(error, options, appPathArray);
             });
         },
@@ -171,4 +172,13 @@ function normalizeAppName(appName) {
     return `${normalized}-nativefier-${postFixHash}`;
 }
 
+function maybeNoIconOption(options) {
+    const packageOptions = JSON.parse(JSON.stringify(options));
+    if (options.platform === 'win32' && !isWindows()) {
+        if (!hasBinary.sync('wine')) {
+            packageOptions.icon = null;
+        }
+    }
+    return packageOptions;
+}
 export default buildApp;
