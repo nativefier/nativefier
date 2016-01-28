@@ -12,10 +12,6 @@ let assert = chai.assert;
 // Prerequisite for test: to use OSX with sips, iconutil and imagemagick convert
 
 function testConvertPng(pngName, done) {
-    if (os.platform() !== 'darwin') {
-        console.warn('Skipping png conversion tests, OSX is required');
-        done();
-    }
     pngToIcns(path.join(__dirname, '../../', 'test-resources', pngName), (error, icnsPath) => {
         if (error) {
             done(error);
@@ -29,11 +25,18 @@ function testConvertPng(pngName, done) {
 }
 
 describe('Get Icon Module', function() {
-    it('Can convert a rgb png to icns', function(done) {
-        testConvertPng('iconSample.png', done);
-    });
+    it('Can convert icons', function() {
+        if (os.platform() !== 'darwin') {
+            console.warn('Skipping png conversion tests, OSX is required');
+            return;
+        }
 
-    it('Can convert a grey png to icns', function(done) {
-        testConvertPng('iconSampleGrey.png', done);
+        it('Can convert a rgb png to icns', function(done) {
+            testConvertPng('iconSample.png', done);
+        });
+
+        it('Can convert a grey png to icns', function(done) {
+            testConvertPng('iconSampleGrey.png', done);
+        });
     });
 });
