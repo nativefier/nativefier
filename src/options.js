@@ -113,7 +113,7 @@ function sanitizeOptions(options) {
     options.name = sanitize(options.name);
 
     if (options.platform === 'linux') {
-        options.name = _.upperFirst(_.camelCase(options.name));
+        options.name = _.kebabCase(options.name);
     }
     return options;
 }
