@@ -51,7 +51,7 @@ describe('Nativefier Module', function() {
             const options = {
                 name: 'google-test-app',
                 targetUrl: 'http://google.com',
-                outDir: tmpPath,
+                out: tmpPath,
                 overwrite: true,
                 platform: null
             };
