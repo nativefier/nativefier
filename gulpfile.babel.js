@@ -5,9 +5,9 @@ import webpack from 'webpack-stream';
 import babel from 'gulp-babel';
 import runSequence from 'run-sequence';
 import path from 'path';
-import childProcess from 'child_process';
 import eslint from 'gulp-eslint';
 import mocha from 'gulp-mocha';
+import shellJs from 'shelljs';
 
 const PATHS = setUpPaths();
 
@@ -73,8 +73,7 @@ gulp.task('watch', ['build'], () => {
 });
 
 gulp.task('publish', done => {
-    childProcess.spawn('npm', ['publish'], {stdio: 'inherit'})
-        .on('close', done);
+    shellExec('npm publish', done);
 });
 
 gulp.task('release', callback => {
@@ -97,7 +96,15 @@ gulp.task('build-tests', done => {
         .pipe(gulp.dest(PATHS.TEST_DEST));
 });
 
-gulp.task('test', ['build'], () => {
+gulp.task('prune', done => {
+    shellExec('npm prune', done);
+});
+
+gulp.task('test', callback => {
+    return runSequence('prune', 'mocha', callback);
+});
+
+gulp.task('mocha', ['build'], () => {
     return gulp.src(PATHS.TEST_DEST_JS, {read: false})
         .pipe(mocha());
 });
@@ -128,3 +135,14 @@ function setUpPaths() {
 
     return paths;
 }
+
+function shellExec(cmd, callback) {
+    shellJs.exec(cmd, {silent: true}, (code, stdout, stderr) => {
+        if (code) {
+            callback(JSON.stringify({code, stdout, stderr}));
+            return;
+        }
+        callback();
+    });
+}
+
