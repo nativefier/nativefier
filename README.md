@@ -36,7 +36,7 @@ $ npm install nativefier -g
 
 #### `.png` to `.icns` Conversion
 
-To support usage of a `.png` for a packaged OSX app icon, you need the following dependencies.
+To support usage of a `.png` for a packaged OSX app icon (currently only supported on OSX), you need the following dependencies.
 
 ##### [sips](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/sips.1.html)
 Automatically ships with OSX
