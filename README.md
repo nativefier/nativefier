@@ -20,6 +20,8 @@ I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser
 
 View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/History.md).
 
+[Relevant Hacker News Thread](https://news.ycombinator.com/item?id=10930718)
+
 ### Features
 
 - Automatically retrieves the correct icon and app name
