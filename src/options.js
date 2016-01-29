@@ -82,6 +82,10 @@ function optionsFactory(inpOptions, callback) {
                 } else {
                     options.name = pageTitle;
                 }
+                if (options.platform === 'linux') {
+                    // spaces will cause problems with Ubuntu when pinned to the dock
+                    options.name = _.kebabCase(options.name);
+                }
                 callback();
             });
         }
@@ -93,10 +97,6 @@ function optionsFactory(inpOptions, callback) {
 function sanitizeOptions(options) {
     options.name = sanitizeFilename(options.name);
 
-    if (options.platform === 'linux') {
-        // spaces will cause problems with Ubuntu when pinned to the dock
-        options.name = _.kebabCase(options.name);
-    }
     return options;
 }
 
