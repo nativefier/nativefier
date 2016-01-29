@@ -40,6 +40,11 @@ if (require.main === module) {
             console.error(error);
             return;
         }
+
+        if (!appPath) {
+            // app exists and --overwrite is not passed
+            return;
+        }
         console.log(`App built to ${appPath}`);
     });
 }
