@@ -69,6 +69,8 @@ $ nativefier --name "Some Awesome App" "http://medium.com"
 
 **For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
 
+**For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
+
 ## Command Line Options
 
 ```bash
@@ -99,6 +101,8 @@ Prints the usage information.
 ```
 
 The name of the application, which will affect strings in titles and the icon.
+
+**For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
 
 #### [platform]
 
