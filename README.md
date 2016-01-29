@@ -67,7 +67,7 @@ $ nativefier --name "Some Awesome App" "http://medium.com"
 
 **For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
 
-## Options
+## Command Line Options
 
 ```bash
 $ nativefier [options] <targetUrl> [dest]
@@ -159,18 +159,6 @@ With the `sips`, `iconutil` and `imagemagick convert` optional dependencies in y
 
 To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
 
-#### [badge]
-
-```
--b, --badge
-```
-
-On OSX, it is desired for the App dock icon to show a badge on the receipt of a desktop notification.
-
-There is no known way to intercept and set an event listener for a desktop notification triggered by the [`<webview>`](https://github.com/atom/electron/blob/master/docs/api/web-view-tag.md), the current workaround is to listen for `document.title` changes within the `<webview>`. Typical web apps like Facebook Messenger will change the `document.title` to "John sent a message..." on the receipt of a desktop notification, and this is what we will listen for to trigger the app badge on the dock.
-
-However, this would cause issues when the command line argument `target` is set to a external page which is not a single page app, because clicking on hyperlinks and switching pages would naturally change the `document.title`. Hence, `--badge` is an optional command argument that can be set by the user if the side effect of this workaround is understood.
-
 #### [counter]
 
 ```
@@ -226,6 +214,50 @@ If this flag is passed, it will not override the user agent.
 --insecure
 ```
 Forces the packaged app to ignore certificate errors.
+
+## Programmatic API
+
+You can use the Nativefier programmatic API as well.
+
+```bash
+$ npm install --save nativefier
+```
+
+In your `.js` file:
+
+```javascript
+var nativefier = require('nativefier');
+
+// possible options
+var options = {
+    name: 'Web WhatsApp',
+    targetUrl: 'http://web.whatsapp.com', // required
+    platform: 'darwin',
+    arch: 'x64',
+    version: '0.36.4',
+    out: '~/Desktop',
+    overwrite: true,
+    asar: false, // see conceal
+    icon: '~/Desktop/icon.png',
+    counter: false,
+    width: 1280,
+    height: 800,
+    showMenuBar: false,
+    userAgent: null,
+    insecure: false,
+    honest: false
+};
+
+nativefier(options, function(error, appPath) {
+    if (error) {
+        console.error(error);
+        return;
+    }
+    console.log('App has been nativefied to', appPath);
+});
+```
+
+More description about the `options` for `nativefier` can be found at the section on [command line flags](#command-line-options).
 
 ## How It Works
 
