@@ -1,5 +1,5 @@
-var wurl = require('wurl');
-var os = require('os');
+import wurl from 'wurl';
+import os from 'os';
 
 function isOSX() {
     return os.platform() === 'darwin';
@@ -11,7 +11,7 @@ function linkIsInternal(currentUrl, newUrl) {
     return currentDomain === newDomain;
 }
 
-module.exports = {
-    isOSX: isOSX,
-    linkIsInternal: linkIsInternal
+export default {
+    isOSX,
+    linkIsInternal
 };

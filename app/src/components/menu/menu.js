@@ -1,7 +1,4 @@
-var electron = require('electron');
-var Menu = electron.Menu;
-var shell = electron.shell;
-const clipboard = electron.clipboard;
+import {Menu, shell, clipboard} from 'electron';
 
 /**
  *
@@ -18,7 +15,7 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
         return;
     }
 
-    var template = [
+    const template = [
         {
             label: 'Edit',
             submenu: [
@@ -70,20 +67,20 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
             submenu: [
                 {
                     label: 'Back',
-                    click: function() {
+                    click: () => {
                         onGoBack();
                     }
                 },
                 {
                     label: 'Forward',
-                    click: function() {
+                    click: () => {
                         onGoForward();
                     }
                 },
                 {
                     label: 'Reload',
                     accelerator: 'CmdOrCtrl+R',
-                    click: function(item, focusedWindow) {
+                    click: (item, focusedWindow) => {
                         if (focusedWindow) {
                             focusedWindow.reload();
                         }
@@ -94,13 +91,13 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                 },
                 {
                     label: 'Toggle Full Screen',
-                    accelerator: (function() {
+                    accelerator: (() => {
                         if (process.platform === 'darwin') {
                             return 'Ctrl+Command+F';
                         }
                         return 'F11';
                     })(),
-                    click: function(item, focusedWindow) {
+                    click: (item, focusedWindow) => {
                         if (focusedWindow) {
                             focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
                         }
@@ -108,37 +105,37 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                 },
                 {
                     label: 'Zoom In',
-                    accelerator: (function() {
+                    accelerator: (() => {
                         if (process.platform === 'darwin') {
                             return 'Command+=';
                         }
                         return 'Ctrl+=';
                     })(),
-                    click: function() {
+                    click: () => {
                         onZoomIn();
                     }
                 },
                 {
                     label: 'Zoom Out',
-                    accelerator: (function() {
+                    accelerator: (() => {
                         if (process.platform === 'darwin') {
                             return 'Command+-';
                         }
                         return 'Ctrl+-';
                     })(),
-                    click: function() {
+                    click: () => {
                         onZoomOut();
                     }
                 },
                 {
                     label: 'Toggle Window Developer Tools',
-                    accelerator: (function() {
+                    accelerator: (() => {
                         if (process.platform === 'darwin') {
                             return 'Alt+Command+I';
                         }
                         return 'Ctrl+Shift+I';
                     })(),
-                    click: function(item, focusedWindow) {
+                    click: (item, focusedWindow) => {
                         if (focusedWindow) {
                             focusedWindow.toggleDevTools();
                         }
@@ -168,13 +165,13 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
             submenu: [
                 {
                     label: `Built with Nativefier v${nativefierVersion}`,
-                    click: function() {
+                    click: () => {
                         shell.openExternal('https://github.com/jiahaog/nativefier');
                     }
                 },
                 {
                     label: 'Report an Issue',
-                    click: function() {
+                    click: () => {
                         shell.openExternal('https://github.com/jiahaog/nativefier/issues');
                     }
                 }
@@ -214,7 +211,7 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                 {
                     label: 'Quit',
                     accelerator: 'Command+Q',
-                    click: function() {
+                    click: () => {
                         onQuit();
                     }
                 }
@@ -231,8 +228,8 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
         );
     }
 
-    var menu = Menu.buildFromTemplate(template);
+    const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
 }
 
-module.exports = createMenu;
+export default createMenu;

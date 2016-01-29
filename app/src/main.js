@@ -1,24 +1,19 @@
-/**
- * Created by JiaHao on 4/7/15.
- */
-
 import 'source-map-support/register';
+import fs from 'fs';
+import path from 'path';
+import electron from 'electron';
+import createLoginWindow from './components/login/loginWindow';
+import createMainWindow from './components/mainWindow/mainWindow';
+import helpers from './helpers/helpers';
 
-var fs = require('fs');
-var path = require('path');
-var electron = require('electron');
-var createMainWindow = require('./components/mainWindow/mainWindow');
-var createLoginWindow = require('./components/login/loginWindow');
-var helpers = require('./helpers/helpers');
-var app = electron.app;
-var ipcMain = electron.ipcMain;
-var isOSX = helpers.isOSX;
+const {app, ipcMain} = electron;
+const {isOSX} = helpers;
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 
-var appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
-var mainWindow;
+let mainWindow;
 
 if (appArgs.insecure) {
     app.commandLine.appendSwitch('ignore-certificate-errors');
@@ -31,13 +26,13 @@ if (isOSX()) {
     setDockBadge = app.dock.setBadge;
 }
 
-app.on('window-all-closed', function() {
+app.on('window-all-closed', () => {
     if (!isOSX()) {
         app.quit();
     }
 });
 
-app.on('activate', function(event, hasVisibleWindows) {
+app.on('activate', (event, hasVisibleWindows) => {
     if (isOSX()) {
         // this is called when the dock is clicked
         if (!hasVisibleWindows) {
@@ -46,7 +41,7 @@ app.on('activate', function(event, hasVisibleWindows) {
     }
 });
 
-app.on('before-quit', function() {
+app.on('before-quit', () => {
     // not fired when the close button on the window is clicked
     if (isOSX()) {
         // need to force a quit as a workaround here to simulate the osx app hiding behaviour
@@ -58,17 +53,17 @@ app.on('before-quit', function() {
     }
 });
 
-app.on('ready', function() {
+app.on('ready', () => {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
 });
 
-app.on('login', function(event, webContents, request, authInfo, callback) {
+app.on('login', (event, webContents, request, authInfo, callback) => {
     // for http authentication
     event.preventDefault();
     createLoginWindow(callback);
 });
 
-ipcMain.on('notification', function(event, title, opts) {
+ipcMain.on('notification', (event, title, opts) => {
     if (!isOSX() || mainWindow.isFocused()) {
         return;
     }

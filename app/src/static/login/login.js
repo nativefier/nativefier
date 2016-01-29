@@ -1,10 +1,11 @@
-var ipcRenderer = require('electron').ipcRenderer;
+import electron from 'electron';
+const {ipcRenderer} = electron;
 
-var form = document.getElementById('login-form');
+const form = document.getElementById('login-form');
 
-form.addEventListener('submit', function(event) {
+form.addEventListener('submit', event => {
     event.preventDefault();
-    var username = document.getElementById('username-input').value;
-    var password = document.getElementById('password-input').value;
+    const username = document.getElementById('username-input').value;
+    const password = document.getElementById('password-input').value;
     ipcRenderer.send('login-message', [username, password]);
 });

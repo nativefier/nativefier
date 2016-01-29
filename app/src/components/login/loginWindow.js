@@ -1,6 +1,6 @@
-var electron = require('electron');
-var BrowserWindow = electron.BrowserWindow;
-var ipcMain = electron.ipcMain;
+import electron from 'electron';
+import path from 'path';
+const {BrowserWindow, ipcMain} = electron;
 
 function createLoginWindow(loginCallback) {
     var loginWindow = new BrowserWindow({
@@ -9,7 +9,7 @@ function createLoginWindow(loginCallback) {
         frame: false,
         resizable: false
     });
-    loginWindow.loadURL('file://' + __dirname + '/static/login/login.html');
+    loginWindow.loadURL('file://' + path.join(__dirname, '/static/login/login.html'));
 
     ipcMain.once('login-message', function(event, usernameAndPassword) {
         loginCallback(usernameAndPassword[0], usernameAndPassword[1]);
@@ -18,4 +18,4 @@ function createLoginWindow(loginCallback) {
     return loginWindow;
 }
 
-module.exports = createLoginWindow;
+export default createLoginWindow;

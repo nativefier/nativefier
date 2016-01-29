@@ -1,25 +1,21 @@
 import electron from 'electron';
-const Menu = electron.Menu;
-const ipcMain = electron.ipcMain;
-const shell = electron.shell;
-const BrowserWindow = electron.BrowserWindow;
+const {Menu, ipcMain, shell, BrowserWindow} = electron;
 
 function initContextMenu(mainWindow) {
-    ipcMain.on('contextMenuOpened', function(event, targetHref) {
+    ipcMain.on('contextMenuOpened', (event, targetHref) => {
         const contextMenuTemplate = [
             {
                 label: 'Open in default browser',
-                click: function() {
+                click: () => {
                     if (targetHref) {
                         shell.openExternal(targetHref);
                         return;
                     }
-
                 }
             },
             {
                 label: 'Open in new window',
-                click: function() {
+                click: () => {
                     if (targetHref) {
                         new BrowserWindow().loadURL(targetHref);
                         return;
