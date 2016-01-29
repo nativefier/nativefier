@@ -1,4 +1,17 @@
 
+6.8.0 / 2016-01-30
+==================
+
+  * Use ES6 for placeholder app
+  * Massive refactor of cli code
+  * Rename `--app-name` to `--name`
+  * Fix #103 App name should not be capitalized
+  * Remove electron prebuilt as a dev dependency to speed up ci builds
+  * Fix test for non darwin platforms
+  * Implement check for wine before attempting to pass icon to electron pacakger
+  * Update gulpfile - Build tests in `gulp build` - Watch test files - Clean test files as well
+  * Implement automatic retrieval of png which resolves #16
+
 6.7.0 / 2016-01-28
 ==================
 
