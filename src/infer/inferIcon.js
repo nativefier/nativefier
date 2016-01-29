@@ -5,6 +5,7 @@ import tmp from 'tmp';
 tmp.setGracefulCleanup();
 
 const BEST_ICON_API = 'http://45.55.116.63:8080/icon';
+
 /**
  *
  * @param {string} targetUrl

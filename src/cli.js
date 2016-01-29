@@ -4,7 +4,7 @@ import 'source-map-support/register';
 
 import path from 'path';
 import program from 'commander';
-import buildApp from './build/buildApp';
+import nativefier from './index';
 const packageJson = require(path.join('..', 'package'));
 
 if (require.main === module) {
@@ -35,7 +35,7 @@ if (require.main === module) {
         program.help();
     }
 
-    buildApp(program, (error, appPath) => {
+    nativefier(program, (error, appPath) => {
         if (error) {
             console.error(error);
             return;
