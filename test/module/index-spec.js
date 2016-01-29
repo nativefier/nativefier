@@ -2,13 +2,13 @@ import tmp from 'tmp';
 import chai from 'chai';
 import fs from 'fs';
 import path from 'path';
-import nativefier from './../../lib/index';
 import async from 'async';
-tmp.setGracefulCleanup();
 
-let assert = chai.assert;
+import nativefier from './../../lib/index';
 
 const PLATFORMS = ['darwin', 'linux', 'win32'];
+tmp.setGracefulCleanup();
+const assert = chai.assert;
 
 function checkApp(appPath, inputOptions, callback) {
     try {
