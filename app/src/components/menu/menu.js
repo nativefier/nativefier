@@ -67,12 +67,14 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
             submenu: [
                 {
                     label: 'Back',
+                    accelerator: 'CmdOrCtrl+[',
                     click: () => {
                         onGoBack();
                     }
                 },
                 {
                     label: 'Forward',
+                    accelerator: 'CmdOrCtrl+]',
                     click: () => {
                         onGoForward();
                     }
