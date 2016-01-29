@@ -1,80 +1,61 @@
 import os from 'os';
 import path from 'path';
 import url from 'url';
-
-import request from 'request';
-import cheerio from 'cheerio';
 import validator from 'validator';
-import sanitize from 'sanitize-filename';
+import sanitizeFilename from 'sanitize-filename';
 import _ from 'lodash';
 import async from 'async';
-import inferIcon from './inferIcon';
+
+import inferIcon from './infer/inferIcon';
+import inferTitle from './infer/inferTitle';
+import inferOs from './infer/inferOs';
+
+const {inferPlatform, inferArch} = inferOs;
 
 const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
 const DEFAULT_APP_NAME = 'APP';
 
-function optionsFactory(name,
-                        targetUrl,
-                        platform = detectPlatform(),
-                        arch = detectArch(),
-                        version = ELECTRON_VERSION,
-                        outDir = process.cwd(),
-                        overwrite = false,
-                        conceal = false,
-                        icon,
-                        counter = false,
-                        width = 1280,
-                        height = 800,
-                        showMenuBar = false,
-                        userAgent,
-                        honest = false,
-                        insecure = false,
-                        callback) {
-    targetUrl = normalizeUrl(targetUrl);
+/**
+ * @callback optionsCallback
+ * @param error
+ * @param options augmented options
+ */
 
-    if (!width) {
-        width = 1280;
-    }
-
-    if (!height) {
-        height = 800;
-    }
-
-    if (!userAgent && !honest) {
-        userAgent = getFakeUserAgent();
-    }
+/**
+ * Extracts only desired keys from inpOptions and augments it with defaults
+ * @param inpOptions
+ * @param {optionsCallback} callback
+ */
+function optionsFactory(inpOptions, callback) {
 
     const options = {
         dir: TEMPLATE_APP_DIR,
-
-        name: name,
-        targetUrl: targetUrl,
-
-        platform: platform,
-        arch: arch,
-        version: version,
-
-        out: outDir,
-
-        // optionals
-        overwrite: overwrite,
-        asar: conceal,
-        icon: icon,
-
-        // app configuration
-        counter: counter,
-        width: width,
-        height: height,
-        showMenuBar: showMenuBar,
-        userAgent: userAgent,
-        insecure: insecure
+        name: inpOptions.name,
+        targetUrl: normalizeUrl(inpOptions.targetUrl),
+        platform: inpOptions.platform || inferPlatform(),
+        arch: inpOptions.arch || inferArch(),
+        version: ELECTRON_VERSION,
+        out: inpOptions.out|| process.cwd(),
+        overwrite: inpOptions.overwrite || false,
+        asar: inpOptions.conceal || false,
+        icon: inpOptions.icon,
+        counter: inpOptions.counter || false,
+        width: inpOptions.width || 1280,
+        height: inpOptions.height || 800,
+        showMenuBar: inpOptions.showMenuBar || false,
+        userAgent: inpOptions.userAgent || getFakeUserAgent(),
+        insecure: inpOptions.insecure || false
     };
+
+    if (inpOptions.honest) {
+        options.userAgent = null;
+    }
 
     async.waterfall([
         callback => {
             if (options.icon) {
-                callback(null, options);
+                callback();
                 return;
             }
             inferIcon(options.targetUrl, (error, pngPath) => {
@@ -83,78 +64,39 @@ function optionsFactory(name,
                 } else {
                     options.icon = pngPath;
                 }
-                callback(null, options);
+                callback();
             });
         },
-        (options, callback) => {
-            if (name && name.length > 0) {
-                options.name = name;
-                callback(null, options);
+        callback => {
+            if (options.name && options.name.length > 0) {
+                callback();
                 return;
             }
 
-            getTitle(options.targetUrl, function(error, pageTitle) {
+            inferTitle(options.targetUrl, function(error, pageTitle) {
                 if (error) {
                     console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
                     options.name = DEFAULT_APP_NAME;
                 } else {
                     options.name = pageTitle;
                 }
-
-                callback(null, options);
+                callback();
             });
         }
-    ], (error, options) => {
+    ], error => {
         callback(error, sanitizeOptions(options));
+        console.log(options);
     });
 }
 
 function sanitizeOptions(options) {
-    options.name = sanitize(options.name);
+    options.name = sanitizeFilename(options.name);
 
     if (options.platform === 'linux') {
+        // spaces will cause problems with Ubuntu when pinned to the dock
         options.name = _.kebabCase(options.name);
     }
     return options;
-}
-
-function detectPlatform() {
-    const platform = os.platform();
-    if (platform === 'darwin' || platform === 'win32' || platform === 'linux') {
-        return platform;
-    }
-
-    console.warn(`Warning: Untested platform ${platform} detected, assuming linux`);
-    return 'linux';
-}
-
-function detectArch() {
-    const arch = os.arch();
-    if (arch !== 'ia32' && arch !== 'x64') {
-        throw `Incompatible architecture ${arch} detected`;
-    }
-    return os.arch();
-}
-
-function getTitle(url, callback) {
-    const options = {
-        url: url,
-        headers: {
-            // fake a user agent because pages like http://messenger.com will throw 404 error
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36'
-        }
-    };
-
-    request(options, (error, response, body) => {
-        if (error || response.statusCode !== 200) {
-            callback(`Request Error: ${error}, Status Code ${response ? response.statusCode : 'No Response'}`);
-            return;
-        }
-
-        const $ = cheerio.load(body);
-        const pageTitle = $('title').text().replace(/\//g, '');
-        callback(null, pageTitle);
-    });
 }
 
 function normalizeUrl(testUrl) {

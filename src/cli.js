@@ -13,9 +13,9 @@ if (require.main === module) {
         .arguments('<targetUrl> [dest]')
         .action(function(targetUrl, appDir) {
             program.targetUrl = targetUrl;
-            program.outDir = appDir;
+            program.out = appDir;
         })
-        .option('-n, --app-name <value>', 'app name')
+        .option('-n, --name <value>', 'app name')
         .option('-p, --platform <value>', '\'linux\', \'win32\', or \'darwin\'')
         .option('-a, --arch <value>', '\'ia32\' or \'x64\'')
         .option('-e, --electron-version <value>', 'electron version to package, without the \'v\', see https://github.com/atom/electron/releases')

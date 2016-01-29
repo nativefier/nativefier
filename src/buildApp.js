@@ -36,24 +36,7 @@ function buildApp(options, callback) {
 
     async.waterfall([
         callback => {
-            optionsFactory(
-                options.appName,
-                options.targetUrl,
-                options.platform,
-                options.arch,
-                options.electronVersion,
-                options.outDir,
-                options.overwrite,
-                options.conceal,
-                options.icon,
-                options.counter,
-                options.width,
-                options.height,
-                options.showMenuBar,
-                options.userAgent,
-                options.honest,
-                options.insecure,
-                callback);
+            optionsFactory(options, callback);
         },
         (options, callback) => {
             copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, options.insecure, (error, tempDirPath) => {
@@ -70,7 +53,6 @@ function buildApp(options, callback) {
 
             // maybe skip passing icon parameter to electron packager
             const packageOptions = maybeNoIconOption(options);
-
             packager(packageOptions, (error, appPathArray) => {
                 // pass options which still contains the icon to waterfall
                 callback(error, options, appPathArray);

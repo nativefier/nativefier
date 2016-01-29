@@ -1,6 +1,7 @@
 # Nativefier
 [![Build Status](https://travis-ci.org/jiahaog/nativefier.svg?branch=master)](https://travis-ci.org/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
+
 ![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
 You want to make a native wrapper for Google Maps (or any web page).
@@ -18,6 +19,10 @@ Nativefier is a command line tool that allows you to easily create a desktop app
 I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
 
 View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/History.md).
+
+### Features
+
+- Automatically retrieves the correct icon and app name
 
 ## Installation
 
@@ -54,10 +59,10 @@ Creating a native desktop app for [medium.com](http://medium.com):
 $ nativefier "http://medium.com"
 ```
 
-Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--app-name "Medium"` as part of the command line options, as such.
+Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name "Medium"` as part of the command line options, as such.
 
 ```
-$ nativefier --app-name "Some Awesome App" "http://medium.com"
+$ nativefier --name "Some Awesome App" "http://medium.com"
 ```
 
 **For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
@@ -85,10 +90,10 @@ Specifies the destination directory to build the app to, defaults to the current
 
 Prints the usage information.
 
-#### [app-name]
+#### [name]
 
 ```
--n, --app-name <value>
+-n, --name <value>
 ```
 
 The name of the application, which will affect strings in titles and the icon.
