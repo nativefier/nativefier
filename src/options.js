@@ -12,7 +12,7 @@ import inferOs from './infer/inferOs';
 
 const {inferPlatform, inferArch} = inferOs;
 
-const TEMPLATE_APP_DIR = path.join(__dirname, '../', 'app');
+const PLACEHOLDER_APP_DIR = path.join(__dirname, '../', 'app');
 const ELECTRON_VERSION = '0.36.4';
 const DEFAULT_APP_NAME = 'APP';
 
@@ -30,13 +30,13 @@ const DEFAULT_APP_NAME = 'APP';
 function optionsFactory(inpOptions, callback) {
 
     const options = {
-        dir: TEMPLATE_APP_DIR,
+        dir: PLACEHOLDER_APP_DIR,
         name: inpOptions.name,
         targetUrl: normalizeUrl(inpOptions.targetUrl),
         platform: inpOptions.platform || inferPlatform(),
         arch: inpOptions.arch || inferArch(),
         version: ELECTRON_VERSION,
-        out: inpOptions.out|| process.cwd(),
+        out: inpOptions.out || process.cwd(),
         overwrite: inpOptions.overwrite || false,
         asar: inpOptions.conceal || false,
         icon: inpOptions.icon,
