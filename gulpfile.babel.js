@@ -73,7 +73,7 @@ gulp.task('watch', ['build'], () => {
 });
 
 gulp.task('publish', done => {
-    shellExec('npm publish', done);
+    shellExec('npm publish', false, done);
 });
 
 gulp.task('release', callback => {
@@ -97,7 +97,7 @@ gulp.task('build-tests', done => {
 });
 
 gulp.task('prune', done => {
-    shellExec('npm prune', done);
+    shellExec('npm prune', true, done);
 });
 
 gulp.task('test', callback => {
@@ -136,8 +136,8 @@ function setUpPaths() {
     return paths;
 }
 
-function shellExec(cmd, callback) {
-    shellJs.exec(cmd, {silent: true}, (code, stdout, stderr) => {
+function shellExec(cmd, silent, callback) {
+    shellJs.exec(cmd, {silent: silent}, (code, stdout, stderr) => {
         if (code) {
             callback(JSON.stringify({code, stdout, stderr}));
             return;
