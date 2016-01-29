@@ -2,9 +2,9 @@ import os from 'os';
 import path from 'path';
 import url from 'url';
 import validator from 'validator';
-import sanitizeFilename from 'sanitize-filename';
 import _ from 'lodash';
 import async from 'async';
+import sanitizeFilename from 'sanitize-filename';
 
 import inferIcon from './infer/inferIcon';
 import inferTitle from './infer/inferTitle';

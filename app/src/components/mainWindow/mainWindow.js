@@ -30,7 +30,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         y: mainWindowState.y,
         'auto-hide-menu-bar': !options.showMenuBar,
         // Convert dashes to spaces because on linux the app name is joined with dashes
-        title: options.name.replace(/-/g, ' '),
+        title: options.name,
         'web-preferences': {
             javascript: true,
             plugins: true,
