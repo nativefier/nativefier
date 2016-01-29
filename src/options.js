@@ -9,6 +9,7 @@ import async from 'async';
 import inferIcon from './infer/inferIcon';
 import inferTitle from './infer/inferTitle';
 import inferOs from './infer/inferOs';
+import packageJson from './../package.json';
 
 const {inferPlatform, inferArch} = inferOs;
 
@@ -36,6 +37,7 @@ function optionsFactory(inpOptions, callback) {
         platform: inpOptions.platform || inferPlatform(),
         arch: inpOptions.arch || inferArch(),
         version: ELECTRON_VERSION,
+        nativefierVersion: packageJson.version,
         out: inpOptions.out || process.cwd(),
         overwrite: inpOptions.overwrite || false,
         asar: inpOptions.conceal || false,
@@ -85,7 +87,6 @@ function optionsFactory(inpOptions, callback) {
         }
     ], error => {
         callback(error, sanitizeOptions(options));
-        console.log(options);
     });
 }
 

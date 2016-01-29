@@ -1,10 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-
-import optionsFactory from './options';
-import iconBuild from './iconBuild';
-import helpers from './helpers';
 import packager from 'electron-packager';
 import tmp from 'tmp';
 import ncp from 'ncp';
@@ -12,7 +8,9 @@ import async from 'async';
 import _ from 'lodash';
 import hasBinary from 'hasbin';
 
-import packageJson from './../package.json';
+import optionsFactory from './options';
+import iconBuild from './iconBuild';
+import helpers from './helpers';
 
 const copy = ncp.ncp;
 const isWindows = helpers.isWindows;
@@ -20,7 +18,7 @@ const isWindows = helpers.isWindows;
 /**
  * @callback buildAppCallback
  * @param error
- * @param appPath
+ * @param {string} appPath
  */
 
 /**
@@ -39,18 +37,22 @@ function buildApp(options, callback) {
             optionsFactory(options, callback);
         },
         (options, callback) => {
-            copyPlaceholderApp(options.dir, tmpPath, options.name, options.targetUrl, options.counter, options.width, options.height, options.showMenuBar, options.userAgent, options.insecure, (error, tempDirPath) => {
-                callback(error, tempDirPath, options);
+            copyPlaceholderApp(options.dir, tmpPath, options, error => {
+                if (error) {
+                    callback(error);
+                    return;
+                }
+                // dir now correctly references the app folder to package
+                options.dir = tmpPath;
+                callback(null, options);
             });
         },
-        (tempDir, options, callback) => {
+        (options, callback) => {
             iconBuild(options, (error, optionsWithIcon) => {
-                callback(null, tempDir, optionsWithIcon);
+                callback(null, optionsWithIcon);
             });
         },
-        (tempDir, options, callback) => {
-            options.dir = tempDir;
-
+        (options, callback) => {
             // maybe skip passing icon parameter to electron packager
             const packageOptions = maybeNoIconOption(options);
             packager(packageOptions, (error, appPathArray) => {
@@ -58,7 +60,6 @@ function buildApp(options, callback) {
                 callback(error, options, appPathArray);
             });
         },
-
         (options, appPathArray, callback) => {
             // somehow appPathArray is a 1 element array
             if (appPathArray.length === 0) {
@@ -71,22 +72,9 @@ function buildApp(options, callback) {
             if (appPathArray.length > 1) {
                 console.warn('Warning: Packaged app path contains more than one element:', appPathArray);
             }
+
             const appPath = appPathArray[0];
-
-            if (!options.icon) {
-                callback(null, appPath);
-                return;
-            }
-
-            if (options.platform === 'darwin') {
-                callback(null, appPath);
-                return;
-            }
-
-            // windows & linux
-
-            const destIconPath = path.join(appPath, 'resources/app');
-            copy(options.icon, path.join(destIconPath, 'icon.png'), error => {
+            maybeCopyIcons(options, appPath, error => {
                 callback(error, appPath);
             });
         }
@@ -94,57 +82,52 @@ function buildApp(options, callback) {
 }
 
 /**
- * @callback tempDirCallback
- * @param error
- * @param {string} [tempDirPath]
- */
-
-/**
  * Creates a temporary directory and copies the './app folder' inside, and adds a text file with the configuration
  * for the single page app.
  *
- * @param {string} srcAppDir
- * @param {string} tempDir
- * @param {string} name
- * @param {string} targetURL
- * @param {boolean} counter
- * @param {number} width
- * @param {number} height
- * @param {boolean} showMenuBar
- * @param {string} userAgent
- * @param {tempDirCallback} callback
+ * @param {string} src
+ * @param {string} dest
+ * @param {{}} options
+ * @param callback
  */
-function copyPlaceholderApp(srcAppDir, tempDir, name, targetURL, counter, width, height, showMenuBar, userAgent, insecure, callback) {
-    const loadedPackageJson = packageJson;
-    copy(srcAppDir, tempDir, function(error) {
+function copyPlaceholderApp(src, dest, options, callback) {
+    const appArgs = selectAppArgs(options);
+    copy(src, dest, error => {
         if (error) {
-            console.error(error);
             callback(`Error Copying temporary directory: ${error}`);
             return;
         }
 
-        const appArgs = {
-            name: name,
-            targetUrl: targetURL,
-            counter: counter,
-            width: width,
-            height: height,
-            showMenuBar: showMenuBar,
-            userAgent: userAgent,
-            nativefierVersion: loadedPackageJson.version,
-            insecure: insecure
-        };
-
-        fs.writeFileSync(path.join(tempDir, '/nativefier.json'), JSON.stringify(appArgs));
-
-        // change name of packageJson so that temporary files will not be shared across different app instances
-        const packageJsonPath = path.join(tempDir, '/package.json');
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-        packageJson.name = normalizeAppName(appArgs.name);
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
-
-        callback(null, tempDir);
+        fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
+        changeAppPackageJsonName(dest, appArgs.name);
+        callback();
     });
+}
+
+function changeAppPackageJsonName(appPath, name) {
+    const packageJsonPath = path.join(appPath, '/package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    packageJson.name = normalizeAppName(name);
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
+}
+
+/**
+ * Only picks certain app args to pass to nativefier.json
+ * @param options
+ * @returns {{name: (*|string), targetUrl: (string|*), counter: *, width: *, height: *, showMenuBar: *, userAgent: *, nativefierVersion: *, insecure: *}}
+ */
+function selectAppArgs(options) {
+    return {
+        name: options.name,
+        targetUrl: options.targetUrl,
+        counter: options.counter,
+        width: options.width,
+        height: options.height,
+        showMenuBar: options.showMenuBar,
+        userAgent: options.userAgent,
+        nativefierVersion: options.nativefierVersion,
+        insecure: options.insecure
+    };
 }
 
 function normalizeAppName(appName) {
@@ -163,4 +146,30 @@ function maybeNoIconOption(options) {
     }
     return packageOptions;
 }
+
+/**
+ * For windows and linux, we have to copy over the icon to the resources/app folder, which the
+ * BrowserWindow is hard coded to read the icon from
+ * @param {{}} options
+ * @param {string} appPath
+ * @param callback
+ */
+function maybeCopyIcons(options, appPath, callback) {
+    if (!options.icon) {
+        callback();
+        return;
+    }
+
+    if (options.platform === 'darwin') {
+        callback();
+        return;
+    }
+
+    // windows & linux
+    const destIconPath = path.join(appPath, 'resources/app');
+    copy(options.icon, path.join(destIconPath, 'icon.png'), error => {
+        callback(error);
+    });
+}
+
 export default buildApp;
