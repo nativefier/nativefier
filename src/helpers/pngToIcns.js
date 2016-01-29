@@ -5,7 +5,7 @@ import helpers from './helpers';
 const isOSX = helpers.isOSX;
 tmp.setGracefulCleanup();
 
-const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '..', 'bin/pngToIcns');
+const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '../..', 'bin/pngToIcns');
 
 /**
  * @callback pngToIcnsCallback

@@ -1,6 +1,6 @@
 import path from 'path';
-import helpers from './helpers';
-import pngToIcns from './pngToIcns';
+import helpers from './../helpers/helpers';
+import pngToIcns from './../helpers/pngToIcns';
 const isOSX = helpers.isOSX;
 
 /**

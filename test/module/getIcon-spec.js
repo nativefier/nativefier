@@ -5,7 +5,7 @@ import chai from 'chai';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import pngToIcns from './../../lib/pngToIcns';
+import pngToIcns from './../../lib/helpers/pngToIcns';
 
 let assert = chai.assert;
 

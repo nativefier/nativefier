@@ -4,7 +4,7 @@ import 'source-map-support/register';
 
 import path from 'path';
 import program from 'commander';
-import buildApp from './buildApp';
+import buildApp from './build/buildApp';
 const packageJson = require(path.join('..', 'package'));
 
 if (require.main === module) {

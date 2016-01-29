@@ -8,9 +8,9 @@ import async from 'async';
 import _ from 'lodash';
 import hasBinary from 'hasbin';
 
-import optionsFactory from './options';
+import optionsFactory from './../options';
 import iconBuild from './iconBuild';
-import helpers from './helpers';
+import helpers from './../helpers/helpers';
 
 const copy = ncp.ncp;
 const isWindows = helpers.isWindows;
