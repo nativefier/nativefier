@@ -17,6 +17,10 @@ gulp.task('build', callback => {
     runSequence('clean', ['build-cli', 'build-app', 'build-tests'], callback);
 });
 
+gulp.task('screw-tests', callback => {
+    runSequence('clean', ['build-cli', 'build-app'], callback);
+});
+
 gulp.task('build-app', ['build-static'], () => {
     return gulp.src(PATHS.APP_MAIN_JS)
         .pipe(webpack(require(PATHS.WEBPACK_CONFIG)))
