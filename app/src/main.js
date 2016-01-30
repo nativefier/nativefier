@@ -90,7 +90,7 @@ app.on('ready', () => {
         {
             label: 'Minimize to Tray',
             type: 'checkbox',
-            checked: appArgs.minimizeToTray || true,
+            checked: appArgs.minimizeToTray || false,
             click: function (menuItem) {
                 appArgs.minimizeToTray = menuItem.checked;
                 fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(appArgs));
