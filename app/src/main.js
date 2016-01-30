@@ -69,7 +69,7 @@ app.on('before-quit', () => {
 let appIcon = null;
 app.on('ready', () => {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
-    mainWindow.on('close', (e)=> {
+    mainWindow.on('close', e => {
         if (!mainWindow.forceClose && appArgs.minimizeToTray) {
             e.preventDefault();
             mainWindow.hide();
@@ -83,7 +83,7 @@ app.on('ready', () => {
         {
             label: 'Show',
             type: 'normal',
-            click: function (menuItem) {
+            click: function() {
                 mainWindow.show();
             }
         },
@@ -91,7 +91,7 @@ app.on('ready', () => {
             label: 'Minimize to Tray',
             type: 'checkbox',
             checked: appArgs.minimizeToTray || false,
-            click: function (menuItem) {
+            click: function(menuItem) {
                 appArgs.minimizeToTray = menuItem.checked;
                 fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(appArgs));
             }
@@ -99,7 +99,7 @@ app.on('ready', () => {
         {
             label: 'Close',
             type: 'normal',
-            click: function (menuItem) {
+            click: function() {
                 mainWindow.forceClose = true;
                 app.quit();
             }
