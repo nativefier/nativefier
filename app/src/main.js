@@ -38,6 +38,7 @@ app.on('window-all-closed', () => {
     // determined opts
     if(appArgs.minimizeToTray){
         mainWindow.hide();
+        return;
     }
     if (!isOSX()) {
         app.quit();
@@ -78,6 +79,13 @@ app.on('ready', () => {
             click: function (menuItem) {
                 appArgs.minimizeToTray = menuItem.checked = !menuItem.checked;
                 fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(appArgs));
+            }
+        },
+        {
+            label: 'Close',
+            type: 'normal',
+            click: function (menuItem) {
+                app.quit();
             }
         }
     ]);
