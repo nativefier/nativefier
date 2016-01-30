@@ -84,7 +84,6 @@ app.on('ready', () => {
             label: 'Show',
             type: 'normal',
             click: function (menuItem) {
-                console.log(mainWindow);
                 mainWindow.show();
             }
         },
