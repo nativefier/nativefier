@@ -72,7 +72,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             }
 
             if (options.counter) {
-                const itemCountRegex = /[\(](\d*?)[\)]/;
+                const itemCountRegex = /[\(\[{](\d*?)[}\]\)]/;
                 const match = itemCountRegex.exec(mainWindow.getTitle());
                 if (match) {
                     setDockBadge(match[1]);
