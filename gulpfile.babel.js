@@ -7,6 +7,7 @@ import runSequence from 'run-sequence';
 import path from 'path';
 import eslint from 'gulp-eslint';
 import mocha from 'gulp-mocha';
+import istanbul from 'gulp-istanbul';
 import shellJs from 'shelljs';
 
 const PATHS = setUpPaths();
@@ -105,8 +106,17 @@ gulp.task('test', callback => {
 });
 
 gulp.task('mocha', ['build'], () => {
-    return gulp.src(PATHS.TEST_DEST_JS, {read: false})
-        .pipe(mocha());
+    return gulp.src(PATHS.CLI_DEST_JS)
+        .pipe(istanbul({includeUntested: true}))
+        .on('finish', () => {
+            return gulp.src(PATHS.TEST_DEST_JS, {read: false})
+                .pipe(mocha())
+                .pipe(istanbul.writeReports({
+                    dir: './coverage',
+                    reporters: ['lcov'],
+                    reportOpts: {dir: './coverage'}
+                }));
+        });
 });
 
 gulp.task('ci', callback => {
@@ -130,6 +140,7 @@ function setUpPaths() {
     paths.APP_STATIC_JS = path.join(paths.APP_SRC, 'static') + '/**/*.js';
     paths.APP_STATIC_DEST = path.join(paths.APP_DEST, 'static');
     paths.CLI_SRC_JS = paths.CLI_SRC + '/**/*.js';
+    paths.CLI_DEST_JS = paths.CLI_DEST + '/**/*.js';
     paths.TEST_SRC_JS = paths.TEST_SRC + '/**/*.js';
     paths.TEST_DEST_JS = paths.TEST_DEST + '/**/*.js';
 
