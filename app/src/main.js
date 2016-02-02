@@ -12,18 +12,10 @@ const {isOSX} = helpers;
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
-const DEFAULT_ICON_PATH = path.join(__dirname, '..', '/icon.png');
-const Tray = electron.Tray;
-const Menu = electron.Menu;
-
 let mainWindow;
 
 if (appArgs.insecure) {
     app.commandLine.appendSwitch('ignore-certificate-errors');
-}
-
-if (!appArgs.icon) {
-    appArgs.icon = DEFAULT_ICON_PATH;
 }
 
 // do nothing for setDockBadge if not OSX
@@ -34,12 +26,6 @@ if (isOSX()) {
 }
 
 app.on('window-all-closed', () => {
-    // Need a better place to store user options, unless you intend to dump everything into cli
-    // determined opts
-    if (appArgs.minimizeToTray) {
-        mainWindow.hide();
-        return;
-    }
     if (!isOSX()) {
         app.quit();
     }
@@ -66,47 +52,8 @@ app.on('before-quit', () => {
     }
 });
 
-let appIcon = null;
 app.on('ready', () => {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
-    mainWindow.on('close', e => {
-        if (!mainWindow.forceClose && appArgs.minimizeToTray) {
-            e.preventDefault();
-            mainWindow.hide();
-        }
-    });
-
-    appIcon = new Tray(appArgs.icon);
-    let menu = Menu.buildFromTemplate([
-        // See https://github.com/atom/electron/blob/master/docs/api/tray.md for why
-        // there is a shitty option to show
-        {
-            label: 'Show',
-            type: 'normal',
-            click: function() {
-                mainWindow.show();
-            }
-        },
-        {
-            label: 'Minimize to Tray',
-            type: 'checkbox',
-            checked: appArgs.minimizeToTray || false,
-            click: function(menuItem) {
-                appArgs.minimizeToTray = menuItem.checked;
-                fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(appArgs));
-            }
-        },
-        {
-            label: 'Close',
-            type: 'normal',
-            click: function() {
-                mainWindow.forceClose = true;
-                app.quit();
-            }
-        }
-    ]);
-    appIcon.setContextMenu(menu);
-
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
