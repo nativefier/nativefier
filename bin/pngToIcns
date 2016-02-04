@@ -27,12 +27,19 @@ fi
 
 # Parameters
 SOURCE=$1
+DEST=$2
 
 # Get source image
 if [ -z "${SOURCE}" ]; then
 	echo "No source image specified"
 	exit 1
 fi
+
+if [ -z "${DEST}" ]; then
+	echo "No destination specified"
+	exit 1
+fi
+
 
 
 # File Infrastructure
@@ -49,38 +56,22 @@ ICONSET="${BASE}.iconset"
 # echo "ICONSET: $ICONSET"
 
 # Get source image info
-SRCWIDTH=$( sips -g pixelWidth "${SOURCE}" | tail -n1 | awk '{print $2}')
-SRCHEIGHT=$( sips -g pixelHeight "${SOURCE}" | tail -n1 | awk '{print $2}' )
-SRCFORMAT=$( sips -g format "${SOURCE}" | tail -n1 | awk '{print $2}' )
+#SRCWIDTH=$( sips -g pixelWidth "${SOURCE}" | tail -n1 | awk '{print $2}')
+#SRCHEIGHT=$( sips -g pixelHeight "${SOURCE}" | tail -n1 | awk '{print $2}' )
+#SRCFORMAT=$( sips -g format "${SOURCE}" | tail -n1 | awk '{print $2}' )
 
 # Debug Info
 # echo "SRCWIDTH: $SRCWIDTH"
 # echo "SRCHEIGHT: $SRCHEIGHT"
 # echo "SRCFORMAT: $SRCFORMAT"
-
-# Check The Source Image
-# if [ "x${SRCWIDTH}" != "x1024" ] || [ "x${SRCHEIGHT}" != "x1024" ]; then
-# 	echo "ERR: Source image should be 1024 x 1024 pixels." >&2
-# 	exit 1;
-# fi
-if [ "x${SRCFORMAT}" != "xpng" ]; then
-	echo "ERR: Source image format should be png." >&2
-	exit 1;
-fi
+#
+#if [ "x${SRCFORMAT}" != "xpng" ]; then
+#	echo "ERR: Source image format should be png." >&2
+#	exit 1;
+#fi
 
 # Resample image into iconset
 mkdir "${ICONSET}"
-# $SIPS -s format png --resampleWidth 1024 "${SOURCE}" --out "${ICONSET}/icon_512x512@2x.png" > /dev/null 2>&1
-# $SIPS -s format png --resampleWidth 512 "${SOURCE}" --out "${ICONSET}/icon_512x512.png" > /dev/null 2>&1
-# cp  "${ICONSET}/icon_512x512.png"  "${ICONSET}/icon_256x256@2x.png"
-# $SIPS -s format png --resampleWidth 256 "${SOURCE}" --out "${ICONSET}/icon_256x256.png" > /dev/null 2>&1
-# cp  "${ICONSET}/icon_256x256.png"  "${ICONSET}/icon_128x128@2x.png"
-# $SIPS -s format png --resampleWidth 128 "${SOURCE}" --out "${ICONSET}/icon_128x128.png" > /dev/null 2>&1
-# $SIPS -s format png --resampleWidth 64 "${SOURCE}" --out "${ICONSET}/icon_32x32@2x.png" > /dev/null 2>&1
-# $SIPS -s format png --resampleWidth 32 "${SOURCE}" --out "${ICONSET}/icon_32x32.png" > /dev/null 2>&1
-# cp  "${ICONSET}/icon_32x32.png"  "${ICONSET}/icon_16x16@2x.png"
-# $SIPS -s format png --resampleWidth 16 "${SOURCE}" --out "${ICONSET}/icon_16x16.png" > /dev/null 2>&1
-
 
 convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 16x16 "${ICONSET}/icon_16x16.png"
 convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_16x16@2x.png"
@@ -95,7 +86,7 @@ convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 10
 
 
 # Create an icns file lefrom the iconset
-iconutil -c icns "${ICONSET}" -o $2
+iconutil -c icns "${ICONSET}" -o ${DEST}
 
 # Clean up the iconset
 rm -rf "${ICONSET}"
