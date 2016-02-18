@@ -233,7 +233,7 @@ $ npm install --save nativefier
 In your `.js` file:
 
 ```javascript
-var nativefier = require('nativefier');
+var nativefier = require('nativefier').default;
 
 // possible options
 var options = {
