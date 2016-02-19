@@ -95,6 +95,14 @@ Specifies the destination directory to build the app to, defaults to the current
 
 Prints the usage information.
 
+#### Version
+
+```
+-V, --version
+```
+
+Prints the version of your `nativefier` install.
+
 #### [name]
 
 ```
