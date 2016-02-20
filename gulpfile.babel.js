@@ -82,7 +82,7 @@ gulp.task('release', callback => {
 });
 
 gulp.task('lint', () => {
-    return gulp.src(['**/*.js', '!node_modules/**', '!app/node_modules/**', '!app/lib/**', '!lib/**', '!built-tests/**'])
+    return gulp.src(['**/*.js', '!node_modules/**', '!app/node_modules/**', '!app/lib/**', '!lib/**', '!built-tests/**', '!coverage/**'])
         .pipe(eslint())
         .pipe(eslint.format())
         .pipe(eslint.failAfterError());
