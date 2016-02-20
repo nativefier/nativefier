@@ -1,19 +1,18 @@
 import os from 'os';
 import path from 'path';
-import url from 'url';
-import validator from 'validator';
 import _ from 'lodash';
 import async from 'async';
 import sanitizeFilename from 'sanitize-filename';
 
-import inferIcon from './infer/inferIcon';
-import inferTitle from './infer/inferTitle';
-import inferOs from './infer/inferOs';
-import packageJson from './../package.json';
+import inferIcon from './../infer/inferIcon';
+import inferTitle from './../infer/inferTitle';
+import inferOs from './../infer/inferOs';
+import normalizeUrl from './normalizeUrl';
+import packageJson from './../../package.json';
 
 const {inferPlatform, inferArch} = inferOs;
 
-const PLACEHOLDER_APP_DIR = path.join(__dirname, '../', 'app');
+const PLACEHOLDER_APP_DIR = path.join(__dirname, '../../', 'app');
 const ELECTRON_VERSION = '0.36.4';
 const DEFAULT_APP_NAME = 'APP';
 
@@ -98,19 +97,6 @@ function sanitizeOptions(options) {
     options.name = sanitizeFilename(options.name);
 
     return options;
-}
-
-function normalizeUrl(testUrl) {
-    // add protocol if protocol not found
-    let normalized = testUrl;
-    const parsed = url.parse(normalized);
-    if (!parsed.protocol) {
-        normalized = 'http://' + normalized;
-    }
-    if (!validator.isURL(normalized, {require_protocol: true, require_tld: false})) {
-        throw `Your Url: "${normalized}" is invalid!`;
-    }
-    return normalized;
 }
 
 function getFakeUserAgent() {

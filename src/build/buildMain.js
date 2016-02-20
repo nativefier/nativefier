@@ -5,7 +5,7 @@ import ncp from 'ncp';
 import async from 'async';
 import hasBinary from 'hasbin';
 
-import optionsFactory from './../options';
+import optionsFactory from './../options/optionsMain';
 import iconBuild from './iconBuild';
 import helpers from './../helpers/helpers';
 import buildApp from './buildApp';
