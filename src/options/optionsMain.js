@@ -35,7 +35,7 @@ function optionsFactory(inpOptions, callback) {
         targetUrl: normalizeUrl(inpOptions.targetUrl),
         platform: inpOptions.platform || inferPlatform(),
         arch: inpOptions.arch || inferArch(),
-        version: ELECTRON_VERSION,
+        version: inpOptions.electronVersion || ELECTRON_VERSION,
         nativefierVersion: packageJson.version,
         out: inpOptions.out || process.cwd(),
         overwrite: inpOptions.overwrite || false,
@@ -69,6 +69,7 @@ function optionsFactory(inpOptions, callback) {
             });
         },
         callback => {
+            // length also checks if its the commanderJS function or a string
             if (options.name && options.name.length > 0) {
                 callback();
                 return;
