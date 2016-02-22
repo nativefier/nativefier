@@ -230,6 +230,13 @@ If this flag is passed, it will not override the user agent.
 ```
 Forces the packaged app to ignore certificate errors.
 
+#### [insecure-content]
+
+```
+--insecure-content
+```
+Forces the packaged app to ignore content errors.
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
