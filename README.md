@@ -230,12 +230,12 @@ If this flag is passed, it will not override the user agent.
 ```
 Forces the packaged app to ignore certificate errors.
 
-#### [insecure-content]
+#### [disable-web-security]
 
 ```
---insecure-content
+--disable-web-security
 ```
-Forces the packaged app to ignore content errors.
+Forces the packaged app to ignore web security errors.
 
 ## Programmatic API
 
@@ -267,6 +267,7 @@ var options = {
     showMenuBar: false,
     userAgent: null,
     insecure: false,
+    disableWebSecurity: false,
     honest: false
 };
 
