@@ -1,4 +1,4 @@
-import {Menu, shell, clipboard} from 'electron';
+import {Menu, shell, clipboard, dialog} from 'electron';
 
 /**
  *
@@ -127,6 +127,43 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     })(),
                     click: () => {
                         onZoomOut();
+                    }
+                },
+                {
+                    label: 'Clear App Data',
+                    click: (item, focusedWindow) => {
+                        if (focusedWindow) {
+                            dialog.showMessageBox(focusedWindow, {
+                                type:"warning",
+                                buttons:["Yes","Cancel"],
+                                defaultId: 1,
+                                title:"Clear cache confirmation",
+                                message:"This will clear all data (cookies, local storage etc) from this app. \nAre you sure you wish to proceed?"
+                            }, (response) => {
+                                if (response === 0) {
+                                    focusedWindow.webContents.session.clearStorageData({},
+                                    () => {
+                                        focusedWindow.webContents.session.clearCache(() => {
+                                            focusedWindow.reload();
+                                        });
+                                    });
+                                }
+                            });
+                        } else { //FIXME: Not sure what to do here
+                            dialog.showErrorBox("No focused window", "No focused window");
+                        }
+                    }
+                },
+                {
+                    label: 'Clear Cache',
+                    click: (item, focusedWindow) => {
+                        if (focusedWindow) {
+                            focusedWindow.webContents.session.clearCache(() => {
+                                focusedWindow.reload();
+                            });
+                        } else { //FIXME: Not sure what to do here
+                            dialog.showErrorBox("No focused window", "No focused window");
+                        }
                     }
                 },
                 {
