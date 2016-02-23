@@ -22,7 +22,7 @@ if (appArgs.flashPluginDir) {
     app.commandLine.appendSwitch('ppapi-flash-path', flashPath);
 }
 
-if (appArgs.insecure) {
+if (appArgs.ignoreCertificate) {
     app.commandLine.appendSwitch('ignore-certificate-errors');
 }
 

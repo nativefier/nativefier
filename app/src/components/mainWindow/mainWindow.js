@@ -36,7 +36,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             plugins: true,
             // node globals causes problems with sites like messenger.com
             nodeIntegration: false,
-            webSecurity: !options.disableWebSecurity,
+            webSecurity: !options.insecure,
             preload: path.join(__dirname, 'static', 'preload.js')
         },
         // after webpack path here should reference `resources/app/`

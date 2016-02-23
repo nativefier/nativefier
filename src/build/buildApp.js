@@ -51,8 +51,8 @@ function selectAppArgs(options) {
         showMenuBar: options.showMenuBar,
         userAgent: options.userAgent,
         nativefierVersion: options.nativefierVersion,
+        ignoreCertificate: options.ignoreCertificate,
         insecure: options.insecure,
-        disableWebSecurity: options.disableWebSecurity,
         flashPluginDir: options.flashPluginDir
     };
 }

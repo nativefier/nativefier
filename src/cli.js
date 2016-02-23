@@ -28,8 +28,8 @@ if (require.main === module) {
         .option('-m, --show-menu-bar', 'set menu bar visible, defaults to false')
         .option('-u, --user-agent <value>', 'set the user agent string for the app')
         .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
-        .option('--insecure', 'ignore certificate related errors')
-        .option('--disable-web-security', 'enable loading of insecure content, defaults to false')
+        .option('--ignore-certificate', 'ignore certificate related errors')
+        .option('--insecure', 'enable loading of insecure content, defaults to false')
         .option('--flash <value>', 'path to Chrome flash plugin, find it in `Chrome://plugins`')
         .parse(process.argv);
 
