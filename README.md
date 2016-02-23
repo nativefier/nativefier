@@ -250,6 +250,8 @@ Forces the packaged app to ignore web security errors.
 
 By default, nativefier will automatically try to determine the location of your Google Chrome flash binary. In the event that Flash does not appear to work, you can specify it directly with this command line flag, by retrieving the location of the Flash path from [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`.
 
+From my experience, it might be helpful to pass the `--disable-web-security` flag if you are using nativefied flash apps, as some `https` websites tend to serve flash insecurely. 
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
