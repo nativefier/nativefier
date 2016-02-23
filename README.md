@@ -235,6 +235,13 @@ If this flag is passed, it will not override the user agent.
 ```
 Forces the packaged app to ignore certificate errors.
 
+#### [disable-web-security]
+
+```
+--disable-web-security
+```
+Forces the packaged app to ignore web security errors.
+
 #### [flash]
 
 ```
@@ -273,6 +280,7 @@ var options = {
     showMenuBar: false,
     userAgent: null,
     insecure: false,
+    disableWebSecurity: false,
     honest: false
 };
 
