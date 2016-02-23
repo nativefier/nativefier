@@ -47,7 +47,8 @@ function optionsFactory(inpOptions, callback) {
         showMenuBar: inpOptions.showMenuBar || false,
         userAgent: inpOptions.userAgent || getFakeUserAgent(),
         insecure: inpOptions.insecure || false,
-        disableWebSecurity: inpOptions.disableWebSecurity || false
+        disableWebSecurity: inpOptions.disableWebSecurity || false,
+        flashPluginDir: inpOptions.flash || null
     };
 
     if (inpOptions.honest) {

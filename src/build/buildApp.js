@@ -52,7 +52,8 @@ function selectAppArgs(options) {
         userAgent: options.userAgent,
         nativefierVersion: options.nativefierVersion,
         insecure: options.insecure,
-        disableWebSecurity: options.disableWebSecurity
+        disableWebSecurity: options.disableWebSecurity,
+        flashPluginDir: options.flashPluginDir
     };
 }
 

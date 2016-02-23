@@ -30,6 +30,7 @@ if (require.main === module) {
         .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
         .option('--insecure', 'ignore certificate related errors')
         .option('--disable-web-security', 'enable loading of insecure content, defaults to false')
+        .option('--flash <value>', 'path to Chrome flash plugin, find it in `Chrome://plugins`')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {
