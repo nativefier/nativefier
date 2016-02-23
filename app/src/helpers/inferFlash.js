@@ -62,7 +62,7 @@ function linuxMatch() {
 }
 
 function windowsMatch() {
-    return findSync(/pepflashplayer\.dll/, 'C:\Program Files (x86)\Google\Chrome')[0];
+    return findSync(/pepflashplayer\.dll/, 'C:\\Program Files (x86)\\Google\\Chrome')[0];
 }
 
 function darwinMatch() {
