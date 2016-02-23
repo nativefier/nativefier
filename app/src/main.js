@@ -5,6 +5,7 @@ import electron from 'electron';
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
 import helpers from './helpers/helpers';
+import inferFlash from './helpers/inferFlash';
 
 const {app, ipcMain} = electron;
 const {isOSX} = helpers;
@@ -13,6 +14,13 @@ const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 let mainWindow;
+
+if (appArgs.flashPluginDir) {
+    app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
+} else {
+    const flashPath = inferFlash();
+    app.commandLine.appendSwitch('ppapi-flash-path', flashPath);
+}
 
 if (appArgs.insecure) {
     app.commandLine.appendSwitch('ignore-certificate-errors');
