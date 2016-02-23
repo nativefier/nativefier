@@ -51,7 +51,8 @@ function selectAppArgs(options) {
         showMenuBar: options.showMenuBar,
         userAgent: options.userAgent,
         nativefierVersion: options.nativefierVersion,
-        insecure: options.insecure
+        insecure: options.insecure,
+        flashPluginDir: options.flashPluginDir
     };
 }
 
