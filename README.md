@@ -26,6 +26,7 @@ View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/Hist
 ### Features
 
 - Automatically retrieves the correct icon and app name
+- Flash Support
 
 ## Installation
 
@@ -53,6 +54,10 @@ You need [XCode](https://developer.apple.com/xcode/) installed.
 ```bash
 $ brew install imagemagick
 ```
+
+##### [Google Chrome](https://www.google.com/chrome/)
+
+Google Chrome is required for flash to be supported. Alternatively, you could download the PepperFlash Chrome plugin and specify the path to it directly with the `--flash` flag. See the command line options below for more details.
 
 ## Usage
 
@@ -229,6 +234,14 @@ If this flag is passed, it will not override the user agent.
 --insecure
 ```
 Forces the packaged app to ignore certificate errors.
+
+#### [flash]
+
+```
+--flash <value>
+```
+
+By default, nativefier will automatically try to determine the location of your Google Chrome flash binary. In the event that Flash does not appear to work, you can specify it directly with this command line flag, by retrieving the location of the Flash path from [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`.
 
 ## Programmatic API
 
