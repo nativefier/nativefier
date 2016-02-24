@@ -134,12 +134,12 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     click: (item, focusedWindow) => {
                         if (focusedWindow) {
                             dialog.showMessageBox(focusedWindow, {
-                                type:"warning",
-                                buttons:["Yes","Cancel"],
+                                type: 'warning',
+                                buttons: ['Yes', 'Cancel'],
                                 defaultId: 1,
-                                title:"Clear cache confirmation",
-                                message:"This will clear all data (cookies, local storage etc) from this app. \nAre you sure you wish to proceed?"
-                            }, (response) => {
+                                title: 'Clear cache confirmation',
+                                message: 'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?'
+                            }, response => {
                                 if (response === 0) {
                                     focusedWindow.webContents.session.clearStorageData({},
                                     () => {
@@ -149,8 +149,9 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                                     });
                                 }
                             });
-                        } else { //FIXME: Not sure what to do here
-                            dialog.showErrorBox("No focused window", "No focused window");
+                        } else {
+                            // Not sure what else to do here
+                            dialog.showErrorBox('No focused window', 'No focused window');
                         }
                     }
                 },
@@ -161,8 +162,9 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                             focusedWindow.webContents.session.clearCache(() => {
                                 focusedWindow.reload();
                             });
-                        } else { //FIXME: Not sure what to do here
-                            dialog.showErrorBox("No focused window", "No focused window");
+                        } else {
+                            // Not sure what else to do here
+                            dialog.showErrorBox('No focused window', 'No focused window');
                         }
                     }
                 },
