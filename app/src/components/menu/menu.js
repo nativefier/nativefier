@@ -147,25 +147,6 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                                             focusedWindow.reload();
                                         });
                                     });
-                                }
-                            });
-                        } else {
-                            // Not sure what else to do here
-                            dialog.showErrorBox('No focused window', 'No focused window');
-                        }
-                    }
-                },
-                {
-                    label: 'Clear Cache',
-                    click: (item, focusedWindow) => {
-                        if (focusedWindow) {
-                            focusedWindow.webContents.session.clearCache(() => {
-                                focusedWindow.reload();
-                            });
-                        } else {
-                            // Not sure what else to do here
-                            dialog.showErrorBox('No focused window', 'No focused window');
-                        }
                     }
                 },
                 {
