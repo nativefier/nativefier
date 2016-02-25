@@ -1,4 +1,27 @@
 
+6.9.0 / 2016-02-25
+==================
+
+  * Preserve app data upon regeneration of app
+  * Add menu option to clear the app data
+  * Change flag usage
+    * `--ignore-certificate` to ignore invalid certificate errors,
+    * `--insecure` to disable web security to allow mixed content
+  * Add flag to allow mixed content over https
+  * Add preliminary flash support
+  * NPM ignore everything except compiled files
+  * Fix #146 Specifying `--electron-version` does not work
+  * Update example api usage for `require('nativefier').default`
+  * Add issue template
+  * #114 Allow [x] and {x} forms of notification count
+  * #112 Counter: Allow for [x] and {x} forms of notification count
+  * #90 Add keyboard shortcuts for back, forward
+  * Add note about not putting spaces in user defined app name
+  * Merge pull request #107 from zweicoder/fix/respect-user-choice
+  * Do not print done statement if app already exists and `--overwrite` is not passed
+  * Respect user choice for naming
+  * Allow npm publish to log to stdout
+
 6.8.0 / 2016-01-30
 ==================
 
