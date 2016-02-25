@@ -29,8 +29,18 @@ function inferFlash() {
  */
 function findSync(pattern, base, findDir) {
     const matches = [];
+
     (function findSyncRecurse(base) {
-        const children = fs.readdirSync(base);
+        let children;
+        try {
+            children = fs.readdirSync(base);
+        } catch (exception) {
+            if (exception.code === 'ENOENT') {
+                return;
+            }
+            throw exception;
+        }
+
         children.forEach(child => {
             const childPath = path.join(base, child);
             const childIsDirectory = fs.lstatSync(childPath).isDirectory();
