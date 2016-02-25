@@ -37,6 +37,11 @@ function buildApp(src, dest, options, callback) {
 }
 
 function maybeCopyScripts(srcs, dest) {
+    if (!srcs) {
+        return new Promise(resolve => {
+            resolve();
+        });
+    }
     const promises = srcs.map(src => {
         return new Promise((resolve, reject) => {
             if (!fs.existsSync(src)) {
