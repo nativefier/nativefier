@@ -1,4 +1,11 @@
 
+6.10.0 / 2016-02-25
+===================
+
+  * Fix bug in mocha where next task is executed before mocha callback
+  * Implement command line flag to start app in full screen, resolves #109
+  * Implement injection of css and js
+
 6.9.1 / 2016-02-25
 ==================
 
