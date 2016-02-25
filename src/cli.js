@@ -38,6 +38,7 @@ if (require.main === module) {
         .option('--insecure', 'enable loading of insecure content, defaults to false')
         .option('--flash <value>', 'path to Chrome flash plugin, find it in `Chrome://plugins`')
         .option('--inject <value>', 'path to a file to be injected', collect, [])
+        .option('--full-screen', 'if the app should always be started in full screen')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {

@@ -41,8 +41,16 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             preload: path.join(__dirname, 'static', 'preload.js')
         },
         // after webpack path here should reference `resources/app/`
-        icon: path.join(__dirname, '../', '/icon.png')
+        icon: path.join(__dirname, '../', '/icon.png'),
+        // set to undefined and not false because explicitly setting to false will disable full screen
+        fullscreen: options.fullScreen || undefined
     });
+
+    // after first run, no longer force full screen to be true
+    if (options.fullScreen) {
+        options.fullScreen = undefined;
+        fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
+    }
 
     let currentZoom = 1;
 

@@ -104,7 +104,8 @@ function selectAppArgs(options) {
         nativefierVersion: options.nativefierVersion,
         ignoreCertificate: options.ignoreCertificate,
         insecure: options.insecure,
-        flashPluginDir: options.flashPluginDir
+        flashPluginDir: options.flashPluginDir,
+        fullScreen: options.fullScreen
     };
 }
 

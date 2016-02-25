@@ -49,7 +49,8 @@ function optionsFactory(inpOptions, callback) {
         ignoreCertificate: inpOptions.ignoreCertificate || false,
         insecure: inpOptions.insecure || false,
         flashPluginDir: inpOptions.flash || null,
-        inject: inpOptions.inject || null
+        inject: inpOptions.inject || null,
+        fullScreen: inpOptions.fullScreen || false
     };
 
     if (inpOptions.honest) {

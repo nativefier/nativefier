@@ -267,6 +267,14 @@ Example:
 $ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
 ```
 
+#### [inject]
+
+```
+--full-screen
+```
+
+Makes the packaged app start in full screen.
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
