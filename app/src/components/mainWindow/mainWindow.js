@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import electron from 'electron';
 import windowStateKeeper from 'electron-window-state';
@@ -6,7 +7,7 @@ import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
 const {BrowserWindow, shell, ipcMain, dialog} = electron;
-const {isOSX, linkIsInternal} = helpers;
+const {isOSX, linkIsInternal, getCssToInject} = helpers;
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -106,6 +107,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('params', JSON.stringify(options));
+        mainWindow.webContents.insertCSS(getCssToInject());
     });
 
     if (options.counter) {

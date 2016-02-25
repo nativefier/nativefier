@@ -25,30 +25,53 @@ function buildApp(src, dest, options, callback) {
 
         fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
 
-        maybeCopyScripts(options.inject, dest, error => {
-            if (error) {
+        maybeCopyScripts(options.inject, dest)
+            .then(() => {
+                changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+                callback();
+            })
+            .catch(error => {
                 callback(error);
-                return;
-            }
-
-            changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
-            callback();
-        });
+            });
     });
 }
 
-function maybeCopyScripts(src, dest, callback) {
-    if (!fs.existsSync(src)) {
-        callback();
-        return;
-    }
+function maybeCopyScripts(srcs, dest) {
+    const promises = srcs.map(src => {
+        return new Promise((resolve, reject) => {
+            if (!fs.existsSync(src)) {
+                resolve();
+                return;
+            }
 
-    copy(src, path.join(dest, 'inject', 'inject.js'), error => {
-        if (error) {
-            callback(`Error Copying injection files: ${error}`);
-            return;
-        }
-        callback();
+            let destFileName;
+            if (path.extname(src) === '.js') {
+                destFileName = 'inject.js';
+            } else if (path.extname(src) === '.css') {
+                destFileName = 'inject.css';
+            } else {
+                resolve();
+                return;
+            }
+
+            copy(src, path.join(dest, 'inject', destFileName), error => {
+                if (error) {
+                    reject(`Error Copying injection files: ${error}`);
+                    return;
+                }
+                resolve();
+            });
+        });
+    });
+
+    return new Promise((resolve, reject) => {
+        Promise.all(promises)
+            .then(() => {
+                resolve();
+            })
+            .catch(error => {
+                reject(error);
+            });
     });
 }
 

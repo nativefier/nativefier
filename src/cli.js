@@ -7,7 +7,13 @@ import program from 'commander';
 import nativefier from './index';
 const packageJson = require(path.join('..', 'package'));
 
+function collect(val, memo) {
+    memo.push(val);
+    return memo;
+}
+
 if (require.main === module) {
+
     program
         .version(packageJson.version)
         .arguments('<targetUrl> [dest]')
@@ -31,7 +37,7 @@ if (require.main === module) {
         .option('--ignore-certificate', 'ignore certificate related errors')
         .option('--insecure', 'enable loading of insecure content, defaults to false')
         .option('--flash <value>', 'path to Chrome flash plugin, find it in `Chrome://plugins`')
-        .option('--inject <value>', 'path to a javascript file to be injected')
+        .option('--inject <value>', 'path to a file to be injected', collect, [])
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {
