@@ -267,7 +267,7 @@ Example:
 $ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
 ```
 
-#### [inject]
+#### [full-screen]
 
 ```
 --full-screen
