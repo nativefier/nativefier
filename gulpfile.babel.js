@@ -105,8 +105,8 @@ gulp.task('test', callback => {
     return runSequence('prune', 'mocha', callback);
 });
 
-gulp.task('mocha', ['build'], () => {
-    return gulp.src(PATHS.CLI_DEST_JS)
+gulp.task('mocha', ['build'], done => {
+    gulp.src(PATHS.CLI_DEST_JS)
         .pipe(istanbul({includeUntested: true}))
         .on('finish', () => {
             return gulp.src(PATHS.TEST_DEST_JS, {read: false})
@@ -115,7 +115,10 @@ gulp.task('mocha', ['build'], () => {
                     dir: './coverage',
                     reporters: ['lcov'],
                     reportOpts: {dir: './coverage'}
-                }));
+                }))
+                .on('finish', () => {
+                    done();
+                });
         });
 });
 
