@@ -24,7 +24,30 @@ function buildApp(src, dest, options, callback) {
         }
 
         fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
-        changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+
+        maybeCopyScripts(options.inject, dest, error => {
+            if (error) {
+                callback(error);
+                return;
+            }
+
+            changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+            callback();
+        });
+    });
+}
+
+function maybeCopyScripts(src, dest, callback) {
+    if (!fs.existsSync(src)) {
+        callback();
+        return;
+    }
+
+    copy(src, path.join(dest, 'inject', 'inject.js'), error => {
+        if (error) {
+            callback(`Error Copying injection files: ${error}`);
+            return;
+        }
         callback();
     });
 }

@@ -48,7 +48,8 @@ function optionsFactory(inpOptions, callback) {
         userAgent: inpOptions.userAgent || getFakeUserAgent(),
         ignoreCertificate: inpOptions.ignoreCertificate || false,
         insecure: inpOptions.insecure || false,
-        flashPluginDir: inpOptions.flash || null
+        flashPluginDir: inpOptions.flash || null,
+        inject: inpOptions.inject || null
     };
 
     if (inpOptions.honest) {
