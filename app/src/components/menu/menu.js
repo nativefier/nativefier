@@ -1,15 +1,16 @@
-import {Menu, shell, clipboard, dialog} from 'electron';
+import {Menu, shell, clipboard} from 'electron';
 
 /**
- *
- * @param {string} nativefierVersion
- * @param {function} onQuit should be from app.quit
- * @param {function} onZoomIn
- * @param {function} onZoomOut
- * @param {{}}} mainWindow
- * @param {{}}} options
+ * @param nativefierVersion
+ * @param appQuit
+ * @param zoomIn
+ * @param zoomOut
+ * @param goBack
+ * @param goForward
+ * @param getCurrentUrl
+ * @param clearAppData
  */
-function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, options) {
+function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForward, getCurrentUrl, clearAppData}) {
     if (Menu.getApplicationMenu()) {
         return;
     }
@@ -45,7 +46,7 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, 
                     label: 'Copy Current URL',
                     accelerator: 'CmdOrCtrl+C',
                     click: () => {
-                        const currentURL = mainWindow.webContents.getURL();
+                        const currentURL = getCurrentUrl();
                         clipboard.writeText(currentURL);
                     }
                 },
@@ -58,6 +59,12 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, 
                     label: 'Select All',
                     accelerator: 'CmdOrCtrl+A',
                     role: 'selectall'
+                },
+                {
+                    label: 'Clear App Data',
+                    click: () => {
+                        clearAppData();
+                    }
                 }
             ]
         },
@@ -68,14 +75,14 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, 
                     label: 'Back',
                     accelerator: 'CmdOrCtrl+[',
                     click: () => {
-                        mainWindow.webContents.goBack();
+                        goBack();
                     }
                 },
                 {
                     label: 'Forward',
                     accelerator: 'CmdOrCtrl+]',
                     click: () => {
-                        mainWindow.webContents.goForward();
+                        goForward();
                     }
                 },
                 {
@@ -113,7 +120,7 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, 
                         return 'Ctrl+=';
                     })(),
                     click: () => {
-                        onZoomIn();
+                        zoomIn();
                     }
                 },
                 {
@@ -125,32 +132,11 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, 
                         return 'Ctrl+-';
                     })(),
                     click: () => {
-                        onZoomOut();
+                        zoomOut();
                     }
                 },
                 {
-                    label: 'Clear App Data',
-                    click: () => {
-                        dialog.showMessageBox(mainWindow, {
-                            type: 'warning',
-                            buttons: ['Yes', 'Cancel'],
-                            defaultId: 1,
-                            title: 'Clear cache confirmation',
-                            message: 'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?'
-                        }, response => {
-                            if (response === 0) {
-                                mainWindow.webContents.session.clearStorageData({},
-                                () => {
-                                    mainWindow.webContents.session.clearCache(() => {
-                                        mainWindow.loadURL(options.targetUrl);
-                                    });
-                                });
-                            }
-                        });
-                    }
-                },
-                {
-                    label: 'Toggle Window Developer Tools',
+                    label: 'Toggle Developer Tools',
                     accelerator: (() => {
                         if (process.platform === 'darwin') {
                             return 'Alt+Command+I';
@@ -234,7 +220,7 @@ function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, 
                     label: 'Quit',
                     accelerator: 'Command+Q',
                     click: () => {
-                        onQuit();
+                        appQuit();
                     }
                 }
             ]

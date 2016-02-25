@@ -5,7 +5,7 @@ import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
-const {BrowserWindow, shell, ipcMain} = electron;
+const {BrowserWindow, shell, ipcMain, dialog} = electron;
 const {isOSX, linkIsInternal} = helpers;
 
 const ZOOM_INTERVAL = 0.1;
@@ -55,7 +55,49 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         mainWindow.webContents.send('change-zoom', currentZoom);
     };
 
-    createMenu(options.nativefierVersion, onAppQuit, onZoomIn, onZoomOut, mainWindow, options);
+    const clearAppData = () => {
+        dialog.showMessageBox(mainWindow, {
+            type: 'warning',
+            buttons: ['Yes', 'Cancel'],
+            defaultId: 1,
+            title: 'Clear cache confirmation',
+            message: 'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?'
+        }, response => {
+            if (response === 0) {
+                const session = mainWindow.webContents.session;
+                session.clearStorageData(() => {
+                    session.clearCache(() => {
+                        mainWindow.loadURL(options.targetUrl);
+                    });
+                });
+            }
+        });
+    };
+
+    const onGoBack = () => {
+        mainWindow.webContents.goBack();
+    };
+
+    const onGoForward = () => {
+        mainWindow.webContents.goForward();
+    };
+
+    const getCurrentUrl = () => {
+        return mainWindow.webContents.getURL();
+    };
+
+    const menuOptions = {
+        nativefierVersion: options.nativefierVersion,
+        appQuit: onAppQuit,
+        zoomIn: onZoomIn,
+        zoomOut: onZoomOut,
+        goBack: onGoBack,
+        goForward: onGoForward,
+        getCurrentUrl: getCurrentUrl,
+        clearAppData: clearAppData
+    };
+
+    createMenu(menuOptions);
     initContextMenu(mainWindow);
 
     if (options.userAgent) {
