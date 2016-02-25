@@ -1,16 +1,15 @@
-import {Menu, shell, clipboard} from 'electron';
+import {Menu, shell, clipboard, dialog} from 'electron';
 
 /**
  *
  * @param {string} nativefierVersion
  * @param {function} onQuit should be from app.quit
- * @param {function} onGoBack
- * @param {electron} onGoForward
  * @param {function} onZoomIn
  * @param {function} onZoomOut
- * @param {function} getUrl
+ * @param {{}}} mainWindow
+ * @param {{}}} options
  */
-function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, onZoomOut, getUrl) {
+function createMenu(nativefierVersion, onQuit, onZoomIn, onZoomOut, mainWindow, options) {
     if (Menu.getApplicationMenu()) {
         return;
     }
@@ -46,7 +45,7 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     label: 'Copy Current URL',
                     accelerator: 'CmdOrCtrl+C',
                     click: () => {
-                        const currentURL = getUrl();
+                        const currentURL = mainWindow.webContents.getURL();
                         clipboard.writeText(currentURL);
                     }
                 },
@@ -69,14 +68,14 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     label: 'Back',
                     accelerator: 'CmdOrCtrl+[',
                     click: () => {
-                        onGoBack();
+                        mainWindow.webContents.goBack();
                     }
                 },
                 {
                     label: 'Forward',
                     accelerator: 'CmdOrCtrl+]',
                     click: () => {
-                        onGoForward();
+                        mainWindow.webContents.goForward();
                     }
                 },
                 {
@@ -127,6 +126,27 @@ function createMenu(nativefierVersion, onQuit, onGoBack, onGoForward, onZoomIn, 
                     })(),
                     click: () => {
                         onZoomOut();
+                    }
+                },
+                {
+                    label: 'Clear App Data',
+                    click: () => {
+                        dialog.showMessageBox(mainWindow, {
+                            type: 'warning',
+                            buttons: ['Yes', 'Cancel'],
+                            defaultId: 1,
+                            title: 'Clear cache confirmation',
+                            message: 'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?'
+                        }, response => {
+                            if (response === 0) {
+                                mainWindow.webContents.session.clearStorageData({},
+                                () => {
+                                    mainWindow.webContents.session.clearCache(() => {
+                                        mainWindow.loadURL(options.targetUrl);
+                                    });
+                                });
+                            }
+                        });
                     }
                 },
                 {

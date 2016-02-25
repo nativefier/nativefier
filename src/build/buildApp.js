@@ -24,15 +24,15 @@ function buildApp(src, dest, options, callback) {
         }
 
         fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
-        changeAppPackageJsonName(dest, appArgs.name);
+        changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
         callback();
     });
 }
 
-function changeAppPackageJsonName(appPath, name) {
+function changeAppPackageJsonName(appPath, name, url) {
     const packageJsonPath = path.join(appPath, '/package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-    packageJson.name = normalizeAppName(name);
+    packageJson.name = normalizeAppName(name, url);
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 }
 
@@ -57,9 +57,11 @@ function selectAppArgs(options) {
     };
 }
 
-function normalizeAppName(appName) {
+function normalizeAppName(appName, url) {
     // use a simple 3 byte random string to prevent collision
-    const postFixHash = crypto.randomBytes(3).toString('hex');
+    let hash = crypto.createHash('md5');
+    hash.update(url);
+    const postFixHash = hash.digest('hex').substring(0, 6);
     const normalized = _.kebabCase(appName.toLowerCase());
     return `${normalized}-nativefier-${postFixHash}`;
 }
