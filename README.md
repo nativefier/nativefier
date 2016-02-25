@@ -26,7 +26,7 @@ View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/Hist
 ### Features
 
 - Automatically retrieves the correct icon and app name
-- Flash Support
+- Flash Support (Needs Testing)
 
 ## Installation
 
@@ -250,7 +250,7 @@ Forces the packaged app to ignore web security errors.
 
 By default, nativefier will automatically try to determine the location of your Google Chrome flash binary. In the event that Flash does not appear to work, you can specify it directly with this command line flag, by retrieving the location of the Flash path from [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`.
 
-From my experience, it might be helpful to pass the `--insecure` flag if you are using nativefied flash apps, as some `https` websites tend to serve flash insecurely. 
+From my experience, it might be helpful to pass the `--insecure` flag if you are using nativefied flash apps, as some `https` websites tend to serve flash insecurely.
 
 ## Programmatic API
 
