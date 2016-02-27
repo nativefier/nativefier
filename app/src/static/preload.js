@@ -12,7 +12,7 @@ setNotificationCallback((title, opt) => {
     ipcRenderer.send('notification', title, opt);
 });
 
-document.addEventListener('DOMContentLoaded', event => {
+document.addEventListener('DOMContentLoaded', () => {
     // do things
 
     window.addEventListener('contextmenu', event => {

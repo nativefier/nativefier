@@ -32,7 +32,6 @@ module.exports = {
         'no-throw-literal': 0,
         camelcase: 0,
         'valid-jsdoc': 0,
-        'no-unused-vars': 1,
         'no-path-concat': 1,
         'quote-props': [2, 'as-needed']
     },

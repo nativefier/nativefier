@@ -70,7 +70,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     createLoginWindow(callback);
 });
 
-ipcMain.on('notification', (event, title, opts) => {
+ipcMain.on('notification', () => {
     if (!isOSX() || mainWindow.isFocused()) {
         return;
     }
