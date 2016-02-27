@@ -71,6 +71,7 @@
     "gulp-mocha": "^2.2.0",
     "gulp-sourcemaps": "^1.6.0",
     "lodash": "^4.0.0",
+    "require-dir": "^0.3.0",
     "run-sequence": "^1.1.5",
     "shelljs": "^0.5.3",
     "tmp": "0.0.28",
