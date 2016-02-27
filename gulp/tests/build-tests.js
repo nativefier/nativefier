@@ -1,14 +1,9 @@
 import gulp from 'gulp';
 import PATHS from './../helpers/src-paths';
+import helpers from './../helpers/gulp-helpers';
 
-import sourcemaps from 'gulp-sourcemaps';
-import babel from 'gulp-babel';
+const {buildES6} = helpers;
 
 gulp.task('build-tests', done => {
-    return gulp.src(PATHS.TEST_SRC_JS)
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .on('error', done)
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(PATHS.TEST_DEST));
+    return buildES6(PATHS.TEST_SRC_JS, PATHS.TEST_DEST, done);
 });

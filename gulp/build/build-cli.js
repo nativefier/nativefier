@@ -1,13 +1,9 @@
 import gulp from 'gulp';
 import PATHS from './../helpers/src-paths';
-import sourcemaps from 'gulp-sourcemaps';
-import babel from 'gulp-babel';
+import helpers from './../helpers/gulp-helpers';
+
+const {buildES6} = helpers;
 
 gulp.task('build-cli', done => {
-    return gulp.src(PATHS.CLI_SRC_JS)
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .on('error', done)
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('lib'));
+    return buildES6(PATHS.CLI_SRC_JS, PATHS.CLI_DEST, done);
 });
