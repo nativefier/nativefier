@@ -26,11 +26,16 @@ function pngToIcns(pngSrc, icnsDest, callback) {
     }
 
     shell.exec(`${PNG_TO_ICNS_BIN_PATH} ${pngSrc} ${icnsDest}`, {silent: true}, (exitCode, stdOut, stdError) => {
-        if (exitCode) {
-            callback({
-                stdOut: stdOut,
-                stdError: stdError
-            }, pngSrc);
+        if (stdOut.includes('icon.iconset:error') || exitCode) {
+            if (exitCode) {
+                callback({
+                    stdOut: stdOut,
+                    stdError: stdError
+                }, pngSrc);
+                return;
+            }
+
+            callback(stdOut, pngSrc);
             return;
         }
 
