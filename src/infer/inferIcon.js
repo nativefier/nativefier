@@ -11,9 +11,9 @@ tmp.setGracefulCleanup();
  * @param {inferIconCallback} callback
  */
 function inferIconFromUrlToPath(targetUrl, outDir, callback) {
-    const outfilePath = path.join(outDir, '/icon.png');
     pageIcon(targetUrl, {ext: 'png'})
         .then(icon => {
+            const outfilePath = path.join(outDir, `/icon.${icon.ext}`);
             fs.writeFile(outfilePath, icon.data, error => {
                 callback(error, outfilePath);
             });
