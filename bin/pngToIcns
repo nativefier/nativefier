@@ -9,13 +9,8 @@
 # ./pngToIcns.sh ~/sample.png ~/Desktop/converted.icns
 
 # Exec Paths
-SIPS=$(which sips)
 ICONUTIL=$(which iconutil)
 IMAGEMAGICK=$(which convert)
-if [ ! -x "${SIPS}" ]; then
-	echo "Cannot find required sips executable" >&2
-	exit 1;
-fi
 if [ ! -x "${ICONUTIL}" ]; then
 	echo "Cannot find required iconutil executable" >&2
 	exit 1;

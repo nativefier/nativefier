@@ -43,9 +43,6 @@ $ npm install nativefier -g
 
 To support usage of a `.png` for a packaged OSX app icon (currently only supported on OSX), you need the following dependencies.
 
-##### [sips](https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/sips.1.html)
-Automatically ships with OSX
-
 ##### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
 
 You need [XCode](https://developer.apple.com/xcode/) installed.
@@ -55,6 +52,8 @@ You need [XCode](https://developer.apple.com/xcode/) installed.
 ```bash
 $ brew install imagemagick
 ```
+
+Make sure `convert` and `identify` are in your `$PATH`.
 
 ##### [Google Chrome](https://www.google.com/chrome/)
 
@@ -172,7 +171,7 @@ The icon parameter should be a path to a `.png` file.
 
 The icon parameter can either be a `.icns` or a `.png` file if the optional dependencies listed [above](#optional-dependencies) are installed.
 
-With the `sips`, `iconutil` and `imagemagick convert` optional dependencies in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
+With `iconutil`, Imagemagick `convert` and `identify` optional dependencies in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
 
 ###### Manually Converting `.icns`
 
