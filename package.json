@@ -43,6 +43,7 @@
     "hasbin": "^1.2.0",
     "lodash": "^4.0.0",
     "ncp": "^2.0.0",
+    "page-icon": "^0.1.0",
     "request": "^2.67.0",
     "sanitize-filename": "^1.5.3",
     "shelljs": "^0.5.3",

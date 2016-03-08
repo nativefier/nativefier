@@ -1,4 +1,4 @@
-import request from 'request';
+import pageIcon from 'page-icon';
 import path from 'path';
 import fs from 'fs';
 import tmp from 'tmp';
@@ -14,34 +14,13 @@ const BEST_ICON_API = 'http://45.55.116.63:8080/icon';
  */
 function inferIconFromUrlToPath(targetUrl, outDir, callback) {
     const outfilePath = path.join(outDir, '/icon.png');
-    request({
-        url: BEST_ICON_API,
-        qs: {
-            url: targetUrl,
-            size: 57,
-            formats: 'png'
-        },
-        encoding: null
-    }, (error, response, body) => {
-        if (error) {
-            callback(error);
-            return;
-        }
-
-        try {
-            const parsedError = JSON.parse(body).error;
-            callback(parsedError);
-        } catch (exception) {
-            if (/<html>/i.test(body)) {
-                callback('BestIcon server 502 error');
-                return;
-            }
-            // body is an image
-            fs.writeFile(outfilePath, body, error => {
+    pageIcon(targetUrl, {ext: 'png'})
+        .then(icon => {
+            fs.writeFile(outfilePath, icon.data, error => {
                 callback(error, outfilePath);
             });
-        }
-    });
+        })
+        .catch(callback);
 }
 
 /**
