@@ -42,23 +42,19 @@ function iconBuild(options, callback) {
         return;
     }
 
-    if (iconIsPng(options.icon)) {
-
-        if (!isOSX()) {
-            console.warn('Conversion of `.png` to `.icns` for OSX app is only supported on OSX');
-            returnCallback();
-            return;
-        }
-
-        pngToIcns(options.icon, (error, icnsPath) => {
-            options.icon = icnsPath;
-            if (error) {
-                console.warn('Skipping icon conversion from `.png` to `.icns`: ', error);
-            }
-            returnCallback();
-            return;
-        });
+    if (!isOSX()) {
+        console.warn('Conversion of `.png` to `.icns` for OSX app is only supported on OSX');
+        returnCallback();
+        return;
     }
+
+    pngToIcns(options.icon, (error, icnsPath) => {
+        options.icon = icnsPath;
+        if (error) {
+            console.warn('Skipping icon conversion from `.png` to `.icns`: ', error);
+        }
+        returnCallback();
+    });
 }
 
 function iconIsPng(iconPath) {

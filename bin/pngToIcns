@@ -29,7 +29,7 @@ fi
 SOURCE=$1
 DEST=$2
 
-# Get source image
+# Check source and destination arguments
 if [ -z "${SOURCE}" ]; then
 	echo "No source image specified"
 	exit 1
@@ -41,12 +41,22 @@ if [ -z "${DEST}" ]; then
 fi
 
 
-
 # File Infrastructure
 NAME=$(basename "${SOURCE}")
 EXT="${NAME##*.}"
 BASE="${NAME%.*}"
 ICONSET="${BASE}.iconset"
+
+mkdir "${ICONSET}"
+
+# check if .ico is a sequence
+IS_ICO_SET="$(identify ${SOURCE} | grep -e "\w\.ico\[0")"
+
+if [ "${IS_ICO_SET}" ]; then
+	# extract the largest(?) image from the set
+	convert "${SOURCE}" "${ICONSET}/${BASE}.png"
+	SOURCE="${ICONSET}/${BASE}-0.png"
+fi
 
 # Debug Info
 # echo "SOURCE: ${SOURCE}"
@@ -71,7 +81,6 @@ ICONSET="${BASE}.iconset"
 #fi
 
 # Resample image into iconset
-mkdir "${ICONSET}"
 
 convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 16x16 "${ICONSET}/icon_16x16.png"
 convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_16x16@2x.png"
@@ -90,3 +99,4 @@ iconutil -c icns "${ICONSET}" -o ${DEST}
 
 # Clean up the iconset
 rm -rf "${ICONSET}"
+
