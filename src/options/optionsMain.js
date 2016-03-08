@@ -84,7 +84,7 @@ function optionsFactory(inpOptions, callback) {
                     console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
                     options.name = DEFAULT_APP_NAME;
                 } else {
-                    options.name = pageTitle;
+                    options.name = pageTitle.trim();
                 }
                 if (options.platform === 'linux') {
                     // spaces will cause problems with Ubuntu when pinned to the dock
