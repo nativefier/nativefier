@@ -37,27 +37,6 @@ With [Node.js](https://nodejs.org/) installed,
 # for use from the command line
 $ npm install nativefier -g
 ```
-### Optional Dependencies
-
-#### `.png` to `.icns` Conversion
-
-To support usage of a `.png` for a packaged OSX app icon (currently only supported on OSX), you need the following dependencies.
-
-##### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
-
-You need [XCode](https://developer.apple.com/xcode/) installed.
-
-##### [imagemagick](http://www.imagemagick.org/script/index.php)
-
-```bash
-$ brew install imagemagick
-```
-
-Make sure `convert` and `identify` are in your `$PATH`.
-
-##### [Google Chrome](https://www.google.com/chrome/)
-
-Google Chrome is required for flash to be supported. Alternatively, you could download the PepperFlash Chrome plugin and specify the path to it directly with the `--flash` flag. See the command line options below for more details.
 
 ## Usage
 
@@ -69,13 +48,37 @@ $ nativefier "http://medium.com"
 
 Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name "Medium"` as part of the command line options, as such.
 
-```
+```bash
 $ nativefier --name "Some Awesome App" "http://medium.com"
 ```
 
 **For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
 
 **For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
+
+## Optional Dependencies
+
+### `.png` Icon for OSX
+
+To support conversion of a `.png` into a `.icns` for a packaged OSX app icon (currently only supported on OSX), you need the following dependencies.
+
+#### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
+
+You need [XCode](https://developer.apple.com/xcode/) installed.
+
+#### [imagemagick](http://www.imagemagick.org/script/index.php)
+
+```bash
+$ brew install imagemagick
+```
+
+Make sure `convert` and `identify` are in your `$PATH`.
+
+### Flash
+
+#### [Google Chrome](https://www.google.com/chrome/)
+
+Google Chrome is required for flash to be supported. Alternatively, you could download the PepperFlash Chrome plugin and specify the path to it directly with the `--flash` flag. See the command line options below for more details.
 
 ## Command Line Options
 
@@ -323,7 +326,7 @@ More description about the `options` for `nativefier` can be found at the sectio
 
 A template app with the appropriate event listeners and callbacks set up is included in the `./app` folder. When the `nativefier` command is executed, this folder is copied to a temporary directory with the appropriate parameters in a configuration file, and is packaged into an app with [Electron Packager](https://github.com/maxogden/electron-packager).
 
-Automatic retrieval of icons is possible thanks to [besticon](https://github.com/mat/besticon).
+In addition, I built and used [pageIcon](https://github.com/jiahaog/page-icon) to automatically retrieve a relevant icon from a url.
 
 ## Development
 
