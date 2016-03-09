@@ -1,0 +1,71 @@
+#!/bin/sh
+
+# USAGE
+
+# ./extractIco <input ico> <outp ico>
+# Make sure the output extension is '.ico'!
+
+# Example
+# ./extractIco.sh ~/SOME_MULTIPLE_ICO.png ~/Desktop/SINGLE.ico
+
+# Exec Paths
+IMAGEMAGICK_CONVERT=$(which convert)
+IMAGEMAGICK_IDENTIFY=$(which identify)
+
+if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
+	echo "Cannot find required ImageMagick Convert executable" >&2
+	exit 1;
+fi
+if [ ! -x "${IMAGEMAGICK_IDENTIFY}" ]; then
+	echo "Cannot find required ImageMagick Identify executable" >&2
+	exit 1;
+fi
+
+# Parameters
+SOURCE=$1
+DEST=$2
+
+# Check source and destination arguments
+if [ -z "${SOURCE}" ]; then
+	echo "No source image specified" >&2
+	exit 1
+fi
+
+if [ -z "${DEST}" ]; then
+	echo "No destination specified" >&2
+	exit 1
+fi
+
+# check if source exists
+if [ ! -f "${SOURCE}" ]; then
+    echo "Source file not found" >&2
+    exit 1
+fi
+
+# File Infrastructure
+NAME=$(basename "${SOURCE}")
+EXT="${NAME##*.}"
+BASE="${NAME%.*}"
+TEMP_DIR="${BASE}.iconset"
+
+if [ "${EXT}" != "ico" ]; then
+  echo "Source file is not a .ico" >&2
+  exit 1
+fi
+
+# check if .ico is a sequence
+IS_ICO_SET="$(identify ${SOURCE} | grep -e "\w\.ico\[0")"
+
+if [ "${IS_ICO_SET}" ]; then
+    mkdir "${TEMP_DIR}"
+
+	# extract the largest(?) image from the set
+	convert "${SOURCE}" "${TEMP_DIR}/${BASE}.png"
+	convert "${TEMP_DIR}/${BASE}-0.png" "${DEST}"
+
+    # Clean up the temp dir
+    rm -rf "${TEMP_DIR}"
+else
+    cp "${SOURCE}" "${DEST}"
+fi
+

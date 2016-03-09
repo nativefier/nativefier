@@ -1,6 +1,7 @@
 import path from 'path';
 import helpers from './../helpers/helpers';
 import pngToIcns from './../helpers/pngToIcns';
+import singleIco from './../helpers/singleIco';
 const isOSX = helpers.isOSX;
 
 /**
@@ -27,11 +28,30 @@ function iconBuild(options, callback) {
         return;
     }
 
-    if (options.platform !== 'darwin') {
+    if (options.platform === 'win32') {
+        if (!iconIsIco(options.icon)) {
+            console.warn('Icon should be an .ico to package for Windows');
+            returnCallback();
+            return;
+        }
+
+        singleIco(options.icon)
+            .then(outPath => {
+                options.icon = outPath;
+                returnCallback();
+            })
+            .catch(error => {
+                console.warn('Skipping icon conversion from `.png` to `.icns`: ', error);
+                returnCallback();
+            });
+        return;
+    }
+
+    if (options.platform === 'linux') {
         if (iconIsPng(options.icon)) {
             returnCallback();
         } else {
-            console.warn('Icon should be a png for Linux and Windows apps');
+            console.warn('Icon should be a .png to package for Linux');
             returnCallback();
         }
         return;
@@ -55,6 +75,10 @@ function iconBuild(options, callback) {
         }
         returnCallback();
     });
+}
+
+function iconIsIco(iconPath) {
+    return path.extname(iconPath) === '.ico';
 }
 
 function iconIsPng(iconPath) {
