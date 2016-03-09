@@ -10,13 +10,19 @@
 
 # Exec Paths
 ICONUTIL=$(which iconutil)
-IMAGEMAGICK=$(which convert)
+IMAGEMAGICK_CONVERT=$(which convert)
+IMAGEMAGICK_IDENTIFY=$(which identify)
+
 if [ ! -x "${ICONUTIL}" ]; then
 	echo "Cannot find required iconutil executable" >&2
 	exit 1;
 fi
-if [ ! -x "${IMAGEMAGICK}" ]; then
+if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
 	echo "Cannot find required ImageMagick Convert executable" >&2
+	exit 1;
+fi
+if [ ! -x "${IMAGEMAGICK_IDENTIFY}" ]; then
+	echo "Cannot find required ImageMagick Identify executable" >&2
 	exit 1;
 fi
 
@@ -90,7 +96,7 @@ convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 10
 
 
 # Create an icns file lefrom the iconset
-iconutil -c icns "${ICONSET}" -o ${DEST}
+iconutil -c icns "${ICONSET}" -o "${DEST}"
 
 # Clean up the iconset
 rm -rf "${ICONSET}"
