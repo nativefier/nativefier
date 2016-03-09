@@ -2,7 +2,7 @@ import os from 'os';
 import path from 'path';
 import _ from 'lodash';
 import async from 'async';
-import sanitizeFilename from 'sanitize-filename';
+import sanitizeFilenameLib from 'sanitize-filename';
 
 import inferIcon from './../infer/inferIcon';
 import inferTitle from './../infer/inferTitle';
@@ -98,9 +98,14 @@ function optionsFactory(inpOptions, callback) {
     });
 }
 
+function sanitizeFilename(str) {
+    const cleaned = sanitizeFilenameLib(str);
+    // remove non ascii
+    return cleaned.replace(/[^\x00-\x7F]/, '');
+}
+
 function sanitizeOptions(options) {
     options.name = sanitizeFilename(options.name);
-
     return options;
 }
 
