@@ -7,11 +7,17 @@ tmp.setGracefulCleanup();
 /**
  *
  * @param {string} targetUrl
+ * @param {string} platform
  * @param {string} outDir
  * @param {inferIconCallback} callback
  */
-function inferIconFromUrlToPath(targetUrl, outDir, callback) {
-    pageIcon(targetUrl, {ext: 'png'})
+function inferIconFromUrlToPath(targetUrl, platform, outDir, callback) {
+    let preferredExt = 'png';
+    if (platform === 'win32') {
+        preferredExt = 'ico';
+    }
+
+    pageIcon(targetUrl, {ext: preferredExt})
         .then(icon => {
             const outfilePath = path.join(outDir, `/icon.${icon.ext}`);
             fs.writeFile(outfilePath, icon.data, error => {
@@ -29,12 +35,13 @@ function inferIconFromUrlToPath(targetUrl, outDir, callback) {
 
 /**
  * @param {string} targetUrl
+ * @param {string} platform
  * @param {inferIconCallback} callback
  */
-function inferIcon(targetUrl, callback) {
+function inferIcon(targetUrl, platform, callback) {
     const tmpObj = tmp.dirSync({unsafeCleanup: true});
     const tmpPath = tmpObj.name;
-    inferIconFromUrlToPath(targetUrl, tmpPath, callback);
+    inferIconFromUrlToPath(targetUrl, platform, tmpPath, callback);
 }
 
 export default inferIcon;

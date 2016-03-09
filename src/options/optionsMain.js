@@ -63,7 +63,7 @@ function optionsFactory(inpOptions, callback) {
                 callback();
                 return;
             }
-            inferIcon(options.targetUrl, (error, pngPath) => {
+            inferIcon(options.targetUrl, options.platform, (error, pngPath) => {
                 if (error) {
                     console.warn('Cannot automatically retrieve the app icon:', error);
                 } else {
