@@ -5,7 +5,7 @@ function isOSX() {
 }
 
 function isWindows() {
-    return os.platform() === 'windows';
+    return os.platform() === 'win32';
 }
 
 export default {
