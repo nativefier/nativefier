@@ -38,6 +38,8 @@ With [Node.js](https://nodejs.org/) installed,
 $ npm install nativefier -g
 ```
 
+See [optional dependencies](#optional-dependencies) for more.
+
 ## Usage
 
 Creating a native desktop app for [medium.com](http://medium.com):
