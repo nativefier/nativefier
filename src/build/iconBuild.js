@@ -3,7 +3,7 @@ import helpers from './../helpers/helpers';
 import iconShellHelpers from './../helpers/iconShellHelpers';
 
 const {isOSX} = helpers;
-const {singleIco, convertToPng, convertToIcns} = iconShellHelpers;
+const {convertToPng, convertToIcns} = iconShellHelpers;
 
 /**
  * @callback augmentIconsCallback
