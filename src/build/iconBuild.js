@@ -30,6 +30,7 @@ function iconBuild(options, callback) {
 
     if (options.platform === 'win32') {
         if (!iconIsIco(options.icon)) {
+            console.warn('Icon should be an .ico to package for Windows');
             returnCallback();
             return;
         }
@@ -40,7 +41,7 @@ function iconBuild(options, callback) {
                 returnCallback();
             })
             .catch(error => {
-                console.warn('Skipping process to make .ico icon contain only a single image: ', error);
+                console.warn('Skipping process to make .ico icon contain only a single image:', error);
                 returnCallback();
             });
         return;

@@ -1,6 +1,8 @@
 import shell from 'shelljs';
 import path from 'path';
 import tmp from 'tmp';
+import helpers from './helpers';
+const {isWindows} = helpers;
 
 tmp.setGracefulCleanup();
 
@@ -13,6 +15,11 @@ const EXTRACT_ICO_PATH = path.join(__dirname, '../..', 'bin/singleIco');
  */
 function singleIco(icoSrc, dest) {
     return new Promise((resolve, reject) => {
+        if (isWindows()) {
+            reject('OSX or Linux is required');
+            return;
+        }
+
         shell.exec(`${EXTRACT_ICO_PATH} ${icoSrc} ${dest}`, {silent: true}, (exitCode, stdOut, stdError) => {
             if (stdOut.includes('icon.iconset:error') || exitCode) {
                 if (exitCode) {
