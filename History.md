@@ -1,4 +1,17 @@
 
+6.11.0 / 2016-03-11
+===================
+
+  * Use local page-icon dependency instead of bestIcon server to infer icons for a target url
+  * Add conversion of images from `.ico` to `.png`
+  * Implement conversion of images on Linux in addition to OSX
+  * Fix bug in setting icon on for a Windows app while on Windows OS
+  * Trim whitespace from inferred page title
+  * Remove non-ascii characters from app name to prevent weird Wine error
+  * Remove dependency on `sips`
+  * Fix bug where shell scripts fail silently
+  * Modularize `gulpfile`
+
 6.10.1 / 2016-02-26
 ===================
 
@@ -88,14 +101,14 @@
   * Remove shorthand command for height and width to fix conflicts with `-h`. Closes #30, closes #64 and closes #67
   * Automatically hide the menu bar by default on Windows. Users can press `alt` to show it
   * Implement proper build system with ES6 support to facilitate development
-  * App window now remembers its previous position 
+  * App window now remembers its previous position
   * Fix #59 Fullscreen goes to a black screen when clicking close
   * Set window title immediately when the window is created, fixes #54
   * Implement navigating backward and forward from the application menu
   * Implement proper notification listeners to change the badge
   * Refactor main.js into separate files, and put static files such as preload and login.html into `app/src/static`
   * Implement changing of zoom which fixes #17
-  
+
 6.5.6 / 2016-01-22
 ==================
 
