@@ -1,8 +1,9 @@
 import path from 'path';
 import helpers from './../helpers/helpers';
-import convertToIcns from './../helpers/convertToIcns';
-import singleIco from './../helpers/singleIco';
-const isOSX = helpers.isOSX;
+import iconShellHelpers from './../helpers/iconShellHelpers';
+
+const {isOSX} = helpers;
+const {singleIco, convertToPng, convertToIcns} = iconShellHelpers;
 
 /**
  * @callback augmentIconsCallback
@@ -50,10 +51,18 @@ function iconBuild(options, callback) {
     if (options.platform === 'linux') {
         if (iconIsPng(options.icon)) {
             returnCallback();
-        } else {
-            console.warn('Icon should be a .png to package for Linux');
-            returnCallback();
+            return;
         }
+
+        convertToPng(options.icon)
+            .then(outPath => {
+                options.icon = outPath;
+                returnCallback();
+            })
+            .catch(error => {
+                console.warn('Skipping icon conversion to .png', error);
+                returnCallback();
+            });
         return;
     }
 
@@ -63,18 +72,20 @@ function iconBuild(options, callback) {
     }
 
     if (!isOSX()) {
-        console.warn('Conversion of `.png` to `.icns` for OSX app is only supported on OSX');
+        console.warn('Skipping icon conversion to .icns, conversion is only supported on OSX');
         returnCallback();
         return;
     }
 
-    convertToIcns(options.icon, (error, icnsPath) => {
-        options.icon = icnsPath;
-        if (error) {
-            console.warn('Skipping icon conversion from `.png` to `.icns`: ', error);
-        }
-        returnCallback();
-    });
+    convertToIcns(options.icon)
+        .then(outPath => {
+            options.icon = outPath;
+            returnCallback();
+        })
+        .catch(error => {
+            console.warn('Skipping icon conversion to .icns', error);
+            returnCallback();
+        });
 }
 
 function iconIsIco(iconPath) {
