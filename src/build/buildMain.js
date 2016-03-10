@@ -100,6 +100,7 @@ function maybeNoIconOption(options) {
     const packageOptions = JSON.parse(JSON.stringify(options));
     if (options.platform === 'win32' && !isWindows()) {
         if (!hasBinary.sync('wine')) {
+            console.warn('Wine is required to set the icon for a Windows app when packaging on non-windows platforms');
             packageOptions.icon = null;
         }
     }
@@ -125,8 +126,10 @@ function maybeCopyIcons(options, appPath, callback) {
     }
 
     // windows & linux
+    // put the icon file into the app
     const destIconPath = path.join(appPath, 'resources/app');
-    copy(options.icon, path.join(destIconPath, 'icon.png'), error => {
+    const destFileName = `icon${path.extname(options.icon)}`;
+    copy(options.icon, path.join(destIconPath, destFileName), error => {
         callback(error);
     });
 }
