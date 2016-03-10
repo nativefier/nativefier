@@ -1,6 +1,6 @@
 import path from 'path';
 import helpers from './../helpers/helpers';
-import pngToIcns from './../helpers/pngToIcns';
+import convertToIcns from './../helpers/convertToIcns';
 import singleIco from './../helpers/singleIco';
 const isOSX = helpers.isOSX;
 
@@ -68,7 +68,7 @@ function iconBuild(options, callback) {
         return;
     }
 
-    pngToIcns(options.icon, (error, icnsPath) => {
+    convertToIcns(options.icon, (error, icnsPath) => {
         options.icon = icnsPath;
         if (error) {
             console.warn('Skipping icon conversion from `.png` to `.icns`: ', error);

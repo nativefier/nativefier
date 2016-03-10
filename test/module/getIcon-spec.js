@@ -5,14 +5,14 @@ import chai from 'chai';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import pngToIcns from './../../lib/helpers/pngToIcns';
+import convertToIcns from './../../lib/helpers/convertToIcns';
 
 let assert = chai.assert;
 
 // Prerequisite for test: to use OSX with sips, iconutil and imagemagick convert
 
 function testConvertPng(pngName, done) {
-    pngToIcns(path.join(__dirname, '../../', 'test-resources', pngName), (error, icnsPath) => {
+    convertToIcns(path.join(__dirname, '../../', 'test-resources', pngName), (error, icnsPath) => {
         if (error) {
             done(error);
             return;

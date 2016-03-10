@@ -2,9 +2,9 @@
 
 ### USAGE
 
-# ./pngToIcns <input png> <outp icns>
+# ./convertToIcns <input png> <outp icns>
 # Example
-# ./pngToIcns.sh ~/sample.png ~/Desktop/converted.icns
+# ./convertToIcns ~/sample.png ~/Desktop/converted.icns
 
 # exit the shell script on error immediately
 set -e

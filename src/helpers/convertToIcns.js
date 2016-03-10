@@ -5,7 +5,7 @@ import helpers from './helpers';
 const isOSX = helpers.isOSX;
 tmp.setGracefulCleanup();
 
-const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '../..', 'bin/pngToIcns');
+const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '../..', 'bin/convertToIcns');
 
 /**
  * @callback pngToIcnsCallback
@@ -19,7 +19,7 @@ const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '../..', 'bin/pngToIcns');
  * @param {string} icnsDest
  * @param {pngToIcnsCallback} callback
  */
-function pngToIcns(pngSrc, icnsDest, callback) {
+function convertToIcns(pngSrc, icnsDest, callback) {
     if (!isOSX()) {
         callback('OSX is required to convert .png to .icns icon', pngSrc);
         return;
@@ -48,10 +48,10 @@ function pngToIcns(pngSrc, icnsDest, callback) {
  * @param {string} pngSrc
  * @param {pngToIcnsCallback} callback
  */
-function pngToIcnsTmp(pngSrc, callback) {
+function convertToIcnsTmp(pngSrc, callback) {
     const tempIconDirObj = tmp.dirSync({unsafeCleanup: true});
     const tempIconDirPath = tempIconDirObj.name;
-    pngToIcns(pngSrc, `${tempIconDirPath}/icon.icns`, callback);
+    convertToIcns(pngSrc, `${tempIconDirPath}/icon.icns`, callback);
 }
 
-export default pngToIcnsTmp;
+export default convertToIcnsTmp;
