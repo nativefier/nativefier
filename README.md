@@ -58,9 +58,13 @@ $ nativefier --name "Some Awesome App" "http://medium.com"
 
 ## Optional Dependencies
 
-### `.png` Icon for OSX
+### Icons for Windows Apps from non-Windows platforms
 
-To support conversion of a `.png` into a `.icns` for a packaged OSX app icon (currently only supported on OSX), you need the following dependencies.
+You need [Wine](https://www.winehq.org/) installed, make sure that `wine` is in your `$PATH`.
+
+### Icon Conversion for OSX
+
+To support conversion of a `.png` or `.ico` into a `.icns` for a packaged OSX app icon (currently only supported on OSX), you need the following dependencies.
 
 #### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
 
