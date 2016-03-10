@@ -19,6 +19,9 @@ function inferIconFromUrlToPath(targetUrl, platform, outDir, callback) {
 
     pageIcon(targetUrl, {ext: preferredExt})
         .then(icon => {
+            if (!icon) {
+                throw 'Icon not found';
+            }
             const outfilePath = path.join(outDir, `/icon.${icon.ext}`);
             fs.writeFile(outfilePath, icon.data, error => {
                 callback(error, outfilePath);
