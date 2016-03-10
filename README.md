@@ -1,14 +1,14 @@
 # Nativefier
 [![Build Status](https://travis-ci.org/jiahaog/nativefier.svg?branch=development)](https://travis-ci.org/jiahaog/nativefier)
-[![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 [![Code Climate](https://codeclimate.com/github/jiahaog/nativefier/badges/gpa.svg)](https://codeclimate.com/github/jiahaog/nativefier)
+[![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
 ![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
 
-You want to make a native wrapper for Google Maps (or any web page).
+You want to make a native wrapper for WhatsApp Web (or any web page).
 
 ```bash
-$ nativefier maps.google.com
+$ nativefier web.whatsapp.com
 ```
 
 You're done.
@@ -231,7 +231,7 @@ Set the user agent to run the created app with.
 ```
 --honest
 ```
-By default, nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
+By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
 
 If this flag is passed, it will not override the user agent.
 
@@ -255,7 +255,7 @@ Forces the packaged app to ignore web security errors.
 --flash <value>
 ```
 
-By default, nativefier will automatically try to determine the location of your Google Chrome flash binary. In the event that Flash does not appear to work, you can specify it directly with this command line flag, by retrieving the location of the Flash path from [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`.
+By default, Nativefier will automatically try to determine the location of your Google Chrome flash binary. In the event that Flash does not appear to work, you can specify it directly with this command line flag, by retrieving the location of the Flash path from [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`.
 
 From my experience, it might be helpful to pass the `--insecure` flag if you are using nativefied flash apps, as some `https` websites tend to serve flash insecurely.
 
@@ -334,20 +334,34 @@ In addition, I built and used [pageIcon](https://github.com/jiahaog/page-icon) t
 
 ## Development
 
-Setting up the project
+### Environment Setup
+
+First clone the project
 
 ```bash
 $ git clone https://github.com/jiahaog/nativefier.git
 $ cd nativefier
+```
 
-# Set up dependencies for the cli tool and the placeholder app
+Install dependencies
+
+```bash
+# OSX and Linux
 $ npm run dev-up
 
-# Set up symlinks so that you can run `$ nativefier` for your local changes
+# Windows
+$ npm install
+$ cd app
+$ npm install
+```
+
+You can set up symlinks so that you can run `$ nativefier` for your local changes
+
+```bash
 $ npm link
 ```
 
-After doing so, you can then run nativefier with your test parameters
+After doing so, you can then run Nativefier with your test parameters
 
 ```bash
 $ nativefier <...>
@@ -365,6 +379,12 @@ Or you can automatically watch the files for changes with:
 $ npm run watch
 ```
 
-## Notes
+### Tests
 
-Tested mostly on OSX, but should work for Windows and Linux.
+```bash
+$ npm test
+```
+
+## License
+
+MIT
