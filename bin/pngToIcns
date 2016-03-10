@@ -1,12 +1,16 @@
 #!/bin/sh
 
-# modified from https://github.com/daveish/png2icns for OSX 10.11
-
-# USAGE
+### USAGE
 
 # ./pngToIcns <input png> <outp icns>
 # Example
 # ./pngToIcns.sh ~/sample.png ~/Desktop/converted.icns
+
+# exit the shell script on error immediately
+set -e
+
+# import script as variable
+CONVERT_TO_PNG="${BASH_SOURCE%/*}/convertToPng"
 
 # Exec Paths
 ICONUTIL=$(which iconutil)
@@ -41,63 +45,40 @@ if [ -z "${DEST}" ]; then
 	exit 1
 fi
 
-
 # File Infrastructure
 NAME=$(basename "${SOURCE}")
 EXT="${NAME##*.}"
 BASE="${NAME%.*}"
+TEMP_DIR="temp_icon"
 ICONSET="${BASE}.iconset"
 
-mkdir "${ICONSET}"
+function cleanUp() {
+    rm -rf "${TEMP_DIR}"
+    rm -rf "${ICONSET}"
+}
 
-# check if .ico is a sequence
-IS_ICO_SET="$(identify ${SOURCE} | grep -e "\w\.ico\[0")"
+trap cleanUp EXIT
 
-if [ "${IS_ICO_SET}" ]; then
-	# extract the largest(?) image from the set
-	convert "${SOURCE}" "${ICONSET}/${BASE}.png"
-	SOURCE="${ICONSET}/${BASE}-0.png"
-fi
+mkdir -p "${TEMP_DIR}"
+mkdir -p "${ICONSET}"
 
-# Debug Info
-# echo "SOURCE: ${SOURCE}"
-# echo "NAME: $NAME"
-# echo "BASE: $BASE"
-# echo "EXT: $EXT"
-# echo "ICONSET: $ICONSET"
-
-# Get source image info
-#SRCWIDTH=$( sips -g pixelWidth "${SOURCE}" | tail -n1 | awk '{print $2}')
-#SRCHEIGHT=$( sips -g pixelHeight "${SOURCE}" | tail -n1 | awk '{print $2}' )
-#SRCFORMAT=$( sips -g format "${SOURCE}" | tail -n1 | awk '{print $2}' )
-
-# Debug Info
-# echo "SRCWIDTH: $SRCWIDTH"
-# echo "SRCHEIGHT: $SRCHEIGHT"
-# echo "SRCFORMAT: $SRCFORMAT"
-#
-#if [ "x${SRCFORMAT}" != "xpng" ]; then
-#	echo "ERR: Source image format should be png." >&2
-#	exit 1;
-#fi
+PNG_PATH="${TEMP_DIR}/icon.png"
+${CONVERT_TO_PNG} "${SOURCE}" "${PNG_PATH}"
 
 # Resample image into iconset
-
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 16x16 "${ICONSET}/icon_16x16.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_16x16@2x.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_32x32.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 64x64 "${ICONSET}/icon_32x32@2x.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 128x128 "${ICONSET}/icon_128x128.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_128x128@2x.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_256x256.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_256x256@2x.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_512x512.png"
-convert "${SOURCE}" -define png:big-depth=16 -define png:color-type=6 -sample 1024x1024 "${ICONSET}/icon_512x512@2x.png"
-
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 16x16 "${ICONSET}/icon_16x16.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_16x16@2x.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_32x32.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 64x64 "${ICONSET}/icon_32x32@2x.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 128x128 "${ICONSET}/icon_128x128.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_128x128@2x.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_256x256.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_256x256@2x.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_512x512.png"
+convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 1024x1024 "${ICONSET}/icon_512x512@2x.png"
 
 # Create an icns file lefrom the iconset
 iconutil -c icns "${ICONSET}" -o "${DEST}"
 
-# Clean up the iconset
-rm -rf "${ICONSET}"
-
+trap - EXIT
+cleanUp
