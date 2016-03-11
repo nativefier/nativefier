@@ -55,7 +55,7 @@ function singleIco(icoSrc) {
 }
 
 function convertToPng(icoSrc) {
-    return iconShellHelper(SCRIPT_PATHS.convertToPng, icoSrc, `${getTmpDirPath()}/icon.ico`);
+    return iconShellHelper(SCRIPT_PATHS.convertToPng, icoSrc, `${getTmpDirPath()}/icon.png`);
 }
 
 function convertToIcns(icoSrc) {
