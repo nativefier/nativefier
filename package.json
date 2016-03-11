@@ -37,9 +37,11 @@
   "homepage": "https://github.com/jiahaog/nativefier#readme",
   "dependencies": {
     "async": "^1.5.2",
+    "axios": "^0.9.1",
     "cheerio": "^0.19.0",
     "commander": "^2.9.0",
     "electron-packager": "^5.2.1",
+    "gitcloud": "0.0.1",
     "hasbin": "^1.2.0",
     "lodash": "^4.0.0",
     "ncp": "^2.0.0",

@@ -63,14 +63,15 @@ function optionsFactory(inpOptions, callback) {
                 callback();
                 return;
             }
-            inferIcon(options.targetUrl, options.platform, (error, pngPath) => {
-                if (error) {
-                    console.warn('Cannot automatically retrieve the app icon:', error);
-                } else {
+            inferIcon(options.targetUrl, options.platform)
+                .then(pngPath => {
                     options.icon = pngPath;
-                }
-                callback();
-            });
+                    callback();
+                })
+                .catch(error => {
+                    console.warn('Cannot automatically retrieve the app icon:', error);
+                    callback();
+                });
         },
         callback => {
             // length also checks if its the commanderJS function or a string
