@@ -31,7 +31,7 @@ View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/Hist
 
 ## Installation
 
-With [Node.js](https://nodejs.org/) installed,
+With [Node.js](https://nodejs.org/) `>=0.12` installed,
 
 ```bash
 # for use from the command line
