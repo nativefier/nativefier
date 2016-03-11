@@ -1,0 +1,45 @@
+#!/bin/sh
+
+# USAGE
+
+# ./convertToIco <input png or ico> <outfilename>.ico
+# Example
+# ./convertToPng ~/sample.png ~/converted.ico
+
+set -e
+
+IMAGEMAGICK_CONVERT=$(which convert)
+IMAGEMAGICK_IDENTIFY=$(which identify)
+
+if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
+	echo "Cannot find required ImageMagick Convert executable" >&2
+	exit 1;
+fi
+if [ ! -x "${IMAGEMAGICK_IDENTIFY}" ]; then
+	echo "Cannot find required ImageMagick Identify executable" >&2
+	exit 1;
+fi
+
+SOURCE=$1
+DEST=$2
+
+if [ -z "${SOURCE}" ]; then
+	echo "No source image specified"
+	exit 1
+fi
+
+if [ -z "${DEST}" ]; then
+	echo "No destination specified"
+	exit 1
+fi
+
+NAME=$(basename "${SOURCE}")
+EXT="${NAME##*.}"
+BASE="${NAME%.*}"
+
+if [ "${EXT}" == "ico" ]; then
+    cp "${SOURCE}" "${DEST}"
+    exit 0
+fi
+
+convert "${SOURCE}" "${DEST}"

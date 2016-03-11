@@ -9,6 +9,7 @@ tmp.setGracefulCleanup();
 const SCRIPT_PATHS = {
     singleIco: path.join(__dirname, '../..', 'bin/singleIco'),
     convertToPng: path.join(__dirname, '../..', 'bin/convertToPng'),
+    convertToIco: path.join(__dirname, '../..', 'bin/convertToIco'),
     convertToIcns: path.join(__dirname, '../..', 'bin/convertToIcns')
 };
 
@@ -58,6 +59,10 @@ function convertToPng(icoSrc) {
     return iconShellHelper(SCRIPT_PATHS.convertToPng, icoSrc, `${getTmpDirPath()}/icon.png`);
 }
 
+function convertToIco(icoSrc) {
+    return iconShellHelper(SCRIPT_PATHS.convertToIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
+}
+
 function convertToIcns(icoSrc) {
     if (!isOSX()) {
         return new Promise((resolve, reject) => reject('OSX is required to convert to a .icns icon'));
@@ -68,5 +73,6 @@ function convertToIcns(icoSrc) {
 export default {
     singleIco,
     convertToPng,
+    convertToIco,
     convertToIcns
 };

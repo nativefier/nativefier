@@ -3,7 +3,7 @@ import helpers from './../helpers/helpers';
 import iconShellHelpers from './../helpers/iconShellHelpers';
 
 const {isOSX} = helpers;
-const {convertToPng, convertToIcns} = iconShellHelpers;
+const {convertToPng, convertToIco, convertToIcns} = iconShellHelpers;
 
 /**
  * @callback augmentIconsCallback
@@ -30,11 +30,20 @@ function iconBuild(options, callback) {
     }
 
     if (options.platform === 'win32') {
-        if (!iconIsIco(options.icon)) {
-            console.warn('Icon should be an .ico to package for Windows');
+        if (iconIsIco(options.icon)) {
+            returnCallback();
+            return;
         }
 
-        returnCallback();
+        convertToIco(options.icon)
+            .then(outPath => {
+                options.icon = outPath;
+                returnCallback();
+            })
+            .catch(error => {
+                console.warn('Skipping icon conversion to .ico', error);
+                returnCallback();
+            });
         return;
     }
 
