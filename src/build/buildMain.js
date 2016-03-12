@@ -4,7 +4,7 @@ import tmp from 'tmp';
 import ncp from 'ncp';
 import async from 'async';
 import hasBinary from 'hasbin';
-
+import ProgressBar from 'progress';
 import optionsFactory from './../options/optionsMain';
 import iconBuild from './iconBuild';
 import helpers from './../helpers/helpers';
@@ -27,14 +27,28 @@ const isWindows = helpers.isWindows;
 function buildMain(options, callback) {
     // pre process app
 
-    var tmpObj = tmp.dirSync({unsafeCleanup: true});
+    const tmpObj = tmp.dirSync({unsafeCleanup: true});
     const tmpPath = tmpObj.name;
+
+    const bar = new ProgressBar('  :task [:bar] :percent', {
+        complete: '=',
+        incomplete: ' ',
+        total: 5,
+        width: 50,
+        clear: true
+    });
 
     async.waterfall([
         callback => {
+            bar.tick({
+                task: 'infering'
+            });
             optionsFactory(options, callback);
         },
         (options, callback) => {
+            bar.tick({
+                task: 'copying'
+            });
             buildApp(options.dir, tmpPath, options, error => {
                 if (error) {
                     callback(error);
@@ -46,19 +60,38 @@ function buildMain(options, callback) {
             });
         },
         (options, callback) => {
+            bar.tick({
+                task: 'icons'
+            });
             iconBuild(options, (error, optionsWithIcon) => {
                 callback(null, optionsWithIcon);
             });
         },
         (options, callback) => {
+            bar.tick({
+                task: 'packaging'
+            });
             // maybe skip passing icon parameter to electron packager
             const packageOptions = maybeNoIconOption(options);
+
+            // suppress 'Packaging app for...' from electron-packager
+            // todo check if this is still needed on later version of packager
+            const consoleError = console.error;
+            console.error = () => {};
+
             packager(packageOptions, (error, appPathArray) => {
+
+                // restore console.error
+                console.error = consoleError;
+
                 // pass options which still contains the icon to waterfall
                 callback(error, options, appPathArray);
             });
         },
         (options, appPathArray, callback) => {
+            bar.tick({
+                task: 'finalizing'
+            });
             // somehow appPathArray is a 1 element array
             const appPath = getAppPath(appPathArray);
             if (!appPath) {
