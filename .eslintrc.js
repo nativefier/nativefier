@@ -33,7 +33,8 @@ module.exports = {
         camelcase: 0,
         'valid-jsdoc': 0,
         'no-path-concat': 1,
-        'quote-props': [2, 'as-needed']
+        'quote-props': [2, 'as-needed'],
+        'no-warning-comments': 1
     },
     env: {
         es6: true,
