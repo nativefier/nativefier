@@ -38,7 +38,7 @@ function optionsFactory(inpOptions, callback) {
         version: inpOptions.electronVersion || ELECTRON_VERSION,
         nativefierVersion: packageJson.version,
         out: inpOptions.out || process.cwd(),
-        overwrite: inpOptions.overwrite || false,
+        overwrite: inpOptions.overwrite,
         asar: inpOptions.conceal || false,
         icon: inpOptions.icon,
         counter: inpOptions.counter || false,

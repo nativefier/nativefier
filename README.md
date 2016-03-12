@@ -150,13 +150,13 @@ Processor architecture, automatically determined based on the current OS. Can be
 
 Electron version without the `v`, see https://github.com/atom/electron/releases.
 
-#### [overwrite]
+#### [no-overwrite]
 
 ```
--o, --overwrite
+--no-overwrite
 ```
 
-Specifies if the destination directory should be overwritten.
+Specifies if the destination directory should be not overwritten, defaults to false.
 
 #### [conceal]
 
@@ -296,22 +296,22 @@ In your `.js` file:
 ```javascript
 var nativefier = require('nativefier').default;
 
-// possible options
+// possible options, defaults unless specified otherwise
 var options = {
-    name: 'Web WhatsApp',
+    name: 'Web WhatsApp', // will be inferred if not specified
     targetUrl: 'http://web.whatsapp.com', // required
-    platform: 'darwin',
-    arch: 'x64',
+    platform: 'darwin', // defaults to the current system
+    arch: 'x64', // defaults to the current system
     version: '0.36.4',
-    out: '~/Desktop',
-    overwrite: true,
+    out: '.',
+    overwrite: false,
     asar: false, // see conceal
     icon: '~/Desktop/icon.png',
     counter: false,
     width: 1280,
     height: 800,
     showMenuBar: false,
-    userAgent: null,
+    userAgent: 'Mozilla ...', // will infer a default for your current system
     ignoreCertificate: false,
     insecure: false,
     honest: false

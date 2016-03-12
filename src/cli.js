@@ -25,7 +25,7 @@ if (require.main === module) {
         .option('-p, --platform <value>', '\'linux\', \'win32\', or \'darwin\'')
         .option('-a, --arch <value>', '\'ia32\' or \'x64\'')
         .option('-e, --electron-version <value>', 'electron version to package, without the \'v\', see https://github.com/atom/electron/releases')
-        .option('-o, --overwrite', 'if output directory for a platform already exists, replaces it rather than skipping it, defaults to false')
+        .option('--no-overwrite', 'do not override output directory if it already exists, defaults to false')
         .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')
         .option('--counter', 'if the target app should use a persistant counter badge in the dock (OSX only), defaults to false')
         .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX, .png for Windows and Linux)')
