@@ -3,27 +3,38 @@ import path from 'path';
 import fs from 'fs';
 import tmp from 'tmp';
 import gitCloud from 'gitcloud';
+import helpers from './../helpers/helpers';
+
+const {downloadFile, allowedIconFormats} = helpers;
 tmp.setGracefulCleanup();
 
-import helpers from './../helpers/helpers';
-const {downloadFile} = helpers;
-
 function inferIconFromStore(targetUrl, platform) {
-    if (platform === 'win32') {
-        return new Promise((resolve, reject) => reject('Skipping icon retrieval from store on windows'));
-    }
+    const allowedFormats = allowedIconFormats(platform);
 
     return gitCloud('http://jiahaog.com/nativefier-icons/')
         .then(fileIndex => {
-            const matchingUrls = fileIndex
+            const matchingIcons = fileIndex
                 .filter(item => {
+                    // todo might have problems with matching length, e.g. `book` vs `facebook`
                     return targetUrl
                         .toLowerCase()
                         .includes(item.name);
                 })
-                .map(item => item.url);
+                .map(item => {
+                    item.ext = path.extname(item.url);
+                    return item;
+                });
 
-            const matchingUrl = matchingUrls[0];
+            let matchingUrl;
+            for (let format of allowedFormats) {
+                for (let icon of matchingIcons) {
+                    if (icon.ext !== format) {
+                        continue;
+                    }
+                    matchingUrl = icon.url;
+                }
+            }
+
             if (!matchingUrl) {
                 return null;
             }
@@ -49,11 +60,14 @@ function inferFromPage(targetUrl, platform, outDir) {
         preferredExt = 'ico';
     }
 
+    // todo might want to pass list of preferences instead
     return pageIcon(targetUrl, {ext: preferredExt})
         .then(icon => {
             if (!icon) {
-                throw 'Icon not found';
+                return null;
             }
+
+            // note that ext from page icon does not contain a '.'
             const outfilePath = path.join(outDir, `/icon.${icon.ext}`);
             return writeFilePromise(outfilePath, icon.data);
         });
@@ -67,18 +81,13 @@ function inferFromPage(targetUrl, platform, outDir) {
 function inferIconFromUrlToPath(targetUrl, platform, outDir) {
 
     return inferIconFromStore(targetUrl, platform)
-        .then(iconData => {
-
-            if (!iconData) {
-                throw 'Unable to find icon from store';
+        .then(icon => {
+            if (!icon) {
+                return inferFromPage(targetUrl, platform, outDir);
             }
 
-            const outfilePath = path.join(outDir, `/icon.png`);
-            return writeFilePromise(outfilePath, iconData);
-        }).catch(error => {
-            console.warn('Unable to find icon on store', error);
-            console.warn('Falling back to inferring from url');
-            return inferFromPage(targetUrl, platform, outDir);
+            const outfilePath = path.join(outDir, `/icon${icon.ext}`);
+            return writeFilePromise(outfilePath, icon.data);
         });
 }
 
