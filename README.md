@@ -54,6 +54,8 @@ Nativefier will intelligently attempt to determine the app name, your OS and pro
 $ nativefier --name "Some Awesome App" "http://medium.com"
 ```
 
+If you would like high resoulution icons to be used, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
+
 **For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
 
 **For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
