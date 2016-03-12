@@ -134,7 +134,9 @@ The name of the application, which will affect strings in titles and the icon.
 ```
 -p, --platform <value>
 ```
-Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `win32`, or `darwin`.
+Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, or `osx`.
+
+The alternative values `win32` (for Windows) or `darwin`, `mac` (for OSX) can also be used.
 
 #### [arch]
 

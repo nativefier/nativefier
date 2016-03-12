@@ -57,6 +57,14 @@ function optionsFactory(inpOptions, callback) {
         options.userAgent = null;
     }
 
+    if (options.platform.toLowerCase() === 'windows') {
+        options.platform = 'win32';
+    }
+
+    if (options.platform.toLowerCase() === 'osx' || options.platform.toLowerCase() === 'mac') {
+        options.platform = 'darwin';
+    }
+
     async.waterfall([
         callback => {
             if (options.icon) {
