@@ -15,7 +15,6 @@ CONVERT_TO_PNG="${BASH_SOURCE%/*}/convertToPng"
 # Exec Paths
 ICONUTIL=$(which iconutil)
 IMAGEMAGICK_CONVERT=$(which convert)
-IMAGEMAGICK_IDENTIFY=$(which identify)
 
 if [ ! -x "${ICONUTIL}" ]; then
 	echo "Cannot find required iconutil executable" >&2
@@ -23,10 +22,6 @@ if [ ! -x "${ICONUTIL}" ]; then
 fi
 if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
 	echo "Cannot find required ImageMagick Convert executable" >&2
-	exit 1;
-fi
-if [ ! -x "${IMAGEMAGICK_IDENTIFY}" ]; then
-	echo "Cannot find required ImageMagick Identify executable" >&2
 	exit 1;
 fi
 

@@ -9,14 +9,9 @@
 set -e
 
 IMAGEMAGICK_CONVERT=$(which convert)
-IMAGEMAGICK_IDENTIFY=$(which identify)
 
 if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
 	echo "Cannot find required ImageMagick Convert executable" >&2
-	exit 1;
-fi
-if [ ! -x "${IMAGEMAGICK_IDENTIFY}" ]; then
-	echo "Cannot find required ImageMagick Identify executable" >&2
 	exit 1;
 fi
 
