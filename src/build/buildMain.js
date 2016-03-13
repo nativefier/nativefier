@@ -4,7 +4,7 @@ import tmp from 'tmp';
 import ncp from 'ncp';
 import async from 'async';
 import hasBinary from 'hasbin';
-import ProgressBar from 'progress';
+import DishonestProgress from './../helpers/dishonestProgress';
 import optionsFactory from './../options/optionsMain';
 import iconBuild from './iconBuild';
 import helpers from './../helpers/helpers';
@@ -34,25 +34,15 @@ function buildMain(options, callback) {
     // todo check if this is still needed on later version of packager
     const packagerConsole = new PackagerConsole();
 
-    const bar = new ProgressBar('  :task [:bar] :percent', {
-        complete: '=',
-        incomplete: ' ',
-        total: 5,
-        width: 50,
-        clear: true
-    });
+    const progress = new DishonestProgress(5);
 
     async.waterfall([
         callback => {
-            bar.tick({
-                task: 'infering'
-            });
+            progress.tick('infering');
             optionsFactory(options, callback);
         },
         (options, callback) => {
-            bar.tick({
-                task: 'copying'
-            });
+            progress.tick('copying');
             buildApp(options.dir, tmpPath, options, error => {
                 if (error) {
                     callback(error);
@@ -64,17 +54,13 @@ function buildMain(options, callback) {
             });
         },
         (options, callback) => {
-            bar.tick({
-                task: 'icons'
-            });
+            progress.tick('icons');
             iconBuild(options, (error, optionsWithIcon) => {
                 callback(null, optionsWithIcon);
             });
         },
         (options, callback) => {
-            bar.tick({
-                task: 'packaging'
-            });
+            progress.tick('packaging');
             // maybe skip passing icon parameter to electron packager
             const packageOptions = maybeNoIconOption(options);
 
@@ -90,9 +76,7 @@ function buildMain(options, callback) {
             });
         },
         (options, appPathArray, callback) => {
-            bar.tick({
-                task: 'finalizing'
-            });
+            progress.tick('finalizing');
             // somehow appPathArray is a 1 element array
             const appPath = getAppPath(appPathArray);
             if (!appPath) {
