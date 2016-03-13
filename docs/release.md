@@ -1,5 +1,6 @@
-# Notes
+# Release Notes
 
+My notes for release commands to NPM
 
 ## Releasing
 
@@ -28,7 +29,6 @@ $ npm run release
 # Merge changes into master
 $ git checkout master
 $ git merge development
-
 
 $ git push --follow-tags
 
