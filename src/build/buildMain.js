@@ -8,6 +8,7 @@ import ProgressBar from 'progress';
 import optionsFactory from './../options/optionsMain';
 import iconBuild from './iconBuild';
 import helpers from './../helpers/helpers';
+import PackagerConsole from './../helpers/packagerConsole';
 import buildApp from './buildApp';
 
 const copy = ncp.ncp;
@@ -29,6 +30,9 @@ function buildMain(options, callback) {
 
     const tmpObj = tmp.dirSync({unsafeCleanup: true});
     const tmpPath = tmpObj.name;
+
+    // todo check if this is still needed on later version of packager
+    const packagerConsole = new PackagerConsole();
 
     const bar = new ProgressBar('  :task [:bar] :percent', {
         complete: '=',
@@ -74,15 +78,12 @@ function buildMain(options, callback) {
             // maybe skip passing icon parameter to electron packager
             const packageOptions = maybeNoIconOption(options);
 
-            // suppress 'Packaging app for...' from electron-packager
-            // todo check if this is still needed on later version of packager
-            const consoleError = console.error;
-            console.error = () => {};
+            packagerConsole.override();
 
             packager(packageOptions, (error, appPathArray) => {
 
                 // restore console.error
-                console.error = consoleError;
+                packagerConsole.restore();
 
                 // pass options which still contains the icon to waterfall
                 callback(error, options, appPathArray);
@@ -103,7 +104,10 @@ function buildMain(options, callback) {
                 callback(error, appPath);
             });
         }
-    ], callback);
+    ], (error, appPath) => {
+        packagerConsole.playback();
+        callback(error, appPath);
+    });
 }
 
 /**
