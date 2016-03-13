@@ -19,8 +19,9 @@ You're done.
   - [Installation](#installation)
   - [Usage](#usage)
   - [Optional Dependencies](#optional-dependencies)
-  - [API](docs/api.md)
   - [How It Works](#how-it-works)
+  - [API Documentation](docs/api.md)
+  - [Changelog](docs/changelog.md)
   - [Development](docs/development.md)
   - [License](#license)
 
@@ -30,7 +31,7 @@ Nativefier is a command line tool that allows you to easily create a desktop app
 
 I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com).
 
-View the changelog [here](https://github.com/jiahaog/nativefier/blob/master/History.md).
+View the changelog [here](docs/changelog.md).
 
 [Relevant Hacker News Thread](https://news.ycombinator.com/item?id=10930718)
 
@@ -104,11 +105,15 @@ In addition, I built [GitCloud](https://github.com/jiahaog/gitcloud) to use GitH
 
 ## API Documentation
 
-See [API](docs/api.md)
+See [API](docs/api.md).
+
+## Changelog
+
+See [Changelog](docs/changelog.md).
 
 ## Development
 
-See [Development](docs/development.md)
+See [Development](docs/development.md).
 
 ## License
 
