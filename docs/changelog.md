@@ -1,5 +1,17 @@
 # Changelog
 
+6.12.0 / 2016-03-14
+===================
+
+  * Try to retrive icons from `nativefier-icons` first before inferring
+  * Add progress bar
+  * Use `windows` and `osx` to specify platform
+  * Override output directory by default
+  * Add checks for icon format
+  * Implement conversion to `.ico` for windows target
+  * Support only node `0.12` onwards with `babel-polyfill`
+  * Organise documentation
+
 6.11.0 / 2016-03-11
 ===================
 
