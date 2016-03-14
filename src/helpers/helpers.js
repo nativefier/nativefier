@@ -53,7 +53,7 @@ function allowedIconFormats(platform) {
                 formats.push('.png');
                 break;
             case 'win32':
-                formats.push('ico');
+                formats.push('.ico');
                 break;
             default:
                 throw `function allowedIconFormats error: Unknown platform ${platform}`;
@@ -77,7 +77,7 @@ function allowedIconFormats(platform) {
                 formats.push('.ico');
             }
             if (icnsToPng) {
-                formats.push('icns');
+                formats.push('.icns');
             }
             break;
         case 'win32':
@@ -86,7 +86,7 @@ function allowedIconFormats(platform) {
                 formats.push('.png');
             }
             if (icnsToIco) {
-                formats.push('icns');
+                formats.push('.icns');
             }
             break;
         default:

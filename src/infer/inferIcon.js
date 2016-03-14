@@ -55,9 +55,9 @@ function writeFilePromise(outPath, data) {
 }
 
 function inferFromPage(targetUrl, platform, outDir) {
-    let preferredExt = 'png';
+    let preferredExt = '.png';
     if (platform === 'win32') {
-        preferredExt = 'ico';
+        preferredExt = '.ico';
     }
 
     // todo might want to pass list of preferences instead
@@ -67,8 +67,7 @@ function inferFromPage(targetUrl, platform, outDir) {
                 return null;
             }
 
-            // note that ext from page icon does not contain a '.'
-            const outfilePath = path.join(outDir, `/icon.${icon.ext}`);
+            const outfilePath = path.join(outDir, `/icon${icon.ext}`);
             return writeFilePromise(outfilePath, icon.data);
         });
 }
