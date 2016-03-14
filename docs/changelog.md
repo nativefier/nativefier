@@ -1,5 +1,11 @@
 # Changelog
 
+6.12.1 / 2016-03-14
+===================
+
+  * Fix bugs retrieving icons from nativefier-icons
+  * Add resize flag to convertToIco convert so that large `.png` will not throw errors when converting to `.ico`
+  
 6.12.0 / 2016-03-14
 ===================
 
