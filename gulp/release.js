@@ -9,6 +9,5 @@ gulp.task('publish', done => {
 });
 
 gulp.task('release', callback => {
-    return runSequence('test', 'lint', 'build', 'publish', callback);
+    return runSequence('build', 'publish', callback);
 });
-
