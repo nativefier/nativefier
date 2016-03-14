@@ -37,4 +37,4 @@ if [ "${EXT}" == "ico" ]; then
     exit 0
 fi
 
-convert "${SOURCE}" "${DEST}"
+convert "${SOURCE}" -resize 256x256 "${DEST}"
