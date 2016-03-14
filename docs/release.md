@@ -18,7 +18,7 @@ git changelog docs/changelog.md --tag <next version>
 subl docs/changelog.md
 
 git add docs/changelog.md
-git commit -m "Update changelog for `v <next version>`"
+git commit -m "Update changelog for \`v<next version>\`"
 
 npm version <next version>
 
@@ -35,4 +35,5 @@ git push --follow-tags
 
 # Return to development
 git checkout development
+
 ```
