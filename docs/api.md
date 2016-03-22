@@ -25,6 +25,7 @@
     - [[flash]](#flash)
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
+    - [[maximize]](#maximize)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -225,6 +226,15 @@ $ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-c
 ```
 
 Makes the packaged app start in full screen.
+
+
+#### [maximize]
+
+```
+--maximize
+```
+
+Makes the packaged app start maximized.
 
 ## Programmatic API
 

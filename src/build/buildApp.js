@@ -105,7 +105,8 @@ function selectAppArgs(options) {
         ignoreCertificate: options.ignoreCertificate,
         insecure: options.insecure,
         flashPluginDir: options.flashPluginDir,
-        fullScreen: options.fullScreen
+        fullScreen: options.fullScreen,
+        maximize: options.maximize
     };
 }
 
