@@ -52,6 +52,13 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
     }
 
+    // after first run, no longer force maximize to be true
+    if (options.maximize) {
+        mainWindow.maximize();
+        options.maximize = undefined;
+        fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
+    }
+
     let currentZoom = 1;
 
     const onZoomIn = () => {
