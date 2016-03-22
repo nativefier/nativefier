@@ -53,7 +53,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     }
 
     // after first run, no longer force maximize to be true
-    if(options.maximize){
+    if (options.maximize) {
         mainWindow.maximize();
         options.maximize = undefined;
         fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
