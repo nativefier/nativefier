@@ -52,6 +52,7 @@ function optionsFactory(inpOptions, callback) {
         insecure: inpOptions.insecure || false,
         flashPluginDir: inpOptions.flash || null,
         inject: inpOptions.inject || null,
+        ignore: 'src',
         fullScreen: inpOptions.fullScreen || false,
         maximize: inpOptions.maximize || false,
         verbose: inpOptions.verbose
