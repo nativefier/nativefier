@@ -1,4 +1,4 @@
-import {inferUserAgent} from './../../lib/infer/inferUserAgent';
+import inferUserAgent from './../../lib/infer/inferUserAgent';
 import chai from 'chai';
 import _ from 'lodash';
 
@@ -18,7 +18,7 @@ function testPlatform(platform) {
 }
 
 describe('Infer User Agent', function() {
-    this.timeout(10000);
+    this.timeout(15000);
     it('Can infer userAgent for all platforms', function(done) {
         const testPromises = _.keys(TEST_RESULT).map(platform => {
             return testPlatform(platform);
@@ -31,6 +31,20 @@ describe('Infer User Agent', function() {
             .catch(error => {
                 done(error);
             });
+    });
+
+    it('Connection error will still get a user agent', function(done) {
+        const TIMEOUT_URL = 'http://www.google.com:81/';
+        inferUserAgent('0.37.1', 'darwin', TIMEOUT_URL)
+            .then(userAgent => {
+                assert.equal(
+                    userAgent,
+                    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36',
+                    'Expect default user agent on connection error'
+                );
+                done();
+            })
+            .catch(done);
     });
 });
 
