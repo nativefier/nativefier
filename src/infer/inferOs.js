@@ -6,8 +6,7 @@ function inferPlatform() {
         return platform;
     }
 
-    console.warn(`Warning: Untested platform ${platform} detected, assuming linux`);
-    return 'linux';
+    throw `Untested platform ${platform} detected`;
 }
 
 function inferArch() {

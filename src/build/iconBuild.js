@@ -1,4 +1,5 @@
 import path from 'path';
+import log from 'loglevel';
 import helpers from './../helpers/helpers';
 import iconShellHelpers from './../helpers/iconShellHelpers';
 
@@ -41,7 +42,7 @@ function iconBuild(options, callback) {
                 returnCallback();
             })
             .catch(error => {
-                console.warn('Skipping icon conversion to .ico', error);
+                log.warn('Skipping icon conversion to .ico', error);
                 returnCallback();
             });
         return;
@@ -59,7 +60,7 @@ function iconBuild(options, callback) {
                 returnCallback();
             })
             .catch(error => {
-                console.warn('Skipping icon conversion to .png', error);
+                log.warn('Skipping icon conversion to .png', error);
                 returnCallback();
             });
         return;
@@ -71,7 +72,7 @@ function iconBuild(options, callback) {
     }
 
     if (!isOSX()) {
-        console.warn('Skipping icon conversion to .icns, conversion is only supported on OSX');
+        log.warn('Skipping icon conversion to .icns, conversion is only supported on OSX');
         returnCallback();
         return;
     }
@@ -82,7 +83,7 @@ function iconBuild(options, callback) {
             returnCallback();
         })
         .catch(error => {
-            console.warn('Skipping icon conversion to .icns', error);
+            log.warn('Skipping icon conversion to .icns', error);
             returnCallback();
         });
 }

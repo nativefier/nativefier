@@ -40,6 +40,7 @@ if (require.main === module) {
         .option('--inject <value>', 'path to a file to be injected', collect, [])
         .option('--full-screen', 'if the app should always be started in full screen')
         .option('--maximize', 'if the app should always be started maximized')
+        .option('--verbose', 'if verbose logs should be displayed')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {

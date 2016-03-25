@@ -1,11 +1,11 @@
 import axios from 'axios';
 import _ from 'lodash';
+import log from 'loglevel';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
 const DEFAULT_CHROME_VERSION = '47.0.2526.73';
 
 function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERSIONS_URL) {
-
     return axios.get(url, {timeout: 5000})
         .then(response => {
             if (response.status !== 200) {
@@ -47,7 +47,7 @@ function inferUserAgent(electronVersion, platform, url = ELECTRON_VERSIONS_URL) 
             return getUserAgentString(chromeVersion, platform);
         })
         .catch(() => {
-            // console.warn(`Unable to infer chrome version for user agent, using ${DEFAULT_CHROME_VERSION}`);
+            log.warn(`Unable to infer chrome version for user agent, using ${DEFAULT_CHROME_VERSION}`);
             return getUserAgentString(DEFAULT_CHROME_VERSION, platform);
         });
 }

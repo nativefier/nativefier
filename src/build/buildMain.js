@@ -4,6 +4,7 @@ import tmp from 'tmp';
 import ncp from 'ncp';
 import async from 'async';
 import hasBinary from 'hasbin';
+import log from 'loglevel';
 import DishonestProgress from './../helpers/dishonestProgress';
 import optionsFactory from './../options/optionsMain';
 import iconBuild from './iconBuild';
@@ -107,7 +108,7 @@ function getAppPath(appPathArray) {
     }
 
     if (appPathArray.length > 1) {
-        console.warn('Warning: This should not be happening, packaged app path contains more than one element:', appPathArray);
+        log.warn('Warning: This should not be happening, packaged app path contains more than one element:', appPathArray);
     }
 
     return appPathArray[0];
@@ -121,7 +122,7 @@ function maybeNoIconOption(options) {
     const packageOptions = JSON.parse(JSON.stringify(options));
     if (options.platform === 'win32' && !isWindows()) {
         if (!hasBinary.sync('wine')) {
-            console.warn('Wine is required to set the icon for a Windows app when packaging on non-windows platforms');
+            log.warn('Wine is required to set the icon for a Windows app when packaging on non-windows platforms');
             packageOptions.icon = null;
         }
     }

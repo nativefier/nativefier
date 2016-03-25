@@ -45,6 +45,7 @@
     "gitcloud": "^0.1.0",
     "hasbin": "^1.2.0",
     "lodash": "^4.0.0",
+    "loglevel": "^1.4.0",
     "ncp": "^2.0.0",
     "page-icon": "^0.3.0",
     "progress": "^1.1.8",

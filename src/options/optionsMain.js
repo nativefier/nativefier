@@ -1,6 +1,7 @@
 import path from 'path';
 import _ from 'lodash';
 import async from 'async';
+import log from 'loglevel';
 import sanitizeFilenameLib from 'sanitize-filename';
 
 import inferIcon from './../infer/inferIcon';
@@ -52,8 +53,15 @@ function optionsFactory(inpOptions, callback) {
         flashPluginDir: inpOptions.flash || null,
         inject: inpOptions.inject || null,
         fullScreen: inpOptions.fullScreen || false,
-        maximize: inpOptions.maximize || false
+        maximize: inpOptions.maximize || false,
+        verbose: inpOptions.verbose
     };
+
+    if (options.verbose) {
+        log.setLevel('trace');
+    } else {
+        log.setLevel('error');
+    }
 
     if (inpOptions.honest) {
         options.userAgent = null;
@@ -91,7 +99,7 @@ function optionsFactory(inpOptions, callback) {
                     callback();
                 })
                 .catch(error => {
-                    console.warn('Cannot automatically retrieve the app icon:', error);
+                    log.warn('Cannot automatically retrieve the app icon:', error);
                     callback();
                 });
         },
@@ -104,7 +112,7 @@ function optionsFactory(inpOptions, callback) {
 
             inferTitle(options.targetUrl, function(error, pageTitle) {
                 if (error) {
-                    console.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
+                    log.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
                     options.name = DEFAULT_APP_NAME;
                 } else {
                     options.name = pageTitle.trim();

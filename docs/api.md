@@ -26,6 +26,7 @@
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
+    - [[verbose]](#verbose)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -235,6 +236,14 @@ Makes the packaged app start in full screen.
 ```
 
 Makes the packaged app start maximized.
+
+#### [verbose]
+
+```
+--verbose
+```
+
+Shows detailed logs in the console.
 
 ## Programmatic API
 
