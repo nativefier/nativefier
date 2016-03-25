@@ -1,5 +1,16 @@
 # Changelog
 
+6.13.0 / 2016-03-25
+===================
+
+  * Source files will not be included in the packaged app
+  * Fix bug where state of mainWindow is not managed properly
+  * Implement setting of verbose log level
+  * Implement infer of user agent from electron version
+  * Implement initial maximization of main window from cli 
+  * Fix FOUC with inject CSS files
+  * No need to run CI test for gulp release
+
 6.12.1 / 2016-03-14
 ===================
 
