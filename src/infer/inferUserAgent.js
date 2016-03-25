@@ -39,7 +39,7 @@ export function getUserAgentString(chromeVersion, platform) {
             userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${ chromeVersion } Safari/537.36`;
             break;
         default:
-            break;
+            throw 'Error invalid platform specified to getUserAgentString()';
     }
     return userAgent;
 }
