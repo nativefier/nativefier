@@ -2,10 +2,11 @@ import axios from 'axios';
 import _ from 'lodash';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
+const DEFAULT_CHROME_VERSION = '47.0.2526.73';
 
 function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERSIONS_URL) {
 
-    return axios.get(url)
+    return axios.get(url, {timeout: 5000})
         .then(response => {
             if (response.status !== 200) {
                 throw `Bad request: Status code ${response.status}`;
@@ -40,9 +41,15 @@ export function getUserAgentString(chromeVersion, platform) {
     return userAgent;
 }
 
-export function inferUserAgent(electronVersion, platform) {
-    return getChromeVersionForElectronVersion(electronVersion)
+function inferUserAgent(electronVersion, platform, url = ELECTRON_VERSIONS_URL) {
+    return getChromeVersionForElectronVersion(electronVersion, url)
         .then(chromeVersion => {
             return getUserAgentString(chromeVersion, platform);
+        })
+        .catch(() => {
+            // console.warn(`Unable to infer chrome version for user agent, using ${DEFAULT_CHROME_VERSION}`);
+            return getUserAgentString(DEFAULT_CHROME_VERSION, platform);
         });
 }
+
+export default inferUserAgent;

@@ -6,7 +6,7 @@ import sanitizeFilenameLib from 'sanitize-filename';
 import inferIcon from './../infer/inferIcon';
 import inferTitle from './../infer/inferTitle';
 import inferOs from './../infer/inferOs';
-import {inferUserAgent, getUserAgentString} from './../infer/inferUserAgent';
+import inferUserAgent from './../infer/inferUserAgent';
 import normalizeUrl from './normalizeUrl';
 import packageJson from './../../package.json';
 
@@ -14,7 +14,6 @@ const {inferPlatform, inferArch} = inferOs;
 
 const PLACEHOLDER_APP_DIR = path.join(__dirname, '../../', 'app');
 const ELECTRON_VERSION = '0.36.4';
-const CHROME_VERSION = '47.0.2526.73';
 
 const DEFAULT_APP_NAME = 'APP';
 
@@ -78,11 +77,7 @@ function optionsFactory(inpOptions, callback) {
                     options.userAgent = userAgent;
                     callback();
                 })
-                .catch(error => {
-                    console.warn('Cannot get user agent:', error);
-                    options.userAgent = getUserAgentString(CHROME_VERSION, options.platform);
-                    callback();
-                });
+                .catch(callback);
         },
         callback => {
             if (options.icon) {
