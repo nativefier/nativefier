@@ -1,4 +1,3 @@
-import os from 'os';
 import path from 'path';
 import _ from 'lodash';
 import async from 'async';
@@ -7,6 +6,7 @@ import sanitizeFilenameLib from 'sanitize-filename';
 import inferIcon from './../infer/inferIcon';
 import inferTitle from './../infer/inferTitle';
 import inferOs from './../infer/inferOs';
+import inferUserAgent from './../infer/inferUserAgent';
 import normalizeUrl from './normalizeUrl';
 import packageJson from './../../package.json';
 
@@ -14,6 +14,7 @@ const {inferPlatform, inferArch} = inferOs;
 
 const PLACEHOLDER_APP_DIR = path.join(__dirname, '../../', 'app');
 const ELECTRON_VERSION = '0.36.4';
+
 const DEFAULT_APP_NAME = 'APP';
 
 /**
@@ -45,7 +46,7 @@ function optionsFactory(inpOptions, callback) {
         width: inpOptions.width || 1280,
         height: inpOptions.height || 800,
         showMenuBar: inpOptions.showMenuBar || false,
-        userAgent: inpOptions.userAgent || getFakeUserAgent(),
+        userAgent: inpOptions.userAgent,
         ignoreCertificate: inpOptions.ignoreCertificate || false,
         insecure: inpOptions.insecure || false,
         flashPluginDir: inpOptions.flash || null,
@@ -67,6 +68,18 @@ function optionsFactory(inpOptions, callback) {
     }
 
     async.waterfall([
+        callback => {
+            if (options.userAgent) {
+                callback();
+                return;
+            }
+            inferUserAgent(options.version, options.platform)
+                .then(userAgent => {
+                    options.userAgent = userAgent;
+                    callback();
+                })
+                .catch(callback);
+        },
         callback => {
             if (options.icon) {
                 callback();
@@ -117,24 +130,6 @@ function sanitizeFilename(str) {
 function sanitizeOptions(options) {
     options.name = sanitizeFilename(options.name);
     return options;
-}
-
-function getFakeUserAgent() {
-    let userAgent;
-    switch (os.platform()) {
-        case 'darwin':
-            userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36';
-            break;
-        case 'win32':
-            userAgent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36';
-            break;
-        case 'linux':
-            userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36';
-            break;
-        default:
-            break;
-    }
-    return userAgent;
 }
 
 export default optionsFactory;
