@@ -46,6 +46,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         fullscreen: options.fullScreen || undefined
     });
 
+    mainWindowState.manage(mainWindow);
+
     // after first run, no longer force full screen to be true
     if (options.fullScreen) {
         options.fullScreen = undefined;
@@ -170,7 +172,6 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         maybeHideWindow(mainWindow, event);
     });
 
-    mainWindowState.manage(mainWindow);
     return mainWindow;
 }
 
