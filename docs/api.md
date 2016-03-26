@@ -23,6 +23,7 @@
     - [[ignore-certificate]](#ignore-certificate)
     - [[insecure]](#insecure)
     - [[flash]](#flash)
+    - [[flash-path]](#flash-path)
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
@@ -194,17 +195,25 @@ Forces the packaged app to ignore certificate errors.
 ```
 --insecure
 ```
-Forces the packaged app to ignore web security errors.
+Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
 
 #### [flash]
 
 ```
---flash <value>
+--flash
 ```
 
-By default, Nativefier will automatically try to determine the location of your Google Chrome flash binary. In the event that Flash does not appear to work, you can specify it directly with this command line flag, by retrieving the location of the Flash path from [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`.
+If `--flash` is specified, Nativefier will automatically try to determine the location of your Google Chrome flash binary. Take note that the version of Chrome on your computer should be the same as the version used by the version of Electron for the Nativefied package.
 
-From my experience, it might be helpful to pass the `--insecure` flag if you are using nativefied flash apps, as some `https` websites tend to serve flash insecurely.
+Take note that if this flag is specified, the `--insecure` flag will be added automatically, to prevent the Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/). 
+
+#### [flash-path]
+
+```
+--flash-path <value>
+```
+
+You can also specify the path to the Chrome flash plugin directly with this flag. The path can be found at [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag as well. 
 
 #### [inject]
 

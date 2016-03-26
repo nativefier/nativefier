@@ -50,7 +50,7 @@ function optionsFactory(inpOptions, callback) {
         userAgent: inpOptions.userAgent,
         ignoreCertificate: inpOptions.ignoreCertificate || false,
         insecure: inpOptions.insecure || false,
-        flashPluginDir: inpOptions.flash || null,
+        flashPluginDir: inpOptions.flashPath || inpOptions.flash || null,
         inject: inpOptions.inject || null,
         ignore: 'src',
         fullScreen: inpOptions.fullScreen || false,
@@ -62,6 +62,10 @@ function optionsFactory(inpOptions, callback) {
         log.setLevel('trace');
     } else {
         log.setLevel('error');
+    }
+
+    if (options.flashPluginDir) {
+        options.insecure = true;
     }
 
     if (inpOptions.honest) {

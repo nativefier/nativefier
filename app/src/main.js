@@ -15,9 +15,9 @@ const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 let mainWindow;
 
-if (appArgs.flashPluginDir) {
+if (typeof appArgs.flashPluginDir === 'string') {
     app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
-} else {
+} else if (appArgs.flashPluginDir) {
     const flashPath = inferFlash();
     app.commandLine.appendSwitch('ppapi-flash-path', flashPath);
 }

@@ -38,7 +38,7 @@ View the changelog [here](docs/changelog.md).
 ### Features
 
 - Automatically retrieves the correct icon and app name
-- Flash Support (Needs Testing)
+- Flash Support (with [`--flash`](docs/api.md#flash) flag)
 - Javascript and CSS injection
 
 ## Installation
