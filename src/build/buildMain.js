@@ -39,7 +39,7 @@ function buildMain(options, callback) {
 
     async.waterfall([
         callback => {
-            progress.tick('infering');
+            progress.tick('inferring');
             optionsFactory(options, callback);
         },
         (options, callback) => {
