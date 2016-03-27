@@ -4,13 +4,15 @@
 [![Code Climate](https://codeclimate.com/github/jiahaog/nativefier/badges/gpa.svg)](https://codeclimate.com/github/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
-![Dock Screenshot](https://raw.githubusercontent.com/jiahaog/nativefier/master/screenshots/Dock%20Screenshot.png)
+![Dock](screenshots/dock.png)
 
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
 ```bash
 $ nativefier web.whatsapp.com
 ```
+
+![Walkthrough](screenshots/walkthrough.gif)
 
 You're done.
 
