@@ -17,7 +17,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
 
     const template = [
         {
-            label: 'Edit',
+            label: '&Edit',
             submenu: [
                 {
                     label: 'Undo',
@@ -69,7 +69,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
             ]
         },
         {
-            label: 'View',
+            label: '&View',
             submenu: [
                 {
                     label: 'Back',
@@ -152,7 +152,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
             ]
         },
         {
-            label: 'Window',
+            label: '&Window',
             role: 'window',
             submenu: [
                 {
@@ -168,7 +168,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
             ]
         },
         {
-            label: 'Help',
+            label: '&Help',
             role: 'help',
             submenu: [
                 {
@@ -189,7 +189,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
 
     if (process.platform === 'darwin') {
         template.unshift({
-            label: 'Electron',
+            label: '&Electron',
             submenu: [
                 {
                     label: 'Services',
