@@ -25,6 +25,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     });
 
     const mainWindow = new BrowserWindow({
+		frame: !options.hideWindowFrame,
         width: mainWindowState.width,
         height: mainWindowState.height,
         x: mainWindowState.x,
