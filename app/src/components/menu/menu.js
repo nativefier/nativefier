@@ -189,7 +189,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
 
     if (process.platform === 'darwin') {
         template.unshift({
-            label: '&Electron',
+            label: 'E&lectron',
             submenu: [
                 {
                     label: 'Services',
