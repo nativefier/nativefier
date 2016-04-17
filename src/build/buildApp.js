@@ -106,7 +106,8 @@ function selectAppArgs(options) {
         insecure: options.insecure,
         flashPluginDir: options.flashPluginDir,
         fullScreen: options.fullScreen,
-        maximize: options.maximize
+        maximize: options.maximize,
+        disableContextMenu: options.disableContextMenu
     };
 }
 
