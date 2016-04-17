@@ -44,7 +44,7 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
                 },
                 {
                     label: 'Copy Current URL',
-                    accelerator: 'CmdOrCtrl+C',
+                    accelerator: 'CmdOrCtrl+L',
                     click: () => {
                         const currentURL = getCurrentUrl();
                         clipboard.writeText(currentURL);

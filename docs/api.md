@@ -205,7 +205,7 @@ Forces the packaged app to ignore web security errors, such as [Mixed Content](h
 
 If `--flash` is specified, Nativefier will automatically try to determine the location of your Google Chrome flash binary. Take note that the version of Chrome on your computer should be the same as the version used by the version of Electron for the Nativefied package.
 
-Take note that if this flag is specified, the `--insecure` flag will be added automatically, to prevent the Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/). 
+Take note that if this flag is specified, the `--insecure` flag will be added automatically, to prevent the Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/).
 
 #### [flash-path]
 
@@ -213,7 +213,7 @@ Take note that if this flag is specified, the `--insecure` flag will be added au
 --flash-path <value>
 ```
 
-You can also specify the path to the Chrome flash plugin directly with this flag. The path can be found at [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag as well. 
+You can also specify the path to the Chrome flash plugin directly with this flag. The path can be found at [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag as well.
 
 #### [inject]
 
@@ -263,6 +263,14 @@ Disable window frame and controls
 ```
 
 Shows detailed logs in the console.
+
+#### [disable-context-menu]
+
+```
+--disable-context-menu
+```
+
+Disable the context menu
 
 ## Programmatic API
 

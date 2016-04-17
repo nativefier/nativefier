@@ -117,7 +117,9 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     };
 
     createMenu(menuOptions);
-    initContextMenu(mainWindow);
+    if (!options.disableContextMenu) {
+        initContextMenu(mainWindow);
+    }
 
     if (options.userAgent) {
         mainWindow.webContents.setUserAgent(options.userAgent);
