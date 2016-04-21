@@ -246,6 +246,16 @@ Makes the packaged app start in full screen.
 
 Makes the packaged app start maximized.
 
+
+#### [hide-window-frame]
+
+```
+--hide-window-frame
+```
+
+Disable window frame and controls
+
+
 #### [verbose]
 
 ```

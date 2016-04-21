@@ -55,6 +55,7 @@ function optionsFactory(inpOptions, callback) {
         ignore: 'src',
         fullScreen: inpOptions.fullScreen || false,
         maximize: inpOptions.maximize || false,
+        hideWindowFrame: inpOptions.hideWindowFrame,
         verbose: inpOptions.verbose,
         disableContextMenu: inpOptions.disableContextMenu
     };
