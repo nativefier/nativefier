@@ -32,6 +32,7 @@ if (require.main === module) {
         .option('--width <value>', 'set window width, defaults to 1280px', parseInt)
         .option('--height <value>', 'set window height, defaults to 800px', parseInt)
         .option('-m, --show-menu-bar', 'set menu bar visible, defaults to false')
+        .option('-f, --fast-quit', 'quit app after window close (OSX only), defaults to false')
         .option('-u, --user-agent <value>', 'set the user agent string for the app')
         .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
         .option('--ignore-certificate', 'ignore certificate related errors')

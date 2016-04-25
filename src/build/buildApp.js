@@ -100,6 +100,7 @@ function selectAppArgs(options) {
         width: options.width,
         height: options.height,
         showMenuBar: options.showMenuBar,
+        fastQuit: options.fastQuit,
         userAgent: options.userAgent,
         nativefierVersion: options.nativefierVersion,
         ignoreCertificate: options.ignoreCertificate,

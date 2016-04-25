@@ -34,7 +34,7 @@ if (isOSX()) {
 }
 
 app.on('window-all-closed', () => {
-    if (!isOSX()) {
+    if (!isOSX() || appArgs.fastQuit) {
         app.quit();
     }
 });

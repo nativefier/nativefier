@@ -18,6 +18,7 @@
     - [[width]](#width)
     - [[height]](#height)
     - [[show-menu-bar]](#show-menu-bar)
+    - [[fast-quit]](#fast-quit)
     - [[user-agent]](#user-agent)
     - [[honest]](#honest)
     - [[ignore-certificate]](#ignore-certificate)
@@ -166,6 +167,14 @@ Height of the packaged application, defaults to `800px`.
 
 Specifies if the menu bar should be shown.
 
+#### [fast-quit]
+
+```
+-f, --fast-quit
+```
+
+(OSX Only) Specifies to quit the app after closing all windows, defaults to false.
+
 #### [user-agent]
 
 ```
@@ -301,6 +310,7 @@ var options = {
     width: 1280,
     height: 800,
     showMenuBar: false,
+    fastQuit: false,
     userAgent: 'Mozilla ...', // will infer a default for your current system
     ignoreCertificate: false,
     insecure: false,
