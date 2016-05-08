@@ -1,5 +1,19 @@
 # Changelog
 
+6.14.0 / 2016-05-08
+===================
+
+  * Properly log errors with injected files
+  * Fix slowdown bug #191
+  * Revert fix for FOUC with injected CSS files #202
+  * Allow fast quit of app after window close on OSX #178
+  * Allow hiding of window frame #188
+  * Allow disabling the context menu #187
+  * Rebind 'Copy Current URL' to 'CmdOrCtrl+L' to mimic 'Open Location' in browsers #181
+  * Add walkthrough gif in readme
+  * No longer enable flash by default
+  * Bump default electron version to 0.37.2
+
 6.13.0 / 2016-03-25
 ===================
 
