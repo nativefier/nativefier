@@ -26,12 +26,12 @@ function buildApp(src, dest, options, callback) {
         fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
 
         maybeCopyScripts(options.inject, dest)
+            .catch(error => {
+                console.warn(error);
+            })
             .then(() => {
                 changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
                 callback();
-            })
-            .catch(error => {
-                callback(error);
             });
     });
 }
@@ -45,7 +45,7 @@ function maybeCopyScripts(srcs, dest) {
     const promises = srcs.map(src => {
         return new Promise((resolve, reject) => {
             if (!fs.existsSync(src)) {
-                resolve();
+                reject('Error copying injection files: file not found');
                 return;
             }
 
