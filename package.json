@@ -42,6 +42,7 @@
     "cheerio": "^0.19.0",
     "commander": "^2.9.0",
     "electron-packager": "^5.2.1",
+    "electron-window-state": "^2.0.0",
     "gitcloud": "^0.1.0",
     "hasbin": "^1.2.0",
     "lodash": "^4.0.0",
@@ -54,7 +55,8 @@
     "shelljs": "^0.5.3",
     "source-map-support": "^0.4.0",
     "tmp": "0.0.28",
-    "validator": "^4.5.0"
+    "validator": "^4.5.0",
+    "wurl": "^2.1.0"
   },
   "babel": {
     "presets": [
