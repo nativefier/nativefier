@@ -125,7 +125,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         mainWindow.webContents.setUserAgent(options.userAgent);
     }
 
-    mainWindow.webContents.on('did-get-response-details', () => {
+    mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('params', JSON.stringify(options));
         mainWindow.webContents.insertCSS(getCssToInject());
     });
