@@ -170,9 +170,9 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     mainWindow.on('close', event => {
         if (mainWindow.isFullScreen()) {
             mainWindow.setFullScreen(false);
-            mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event));
+            mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event, options.fastQuit));
         }
-        maybeHideWindow(mainWindow, event);
+        maybeHideWindow(mainWindow, event, options.fastQuit);
     });
 
     return mainWindow;
@@ -185,8 +185,8 @@ ipcMain.on('cancelNewWindowOverride', () => {
     });
 });
 
-function maybeHideWindow(window, event) {
-    if (isOSX()) {
+function maybeHideWindow(window, event, fastQuit) {
+    if (isOSX() && !fastQuit) {
         // this is called when exiting from clicking the cross button on the window
         event.preventDefault();
         window.hide();

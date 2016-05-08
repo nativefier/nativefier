@@ -47,6 +47,7 @@ function optionsFactory(inpOptions, callback) {
         width: inpOptions.width || 1280,
         height: inpOptions.height || 800,
         showMenuBar: inpOptions.showMenuBar || false,
+        fastQuit: inpOptions.fastQuit || false,
         userAgent: inpOptions.userAgent,
         ignoreCertificate: inpOptions.ignoreCertificate || false,
         insecure: inpOptions.insecure || false,
