@@ -4,7 +4,7 @@
   "description": "Placeholder for the nativefier cli to override with a target url",
   "main": "lib/main.js",
   "dependencies": {
-    "electron-window-state": "^2.0.0",
+    "electron-window-state": "^3.0.3",
     "source-map-support": "^0.4.0",
     "wurl": "^2.1.0"
   },

@@ -2,8 +2,8 @@ var electronPublicApi = [
     'electron',
     // for modules which use deprecated api
     // modules are taken from https://github.com/atom/electron/tree/master/docs/api
-    'app',
-    'screen'
+    // 'app',
+    // 'screen'
 
     // Uncomment as needed if some external module uses the deprecated api
 

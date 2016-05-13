@@ -14,7 +14,7 @@ import packageJson from './../../package.json';
 const {inferPlatform, inferArch} = inferOs;
 
 const PLACEHOLDER_APP_DIR = path.join(__dirname, '../../', 'app');
-const ELECTRON_VERSION = '0.37.2';
+const ELECTRON_VERSION = '1.0.2';
 
 const DEFAULT_APP_NAME = 'APP';
 
