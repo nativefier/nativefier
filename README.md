@@ -46,7 +46,7 @@ View the changelog [here](docs/changelog.md).
 
 ## Installation
 
-With [Node.js](https://nodejs.org/) `>=0.12` installed,
+With [Node.js](https://nodejs.org/) `>=4` installed,
 
 ```bash
 # for use from the command line
