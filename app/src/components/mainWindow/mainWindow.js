@@ -1,12 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import electron from 'electron';
+import {BrowserWindow, shell, ipcMain, dialog} from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
-const {BrowserWindow, shell, ipcMain, dialog} = electron;
 const {isOSX, linkIsInternal, getCssToInject} = helpers;
 
 const ZOOM_INTERVAL = 0.1;

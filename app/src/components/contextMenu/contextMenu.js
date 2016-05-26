@@ -1,5 +1,4 @@
-import electron from 'electron';
-const {Menu, ipcMain, shell, BrowserWindow} = electron;
+import {Menu, ipcMain, shell, BrowserWindow} from 'electron';
 
 function initContextMenu(mainWindow) {
     ipcMain.on('contextMenuOpened', (event, targetHref) => {

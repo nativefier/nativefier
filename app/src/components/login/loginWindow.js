@@ -1,6 +1,5 @@
-import electron from 'electron';
+import {BrowserWindow, ipcMain} from 'electron';
 import path from 'path';
-const {BrowserWindow, ipcMain} = electron;
 
 function createLoginWindow(loginCallback) {
     var loginWindow = new BrowserWindow({

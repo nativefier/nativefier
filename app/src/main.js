@@ -1,13 +1,12 @@
 import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
-import electron from 'electron';
+import {app, ipcMain} from 'electron';
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
 import helpers from './helpers/helpers';
 import inferFlash from './helpers/inferFlash';
 
-const {app, ipcMain} = electron;
 const {isOSX} = helpers;
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
