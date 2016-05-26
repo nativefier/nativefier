@@ -8,22 +8,21 @@ import helpers from './../helpers/helpers';
 const {downloadFile, allowedIconFormats} = helpers;
 tmp.setGracefulCleanup();
 
+const GITCLOUD_SPACE_DELIMITER = '-';
+
 function inferIconFromStore(targetUrl, platform) {
     const allowedFormats = allowedIconFormats(platform);
 
     return gitCloud('http://jiahaog.com/nativefier-icons/')
         .then(fileIndex => {
-            const matchingIcons = fileIndex
-                .filter(item => {
-                    // todo might have problems with matching length, e.g. `book` vs `facebook`
-                    return targetUrl
-                        .toLowerCase()
-                        .includes(item.name);
-                })
-                .map(item => {
-                    item.ext = path.extname(item.url);
-                    return item;
-                });
+            const iconWithScores = mapIconWithMatchScore(fileIndex, targetUrl);
+            const maxScore = getMaxMatchScore(iconWithScores);
+
+            if (maxScore === 0) {
+                return null;
+            }
+
+            const matchingIcons = getMatchingIcons(iconWithScores, maxScore);
 
             let matchingUrl;
             for (let format of allowedFormats) {
@@ -39,6 +38,52 @@ function inferIconFromStore(targetUrl, platform) {
                 return null;
             }
             return downloadFile(matchingUrl);
+        });
+}
+
+function mapIconWithMatchScore(fileIndex, targetUrl) {
+    const normalisedTargetUrl = targetUrl.toLowerCase();
+    return fileIndex
+        .map(item => {
+            const itemWords = item.name.split(GITCLOUD_SPACE_DELIMITER);
+            const score = itemWords.reduce((currentScore, word) => {
+                if (normalisedTargetUrl.includes(word)) {
+                    return currentScore + 1;
+                }
+                return currentScore;
+            }, 0);
+
+            return Object.assign({},
+                item,
+                {score}
+            );
+        });
+}
+
+function getMaxMatchScore(iconWithScores) {
+    return iconWithScores.reduce((maxScore, currentIcon) => {
+        const currentScore = currentIcon.score;
+        if (currentScore > maxScore) {
+            return currentScore;
+        }
+        return maxScore;
+    }, 0);
+}
+
+/**
+ * also maps ext to icon object
+ */
+function getMatchingIcons(iconWithScores, maxScore) {
+    return iconWithScores
+        .filter(item => {
+            return item.score === maxScore;
+        })
+        .map(item => {
+            return Object.assign(
+                {},
+                item,
+                {ext: path.extname(item.url)}
+            );
         });
 }
 
