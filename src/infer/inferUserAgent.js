@@ -16,7 +16,7 @@ function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERS
             const electronVersionToChromeVersion = _.zipObject(data.map(d => d.version), data.map(d => d.chrome));
 
             if (!(electronVersion in electronVersionToChromeVersion)) {
-                throw `Electron version '${ electronVersion }' not found in retrieved version list!`;
+                throw `Electron version '${electronVersion}' not found in retrieved version list!`;
             }
 
             return electronVersionToChromeVersion[electronVersion];
@@ -27,13 +27,13 @@ export function getUserAgentString(chromeVersion, platform) {
     let userAgent;
     switch (platform) {
         case 'darwin':
-            userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${ chromeVersion } Safari/537.36`;
+            userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion}  Safari/537.36`;
             break;
         case 'win32':
-            userAgent = `Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${ chromeVersion } Safari/537.36`;
+            userAgent = `Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
             break;
         case 'linux':
-            userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${ chromeVersion } Safari/537.36`;
+            userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
             break;
         default:
             throw 'Error invalid platform specified to getUserAgentString()';

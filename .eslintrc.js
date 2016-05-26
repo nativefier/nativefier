@@ -34,7 +34,8 @@ module.exports = {
         'valid-jsdoc': 0,
         'no-path-concat': 1,
         'quote-props': [2, 'as-needed'],
-        'no-warning-comments': 1
+        'no-warning-comments': 1,
+        'no-control-regex': 0
     },
     env: {
         es6: true,
