@@ -58,7 +58,8 @@ function optionsFactory(inpOptions, callback) {
         maximize: inpOptions.maximize || false,
         hideWindowFrame: inpOptions.hideWindowFrame,
         verbose: inpOptions.verbose,
-        disableContextMenu: inpOptions.disableContextMenu
+        disableContextMenu: inpOptions.disableContextMenu,
+        tmpdir: false
     };
 
     if (options.verbose) {
