@@ -33,6 +33,8 @@
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
     - [[verbose]](#verbose)
+    - [[disable-context-menu]](#disable-context-menu)
+    - [[disable-dev-tools]](#disable-dev-tools)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -316,6 +318,14 @@ Shows detailed logs in the console.
 ```
 
 Disable the context menu
+
+#### [disable-dev-tools]
+
+```
+--disable-dev-tools
+```
+
+Disable the Chrome developer tools
 
 ## Programmatic API
 

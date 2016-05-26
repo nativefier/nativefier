@@ -113,7 +113,8 @@ function selectAppArgs(options) {
         fullScreen: options.fullScreen,
         hideWindowFrame: options.hideWindowFrame,
         maximize: options.maximize,
-        disableContextMenu: options.disableContextMenu
+        disableContextMenu: options.disableContextMenu,
+        disableDevTools: options.disableDevTools
     };
 }
 

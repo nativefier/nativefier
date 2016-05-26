@@ -9,8 +9,9 @@ import {Menu, shell, clipboard} from 'electron';
  * @param goForward
  * @param getCurrentUrl
  * @param clearAppData
+ * @param disableDevTools
  */
-function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForward, getCurrentUrl, clearAppData}) {
+function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForward, getCurrentUrl, clearAppData, disableDevTools}) {
     if (Menu.getApplicationMenu()) {
         return;
     }
@@ -186,6 +187,12 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
             ]
         }
     ];
+
+    if (disableDevTools) {
+        // remove last item (dev tools) from menu > view
+        const submenu = template[1].submenu;
+        submenu.splice(submenu.length - 1, 1);
+    }
 
     if (process.platform === 'darwin') {
         template.unshift({

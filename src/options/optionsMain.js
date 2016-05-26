@@ -63,6 +63,7 @@ function optionsFactory(inpOptions, callback) {
         hideWindowFrame: inpOptions.hideWindowFrame,
         verbose: inpOptions.verbose,
         disableContextMenu: inpOptions.disableContextMenu,
+        disableDevTools: inpOptions.disableDevTools,
         // workaround for electron-packager#375
         tmpdir: false
     };

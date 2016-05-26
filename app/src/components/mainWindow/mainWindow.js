@@ -117,7 +117,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         goBack: onGoBack,
         goForward: onGoForward,
         getCurrentUrl: getCurrentUrl,
-        clearAppData: clearAppData
+        clearAppData: clearAppData,
+        disableDevTools: options.disableDevTools
     };
 
     createMenu(menuOptions);
