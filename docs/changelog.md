@@ -1,5 +1,24 @@
 # Changelog
 
+7.0.0 / 2016-05-27
+==================
+
+  * Only support node.js >=4
+  * Implement downloading of files #185
+  * Implement min/max window width and height #82
+  * Implement disabling of developer tools #194
+  * Update default electron version to stable v1.1.3 #206
+  * Update electron-packager to v7.0.1 #193
+  * Update validator to v5.2.0
+  * Update shelljs to v0.7.0
+  * Update cheerio to v0.20.0
+  * Update axios to v0.11.1
+  * Update eslint to v2.0.0
+  * Increase timeout for test
+  * Fix bug where gitcloud matching of icons with multiple words is not supported
+  * Fix bug where inferred title is too long #195
+  * Fix flash of unstyled content #159
+
 6.14.0 / 2016-05-08
 ===================
 
