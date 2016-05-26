@@ -1,6 +1,6 @@
 {
   "name": "Google",
-  "targetUrl": "file:///Users/JiaHao/Desktop/lab4.html",
+  "targetUrl": "http://google.com",
   "badge": false,
   "width": 1280,
   "height": 800,
