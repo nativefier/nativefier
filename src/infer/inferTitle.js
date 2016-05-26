@@ -17,7 +17,7 @@ function inferTitle(url, callback) {
         }
 
         const $ = cheerio.load(body);
-        const pageTitle = $('title').text().replace(/\//g, '');
+        const pageTitle = $('title').first().text().replace(/\//g, '');
         callback(null, pageTitle);
     });
 }
