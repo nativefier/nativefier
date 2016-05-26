@@ -9,9 +9,8 @@ addons:
       - g++-4.8
 node_js:
   - "node"
-  - "4.2"
-  - "0.12"
-  - "iojs"
+  - "5"
+  - "4"
 install:
   - npm run dev-up
 script:
