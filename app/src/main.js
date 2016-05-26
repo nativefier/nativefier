@@ -6,8 +6,11 @@ import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
 import helpers from './helpers/helpers';
 import inferFlash from './helpers/inferFlash';
+import electronDownload from 'electron-dl';
 
 const {isOSX} = helpers;
+
+electronDownload();
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
