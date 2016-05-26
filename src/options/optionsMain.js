@@ -46,6 +46,10 @@ function optionsFactory(inpOptions, callback) {
         counter: inpOptions.counter || false,
         width: inpOptions.width || 1280,
         height: inpOptions.height || 800,
+        minWidth: inpOptions.minWidth,
+        minHeight: inpOptions.minHeight,
+        maxWidth: inpOptions.maxWidth,
+        maxHeight: inpOptions.maxHeight,
         showMenuBar: inpOptions.showMenuBar || false,
         fastQuit: inpOptions.fastQuit || false,
         userAgent: inpOptions.userAgent,
@@ -82,6 +86,14 @@ function optionsFactory(inpOptions, callback) {
 
     if (options.platform.toLowerCase() === 'osx' || options.platform.toLowerCase() === 'mac') {
         options.platform = 'darwin';
+    }
+
+    if (options.width > options.maxWidth) {
+        options.width = options.maxWidth;
+    }
+
+    if (options.height > options.maxHeight) {
+        options.height = options.maxHeight;
     }
 
     async.waterfall([

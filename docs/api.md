@@ -17,6 +17,10 @@
     - [[counter]](#counter)
     - [[width]](#width)
     - [[height]](#height)
+    - [[min-width]](#min-width)
+    - [[min-height]](#min-height)
+    - [[max-width]](#max-width)
+    - [[max-height]](#max-height)
     - [[show-menu-bar]](#show-menu-bar)
     - [[fast-quit]](#fast-quit)
     - [[user-agent]](#user-agent)
@@ -158,6 +162,38 @@ Width of the packaged application, defaults to `1280px`.
 ```
 
 Height of the packaged application, defaults to `800px`.
+
+#### [min-width]
+
+```
+--min-width <value>
+```
+
+Minimum width of the packaged application, defaults to `0`.
+
+#### [min-height]
+
+```
+--min-height <value>
+```
+
+Minimum height of the packaged application, defaults to `0`.
+
+#### [max-width]
+
+```
+--max-width <value>
+```
+
+Maximum width of the packaged application, default is no limit.
+
+#### [max-height]
+
+```
+--max-height <value>
+```
+
+Maximum height of the packaged application, default is no limit.
 
 #### [show-menu-bar]
 
