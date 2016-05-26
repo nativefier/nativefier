@@ -41,7 +41,7 @@ function checkApp(appPath, inputOptions, callback) {
 }
 
 describe('Nativefier Module', function() {
-    this.timeout(120000);
+    this.timeout(240000);
     it('Can build an app from a target url', function(done) {
         async.eachSeries(PLATFORMS, (platform, callback) => {
 
