@@ -131,9 +131,21 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('params', JSON.stringify(options));
-        mainWindow.webContents.insertCSS(getCssToInject());
+        // remove the injection of css the moment the page is loaded
+        mainWindow.webContents.removeListener('did-get-response-details', injectCss);
     });
 
+    const injectCss = () => {
+        mainWindow.webContents.insertCSS(getCssToInject());
+    }
+    
+    // on every page navigation inject the css
+    mainWindow.webContents.on('did-start-loading', () => {
+        // we have to inject the css in did-get-response-details to prevent the fouc
+        // will run multiple times
+        mainWindow.webContents.on('did-get-response-details', injectCss);
+    });
+    
     if (options.counter) {
         mainWindow.on('page-title-updated', () => {
             if (mainWindow.isFocused()) {
