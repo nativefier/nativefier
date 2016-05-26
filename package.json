@@ -54,7 +54,7 @@
     "shelljs": "^0.7.0",
     "source-map-support": "^0.4.0",
     "tmp": "0.0.28",
-    "validator": "^4.5.0"
+    "validator": "^5.2.0"
   },
   "babel": {
     "presets": [
