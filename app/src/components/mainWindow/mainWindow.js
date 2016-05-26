@@ -30,10 +30,10 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         height: mainWindowState.height,
         x: mainWindowState.x,
         y: mainWindowState.y,
-        'auto-hide-menu-bar': !options.showMenuBar,
+        autoHideMenuBar: !options.showMenuBar,
         // Convert dashes to spaces because on linux the app name is joined with dashes
         title: options.name,
-        'web-preferences': {
+        webPreferences: {
             javascript: true,
             plugins: true,
             // node globals causes problems with sites like messenger.com
