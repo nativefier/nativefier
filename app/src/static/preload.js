@@ -1,10 +1,9 @@
 /**
  Preload file that will be executed in the renderer process
  */
-import electron from 'electron';
+import {ipcRenderer, webFrame} from 'electron';
 import path from 'path';
 import fs from 'fs';
-const {ipcRenderer, webFrame} = electron;
 
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
 
