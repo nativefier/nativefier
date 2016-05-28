@@ -8,12 +8,7 @@
 
 set -e
 
-IMAGEMAGICK_CONVERT=$(which convert)
-
-if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
-	echo "Cannot find required ImageMagick Convert executable" >&2
-	exit 1;
-fi
+type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Convert executable"; exit 1; }
 
 SOURCE=$1
 DEST=$2

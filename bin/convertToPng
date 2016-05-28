@@ -8,18 +8,8 @@
 
 set -e
 
-# Exec Paths
-IMAGEMAGICK_CONVERT=$(which convert)
-IMAGEMAGICK_IDENTIFY=$(which identify)
-
-if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
-	echo "Cannot find required ImageMagick Convert executable" >&2
-	exit 1;
-fi
-if [ ! -x "${IMAGEMAGICK_IDENTIFY}" ]; then
-	echo "Cannot find required ImageMagick Identify executable" >&2
-	exit 1;
-fi
+type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Convert executable"; exit 1; }
+type identify >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Identify executable"; exit 1; }
 
 # Parameters
 SOURCE=$1

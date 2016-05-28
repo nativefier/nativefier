@@ -13,17 +13,8 @@ set -e
 CONVERT_TO_PNG="${BASH_SOURCE%/*}/convertToPng"
 
 # Exec Paths
-ICONUTIL=$(which iconutil)
-IMAGEMAGICK_CONVERT=$(which convert)
-
-if [ ! -x "${ICONUTIL}" ]; then
-	echo "Cannot find required iconutil executable" >&2
-	exit 1;
-fi
-if [ ! -x "${IMAGEMAGICK_CONVERT}" ]; then
-	echo "Cannot find required ImageMagick Convert executable" >&2
-	exit 1;
-fi
+type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Convert executable"; exit 1; }
+type iconutil >/dev/null 2>&1 || { echo >&2 "Cannot find required iconutil executable"; exit 1; }
 
 # Parameters
 SOURCE=$1
