@@ -18,8 +18,8 @@ function isWindows() {
 }
 
 function linkIsInternal(currentUrl, newUrl) {
-    var currentDomain = wurl('domain', currentUrl);
-    var newDomain = wurl('domain', newUrl);
+    var currentDomain = wurl('sub', currentUrl) + wurl('domain', currentUrl);
+    var newDomain = wurl('sub', newUrl) + wurl('domain', newUrl);
     return currentDomain === newDomain;
 }
 
