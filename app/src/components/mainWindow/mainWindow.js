@@ -6,7 +6,7 @@ import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
-const {isOSX, linkIsInternal, getCssToInject} = helpers;
+const {isOSX, linkIsInternal, getCssToInject, shouldInjectCss} = helpers;
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -129,21 +129,9 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         mainWindow.webContents.setUserAgent(options.userAgent);
     }
 
-    const injectCss = () => {
-        mainWindow.webContents.insertCSS(getCssToInject());
-    };
-
+    maybeInjectCss(mainWindow);
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.webContents.send('params', JSON.stringify(options));
-        // remove the injection of css the moment the page is loaded
-        mainWindow.webContents.removeListener('did-get-response-details', injectCss);
-    });
-
-    // on every page navigation inject the css
-    mainWindow.webContents.on('did-start-loading', () => {
-        // we have to inject the css in did-get-response-details to prevent the fouc
-        // will run multiple times
-        mainWindow.webContents.on('did-get-response-details', injectCss);
     });
 
     if (options.counter) {
@@ -208,6 +196,30 @@ function maybeHideWindow(window, event, fastQuit) {
         window.hide();
     }
     // will close the window on other platforms
+}
+
+function maybeInjectCss(browserWindow) {
+    if (!shouldInjectCss()) {
+        return;
+    }
+
+    const cssToInject = getCssToInject();
+
+    const injectCss = () => {
+        browserWindow.webContents.insertCSS(cssToInject);
+    };
+
+    browserWindow.webContents.on('did-finish-load', () => {
+        // remove the injection of css the moment the page is loaded
+        browserWindow.webContents.removeListener('did-get-response-details', injectCss);
+    });
+
+    // on every page navigation inject the css
+    browserWindow.webContents.on('did-navigate', () => {
+        // we have to inject the css in did-get-response-details to prevent the fouc
+        // will run multiple times
+        browserWindow.webContents.on('did-get-response-details', injectCss);
+    });
 }
 
 export default createMainWindow;
