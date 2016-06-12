@@ -6,7 +6,7 @@ import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
-const {isOSX, linkIsInternal, getCssToInject, shouldInjectCss} = helpers;
+const {isOSX, linkIsInternal, getCssToInject, shouldInjectCss, debugLog} = helpers;
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -131,6 +131,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
 
     maybeInjectCss(mainWindow);
     mainWindow.webContents.on('did-finish-load', () => {
+        debugLog(mainWindow, 'did-finish-load');
         mainWindow.webContents.send('params', JSON.stringify(options));
     });
 
@@ -206,16 +207,19 @@ function maybeInjectCss(browserWindow) {
     const cssToInject = getCssToInject();
 
     const injectCss = () => {
+        debugLog(browserWindow, 'Injecting css');
         browserWindow.webContents.insertCSS(cssToInject);
     };
 
     browserWindow.webContents.on('did-finish-load', () => {
+        debugLog(browserWindow, 'did finish load, css');
         // remove the injection of css the moment the page is loaded
         browserWindow.webContents.removeListener('did-get-response-details', injectCss);
     });
 
     // on every page navigation inject the css
     browserWindow.webContents.on('did-navigate', () => {
+        debugLog(browserWindow, 'did navigate');
         // we have to inject the css in did-get-response-details to prevent the fouc
         // will run multiple times
         browserWindow.webContents.on('did-get-response-details', injectCss);
