@@ -23,12 +23,30 @@ function linkIsInternal(currentUrl, newUrl) {
     return currentDomain === newDomain;
 }
 
-function getCssToInject() {
-    const needToInject = fs.existsSync(INJECT_CSS_PATH);
-    if (!needToInject) {
-        return '';
+function shouldInjectCss() {
+    try {
+        fs.accessSync(INJECT_CSS_PATH, fs.F_OK);
+        return true;
+    } catch (e) {
+        return false;
     }
+}
+
+function getCssToInject() {
     return fs.readFileSync(INJECT_CSS_PATH).toString();
+}
+
+/**
+ * Helper method to print debug messages from the main process in the browser window
+ * @param {BrowserWindow} browserWindow
+ * @param message
+ */
+function debugLog(browserWindow, message) {
+    // need the timeout as it takes time for the preload javascript to be loaded in the window
+    setTimeout(() => {
+        browserWindow.webContents.send('debug', message);
+    }, 3000);
+    console.log(message);
 }
 
 export default {
@@ -36,5 +54,7 @@ export default {
     isLinux,
     isWindows,
     linkIsInternal,
-    getCssToInject
+    getCssToInject,
+    debugLog,
+    shouldInjectCss
 };

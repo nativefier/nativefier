@@ -37,6 +37,10 @@ ipcRenderer.on('params', (event, message) => {
     console.log('nativefier.json', appArgs);
 });
 
+ipcRenderer.on('debug', (event, message) => {
+    console.log('debug:', message);
+});
+
 ipcRenderer.on('change-zoom', (event, message) => {
     webFrame.setZoomFactor(message);
 });
