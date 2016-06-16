@@ -1,5 +1,12 @@
 # Changelog
 
+7.0.1 / 2016-06-16
+==================
+
+  * Fix/performance issues with FOUC (#214)
+  * Fix bug where convert icons script fails silently if dependency is not found
+  * Use original eslint module for linting instead of gulp
+
 7.0.0 / 2016-05-27
 ==================
 
