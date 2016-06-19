@@ -50,6 +50,7 @@ if (require.main === module) {
         .option('--verbose', 'if verbose logs should be displayed')
         .option('--disable-context-menu', 'disable the context menu')
         .option('--disable-dev-tools', 'disable developer tools')
+        .option('--zoom <value>', 'default zoom factor to use when the app is opened, defaults to 1.0', parseFloat)
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {
