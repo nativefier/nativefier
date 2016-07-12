@@ -154,8 +154,8 @@ function optionsFactory(inpOptions, callback) {
 
 function sanitizeFilename(str) {
     const cleaned = sanitizeFilenameLib(str);
-    // remove all non ascii or do nothing
-    return cleaned.replace(/[^\x00-\x7F]/g, '') || cleaned;
+    // remove all non ascii or use default app name
+    return cleaned.replace(/[^\x00-\x7F]/g, '') || DEFAULT_APP_NAME;
 }
 
 function sanitizeOptions(options) {
