@@ -35,6 +35,7 @@
     - [[verbose]](#verbose)
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
+    - [[zoom]](#zoom)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -327,6 +328,14 @@ Disable the context menu
 
 Disable the Chrome developer tools
 
+#### [zoom]
+
+```
+--zoom <value>
+```
+
+Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
@@ -360,7 +369,8 @@ var options = {
     userAgent: 'Mozilla ...', // will infer a default for your current system
     ignoreCertificate: false,
     insecure: false,
-    honest: false
+    honest: false,
+    zoom: 1.0
 };
 
 nativefier(options, function(error, appPath) {

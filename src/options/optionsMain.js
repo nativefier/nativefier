@@ -65,7 +65,8 @@ function optionsFactory(inpOptions, callback) {
         disableContextMenu: inpOptions.disableContextMenu,
         disableDevTools: inpOptions.disableDevTools,
         // workaround for electron-packager#375
-        tmpdir: false
+        tmpdir: false,
+        zoom: inpOptions.zoom || 1.0
     };
 
     if (options.verbose) {
