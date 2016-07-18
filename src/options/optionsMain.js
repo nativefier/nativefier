@@ -65,7 +65,8 @@ function optionsFactory(inpOptions, callback) {
         disableContextMenu: inpOptions.disableContextMenu,
         disableDevTools: inpOptions.disableDevTools,
         // workaround for electron-packager#375
-        tmpdir: false
+        tmpdir: false,
+        zoom: inpOptions.zoom || 1.0
     };
 
     if (options.verbose) {
@@ -154,8 +155,8 @@ function optionsFactory(inpOptions, callback) {
 
 function sanitizeFilename(str) {
     const cleaned = sanitizeFilenameLib(str);
-    // remove non ascii
-    return cleaned.replace(/[^\x00-\x7F]/, '');
+    // remove all non ascii or use default app name
+    return cleaned.replace(/[^\x00-\x7F]/g, '') || DEFAULT_APP_NAME;
 }
 
 function sanitizeOptions(options) {
