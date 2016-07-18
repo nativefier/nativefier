@@ -32,6 +32,8 @@ const DEFAULT_APP_NAME = 'APP';
 function optionsFactory(inpOptions, callback) {
 
     const options = {
+        'app-copyright': inpOptions['app-copyright'],
+        'app-version': inpOptions['app-version'],
         dir: PLACEHOLDER_APP_DIR,
         name: inpOptions.name,
         targetUrl: normalizeUrl(inpOptions.targetUrl),
@@ -66,6 +68,7 @@ function optionsFactory(inpOptions, callback) {
         disableDevTools: inpOptions.disableDevTools,
         // workaround for electron-packager#375
         tmpdir: false,
+        'version-string': inpOptions['version-string'],
         zoom: inpOptions.zoom || 1.0
     };
 
