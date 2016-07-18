@@ -51,6 +51,7 @@ if (require.main === module) {
         .option('--disable-context-menu', 'disable the context menu')
         .option('--disable-dev-tools', 'disable developer tools')
         .option('--zoom <value>', 'default zoom factor to use when the app is opened, defaults to 1.0', parseFloat)
+        .option('--internal-urls <value>', 'regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser.  (default: URLs on same second-level domain as app)')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {

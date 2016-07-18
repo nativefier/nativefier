@@ -159,7 +159,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
             return;
         }
 
-        if (linkIsInternal(options.targetUrl, urlToGo)) {
+        if (linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
             return;
         }
         event.preventDefault();
