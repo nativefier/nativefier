@@ -50,6 +50,7 @@ if (require.main === module) {
         .option('--verbose', 'if verbose logs should be displayed')
         .option('--disable-context-menu', 'disable the context menu')
         .option('--disable-dev-tools', 'disable developer tools')
+        .option('--crash-reporter <value>', 'remote server URL to send crash reports')
         .parse(process.argv);
 
     if (!process.argv.slice(2).length) {

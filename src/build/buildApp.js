@@ -114,7 +114,8 @@ function selectAppArgs(options) {
         hideWindowFrame: options.hideWindowFrame,
         maximize: options.maximize,
         disableContextMenu: options.disableContextMenu,
-        disableDevTools: options.disableDevTools
+        disableDevTools: options.disableDevTools,
+        crashReporter: options.crashReporter
     };
 }
 
