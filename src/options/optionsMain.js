@@ -66,7 +66,8 @@ function optionsFactory(inpOptions, callback) {
         disableDevTools: inpOptions.disableDevTools,
         // workaround for electron-packager#375
         tmpdir: false,
-        zoom: inpOptions.zoom || 1.0
+        zoom: inpOptions.zoom || 1.0,
+        internalUrls: inpOptions.internalUrls || null
     };
 
     if (options.verbose) {

@@ -17,7 +17,12 @@ function isWindows() {
     return os.platform() === 'win32';
 }
 
-function linkIsInternal(currentUrl, newUrl) {
+function linkIsInternal(currentUrl, newUrl, internalUrlRegex) {
+    if (internalUrlRegex) {
+        var regex = RegExp(internalUrlRegex);
+        return regex.test(newUrl);
+    }
+
     var currentDomain = wurl('domain', currentUrl);
     var newDomain = wurl('domain', newUrl);
     return currentDomain === newDomain;
