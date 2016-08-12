@@ -70,7 +70,7 @@ $ nativefier --name "Some Awesome App" "http://medium.com"
 ```
 Read the [API documentation](docs/api.md) for other command line flags and options that can be used to configure the packaged app.
 
-If you would like high resoulution icons to be used, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
+If you would like high resolution icons to be used, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
 
 **For Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
 
