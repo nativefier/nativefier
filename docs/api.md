@@ -36,6 +36,9 @@
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
     - [[zoom]](#zoom)
+    - [[app-copyright]](#app-copyright)
+    - [[app-version]](#app-version)
+
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -335,6 +338,22 @@ Disable the Chrome developer tools
 ```
 
 Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
+
+#### [app-copyright]
+
+```
+--app-copyright
+```
+
+Maps to `LegalCopyright` metadata property on Windows and `NSumanReadableCopyright` on macOS.
+
+#### [app-version]
+
+```
+--app-version
+```
+
+Maps to the `ProductVersion` metadata property on Windows and `CFBundleShortVersionString` on macOS.
 
 ## Programmatic API
 
