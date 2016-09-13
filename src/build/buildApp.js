@@ -117,7 +117,6 @@ function selectAppArgs(options) {
         maximize: options.maximize,
         disableContextMenu: options.disableContextMenu,
         disableDevTools: options.disableDevTools,
-        'version-string': options['version-string'],
         zoom: options.zoom
     };
 }

@@ -68,7 +68,6 @@ function optionsFactory(inpOptions, callback) {
         disableDevTools: inpOptions.disableDevTools,
         // workaround for electron-packager#375
         tmpdir: false,
-        versionString: inpOptions.versionString,
         zoom: inpOptions.zoom || 1.0
     };
 
