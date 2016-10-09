@@ -133,9 +133,9 @@ The icon parameter should be a path to a `.png` file.
 
 ##### Packaging for OSX
 
-The icon parameter can either be a `.icns` or a `.png` file if the optional dependencies listed are installed.
+The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](https://github.com/jiahaog/nativefier#optional-dependencies) are installed.
 
-With `iconutil`, Imagemagick `convert` and `identify` optional dependencies in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
+If you have the optional dependencies `iconutil`, Imagemagick `convert`, and Imagemagick `identify` in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
 
 ###### Manually Converting `.icns`
 
