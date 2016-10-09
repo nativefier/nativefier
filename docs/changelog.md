@@ -60,7 +60,7 @@
 6.12.0 / 2016-03-14
 ===================
 
-  * Try to retrive icons from `nativefier-icons` first before inferring
+  * Try to retrieve icons from `nativefier-icons` first before inferring
   * Add progress bar
   * Use `windows` and `osx` to specify platform
   * Override output directory by default
@@ -131,7 +131,7 @@
   * Fix #103 App name should not be capitalized
   * Remove electron prebuilt as a dev dependency to speed up ci builds
   * Fix test for non darwin platforms
-  * Implement check for wine before attempting to pass icon to electron pacakger
+  * Implement check for wine before attempting to pass icon to electron packager
   * Update gulpfile - Build tests in `gulp build` - Watch test files - Clean test files as well
   * Implement automatic retrieval of png which resolves #16
 
