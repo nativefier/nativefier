@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
-import {app, ipcMain, crashReporter} from 'electron';
+import {app, crashReporter} from 'electron';
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
 import helpers from './helpers/helpers';
@@ -80,11 +80,4 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     // for http authentication
     event.preventDefault();
     createLoginWindow(callback);
-});
-
-ipcMain.on('notification', () => {
-    if (!isOSX() || mainWindow.isFocused()) {
-        return;
-    }
-    setDockBadge('●');
 });
