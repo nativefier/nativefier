@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('contextmenu', event => {
         event.preventDefault();
         const targetElement = event.srcElement;
+        
+        // the clicked element is the deepest in the DOM, and may not be the <a> bearing the href
+        // for example, <a href="..."><span>Google</span></a>
+        while (!targetElement.href && targetElement.parentElement) {
+            targetElement = targetElement.parentElement;
+        }
         const targetHref = targetElement.href;
 
         if (!targetHref) {
