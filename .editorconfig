@@ -23,3 +23,5 @@ indent_size = 2
 # Tab indentation (no size specified)
 [Makefile]
 indent_style = tab
+
+trim_trailing_whitespace = true
