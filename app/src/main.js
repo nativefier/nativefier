@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
-import {app, ipcMain} from 'electron';
+import {app, ipcMain, crashReporter} from 'electron';
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
 import helpers from './helpers/helpers';
@@ -61,6 +61,16 @@ app.on('before-quit', () => {
         app.exit(0);
     }
 });
+
+if (appArgs.crashReporter) {
+    app.on('will-finish-launching', () => {
+        crashReporter.start({
+            productName: appArgs.name,
+            submitURL: appArgs.crashReporter,
+            autoSubmit: true
+        });
+    });
+}
 
 app.on('ready', () => {
     mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);

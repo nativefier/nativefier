@@ -36,6 +36,7 @@
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
     - [[zoom]](#zoom)
+    - [[crash-reporter]](#crash-reporter)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -327,6 +328,20 @@ Disable the context menu
 ```
 
 Disable the Chrome developer tools
+
+#### [crash-reporter]
+
+```
+--crash-reporter <value>
+```
+
+Enables crash reporting and set the URL to submit crash reports to
+
+Example:
+
+```bash
+$ nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
+```
 
 #### [zoom]
 
