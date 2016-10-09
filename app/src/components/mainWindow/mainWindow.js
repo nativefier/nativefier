@@ -136,20 +136,24 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     });
 
     if (options.counter) {
-        mainWindow.on('page-title-updated', () => {
-            if (mainWindow.isFocused()) {
+        mainWindow.on('page-title-updated', (e, title) => {
+            const itemCountRegex = /[\(\[{](\d*?)[}\]\)]/;
+            const match = itemCountRegex.exec(title);
+            if (match) {
+                setDockBadge(match[1]);
+            } else {
+                setDockBadge('');
+            }
+        });
+    } else {
+        ipcMain.on('notification', () => {
+            if (!isOSX() || mainWindow.isFocused()) {
                 return;
             }
-
-            if (options.counter) {
-                const itemCountRegex = /[\(\[{](\d*?)[}\]\)]/;
-                const match = itemCountRegex.exec(mainWindow.getTitle());
-                if (match) {
-                    setDockBadge(match[1]);
-                }
-                return;
-            }
-            setDockBadge('●');
+            setDockBadge('•');
+        });
+        mainWindow.on('focus', () => {
+            setDockBadge('');
         });
     }
 
@@ -167,10 +171,6 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     });
 
     mainWindow.loadURL(options.targetUrl);
-
-    mainWindow.on('focus', () => {
-        setDockBadge('');
-    });
 
     mainWindow.on('close', event => {
         if (mainWindow.isFullScreen()) {
