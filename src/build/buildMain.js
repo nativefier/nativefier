@@ -11,6 +11,7 @@ import iconBuild from './iconBuild';
 import helpers from './../helpers/helpers';
 import PackagerConsole from './../helpers/packagerConsole';
 import buildApp from './buildApp';
+import fs from 'fs';
 
 const copy = ncp.ncp;
 const isWindows = helpers.isWindows;
@@ -51,6 +52,7 @@ function buildMain(options, callback) {
                 }
                 // dir now correctly references the app folder to package
                 options.dir = tmpPath;
+                fs.chmod(options.dir, '755');
                 callback(null, options);
             });
         },
