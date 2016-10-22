@@ -25,7 +25,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
 
     const mainWindow = new BrowserWindow({
         frame: !options.hideWindowFrame,
-        titleBarStyle: options.hideTitleBar?'hidden':'default',
+        titleBarStyle: options.hideTitleBar ? 'hidden' : 'default',
         width: mainWindowState.width,
         height: mainWindowState.height,
         minWidth: options.minWidth,
