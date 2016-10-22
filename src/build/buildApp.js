@@ -112,6 +112,7 @@ function selectAppArgs(options) {
         flashPluginDir: options.flashPluginDir,
         fullScreen: options.fullScreen,
         hideWindowFrame: options.hideWindowFrame,
+        hideTitleBar: options.hideTitleBar,
         maximize: options.maximize,
         disableContextMenu: options.disableContextMenu,
         disableDevTools: options.disableDevTools,

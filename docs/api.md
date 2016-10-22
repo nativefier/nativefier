@@ -32,6 +32,8 @@
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
+    - [[hide-window-frame]](#hide-window-frame)
+    - [[hide-title-bar]](#hide-title-bar)
     - [[verbose]](#verbose)
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
@@ -303,6 +305,15 @@ Makes the packaged app start maximized.
 ```
 
 Disable window frame and controls
+
+
+#### [hide-title-bar]
+
+```
+--hide-title-bar
+```
+
+(macOS 10.9+ Only) Disable window frame only
 
 
 #### [verbose]

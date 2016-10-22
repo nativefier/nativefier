@@ -61,6 +61,7 @@ function optionsFactory(inpOptions, callback) {
         fullScreen: inpOptions.fullScreen || false,
         maximize: inpOptions.maximize || false,
         hideWindowFrame: inpOptions.hideWindowFrame,
+        hideTitleBar: inpOptions.hideTitleBar || false,
         verbose: inpOptions.verbose,
         disableContextMenu: inpOptions.disableContextMenu,
         disableDevTools: inpOptions.disableDevTools,
