@@ -118,6 +118,15 @@ See [Changelog](docs/changelog.md).
 
 See [Development](docs/development.md).
 
+## Docker Container
+
+Build and an run the latest sources in a docker build:
+
+```
+docker build -t local/nativefier .
+docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target -it local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
+```
+
 ## License
 
 [MIT](LICENSE.md)
