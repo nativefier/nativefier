@@ -21,6 +21,12 @@ $ cd app
 $ npm install
 ```
 
+Don't forget to compile source files:
+
+```bash
+$ npm run build
+```
+
 You can set up symlinks so that you can run `$ nativefier` for your local changes
 
 ```bash
@@ -31,12 +37,6 @@ After doing so, you can then run Nativefier with your test parameters
 
 ```bash
 $ nativefier <...>
-```
-
-Don't forget to compile source files (after making changes):
-
-```bash
-$ npm run build
 ```
 
 Or you can automatically watch the files for changes with:
