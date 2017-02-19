@@ -37,6 +37,7 @@
     - [[disable-dev-tools]](#disable-dev-tools)
     - [[zoom]](#zoom)
     - [[crash-reporter]](#crash-reporter)
+    - [[single-instance]](#single-instance)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -351,6 +352,14 @@ $ nativefier http://google.com --crash-reporter https://electron-crash-reporter.
 
 Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
+#### [single-instance]
+
+```
+--single-instance
+```
+
+Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
@@ -385,7 +394,8 @@ var options = {
     ignoreCertificate: false,
     insecure: false,
     honest: false,
-    zoom: 1.0
+    zoom: 1.0,
+    singleInstance: false
 };
 
 nativefier(options, function(error, appPath) {
