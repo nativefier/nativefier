@@ -1,5 +1,20 @@
 # Changelog
 
+7.1.0 / 2017-04-07
+==================
+
+  * Update documentation
+  * Add editorconfig to trim trailing whitespace
+  * Merge branch 'patch-1' of https://github.com/vrunjeti/nativefier into vrunjeti-patch-1
+  * Fix context menu actions broken on <a> elements containing nested markup (#263)
+  * Fix counter notifications (#256)
+  * Fix travis tests which require wine
+  * Fix context menu actions broken on <a> elements containing nested markup
+  * Fix badge notifications
+  * add "copy link location" and "--internal-urls <regex>" features (#230)
+  * Remove all non-ascii characters or use default for app name (#217)
+  * Added a --zoom option for setting default zoom (#218)
+
 7.0.1 / 2016-06-16
 ==================
 
