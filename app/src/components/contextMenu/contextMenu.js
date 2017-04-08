@@ -4,7 +4,7 @@ function initContextMenu(mainWindow) {
     ipcMain.on('contextMenuOpened', (event, targetHref) => {
         const contextMenuTemplate = [
             {
-                label: 'Open in default browser',
+                label: 'Open with default browser',
                 click: () => {
                     if (targetHref) {
                         shell.openExternal(targetHref);
