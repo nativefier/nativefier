@@ -46,7 +46,9 @@ View the changelog [here](https://github.com/jiahaog/nativefier/blob/development
 
 ## Installation
 
-With [Node.js](https://nodejs.org/) `>=4` installed,
+### Requirements
+- macOS 10.9+ / Windows / Linux
+- [Node.js](https://nodejs.org/) `>=4`
 
 ```bash
 # for use from the command line
