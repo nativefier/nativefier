@@ -42,7 +42,7 @@
 ## Command Line
 
 ```bash
-$ nativefier [options] <targetUrl> [dest]
+nativefier [options] <targetUrl> [dest]
 ```
 Command line options are listed below.
 
@@ -275,7 +275,7 @@ Allows you to inject a javascript or css file. This command can be run multiple 
 Example:
 
 ```bash
-$ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
+nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
 ```
 
 #### [full-screen]
@@ -340,7 +340,7 @@ Enables crash reporting and set the URL to submit crash reports to
 Example:
 
 ```bash
-$ nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
+nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
 ```
 
 #### [zoom]
@@ -357,7 +357,7 @@ You can use the Nativefier programmatic API as well.
 
 ```bash
 # install and save to package.json
-$ npm install --save nativefier
+npm install --save nativefier
 ```
 
 In your `.js` file:

@@ -10,7 +10,7 @@
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
 ```bash
-$ nativefier web.whatsapp.com
+nativefier web.whatsapp.com
 ```
 
 ![Walkthrough](screenshots/walkthrough.gif)
@@ -51,8 +51,7 @@ View the changelog [here](https://github.com/jiahaog/nativefier/blob/development
 - [Node.js](https://nodejs.org/) `>=4`
 
 ```bash
-# for use from the command line
-$ npm install nativefier -g
+npm install nativefier -g
 ```
 
 See [optional dependencies](#optional-dependencies) for more.
@@ -62,13 +61,13 @@ See [optional dependencies](#optional-dependencies) for more.
 Creating a native desktop app for [medium.com](http://medium.com):
 
 ```bash
-$ nativefier "http://medium.com"
+nativefier "http://medium.com"
 ```
 
 Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name "Medium"` as part of the command line options, as such.
 
 ```bash
-$ nativefier --name "Some Awesome App" "http://medium.com"
+nativefier --name "Some Awesome App" "http://medium.com"
 ```
 Read the [API documentation](docs/api.md) for other command line flags and options that can be used to configure the packaged app.
 
