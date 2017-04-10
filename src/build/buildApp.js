@@ -117,7 +117,8 @@ function selectAppArgs(options) {
         disableDevTools: options.disableDevTools,
         zoom: options.zoom,
         internalUrls: options.internalUrls,
-        crashReporter: options.crashReporter
+        crashReporter: options.crashReporter,
+        singleInstance: options.singleInstance
     };
 }
 

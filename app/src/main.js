@@ -81,3 +81,20 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     event.preventDefault();
     createLoginWindow(callback);
 });
+
+if (appArgs.singleInstance) {
+    const shouldQuit = app.makeSingleInstance(() => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) {
+                mainWindow.restore();
+            }
+            mainWindow.focus();
+
+        }
+    });
+
+    if (shouldQuit) {
+        app.quit();
+    }
+}
