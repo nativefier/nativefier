@@ -68,6 +68,8 @@
     "babel-register": "^6.6.0",
     "chai": "^3.4.1",
     "del": "^2.2.0",
+    "electron-dl": "^1.8.0",
+    "electron-window-state": "^4.1.0",
     "eslint": "^2.10.2",
     "eslint-config-google": "^0.5.0",
     "gulp": "^3.9.0",
@@ -77,6 +79,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.5",
-    "webpack-stream": "^3.1.0"
+    "webpack-stream": "^3.1.0",
+    "wurl": "^2.1.0"
   }
 }
