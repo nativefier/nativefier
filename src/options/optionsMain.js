@@ -14,7 +14,7 @@ import packageJson from './../../package.json';
 const {inferPlatform, inferArch} = inferOs;
 
 const PLACEHOLDER_APP_DIR = path.join(__dirname, '../../', 'app');
-const ELECTRON_VERSION = '1.1.3';
+const ELECTRON_VERSION = '1.6.6';
 
 const DEFAULT_APP_NAME = 'APP';
 
@@ -37,7 +37,7 @@ function optionsFactory(inpOptions, callback) {
         targetUrl: normalizeUrl(inpOptions.targetUrl),
         platform: inpOptions.platform || inferPlatform(),
         arch: inpOptions.arch || inferArch(),
-        version: inpOptions.electronVersion || ELECTRON_VERSION,
+        electronVersion: inpOptions.electronVersion || ELECTRON_VERSION,
         nativefierVersion: packageJson.version,
         out: inpOptions.out || process.cwd(),
         overwrite: inpOptions.overwrite,
@@ -108,7 +108,7 @@ function optionsFactory(inpOptions, callback) {
                 callback();
                 return;
             }
-            inferUserAgent(options.version, options.platform)
+            inferUserAgent(options.electronVersion, options.platform)
                 .then(userAgent => {
                     options.userAgent = userAgent;
                     callback();
