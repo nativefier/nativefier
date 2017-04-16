@@ -43,7 +43,7 @@ if (require.main === module) {
         .option('--insecure', 'enable loading of insecure content, defaults to false')
         .option('--flash', 'if flash should be enabled')
         .option('--flash-path <value>', 'path to Chrome flash plugin, find it in `Chrome://plugins`')
-        .option('--inject <value>', 'path to a file to be injected', collect, [])
+        .option('--inject <value>', 'path to a CSS/JS file to be injected', collect, [])
         .option('--full-screen', 'if the app should always be started in full screen')
         .option('--maximize', 'if the app should always be started maximized')
         .option('--hide-window-frame', 'disable window frame and controls')
