@@ -3,7 +3,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
-const DEFAULT_CHROME_VERSION = '47.0.2526.73';
+const DEFAULT_CHROME_VERSION = '56.0.2924.87';
 
 function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERSIONS_URL) {
     return axios.get(url, {timeout: 5000})
@@ -27,10 +27,10 @@ export function getUserAgentString(chromeVersion, platform) {
     let userAgent;
     switch (platform) {
         case 'darwin':
-            userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
+            userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
             break;
         case 'win32':
-            userAgent = `Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
+            userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
             break;
         case 'linux':
             userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
