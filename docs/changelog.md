@@ -1,5 +1,15 @@
 # Changelog
 
+7.2.0 / 2017-04-20
+==================
+  * Update dependencies, default to latest Electron 1.6.6 (#327, PR #341). **Feedback welcome in case of issues/regressions!**
+  * [Feature] Add `--single-instance` switch (PR #323) 
+  * [Bug] Better honor `--zoom` option (#253, PR #347)
+  * [Bug] Allow mDNS addresses (ending with `local.`) during URL validation (#308, PR #346)
+  * [Docs] Readme and CLI cleanup
+  * [Misc] Remove duplicate dependencies (#337)
+  * [Misc] Rename 'Open in default browser' contextMenu to 'Open with default browser' (#338)
+
 7.1.0 / 2017-04-07
 ==================
 
