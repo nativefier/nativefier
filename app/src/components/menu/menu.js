@@ -5,16 +5,21 @@ import {Menu, shell, clipboard} from 'electron';
  * @param appQuit
  * @param zoomIn
  * @param zoomOut
+ * @param zoomReset
+ * @param zoomBuildTimeValue
  * @param goBack
  * @param goForward
  * @param getCurrentUrl
  * @param clearAppData
  * @param disableDevTools
  */
-function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForward, getCurrentUrl, clearAppData, disableDevTools}) {
+function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, zoomReset, zoomBuildTimeValue, goBack, goForward, getCurrentUrl, clearAppData, disableDevTools}) {
     if (Menu.getApplicationMenu()) {
         return;
     }
+    const zoomResetLabel = (zoomBuildTimeValue === 1.0) ?
+      'Reset Zoom' :
+      `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
 
     const template = [
         {
@@ -134,6 +139,18 @@ function createMenu({nativefierVersion, appQuit, zoomIn, zoomOut, goBack, goForw
                     })(),
                     click: () => {
                         zoomOut();
+                    }
+                },
+                {
+                    label: zoomResetLabel,
+                    accelerator: (() => {
+                        if (process.platform === 'darwin') {
+                            return 'Command+0';
+                        }
+                        return 'Ctrl+0';
+                    })(),
+                    click: () => {
+                        zoomReset();
                     }
                 },
                 {

@@ -66,7 +66,7 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
     }
 
-    let currentZoom = 1;
+    let currentZoom = options.zoom;
 
     const onZoomIn = () => {
         currentZoom += ZOOM_INTERVAL;
@@ -76,6 +76,10 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
     const onZoomOut = () => {
         currentZoom -= ZOOM_INTERVAL;
         mainWindow.webContents.send('change-zoom', currentZoom);
+    };
+
+    const onZoomReset = () => {
+        mainWindow.webContents.send('change-zoom', options.zoom);
     };
 
     const clearAppData = () => {
@@ -114,6 +118,8 @@ function createMainWindow(options, onAppQuit, setDockBadge) {
         appQuit: onAppQuit,
         zoomIn: onZoomIn,
         zoomOut: onZoomOut,
+        zoomReset: onZoomReset,
+        zoomBuildTimeValue: options.zoom,
         goBack: onGoBack,
         goForward: onGoForward,
         getCurrentUrl: getCurrentUrl,
