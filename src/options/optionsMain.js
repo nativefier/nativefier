@@ -136,18 +136,13 @@ function optionsFactory(inpOptions, callback) {
                 callback();
                 return;
             }
+            options.name = DEFAULT_APP_NAME;
 
-            inferTitle(options.targetUrl, function(error, pageTitle) {
-                if (error) {
-                    log.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'`);
-                    options.name = DEFAULT_APP_NAME;
-                } else {
-                    options.name = pageTitle.trim();
-                }
-                if (options.platform === 'linux') {
-                    // spaces will cause problems with Ubuntu when pinned to the dock
-                    options.name = _.kebabCase(options.name);
-                }
+            inferTitle(options.targetUrl).then(pageTitle => {
+                options.name = pageTitle;
+            }).catch(error => {
+                log.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${error}`);
+            }).then(() => {
                 callback();
             });
         }
@@ -156,14 +151,21 @@ function optionsFactory(inpOptions, callback) {
     });
 }
 
-function sanitizeFilename(str) {
-    const cleaned = sanitizeFilenameLib(str);
+function sanitizeFilename(platform, str) {
+    let result = sanitizeFilenameLib(str);
+
     // remove all non ascii or use default app name
-    return cleaned.replace(/[^\x00-\x7F]/g, '') || DEFAULT_APP_NAME;
+    result = result.replace(/[^\x00-\x7F]/g, '') || DEFAULT_APP_NAME;
+
+    // spaces will cause problems with Ubuntu when pinned to the dock
+    if (platform === 'linux') {
+        return _.kebabCase(result);
+    }
+    return result;
 }
 
 function sanitizeOptions(options) {
-    options.name = sanitizeFilename(options.name);
+    options.name = sanitizeFilename(options.platform, options.name);
     return options;
 }
 

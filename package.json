@@ -49,7 +49,6 @@
     "ncp": "^2.0.0",
     "page-icon": "^0.3.0",
     "progress": "^2.0.0",
-    "request": "^2.67.0",
     "sanitize-filename": "^1.5.3",
     "shelljs": "^0.7.0",
     "source-map-support": "^0.4.0",
