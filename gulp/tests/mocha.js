@@ -27,6 +27,6 @@ gulp.task('mocha', done => {
         });
 });
 
-gulp.task('tdd', () => {
-    return gulp.watch(['src/*.js', 'test/*.js'], ['mocha']);
+gulp.task('tdd', ['mocha'], () => {
+    return gulp.watch(['src/**/*.js', 'test/**/*.js'], ['mocha']);
 });

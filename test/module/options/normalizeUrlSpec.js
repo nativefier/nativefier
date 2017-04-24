@@ -1,4 +1,3 @@
-import 'source-map-support/register';
 import normalizeUrl from '../../../src/options/normalizeUrl';
 import chai from 'chai';
 const assert = chai.assert;

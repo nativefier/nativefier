@@ -13,7 +13,7 @@
   "scripts": {
     "dev-up": "npm install && (cd app && npm install) && npm run build",
     "test": "gulp test",
-    "test-watch": "mocha --watch --require babel-register --recursive ./test",
+    "tdd": "gulp tdd",
     "lint": "eslint .",
     "ci": "gulp build test && npm run lint",
     "clean": "gulp clean",
