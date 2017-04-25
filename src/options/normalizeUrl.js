@@ -1,23 +1,26 @@
 import url from 'url';
 import validator from 'validator';
 
-function normalizeUrl(testUrl) {
-    // add protocol if protocol not found
-    let normalized = testUrl;
-    const parsed = url.parse(normalized);
+function appendProtocol(testUrl) {
+    const parsed = url.parse(testUrl);
     if (!parsed.protocol) {
-        normalized = 'http://' + normalized;
+        return `http://${testUrl}`;
     }
+    return testUrl;
+}
+
+function normalizeUrl(testUrl) {
+    const urlWithProtocol = appendProtocol(testUrl);
 
     const validatorOptions = {
         require_protocol: true,
         require_tld: false,
         allow_trailing_dot: true // mDNS addresses, https://github.com/jiahaog/nativefier/issues/308
     };
-    if (!validator.isURL(normalized, validatorOptions)) {
-        throw `Your Url: "${normalized}" is invalid!`;
+    if (!validator.isURL(urlWithProtocol, validatorOptions)) {
+        throw `Your Url: "${urlWithProtocol}" is invalid!`;
     }
-    return normalized;
+    return urlWithProtocol;
 }
 
 export default normalizeUrl;

@@ -13,8 +13,9 @@
   "scripts": {
     "dev-up": "npm install && (cd app && npm install) && npm run build",
     "test": "gulp test",
+    "tdd": "gulp tdd",
     "lint": "eslint .",
-    "ci": "gulp test && npm run lint",
+    "ci": "gulp build test && npm run lint",
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "while true ; do gulp watch ; done",
@@ -74,6 +75,7 @@
     "gulp-istanbul": "^1.1.1",
     "gulp-mocha": "^4.3.0",
     "gulp-sourcemaps": "^2.6.0",
+    "isparta": "^4.0.0",
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.5",
     "webpack-stream": "^3.1.0"
