@@ -6,7 +6,7 @@ import async from 'async';
 
 import nativefier from './../../lib/index';
 
-const PLATFORMS = ['darwin', 'linux', 'win32'];
+const PLATFORMS = ['darwin', 'linux'];
 tmp.setGracefulCleanup();
 const assert = chai.assert;
 
