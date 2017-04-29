@@ -1,5 +1,5 @@
 
-"7.3.1" / 2017-04-30
+7.3.1 / 2017-04-30
 ====================
 
   * Add script to update version and changelog

@@ -43,7 +43,7 @@ mv package.json.tmp package.json
 
 # Unset the editor so that git changelog does not open a editor
 EDITOR=:
-git changelog docs/changelog.md --tag \"$VERSION\"
+git changelog docs/changelog.md --tag "$VERSION"
 
 # Commit these changes
 git add docs/changelog.md
