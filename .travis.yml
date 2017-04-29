@@ -27,4 +27,4 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    branch: development
+    node: '4'
