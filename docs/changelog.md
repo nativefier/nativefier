@@ -1,15 +1,15 @@
 
-7.3.0 / 2017-04-30
-==================
+"7.3.1" / 2017-04-30
+====================
 
+  * Add script to update version and changelog
+  * Update changelog for 7.3.0
   * Remove Windows tests
   * Cleanup travis config
   * Update eslint and use Airbnb style
   * Change Mocha to not need a babel build to run (#349)
   * Promisify inferTitle module
   * Add autodeploy to NPM on tag
-
-# Changelog
 
 7.2.0 / 2017-04-20
 ==================
