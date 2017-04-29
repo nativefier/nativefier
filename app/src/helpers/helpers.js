@@ -6,39 +6,39 @@ import path from 'path';
 const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');
 
 function isOSX() {
-    return os.platform() === 'darwin';
+  return os.platform() === 'darwin';
 }
 
 function isLinux() {
-    return os.platform() === 'linux';
+  return os.platform() === 'linux';
 }
 
 function isWindows() {
-    return os.platform() === 'win32';
+  return os.platform() === 'win32';
 }
 
 function linkIsInternal(currentUrl, newUrl, internalUrlRegex) {
-    if (internalUrlRegex) {
-        var regex = RegExp(internalUrlRegex);
-        return regex.test(newUrl);
-    }
+  if (internalUrlRegex) {
+    const regex = RegExp(internalUrlRegex);
+    return regex.test(newUrl);
+  }
 
-    var currentDomain = wurl('domain', currentUrl);
-    var newDomain = wurl('domain', newUrl);
-    return currentDomain === newDomain;
+  const currentDomain = wurl('domain', currentUrl);
+  const newDomain = wurl('domain', newUrl);
+  return currentDomain === newDomain;
 }
 
 function shouldInjectCss() {
-    try {
-        fs.accessSync(INJECT_CSS_PATH, fs.F_OK);
-        return true;
-    } catch (e) {
-        return false;
-    }
+  try {
+    fs.accessSync(INJECT_CSS_PATH, fs.F_OK);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function getCssToInject() {
-    return fs.readFileSync(INJECT_CSS_PATH).toString();
+  return fs.readFileSync(INJECT_CSS_PATH).toString();
 }
 
 /**
@@ -47,19 +47,20 @@ function getCssToInject() {
  * @param message
  */
 function debugLog(browserWindow, message) {
-    // need the timeout as it takes time for the preload javascript to be loaded in the window
-    setTimeout(() => {
-        browserWindow.webContents.send('debug', message);
-    }, 3000);
-    console.log(message);
+  // need the timeout as it takes time for the preload javascript to be loaded in the window
+  setTimeout(() => {
+    browserWindow.webContents.send('debug', message);
+  }, 3000);
+  // eslint-disable-next-line no-console
+  console.log(message);
 }
 
 export default {
-    isOSX,
-    isLinux,
-    isWindows,
-    linkIsInternal,
-    getCssToInject,
-    debugLog,
-    shouldInjectCss
+  isOSX,
+  isLinux,
+  isWindows,
+  linkIsInternal,
+  getCssToInject,
+  debugLog,
+  shouldInjectCss,
 };

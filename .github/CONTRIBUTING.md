@@ -15,23 +15,19 @@ Please include the following in your new issue:
 
 See [here](https://github.com/jiahaog/nativefier#development) for instructions on how to set up a development environment.
 
-Follow the current code style, and make sure tests and lints pass before submitting with the following commands:
+We follow the [Airbnb Style Guide](https://github.com/airbnb/javascript), please make sure tests and lints pass when you submit your pull request. 
 
-Run the following command before submitting the pull request:
-
-```bash
-# Run tests and linting
-$ npm run ci
-```
-
-Or you can run them separately:
+The following commands might be helpful:
 
 ```bash
-# Tests
-$ npm run test
+# Run specs and lint
+npm run ci
 
-# Lint source files
-$ npm run lint
+# Run specs only
+npm run test
+
+# Run linter only
+npm run lint
 ```
 
 Thank you so much for your contribution!

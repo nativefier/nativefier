@@ -2,15 +2,16 @@ import shell from 'shelljs';
 import path from 'path';
 import tmp from 'tmp';
 import helpers from './helpers';
-const {isWindows, isOSX} = helpers;
+
+const { isWindows, isOSX } = helpers;
 
 tmp.setGracefulCleanup();
 
 const SCRIPT_PATHS = {
-    singleIco: path.join(__dirname, '../..', 'bin/singleIco'),
-    convertToPng: path.join(__dirname, '../..', 'bin/convertToPng'),
-    convertToIco: path.join(__dirname, '../..', 'bin/convertToIco'),
-    convertToIcns: path.join(__dirname, '../..', 'bin/convertToIcns')
+  singleIco: path.join(__dirname, '../..', 'bin/singleIco'),
+  convertToPng: path.join(__dirname, '../..', 'bin/convertToPng'),
+  convertToIco: path.join(__dirname, '../..', 'bin/convertToIco'),
+  convertToIcns: path.join(__dirname, '../..', 'bin/convertToIcns'),
 };
 
 /**
@@ -20,29 +21,29 @@ const SCRIPT_PATHS = {
  * @param {string} dest has to be a .ico path
  */
 function iconShellHelper(shellScriptPath, icoSrc, dest) {
-    return new Promise((resolve, reject) => {
-        if (isWindows()) {
-            reject('OSX or Linux is required');
-            return;
-        }
+  return new Promise((resolve, reject) => {
+    if (isWindows()) {
+      reject('OSX or Linux is required');
+      return;
+    }
 
-        shell.exec(`${shellScriptPath} ${icoSrc} ${dest}`, {silent: true}, (exitCode, stdOut, stdError) => {
-            if (exitCode) {
-                reject({
-                    stdOut: stdOut,
-                    stdError: stdError
-                });
-                return;
-            }
-
-            resolve(dest);
+    shell.exec(`${shellScriptPath} ${icoSrc} ${dest}`, { silent: true }, (exitCode, stdOut, stdError) => {
+      if (exitCode) {
+        reject({
+          stdOut,
+          stdError,
         });
+        return;
+      }
+
+      resolve(dest);
     });
+  });
 }
 
 function getTmpDirPath() {
-    const tempIconDirObj = tmp.dirSync({unsafeCleanup: true});
-    return tempIconDirObj.name;
+  const tempIconDirObj = tmp.dirSync({ unsafeCleanup: true });
+  return tempIconDirObj.name;
 }
 
 /**
@@ -52,27 +53,27 @@ function getTmpDirPath() {
  */
 
 function singleIco(icoSrc) {
-    return iconShellHelper(SCRIPT_PATHS.singleIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
+  return iconShellHelper(SCRIPT_PATHS.singleIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
 }
 
 function convertToPng(icoSrc) {
-    return iconShellHelper(SCRIPT_PATHS.convertToPng, icoSrc, `${getTmpDirPath()}/icon.png`);
+  return iconShellHelper(SCRIPT_PATHS.convertToPng, icoSrc, `${getTmpDirPath()}/icon.png`);
 }
 
 function convertToIco(icoSrc) {
-    return iconShellHelper(SCRIPT_PATHS.convertToIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
+  return iconShellHelper(SCRIPT_PATHS.convertToIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
 }
 
 function convertToIcns(icoSrc) {
-    if (!isOSX()) {
-        return new Promise((resolve, reject) => reject('OSX is required to convert to a .icns icon'));
-    }
-    return iconShellHelper(SCRIPT_PATHS.convertToIcns, icoSrc, `${getTmpDirPath()}/icon.icns`);
+  if (!isOSX()) {
+    return new Promise((resolve, reject) => reject('OSX is required to convert to a .icns icon'));
+  }
+  return iconShellHelper(SCRIPT_PATHS.convertToIcns, icoSrc, `${getTmpDirPath()}/icon.icns`);
 }
 
 export default {
-    singleIco,
-    convertToPng,
-    convertToIco,
-    convertToIcns
+  singleIco,
+  convertToPng,
+  convertToIco,
+  convertToIcns,
 };
