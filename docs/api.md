@@ -32,6 +32,7 @@
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
+    - [[hide-window-frame]](#hide-window-frame)
     - [[verbose]](#verbose)
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
