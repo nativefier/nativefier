@@ -1,28 +1,35 @@
-FROM ubuntu:xenial
-MAINTAINER Tobias Schneck (tobias@consol.de)
+FROM node:7-alpine
+LABEL description="Alpine image to build nativfier apps"
 
-# /root/ as default folder
-
-# Install build env
-RUN apt-get update \
-    && apt-get install -y software-properties-common \
-    && dpkg --add-architecture i386 \
-    && add-apt-repository -y ppa:wine/wine-builds \
-    && apt-get update
-RUN apt-get install -y --install-recommends winehq-devel \
-    && apt-get clean
-
-RUN apt-get update \
-        && apt-get install -y wget \
-        && apt-get clean
-RUN mkdir -p /root/node && wget -qO- https://nodejs.org/dist/latest-v5.x/node-v5.12.0-linux-x86.tar.gz | tar xvz -C /root/node
-ENV PATH="$PATH:/root/node/node-v5.12.0-linux-x86/bin"
-
-# build sources
+### Install wine depedency
+RUN apk add --no-cache \
+    wine \
+    freetype \
+    ### make symbolic link to use `wine`
+    && ln -s /usr/bin/wine64 /usr/bin/wine
+    
+# Add sources
 ADD . /nativefier
-WORKDIR /nativefier/
-RUN npm install && (cd /nativefier/app && npm install) && npm run build
-RUN npm install -g
-RUN ln -s /root/node/node-v5.12.0-linux-x86/bin/nativefier /usr/bin/nativefier
+
+### Build app package for nativefier installation
+RUN cd /nativefier/app && npm install \
+    # Build and install nativefier binary
+    && cd /nativefier && npm install && npm run build && npm install -g \
+    ## Remove no longer needed sources
+    && rm -rf /nativefier
+
+
+### Use 1000 as default user not root
+USER 1000
+
+### Check that installation was sucessfull and chache all electron installation.
+### Ensures that no addtional download will needed at runtime exectuion `docker run`.
+RUN nativefier https://github.com/jiahaog/nativefier /tmp/nativefier \
+    && nativefier -p osx https://github.com/jiahaog/nativefier /tmp/nativefier \
+# TODO: windows are currently not possible, because of non 64-bit `node-rcedit`, see https://github.com/electron/node-rcedit/issues/22.
+#    && nativefier -p windows https://github.com/jiahaog/nativefier /tmp/nativefier \
+    #remove not need test aplication
+    && rm -rf /tmp/nativefier
+
 ENTRYPOINT ["nativefier"]
 CMD ["--help"]

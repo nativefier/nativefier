@@ -119,14 +119,19 @@ See [Changelog](docs/changelog.md).
 
 See [Development](docs/development.md).
 
-## Docker Container
+## Docker Image
 
-Build and an run the latest sources in a docker build:
+The [Dockerfile](Dockerfile) is designed that you can use it like the "normal" nativefier app. By default the command `nativefier --version` will be executed. Before you can use the Image you have to build it like follow:
 
-```
-docker build -t local/nativefier .
-docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target -it local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
-```
+    docker build -t local/nativefier .
+ 
+After that you can build your first nativefier app to the local `$TARGER-PATH`:
+
+    docker run -v $TARGET-PATH:/target -it local/nativefier https://my-web-app.com/ /target/
+    
+You can also use additional source or nativefier options like e.g. use a icon:
+
+    docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target -it local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
 
 ## License
 
