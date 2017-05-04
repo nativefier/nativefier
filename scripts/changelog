@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+#
+# Updates the changelog and version in the package.json
+# Will also create a commit with these changes locally
+# Run `git commit --amend` after that if you wish to make changes
+#
+# Usage:
+# ./changelog "7.0.0"
+#
+# Prerequisites:
+# - On master branch
+# - No uncommitted changes
+#
+# Dependencies:
+# - git-extras https://github.com/tj/git-extras/blob/master/Installation.md
+
+set -eo pipefail
+
+# Checks if we are on the master branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$BRANCH" != 'master' ]]; then
+  echo 'ERROR: not on master branch' >&2
+  exit 1;
+fi
+
+# Checks if there are uncommitted changes
+git diff-index --quiet HEAD -- || (echo 'ERROR: there are uncommitted changes' >&2 && exit 1)
+
+VERSION="$1"
+
+# Validates the $VERSION
+SEMVER_REGEX='^([0-9]+\.){2}([0-9]+)$'
+if ! [[ $VERSION =~ $SEMVER_REGEX ]]; then
+ echo "ERROR: Version '$VERSION' is invalid " >&2
+ exit 1
+fi
+
+# Change the version in the package.json
+cat package.json | jq ".version = \"$VERSION\"" > package.json.tmp
+
+# Workaround for inplace jq editing
+mv package.json.tmp package.json
+
+# Unset the editor so that git changelog does not open a editor
+EDITOR=:
+git changelog docs/changelog.md --tag "$VERSION"
+
+# Commit these changes
+git add docs/changelog.md
+git add package.json
+git commit -m "Update changelog for \`v$VERSION\`"

@@ -1,4 +1,38 @@
-# Changelog
+
+7.3.1 / 2017-04-30
+====================
+
+  * Add script to update version and changelog
+  * Update changelog for 7.3.0
+  * Remove Windows tests
+  * Cleanup travis config
+  * Update eslint and use Airbnb style
+  * Change Mocha to not need a babel build to run (#349)
+  * Promisify inferTitle module
+  * Add autodeploy to NPM on tag
+
+7.2.0 / 2017-04-20
+==================
+  * Update dependencies, default to latest Electron 1.6.6 (#327, PR #341). **Feedback welcome in case of issues/regressions!**
+  * [Feature] Add `--single-instance` switch (PR #323) 
+  * [Bug] Better honor `--zoom` option (#253, PR #347)
+  * [Bug] Allow mDNS addresses (ending with `local.`) during URL validation (#308, PR #346)
+  * [Docs] Readme and CLI cleanup
+  * [Misc] Remove duplicate dependencies (#337)
+  * [Misc] Rename 'Open in default browser' contextMenu to 'Open with default browser' (#338)
+
+7.1.0 / 2017-04-07
+==================
+
+  * Feature: Add "Copy link location" context menu (#230)
+  * Feature: Add `--internal-urls <regex>` option to customize what should open in external browser (#230)
+  * Feature: Add `--zoom` option for setting default zoom (#218)
+  * Bug: Fix context menu actions broken on <a> elements containing nested markup (#263)
+  * Bug: Fix counter notifications (#256)
+  * Bug: Remove non-ascii characters or use default for app name (#217)
+  * Doc: various fixes, including clarifying optional OSX dependencies for generating icons
+  * CI: Fix Travis tests which require wine
+  * Dev: Add editorconfig to trim trailing whitespace
 
 7.0.1 / 2016-06-16
 ==================

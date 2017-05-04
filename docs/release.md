@@ -1,39 +1,35 @@
-# Release Notes
+# Release
 
-My notes for release commands to NPM
+Releases are automatically deployed to NPM on Travis, when they are tagged. However, we have to make sure that the version in the `package.json`, and the changelog is updated.
 
-## Releasing
+## Dependencies
+- [Git Extras](https://github.com/tj/git-extras/blob/master/Installation.md)
 
-At branch `development` ready to release to npm:
+## How to Release `$VERSION`
 
-``` bash
-# Make sure ci tests pass
-npm run ci
+While on `master`, with no uncommitted changes,
 
-# See the current version
-npm version
-
-# Update the changlog and perform cleanup on it
-git changelog docs/changelog.md --tag <next version>
-subl docs/changelog.md
-
-git add docs/changelog.md
-git commit -m "Update changelog for \`v<next version>\`"
-
-npm version <next version>
-
-# Can automate from here onwards
-
-# Publish it to npm
-npm run release
-
-# Merge changes into master
-git checkout master
-git merge development
-
-git push --follow-tags
-
-# Return to development
-git checkout development
-
+```bash
+npm run changelog -- $VERSION
 ```
+
+This command does 3 things:
+1. Update the version in the `package.json`
+2. Update the changelog
+3. Creates a new commit with the changes
+
+Now we may want to cleanup the changelog:
+
+```bash
+vim docs/changelog.md
+
+git commit --amend
+```
+
+Once we are satisfied,
+```bash
+git push origin master
+```
+
+On [GitHub Releases](https://github.com/jiahaog/nativefier/releases), draft and publish a new release with title `Nativefier vX.X.X`.
+

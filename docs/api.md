@@ -32,17 +32,19 @@
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
+    - [[hide-window-frame]](#hide-window-frame)
     - [[verbose]](#verbose)
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
     - [[zoom]](#zoom)
     - [[crash-reporter]](#crash-reporter)
+    - [[single-instance]](#single-instance)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
 
 ```bash
-$ nativefier [options] <targetUrl> [dest]
+nativefier [options] <targetUrl> [dest]
 ```
 Command line options are listed below.
 
@@ -275,7 +277,7 @@ Allows you to inject a javascript or css file. This command can be run multiple 
 Example:
 
 ```bash
-$ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
+nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
 ```
 
 #### [full-screen]
@@ -340,7 +342,7 @@ Enables crash reporting and set the URL to submit crash reports to
 Example:
 
 ```bash
-$ nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
+nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
 ```
 
 #### [zoom]
@@ -351,13 +353,21 @@ $ nativefier http://google.com --crash-reporter https://electron-crash-reporter.
 
 Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
+#### [single-instance]
+
+```
+--single-instance
+```
+
+Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
 
 ```bash
 # install and save to package.json
-$ npm install --save nativefier
+npm install --save nativefier
 ```
 
 In your `.js` file:
@@ -385,7 +395,8 @@ var options = {
     ignoreCertificate: false,
     insecure: false,
     honest: false,
-    zoom: 1.0
+    zoom: 1.0,
+    singleInstance: false
 };
 
 nativefier(options, function(error, appPath) {

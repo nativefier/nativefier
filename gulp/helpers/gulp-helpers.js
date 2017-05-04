@@ -4,17 +4,17 @@ import sourcemaps from 'gulp-sourcemaps';
 import babel from 'gulp-babel';
 
 function shellExec(cmd, silent, callback) {
-    shellJs.exec(cmd, {silent: silent}, (code, stdout, stderr) => {
-        if (code) {
-            callback(JSON.stringify({code, stdout, stderr}));
-            return;
-        }
-        callback();
-    });
+  shellJs.exec(cmd, { silent }, (code, stdout, stderr) => {
+    if (code) {
+      callback(JSON.stringify({ code, stdout, stderr }));
+      return;
+    }
+    callback();
+  });
 }
 
 function buildES6(src, dest, callback) {
-    return gulp.src(src)
+  return gulp.src(src)
         .pipe(sourcemaps.init())
         .pipe(babel())
         .on('error', callback)
@@ -23,6 +23,6 @@ function buildES6(src, dest, callback) {
 }
 
 export default {
-    shellExec,
-    buildES6
+  shellExec,
+  buildES6,
 };
