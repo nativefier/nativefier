@@ -125,13 +125,13 @@ The [Dockerfile](Dockerfile) is designed that you can use it like the "normal" n
 
     docker build -t local/nativefier .
  
-After that you can build your first nativefier app to the local `$TARGER-PATH`:
+After that you can build your first nativefier app to the local `$TARGER-PATH`. Please ensure that you have write access to the `$TARGER-PATH`:
 
-    docker run -v $TARGET-PATH:/target -it local/nativefier https://my-web-app.com/ /target/
+    docker run -v $TARGET-PATH:/target local/nativefier https://my-web-app.com/ /target/
     
 You can also use additional source or nativefier options like e.g. use a icon:
 
-    docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target -it local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
+    docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
 
 ## License
 
