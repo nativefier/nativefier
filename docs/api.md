@@ -97,7 +97,7 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for OSX) can al
 -a, --arch <value>
 ```
 
-Processor architecture, automatically determined based on the current OS. Can be overwritten by specifying either `ia32` or `x64`.
+Processor architecture, automatically determined based on the current OS. Can be overwritten by specifying either `ia32`, `x64` or `armv7l`.
 
 #### [electron-version]
 
