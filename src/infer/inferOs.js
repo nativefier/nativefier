@@ -11,7 +11,7 @@ function inferPlatform() {
 
 function inferArch() {
   const arch = os.arch();
-  if (arch !== 'ia32' && arch !== 'x64') {
+  if (arch !== 'ia32' && arch !== 'x64' && arch !== 'arm') {
     throw new Error(`Incompatible architecture ${arch} detected`);
   }
   return arch;
