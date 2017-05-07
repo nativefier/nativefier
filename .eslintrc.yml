@@ -1,4 +1,7 @@
 extends: airbnb-base 
+env: 
+  # TODO: find out how to turn this on only for src/**/*.test.js files
+  jest: true
 plugins:
   - import
 rules:

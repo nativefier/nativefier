@@ -105,7 +105,12 @@ function buildMain(inpOptions, callback) {
   async.waterfall([
     (callback) => {
       progress.tick('inferring');
-      optionsFactory(options, callback);
+      optionsFactory(options)
+        .then((result) => {
+          callback(null, result);
+        }).catch((error) => {
+          callback(error);
+        });
     },
     (options, callback) => {
       progress.tick('copying');
