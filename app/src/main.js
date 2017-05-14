@@ -66,6 +66,7 @@ app.on('before-quit', () => {
 if (appArgs.crashReporter) {
   app.on('will-finish-launching', () => {
     crashReporter.start({
+      companyName: appArgs.companyName,
       productName: appArgs.name,
       submitURL: appArgs.crashReporter,
       autoSubmit: true,

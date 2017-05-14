@@ -17,6 +17,7 @@ export default function (inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
+    companyName: inpOptions.companyName,
     targetUrl: normalizeUrl(inpOptions.targetUrl),
     platform: inpOptions.platform || inferPlatform(),
     arch: inpOptions.arch || inferArch(),
@@ -40,6 +41,7 @@ export default function (inpOptions) {
     insecure: inpOptions.insecure || false,
     flashPluginDir: inpOptions.flashPath || inpOptions.flash || null,
     inject: inpOptions.inject || null,
+    assets: inpOptions.assets || null,
     ignore: 'src',
     fullScreen: inpOptions.fullScreen || false,
     maximize: inpOptions.maximize || false,
@@ -53,6 +55,7 @@ export default function (inpOptions) {
     zoom: inpOptions.zoom || 1.0,
     internalUrls: inpOptions.internalUrls || null,
     singleInstance: inpOptions.singleInstance || false,
+    dependencies: inpOptions.dependencies || null,
   };
 
   if (options.verbose) {

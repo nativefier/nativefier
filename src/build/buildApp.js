@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import _ from 'lodash';
 import path from 'path';
 import ncp from 'ncp';
+import shellJs from 'shelljs';
 
 const copy = ncp.ncp;
 
@@ -13,6 +14,7 @@ const copy = ncp.ncp;
 function selectAppArgs(options) {
   return {
     name: options.name,
+    companyName: options.companyName,
     targetUrl: options.targetUrl,
     counter: options.counter,
     width: options.width,
@@ -37,6 +39,7 @@ function selectAppArgs(options) {
     internalUrls: options.internalUrls,
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
+    dependencies: options.dependencies,
   };
 }
 
@@ -82,6 +85,45 @@ function maybeCopyScripts(srcs, dest) {
   });
 }
 
+
+function maybeCopyAssets(srcs, dest) {
+  if (!srcs) {
+    return new Promise((resolve) => {
+      resolve();
+    });
+  }
+
+  const promises = srcs.map(src => new Promise((resolve, reject) => {
+    if (!fs.existsSync(src)) {
+      reject('Error copying assets directories or files: not found');
+      return;
+    }
+
+    const destPath = path.join(dest, 'assets/');
+    if (!fs.existsSync(destPath)) {
+      fs.mkdir(destPath);
+    }
+
+    copy(src, path.join(destPath, path.basename(src)), (error) => {
+      if (error) {
+        reject(`Error Copying assets directories or files: ${error}`);
+        return;
+      }
+      resolve();
+    });
+  }));
+
+  return new Promise((resolve, reject) => {
+    Promise.all(promises)
+      .then(() => {
+        resolve();
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
 function normalizeAppName(appName, url) {
     // use a simple 3 byte random string to prevent collision
   const hash = crypto.createHash('md5');
@@ -96,6 +138,32 @@ function changeAppPackageJsonName(appPath, name, url) {
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
   packageJson.name = normalizeAppName(name, url);
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
+}
+
+function addAdditionalDependencies(appPath, options) {
+  if (options.dependencies) {
+    const packageJsonPath = path.join(appPath, '/package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+    packageJson.dependencies = Object.assign(packageJson.dependencies, options.dependencies);
+    fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
+  }
+}
+
+/**
+ * Allow to start a shell command
+ *
+ * @param {string} cmd
+ * @param {boolean} silent
+ * @param {function} callback
+ */
+function shellExec(cmd, silent, callback) {
+  shellJs.exec(cmd, { silent }, (code, stdout, stderr) => {
+    if (code) {
+      callback(JSON.stringify({ code, stdout, stderr }));
+      return;
+    }
+    callback();
+  });
 }
 
 /**
@@ -118,15 +186,17 @@ function buildApp(src, dest, options, callback) {
     fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
 
     maybeCopyScripts(options.inject, dest)
-      .catch((error) => {
-        console.warn(error);
-      })
+      .then(() => maybeCopyAssets(options.assets, dest))
       .then(() => {
         changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+        addAdditionalDependencies(dest, options);
+        shellExec(`cd ${dest} && npm install`, true, () => {});
         callback();
+      })
+      .catch((error) => {
+        console.warn(error);
       });
   });
 }
-
 
 export default buildApp;
