@@ -17,6 +17,7 @@ export default function (inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
+    companyName: inpOptions.companyName,
     targetUrl: normalizeUrl(inpOptions.targetUrl),
     platform: inpOptions.platform || inferPlatform(),
     arch: inpOptions.arch || inferArch(),
@@ -68,6 +69,7 @@ export default function (inpOptions) {
       FileDescription: inpOptions.name,
     },
     processEnvs: inpOptions.processEnvs,
+    dependencies: inpOptions.dependencies || null,
   };
 
   if (options.verbose) {

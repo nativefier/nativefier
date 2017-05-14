@@ -42,11 +42,8 @@ function selectAppArgs(options) {
     internalUrls: options.internalUrls,
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
-<<<<<<< 306e5adb1d5d6533a8cd14d18e42d7a3ecec2e5c
     dependencies: options.dependencies,
-=======
     processEnvs: options.processEnvs,
->>>>>>> Allow nativefier to set process.env variables (#419)
   };
 }
 
