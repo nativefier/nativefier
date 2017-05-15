@@ -1,5 +1,5 @@
 import userAgent from './userAgent';
-import { inferUserAgent } from '../../infer';
+import { inferUserAgent } from './../../infer';
 
 jest.mock('./../../infer/inferUserAgent');
 
@@ -16,7 +16,7 @@ test('when a userAgent parameter is passed', () => {
 
 test('no userAgent parameter is passed', () => {
   const params = { electronVersion: '123', platform: 'mac' };
-  return userAgent(params).then((result) => {
+  return userAgent(params).then(() => {
     expect(inferUserAgent).toHaveBeenCalledWith(params.electronVersion, params.platform);
   });
 });
