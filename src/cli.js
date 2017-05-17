@@ -21,7 +21,7 @@ if (require.main === module) {
     })
     .option('-n, --name <value>', 'app name')
     .option('-p, --platform <value>', '\'osx\', \'linux\' or \'windows\'')
-    .option('-a, --arch <value>', '\'ia32\' or \'x64\'')
+    .option('-a, --arch <value>', '\'ia32\' or \'x64\' or \'armv7l\'')
     .option('-e, --electron-version <value>', 'electron version to package, without the \'v\', see https://github.com/atom/electron/releases')
     .option('--no-overwrite', 'do not override output directory if it already exists, defaults to false')
     .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')

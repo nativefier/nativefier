@@ -1,53 +1,19 @@
-import path from 'path';
-import _ from 'lodash';
-import async from 'async';
 import log from 'loglevel';
-import sanitizeFilenameLib from 'sanitize-filename';
 
-import inferIcon from './../infer/inferIcon';
-import inferTitle from './../infer/inferTitle';
 import inferOs from './../infer/inferOs';
-import inferUserAgent from './../infer/inferUserAgent';
 import normalizeUrl from './normalizeUrl';
 import packageJson from './../../package.json';
+import { ELECTRON_VERSION, PLACEHOLDER_APP_DIR } from './../constants';
+import asyncConfig from './asyncConfig';
 
 const { inferPlatform, inferArch } = inferOs;
 
-const PLACEHOLDER_APP_DIR = path.join(__dirname, '../../', 'app');
-const ELECTRON_VERSION = '1.6.6';
-const DEFAULT_APP_NAME = 'APP';
-
-function sanitizeFilename(platform, str) {
-  let result = sanitizeFilenameLib(str);
-
-  // remove all non ascii or use default app name
-  // eslint-disable-next-line no-control-regex
-  result = result.replace(/[^\x00-\x7F]/g, '') || DEFAULT_APP_NAME;
-
-  // spaces will cause problems with Ubuntu when pinned to the dock
-  if (platform === 'linux') {
-    return _.kebabCase(result);
-  }
-  return result;
-}
-
-function sanitizeOptions(options) {
-  const name = sanitizeFilename(options.platform, options.name);
-  return Object.assign({}, options, { name });
-}
-
-/**
- * @callback optionsCallback
- * @param error
- * @param options augmented options
- */
-
 /**
  * Extracts only desired keys from inpOptions and augments it with defaults
- * @param inpOptions
- * @param {optionsCallback} callback
+ * @param {Object} inpOptions
+ * @returns {Promise}
  */
-function optionsFactory(inpOptions, callback) {
+export default function (inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
@@ -82,7 +48,7 @@ function optionsFactory(inpOptions, callback) {
     disableContextMenu: inpOptions.disableContextMenu,
     disableDevTools: inpOptions.disableDevTools,
     crashReporter: inpOptions.crashReporter,
-        // workaround for electron-packager#375
+    // workaround for electron-packager#375
     tmpdir: false,
     zoom: inpOptions.zoom || 1.0,
     internalUrls: inpOptions.internalUrls || null,
@@ -119,57 +85,6 @@ function optionsFactory(inpOptions, callback) {
     options.height = options.maxHeight;
   }
 
-  async.waterfall([
-    (callback) => {
-      if (options.userAgent) {
-        callback();
-        return;
-      }
-      inferUserAgent(options.electronVersion, options.platform)
-        .then((userAgent) => {
-          options.userAgent = userAgent;
-          callback();
-        })
-        .catch(callback);
-    },
-    (callback) => {
-      if (options.icon) {
-        callback();
-        return;
-      }
-      inferIcon(options.targetUrl, options.platform)
-        .then((pngPath) => {
-          options.icon = pngPath;
-          callback();
-        })
-        .catch((error) => {
-          log.warn('Cannot automatically retrieve the app icon:', error);
-          callback();
-        });
-    },
-    (callback) => {
-      // length also checks if its the commanderJS function or a string
-      if (options.name && options.name.length > 0) {
-        callback();
-        return;
-      }
-      options.name = DEFAULT_APP_NAME;
-
-      inferTitle(options.targetUrl).then((pageTitle) => {
-        options.name = pageTitle;
-      }).catch((error) => {
-        log.warn(`Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${error}`);
-      }).then(() => {
-        callback();
-      });
-    },
-  ], (error) => {
-    if (error) {
-      callback(error);
-      return;
-    }
-    callback(null, sanitizeOptions(options));
-  });
+  return asyncConfig(options);
 }
 
-export default optionsFactory;
