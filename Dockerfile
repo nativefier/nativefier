@@ -5,11 +5,12 @@ LABEL description="Alpine image to build nativfier apps"
 RUN apk add --no-cache \
     wine \
     freetype \
+    imagemagick \
     ### make symbolic link to use `wine`
     && ln -s /usr/bin/wine64 /usr/bin/wine
     
 # Add sources
-ADD . /nativefier
+COPY . /nativefier
 
 ### Build app package for nativefier installation
 RUN cd /nativefier/app && npm install \

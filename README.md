@@ -125,7 +125,7 @@ The [Dockerfile](Dockerfile) is designed that you can use it like the "normal" n
 
     docker build -t local/nativefier .
  
-After that you can build your first nativefier app to the local `$TARGER-PATH`. Please ensure that you have write access to the `$TARGER-PATH`:
+After that you can build your first nativefier app to the local `$TARGET-PATH`. Please ensure that you have write access to the `$TARGET-PATH`:
 
     docker run -v $TARGET-PATH:/target local/nativefier https://my-web-app.com/ /target/
     
