@@ -12,9 +12,7 @@ describe('when the icon parameter is passed', () => {
     expect(inferIcon).toHaveBeenCalledTimes(0);
 
     const params = { icon: './icon.png' };
-    return icon(params).then((result) => {
-      expect(result).toBe(params.icon);
-    });
+    expect(icon(params)).resolves.toBe(params.icon);
   });
 });
 
