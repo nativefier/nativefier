@@ -1,0 +1,4 @@
+eslint:
+  enabled: true
+  config_file: .eslintrc.yml
+  ignore_file: .eslintignore
