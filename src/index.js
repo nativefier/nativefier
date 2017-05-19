@@ -4,7 +4,3 @@ import 'babel-polyfill';
 import buildApp from './build/buildMain';
 
 export default buildApp;
-
-const test = () => {
-
-};
