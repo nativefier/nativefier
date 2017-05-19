@@ -7,7 +7,7 @@ test('when a userAgent parameter is passed', () => {
   expect(inferUserAgent).toHaveBeenCalledTimes(0);
 
   const params = { userAgent: 'valid user agent' };
-  expect(userAgent(params)).toBe(params.userAgent);
+  expect(userAgent(params)).resolves.toBe(params.userAgent);
 });
 
 test('no userAgent parameter is passed', () => {
