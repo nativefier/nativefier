@@ -4,6 +4,7 @@ Releases are automatically deployed to NPM on Travis, when they are tagged. Howe
 
 ## Dependencies
 - [Git Extras](https://github.com/tj/git-extras/blob/master/Installation.md)
+- [jq](https://stedolan.github.io/jq/download/)
 
 ## How to Release `$VERSION`
 
