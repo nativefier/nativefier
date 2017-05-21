@@ -1,4 +1,14 @@
 
+7.4.0 / 2017-05-21
+==================
+
+  * Add jq to docs as release dependency
+  * Run Nativefier with Docker (#311)
+  * Add hound config (#369)
+  * Add codeclimate config
+  * Promisfy and parallelise config generation, add unit tests
+  * Add ARM build support (#360)
+
 7.3.1 / 2017-04-30
 ====================
 
