@@ -9,7 +9,7 @@ function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERS
   return axios.get(url, { timeout: 5000 })
     .then((response) => {
       if (response.status !== 200) {
-        throw new Error(`Bad request: Status code ${response.status}`);
+        return Promise.reject(`Bad request: Status code ${response.status}`);
       }
 
       const data = response.data;
@@ -17,10 +17,10 @@ function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERS
                                                          data.map(d => d.chrome));
 
       if (!(electronVersion in electronVersionToChromeVersion)) {
-        throw new Error(`Electron version '${electronVersion}' not found in retrieved version list!`);
+        return Promise.reject(`Electron version '${electronVersion}' not found in retrieved version list!`);
       }
 
-      return electronVersionToChromeVersion[electronVersion];
+      return Promise.resolve(electronVersionToChromeVersion[electronVersion]);
     });
 }
 
@@ -37,9 +37,9 @@ export function getUserAgentString(chromeVersion, platform) {
       userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
       break;
     default:
-      throw new Error('Error invalid platform specified to getUserAgentString()');
+      return Promise.reject('Error invalid platform specified to getUserAgentString()');
   }
-  return userAgent;
+  return Promise.resolve(userAgent);
 }
 
 function inferUserAgent(electronVersion, platform, url = ELECTRON_VERSIONS_URL) {
