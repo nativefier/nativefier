@@ -17,6 +17,9 @@ export default function (inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
+    win32metadata: {
+      ProductName: inpOptions.name
+    },
     targetUrl: normalizeUrl(inpOptions.targetUrl),
     platform: inpOptions.platform || inferPlatform(),
     arch: inpOptions.arch || inferArch(),
