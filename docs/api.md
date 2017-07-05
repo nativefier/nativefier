@@ -29,6 +29,7 @@
     - [[insecure]](#insecure)
     - [[flash]](#flash)
     - [[flash-path]](#flash-path)
+    - [[disk-cache-size]](#disk-cache-size)
     - [[inject]](#inject)
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
@@ -265,6 +266,13 @@ Take note that if this flag is specified, the `--insecure` flag will be added au
 ```
 
 You can also specify the path to the Chrome flash plugin directly with this flag. The path can be found at [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag as well.
+
+#### [disk-cache-size]
+
+```
+--disk-cache-size <value>
+```
+Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 #### [inject]
 
