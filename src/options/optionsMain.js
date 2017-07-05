@@ -44,6 +44,7 @@ export default function (inpOptions) {
     ignoreCertificate: inpOptions.ignoreCertificate || false,
     insecure: inpOptions.insecure || false,
     flashPluginDir: inpOptions.flashPath || inpOptions.flash || null,
+    diskCacheSize: inpOptions.diskCacheSize || null,
     inject: inpOptions.inject || null,
     ignore: 'src',
     fullScreen: inpOptions.fullScreen || false,
