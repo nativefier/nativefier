@@ -30,6 +30,7 @@ function selectAppArgs(options) {
     ignoreCertificate: options.ignoreCertificate,
     insecure: options.insecure,
     flashPluginDir: options.flashPluginDir,
+    diskCacheSize: options.diskCacheSize,
     fullScreen: options.fullScreen,
     hideWindowFrame: options.hideWindowFrame,
     maximize: options.maximize,

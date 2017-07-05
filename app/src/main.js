@@ -29,6 +29,10 @@ if (appArgs.ignoreCertificate) {
   app.commandLine.appendSwitch('ignore-certificate-errors');
 }
 
+if (appArgs.diskCacheSize) {
+  app.commandLine.appendSwitch('disk-cache-size', appArgs.diskCacheSize);
+}
+
 // do nothing for setDockBadge if not OSX
 let setDockBadge = () => {};
 
