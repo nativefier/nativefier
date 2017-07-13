@@ -38,6 +38,8 @@ if (require.main === module) {
     .option('-u, --user-agent <value>', 'set the user agent string for the app')
     .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
     .option('--ignore-certificate', 'ignore certificate related errors')
+    .option('--ignore-gpu-blacklist', 'allow WebGl apps to work on non supported graphics cards')
+    .option('--enable-es3-apis', 'force activation of WebGl 2.0')
     .option('--insecure', 'enable loading of insecure content, defaults to false')
     .option('--flash', 'if flash should be enabled')
     .option('--flash-path <value>', 'path to Chrome flash plugin, find it in `Chrome://plugins`')
