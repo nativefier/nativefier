@@ -1,16 +1,21 @@
 ### Description
 
+<Detail your problem here as clearly and concisely as possible 🙂. Help us help you by saying why and giving some context!>
 
-### Steps to Reproduce Issue
+### Steps to reproduce issue
 
 
-### Specifications
-- Version of Nativefier (run `$ nativefier --version`): `v0.0.0`
-- Version of Node.js (run `$ node --version`): `v0.0.0`
-- OS: `<OS>`
-- Architecture `<ARCH>`
-- Stack trace from the error message (if any)
+
+### Details
+
+- Are you nativefying a *public* website?
+- Feature request? Have you looked at `nativefier --help` to see if an existing option could fit your needs?
+- Full nativefier command used to build your app: `<command here>`
+- Version of Nativefier (run `nativefier --version`): `v0.0.0`
+- Version of node.js (run `node --version`): `v0.0.0`
+- OS: `<OS here>`
+- Error message / stack trace (if any):
 
 ```
-<Stack trace here>
+<Error message / Stack trace here>
 ```
