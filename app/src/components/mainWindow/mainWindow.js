@@ -177,7 +177,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   if (options.counter) {
     mainWindow.on('page-title-updated', (e, title) => {
-      const itemCountRegex = /[([{](\d*?)[}\])]/;
+      const itemCountRegex = /[([{](\d*?)\+?[}\])]/;
       const match = itemCountRegex.exec(title);
       if (match) {
         setDockBadge(match[1]);
