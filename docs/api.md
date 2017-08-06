@@ -242,6 +242,21 @@ If this flag is passed, it will not override the user agent.
 ```
 Forces the packaged app to ignore certificate errors.
 
+#### [ignore-gpu-blacklist]
+
+```
+--ignore-gpu-blacklist
+```
+Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
+
+#### [enable-es3-apis]
+
+```
+--enable-es3-apis
+```
+Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
+
+
 #### [insecure]
 
 ```
@@ -401,6 +416,8 @@ var options = {
     fastQuit: false,
     userAgent: 'Mozilla ...', // will infer a default for your current system
     ignoreCertificate: false,
+    ignoreGpuBlacklist: false,
+    enableEs3Apis: false,
     insecure: false,
     honest: false,
     zoom: 1.0,

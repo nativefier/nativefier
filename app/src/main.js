@@ -29,6 +29,14 @@ if (appArgs.ignoreCertificate) {
   app.commandLine.appendSwitch('ignore-certificate-errors');
 }
 
+if (appArgs.ignoreGpuBlacklist) {
+  app.commandLine.appendSwitch('ignore-gpu-blacklist');
+}
+
+if (appArgs.enableEs3Apis) {
+  app.commandLine.appendSwitch('enable-es3-apis');
+}
+
 if (appArgs.diskCacheSize) {
   app.commandLine.appendSwitch('disk-cache-size', appArgs.diskCacheSize);
 }
@@ -70,6 +78,7 @@ app.on('before-quit', () => {
 if (appArgs.crashReporter) {
   app.on('will-finish-launching', () => {
     crashReporter.start({
+      companyName: appArgs.companyName || '',
       productName: appArgs.name,
       submitURL: appArgs.crashReporter,
       autoSubmit: true,
