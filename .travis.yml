@@ -10,6 +10,9 @@ node_js:
   - '5'
   - '4'
 
+before_install:
+  - npm install -g npm
+
 install:
   - npm run dev-up
 
