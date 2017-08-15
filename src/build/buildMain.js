@@ -77,6 +77,66 @@ function maybeCopyIcons(options, appPath, callback) {
   });
 }
 
+/**
+ * Removes invalid parameters from options if building for Windows while not on Windows
+ * and Wine is not installed
+ * @param options
+ */
+function removeInvalidOptions(options, param) {
+  const packageOptions = JSON.parse(JSON.stringify(options));
+  if (options.platform === 'win32' && !isWindows()) {
+    if (!hasBinary.sync('wine')) {
+      log.warn(`Wine is required to use "${param}" option for a Windows app when packaging on non-windows platforms`);
+      packageOptions[param] = null;
+    }
+  }
+  return packageOptions;
+}
+
+/**
+ * Removes the `app-copyright` parameter from options if building for Windows while not on Windows
+ * and Wine is not installed
+ * @param options
+ */
+function maybeNoAppCopyrightOption(options) {
+  return removeInvalidOptions(options, 'app-copyright');
+}
+
+/**
+ * Removes the `build-version` parameter from options if building for Windows while not on Windows
+ * and Wine is not installed
+ * @param options
+ */
+function maybeNoBuildVersionOption(options) {
+  return removeInvalidOptions(options, 'build-version');
+}
+
+/**
+ * Removes the `app-version` parameter from options if building for Windows while not on Windows
+ * and Wine is not installed
+ * @param options
+ */
+function maybeNoAppVersionOption(options) {
+  return removeInvalidOptions(options, 'app-version');
+}
+
+/**
+ * Removes the `version-string` parameter from options if building for Windows while not on Windows
+ * and Wine is not installed
+ * @param options
+ */
+function maybeNoVersionStringOption(options) {
+  return removeInvalidOptions(options, 'version-string');
+}
+
+/**
+ * Removes the `win32metadata` parameter from options if building for Windows while not on Windows
+ * and Wine is not installed
+ * @param options
+ */
+function maybeNoWin32metadataOption(options) {
+  return removeInvalidOptions(options, 'win32metadata');
+}
 
 /**
  * @callback buildAppCallback
@@ -133,7 +193,13 @@ function buildMain(inpOptions, callback) {
     (options, callback) => {
       progress.tick('packaging');
       // maybe skip passing icon parameter to electron packager
-      const packageOptions = maybeNoIconOption(options);
+      let packageOptions = maybeNoIconOption(options);
+      // maybe skip passing other parameters to electron packager
+      packageOptions = maybeNoAppCopyrightOption(packageOptions);
+      packageOptions = maybeNoAppVersionOption(packageOptions);
+      packageOptions = maybeNoBuildVersionOption(packageOptions);
+      packageOptions = maybeNoVersionStringOption(packageOptions);
+      packageOptions = maybeNoWin32metadataOption(packageOptions);
 
       packagerConsole.override();
 

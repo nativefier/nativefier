@@ -11,7 +11,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "dev-up": "npm install && (cd app && npm install) && npm run build",
+    "dev-up": "npm install && (cd ./app && npm install) && npm run build",
     "test": "jest && gulp test",
     "jest": "jest",
     "tdd": "gulp tdd",
