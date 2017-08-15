@@ -17,8 +17,11 @@ export default function (inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
-    companyName: inpOptions.companyName,
-    win32metadata: {
+    'app-version': inpOptions.appVersion,
+    'build-version': inpOptions.buildVersion,
+    'app-copyright': inpOptions.appCopyright,
+    'version-string': inpOptions.versionString,
+    win32metadata: inpOptions.win32metadata || {
       ProductName: inpOptions.name,
       InternalName: inpOptions.name,
       FileDescription: inpOptions.name,
