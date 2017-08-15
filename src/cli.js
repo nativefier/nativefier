@@ -16,6 +16,13 @@ function parseJson(val) {
   return JSON.parse(val);
 }
 
+function getProcessEnvs(val) {
+  if (!val) return {};
+  const pEnv = {};
+  pEnv.processEnvs = parseJson(val);
+  return pEnv;
+}
+
 if (require.main === module) {
   program
     .version(packageJson.version)
@@ -64,6 +71,7 @@ if (require.main === module) {
     .option('--internal-urls <value>', 'regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser.  (default: URLs on same second-level domain as app)')
     .option('--crash-reporter <value>', 'remote server URL to send crash reports')
     .option('--single-instance', 'allow only a single instance of the application')
+    .option('--processEnvs <json-string>', 'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.', getProcessEnvs)
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {
