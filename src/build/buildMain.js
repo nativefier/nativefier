@@ -94,39 +94,39 @@ function removeInvalidOptions(options, param) {
 }
 
 /**
- * Removes the `app-copyright` parameter from options if building for Windows while not on Windows
+ * Removes the `appCopyright` parameter from options if building for Windows while not on Windows
  * and Wine is not installed
  * @param options
  */
 function maybeNoAppCopyrightOption(options) {
-  return removeInvalidOptions(options, 'app-copyright');
+  return removeInvalidOptions(options, 'appCopyright');
 }
 
 /**
- * Removes the `build-version` parameter from options if building for Windows while not on Windows
+ * Removes the `buildVersion` parameter from options if building for Windows while not on Windows
  * and Wine is not installed
  * @param options
  */
 function maybeNoBuildVersionOption(options) {
-  return removeInvalidOptions(options, 'build-version');
+  return removeInvalidOptions(options, 'buildVersion');
 }
 
 /**
- * Removes the `app-version` parameter from options if building for Windows while not on Windows
+ * Removes the `appVersion` parameter from options if building for Windows while not on Windows
  * and Wine is not installed
  * @param options
  */
 function maybeNoAppVersionOption(options) {
-  return removeInvalidOptions(options, 'app-version');
+  return removeInvalidOptions(options, 'appVersion');
 }
 
 /**
- * Removes the `version-string` parameter from options if building for Windows while not on Windows
+ * Removes the `versionString` parameter from options if building for Windows while not on Windows
  * and Wine is not installed
  * @param options
  */
 function maybeNoVersionStringOption(options) {
-  return removeInvalidOptions(options, 'version-string');
+  return removeInvalidOptions(options, 'versionString');
 }
 
 /**
