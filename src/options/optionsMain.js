@@ -17,15 +17,6 @@ export default function (inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
-    'app-version': inpOptions.appVersion,
-    'build-version': inpOptions.buildVersion,
-    'app-copyright': inpOptions.appCopyright,
-    'version-string': inpOptions.versionString,
-    win32metadata: inpOptions.win32metadata || {
-      ProductName: inpOptions.name,
-      InternalName: inpOptions.name,
-      FileDescription: inpOptions.name,
-    },
     targetUrl: normalizeUrl(inpOptions.targetUrl),
     platform: inpOptions.platform || inferPlatform(),
     arch: inpOptions.arch || inferArch(),
@@ -65,6 +56,16 @@ export default function (inpOptions) {
     zoom: inpOptions.zoom || 1.0,
     internalUrls: inpOptions.internalUrls || null,
     singleInstance: inpOptions.singleInstance || false,
+    appVersion: inpOptions.appVersion,
+    buildVersion: inpOptions.buildVersion,
+    appCopyright: inpOptions.appCopyright,
+    versionString: inpOptions.versionString,
+    win32metadata: inpOptions.win32metadata || {
+      ProductName: inpOptions.name,
+      InternalName: inpOptions.name,
+      FileDescription: inpOptions.name,
+    },
+    processEnvs: inpOptions.processEnvs,
   };
 
   if (options.verbose) {

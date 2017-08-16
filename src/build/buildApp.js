@@ -40,6 +40,7 @@ function selectAppArgs(options) {
     internalUrls: options.internalUrls,
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
+    processEnvs: options.processEnvs,
   };
 }
 

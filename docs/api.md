@@ -408,6 +408,20 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
 
+#### [processEnvs]
+
+```
+--processEnvs <json-string>
+```
+
+a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.
+
+Example:
+
+```bash
+nativefier <your-geolocation-enabled-website> --processEnvs '{"GOOGLE_API_KEY": "<your-google-api-key>"}'
+```
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
@@ -445,7 +459,10 @@ var options = {
     insecure: false,
     honest: false,
     zoom: 1.0,
-    singleInstance: false
+    singleInstance: false,
+    processEnvs: {
+      "GOOGLE_API_KEY": "<your-google-api-key>"
+    }
 };
 
 nativefier(options, function(error, appPath) {
