@@ -16,6 +16,13 @@ electronDownload();
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
+if (appArgs.processEnvs) {
+  Object.keys(appArgs.processEnvs).forEach((key) => {
+    /* eslint-env node */
+    process.env[key] = appArgs.processEnvs[key];
+  });
+}
+
 let mainWindow;
 
 if (typeof appArgs.flashPluginDir === 'string') {
