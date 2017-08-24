@@ -78,13 +78,13 @@ function maybeCopyScripts(srcs, dest) {
     });
   }));
 
-  return new Promise((resolve, reject) => {
+  return new Promise((_resolve, _reject) => {
     Promise.all(promises)
       .then(() => {
-        resolve();
+        _resolve();
       })
       .catch((error) => {
-        reject(error);
+        _reject(error);
       });
   });
 }
@@ -198,7 +198,6 @@ function buildApp(src, dest, options, callback) {
         callback();
       })
       .catch(() => {
-        
       });
   });
 }
