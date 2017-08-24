@@ -5,6 +5,8 @@ import path from 'path';
 import ncp from 'ncp';
 import helpers from '../helpers/helpers';
 
+const { shellExec } = helpers;
+
 const copy = ncp.ncp;
 
 /**
