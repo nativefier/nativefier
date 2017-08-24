@@ -197,8 +197,8 @@ function buildApp(src, dest, options, callback) {
         shellExec(`cd ${dest} && npm install`, true, () => {});
         callback();
       })
-      .catch((error) => {
-        console.warn(error);
+      .catch((err) => {
+        console.warn(err);
       });
   });
 }
