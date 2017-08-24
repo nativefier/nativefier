@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import _ from 'lodash';
 import path from 'path';
 import ncp from 'ncp';
-import shellJs from 'shelljs';
+import helpers from '../helpers/helpers';
 
 const copy = ncp.ncp;
 
@@ -135,23 +135,6 @@ function addAdditionalDependencies(appPath, options) {
     packageJson.dependencies = Object.assign(packageJson.dependencies, options.dependencies);
     fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
   }
-}
-
-/**
- * Allow to start a shell command
- *
- * @param {string} cmd
- * @param {boolean} silent
- * @param {function} callback
- */
-function shellExec(cmd, silent, callback) {
-  shellJs.exec(cmd, { silent }, (code, stdout, stderr) => {
-    if (code) {
-      callback(JSON.stringify({ code, stdout, stderr }));
-      return;
-    }
-    callback();
-  });
 }
 
 /**
