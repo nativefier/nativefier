@@ -69,7 +69,6 @@ export default function (inpOptions) {
       FileDescription: inpOptions.name,
     },
     processEnvs: inpOptions.processEnvs,
-    dependencies: inpOptions.dependencies || null,
   };
 
   if (options.verbose) {

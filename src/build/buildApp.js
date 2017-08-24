@@ -198,7 +198,7 @@ function buildApp(src, dest, options, callback) {
         callback();
       })
       .catch((err) => {
-        console.warn(err);
+        
       });
   });
 }
