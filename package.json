@@ -53,7 +53,7 @@
     "page-icon": "^0.3.0",
     "progress": "^2.0.0",
     "sanitize-filename": "^1.5.3",
-    "shelljs": "^0.7.0",
+    "shelljs": "^0.7.8",
     "source-map-support": "^0.4.0",
     "tmp": "0.0.31",
     "validator": "^7.0.0"
@@ -69,6 +69,7 @@
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.1.3",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-promise": "^3.5.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^6.1.1",
     "gulp-istanbul": "^1.1.1",

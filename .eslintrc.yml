@@ -4,6 +4,7 @@ env:
   jest: true
 plugins:
   - import
+  - promise
 rules:
   # TODO: Remove this when we have shifted away from the async package
   no-shadow: 'warn'
