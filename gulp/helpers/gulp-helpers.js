@@ -1,6 +1,19 @@
 import gulp from 'gulp';
+import shellJs from 'shelljs';
 import sourcemaps from 'gulp-sourcemaps';
 import babel from 'gulp-babel';
+
+function shellExec(cmd, silent, callback) {
+  shellJs.exec(cmd, { silent }, (code, stdout, stderr) => {
+    // Check answer validity
+    if (code) {
+      // Serialize response
+      callback(JSON.stringify({ code, stdout, stderr }));
+      return;
+    }
+    callback();
+  });
+}
 
 function buildES6(src, dest, callback) {
   return gulp.src(src)
@@ -12,5 +25,6 @@ function buildES6(src, dest, callback) {
 }
 
 export default {
+  shellExec,
   buildES6,
 };

@@ -1,6 +1,6 @@
 import gulp from 'gulp';
 import runSequence from 'run-sequence';
-import helpers from '../lib/helpers/helpers.js';
+import helpers from './helpers/gulp-helpers';
 
 const { shellExec } = helpers;
 
