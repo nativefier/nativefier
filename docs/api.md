@@ -10,6 +10,8 @@
     - [[name]](#name)
     - [[platform]](#platform)
     - [[arch]](#arch)
+    - [[assets]](#assets)
+    - [[dependencies]](#dependencies)
     - [[electron-version]](#electron-version)
     - [[no-overwrite]](#no-overwrite)
     - [[conceal]](#conceal)
@@ -407,6 +409,69 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 ```
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
+
+#### [assets]
+
+```
+--assets
+```
+
+Allow to specify additional assets array dedicated to the desktop version of your electron application, might be either a file or a directory
+
+Example:
+
+```bash
+nativefier http://google.com --assets ./assets/mainInjector.js --assets ./images ....
+```
+
+Add injector.js file with --injector arguments:
+```bash
+nativefier http://google.com --assets ./assets/mainInjector.js --assets ./images --injector ./desktop/assets/injector.js
+```
+
+* injector.js
+
+The code code runs at webclient side, you may use 'MAIN_CONTROLLER_READY' or any other kind of signal to synchronize the code injection with your webclient.
+In the injector.js file you may overload existing webclient script, or add your own signal in order to create a channel between the web part and the remote part. 
+
+```javascript
+(function () {
+    "use strict";
+    // Electron
+    var {ipcRenderer, remote} = require('electron'); 
+    // --
+
+    if( remote ) {
+        let { injection } = remote.require( remote.app.getAppPath() +  "/assets/mainInjector.js");
+       
+    } else {
+            return;
+        }
+    }
+    document.addEventListener("MAIN_CONTROLLER_READY", function(){
+        ...
+    }
+}
+```
+
+* mainInjector.js
+
+Use Webpack to create a full contained file with dependencies and desktop code, this file/code have to contain the code executed on remote side
+
+
+#### [dependencies]
+
+```
+--dependencies
+```
+
+Allow to add additional npm dependencies to your project for local assets
+
+Example:
+
+```bash
+nativefier ... --dependencies '{"electron-log": "^2.2.6"}'
+```
 
 #### [processEnvs]
 
