@@ -71,6 +71,8 @@ if (require.main === module) {
     .option('--internal-urls <value>', 'regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser.  (default: URLs on same second-level domain as app)')
     .option('--crash-reporter <value>', 'remote server URL to send crash reports')
     .option('--single-instance', 'allow only a single instance of the application')
+    .option('--assets <value>', 'Allow to specify additional assets array dedicated to the desktop version of your electron application, might be either a file or a directory', collect, [])
+    .option('--dependencies', 'Allow to add additional npm dependencies to your project for local assets', parseJson)
     .option('--processEnvs <json-string>', 'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.', getProcessEnvs)
     .parse(process.argv);
 
