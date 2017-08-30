@@ -1,3 +1,13 @@
+7.4.1 / 2017-08-06
+==================
+
+ * Add support for `--disk-cache-size` Electron flag (PR #400)
+ * Add `--ignore-gpu-blacklist` and `--enable-es3-apis` flags to allow WebGL
+   apps to work on graphics cards unsupported/blacklisted by Chrome (PR #410)
+ * Fix #28 - Executable name being always `Electron` under Windows (PR #389)
+ * Fix #353 - `--crash-reporter` option crashing packaged app at startup
+ * Fix #402 - Force fullscreen even after first startup, as `electron-window-state`
+   does not appear to remember fullscreen in all cases (PR #403).
 
 7.4.0 / 2017-05-21
 ==================

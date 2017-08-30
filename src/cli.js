@@ -11,6 +11,18 @@ function collect(val, memo) {
   return memo;
 }
 
+function parseJson(val) {
+  if (!val) return {};
+  return JSON.parse(val);
+}
+
+function getProcessEnvs(val) {
+  if (!val) return {};
+  const pEnv = {};
+  pEnv.processEnvs = parseJson(val);
+  return pEnv;
+}
+
 if (require.main === module) {
   program
     .version(packageJson.version)
@@ -22,6 +34,10 @@ if (require.main === module) {
     .option('-n, --name <value>', 'app name')
     .option('-p, --platform <value>', '\'osx\', \'linux\' or \'windows\'')
     .option('-a, --arch <value>', '\'ia32\' or \'x64\' or \'armv7l\'')
+    .option('--app-version <value>', 'The release version of the application.  Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.')
+    .option('--build-version <value>', 'The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.')
+    .option('--app-copyright <value>', 'The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X')
+    .option('--win32metadata <json-string>', 'a JSON string of key/value pairs of application metadata (ProductName, InternalName, FileDescription) to embed into the executable (Windows only).', parseJson)
     .option('-e, --electron-version <value>', 'electron version to package, without the \'v\', see https://github.com/atom/electron/releases')
     .option('--no-overwrite', 'do not override output directory if it already exists, defaults to false')
     .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')
@@ -55,6 +71,7 @@ if (require.main === module) {
     .option('--internal-urls <value>', 'regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser.  (default: URLs on same second-level domain as app)')
     .option('--crash-reporter <value>', 'remote server URL to send crash reports')
     .option('--single-instance', 'allow only a single instance of the application')
+    .option('--processEnvs <json-string>', 'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.', getProcessEnvs)
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {

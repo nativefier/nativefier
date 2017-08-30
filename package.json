@@ -1,6 +1,6 @@
 {
   "name": "nativefier",
-  "version": "7.4.0",
+  "version": "7.4.1",
   "description": "Wrap web apps natively",
   "keywords": [
     "desktop",
@@ -11,7 +11,7 @@
   ],
   "main": "lib/index.js",
   "scripts": {
-    "dev-up": "npm install && (cd app && npm install) && npm run build",
+    "dev-up": "npm install && (cd ./app && npm install) && npm run build",
     "test": "jest && gulp test",
     "jest": "jest",
     "tdd": "gulp tdd",

@@ -100,6 +100,30 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for OSX) can al
 
 Processor architecture, automatically determined based on the current OS. Can be overwritten by specifying either `ia32`, `x64` or `armv7l`.
 
+#### [app-copyright]
+
+```
+--app-copyright <value>
+```
+
+The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X.
+
+#### [app-version]
+
+```
+--app-version <value>
+```
+
+The release version of the application. By default the `version` property in the `package.json` is used but it can be overridden with this argument. If neither are provided, the version of Electron will be used. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.
+
+#### [build-version]
+
+```
+--build-version <value>
+```
+
+The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.
+
 #### [electron-version]
 
 ```
@@ -384,6 +408,20 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
 
+#### [processEnvs]
+
+```
+--processEnvs <json-string>
+```
+
+a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.
+
+Example:
+
+```bash
+nativefier <your-geolocation-enabled-website> --processEnvs '{"GOOGLE_API_KEY": "<your-google-api-key>"}'
+```
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
@@ -421,7 +459,10 @@ var options = {
     insecure: false,
     honest: false,
     zoom: 1.0,
-    singleInstance: false
+    singleInstance: false,
+    processEnvs: {
+      "GOOGLE_API_KEY": "<your-google-api-key>"
+    }
 };
 
 nativefier(options, function(error, appPath) {
@@ -431,6 +472,55 @@ nativefier(options, function(error, appPath) {
     }
     console.log('App has been nativefied to', appPath);
 });
+```
+
+### Addition packaging options for Windows
+
+#### [version-string]
+
+*Object* (**deprecated** and will be removed in a future major version (of `electron-packager`), please use the
+[`win32metadata`](#win32metadata) parameter instead)
+
+#### [win32metadata]
+
+```
+--win32metadata <json-string>
+```
+
+a JSON string of key/value pairs of application metadata (ProductName, InternalName, FileDescription) to embed into the executable (Windows only).
+
+Example:
+
+```bash
+nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "Your Product Name", "InternalName", "Your Internal Name", "FileDescription": "Your File Description"}'
+```
+
+##### Programmatic API
+
+*Object*
+
+Object (also known as a "hash") of application metadata to embed into the executable:
+- `CompanyName`
+- `FileDescription`
+- `OriginalFilename`
+- `ProductName`
+- `InternalName`
+
+_(Note that `win32metadata` was added to `electron-packager` in version 8.0.0)_
+
+In your `.js` file:
+
+```javascript
+var options = {
+    ...
+    win32metadata: {
+      CompanyName: 'Your Company Name',
+      FileDescription: 'Your File Description',
+      OriginalFilename: 'Your Original Filename',
+      ProductName: 'Your Product Name',
+      InternalName: 'Your Internal Name'
+    }
+};
 ```
 
 More description about the options for `nativefier` can be found at the above [section](#command-line).
