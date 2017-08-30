@@ -103,9 +103,6 @@ app.on('ready', () => {
         // the user needs to relaunch the app
         app.relaunch();
         app.quit();
-      })
-      .catch((err) => {
-        console.error(err);
       });
   }
 
