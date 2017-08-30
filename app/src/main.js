@@ -97,7 +97,7 @@ if (appArgs.crashReporter) {
 }
 
 app.on('ready', () => {
-  if(!widevineExists) {
+  if (!widevineExists) {
     widevine.downloadAsync(app, widevineStoragePath)
       .then(() => {
         // the user needs to relaunch the app
