@@ -97,15 +97,17 @@ if (appArgs.crashReporter) {
 }
 
 app.on('ready', () => {
-  !widevineExists && widevine.downloadAsync(app, widevineStoragePath)
-    .then(() => {
-      // the user needs to relaunch the app
-      app.relaunch();
-      app.quit();
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  if(!widevineExists) {
+    widevine.downloadAsync(app, widevineStoragePath)
+      .then(() => {
+        // the user needs to relaunch the app
+        app.relaunch();
+        app.quit();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
 });
