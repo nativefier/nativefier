@@ -104,7 +104,7 @@ app.on('ready', () => {
       app.quit();
     })
     .catch((err) => {
-      console.log(err);
+      console.error(err);
     });
 
   mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
