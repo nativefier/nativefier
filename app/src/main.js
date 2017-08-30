@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { app, crashReporter } from 'electron';
 import electronDownload from 'electron-dl';
+import widevine from 'electron-widevinecdm';
 
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
@@ -12,6 +13,8 @@ import inferFlash from './helpers/inferFlash';
 const { isOSX } = helpers;
 
 electronDownload();
+const widevineStoragePath = path.join(app.getPath('appData'), 'widevine');
+const widevineExists = widevine.load(app, widevineStoragePath);
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
@@ -94,6 +97,16 @@ if (appArgs.crashReporter) {
 }
 
 app.on('ready', () => {
+  !widevineExists && widevine.downloadAsync(app, widevineStoragePath)
+    .then(() => {
+      // the user needs to relaunch the app
+      app.relaunch();
+      app.quit();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
   mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
 });
 
