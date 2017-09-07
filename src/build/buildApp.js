@@ -41,6 +41,8 @@ function selectAppArgs(options) {
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
     processEnvs: options.processEnvs,
+    basicAuthUsername: options.basicAuthUsername,
+    basicAuthPassword: options.basicAuthPassword,
   };
 }
 
