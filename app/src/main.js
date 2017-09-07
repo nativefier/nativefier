@@ -109,7 +109,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
     // for http authentication
   event.preventDefault();
 
-  if (appArgs.basicAuthUsername !== '' && appArgs.basicAuthPassword !== '') {
+  if (appArgs.basicAuthUsername !== null && appArgs.basicAuthPassword !== null) {
     callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
   } else {
     createLoginWindow(callback);
