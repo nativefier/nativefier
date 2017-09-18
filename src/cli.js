@@ -23,6 +23,18 @@ function getProcessEnvs(val) {
   return pEnv;
 }
 
+function checkInternet() {
+    require('dns').lookup('google.com',function(err) {
+        if (err && err.code == "ENOTFOUND") {
+            console.log('\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.');
+            process.exit(1);
+        } else {
+            return;
+        }
+    })
+}
+
+
 if (require.main === module) {
   program
     .version(packageJson.version)
@@ -77,12 +89,14 @@ if (require.main === module) {
   if (!process.argv.slice(2).length) {
     program.help();
   }
-
+  checkInternet();
   nativefier(program, (error, appPath) => {
     if (error) {
       console.error(error);
       return;
     }
+
+
 
     if (!appPath) {
       // app exists and --overwrite is not passed
