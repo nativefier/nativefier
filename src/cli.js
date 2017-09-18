@@ -96,8 +96,6 @@ if (require.main === module) {
       return;
     }
 
-
-
     if (!appPath) {
       // app exists and --overwrite is not passed
       return;
