@@ -3,6 +3,7 @@
 import 'source-map-support/register';
 import program from 'commander';
 import nativefier from './index';
+
 const dns = require('dns');
 const packageJson = require('./../package');
 
@@ -26,7 +27,7 @@ function getProcessEnvs(val) {
 function checkInternet() {
   dns.lookup('npmjs.com', (err) => {
     if (err && err.code === 'ENOTFOUND') {
-      console.log ('\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.');
+      console.log('\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.');
       process.exit(1);
     }
   });
