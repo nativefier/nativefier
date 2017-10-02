@@ -72,6 +72,7 @@ if (require.main === module) {
     .option('--crash-reporter <value>', 'remote server URL to send crash reports')
     .option('--single-instance', 'allow only a single instance of the application')
     .option('--processEnvs <json-string>', 'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.', getProcessEnvs)
+    .option('--tray', 'allow app to stay in system tray')
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {

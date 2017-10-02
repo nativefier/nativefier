@@ -6,6 +6,7 @@ import electronDownload from 'electron-dl';
 
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
+import createTray from './components/trayIcon/trayIcon';
 import helpers from './helpers/helpers';
 import inferFlash from './helpers/inferFlash';
 
@@ -24,6 +25,7 @@ if (appArgs.processEnvs) {
 }
 
 let mainWindow;
+let trayIcon;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
@@ -95,6 +97,7 @@ if (appArgs.crashReporter) {
 
 app.on('ready', () => {
   mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
+  trayIcon = createTray(appArgs, mainWindow);
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {

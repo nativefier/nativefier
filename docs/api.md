@@ -40,6 +40,7 @@
     - [[zoom]](#zoom)
     - [[crash-reporter]](#crash-reporter)
     - [[single-instance]](#single-instance)
+    - [[tray]](#tray)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -407,6 +408,14 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 ```
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
+
+#### [tray]
+
+```
+--tray
+```
+
+Application will stays as an icon in the system tray. Prevents application from being closed from clicking the cross button on the window.
 
 #### [processEnvs]
 

@@ -10,9 +10,12 @@ const { isOSX, linkIsInternal, getCssToInject, shouldInjectCss } = helpers;
 
 const ZOOM_INTERVAL = 0.1;
 
-function maybeHideWindow(window, event, fastQuit) {
+function maybeHideWindow(window, event, fastQuit, tray) {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
+    event.preventDefault();
+    window.hide();
+  } else if (!fastQuit && tray) {
     event.preventDefault();
     window.hide();
   }
@@ -211,7 +214,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       mainWindow.setFullScreen(false);
       mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event, options.fastQuit));
     }
-    maybeHideWindow(mainWindow, event, options.fastQuit);
+    maybeHideWindow(mainWindow, event, options.fastQuit, options.tray);
   });
 
   return mainWindow;

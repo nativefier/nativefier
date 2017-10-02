@@ -66,6 +66,7 @@ export default function (inpOptions) {
       FileDescription: inpOptions.name,
     },
     processEnvs: inpOptions.processEnvs,
+    tray: inpOptions.tray || false,
   };
 
   if (options.verbose) {
@@ -100,4 +101,3 @@ export default function (inpOptions) {
 
   return asyncConfig(options);
 }
-
