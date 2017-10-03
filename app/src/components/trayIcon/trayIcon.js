@@ -1,5 +1,6 @@
 import path from 'path';
-const {app, Tray, Menu, ipcMain} = require('electron');
+
+const { app, Tray, Menu, ipcMain } = require('electron');
 
 /**
  *
@@ -7,45 +8,50 @@ const {app, Tray, Menu, ipcMain} = require('electron');
  * @param {electron.BrowserWindow} mainWindow MainWindow created from main.js
  * @returns {electron.Tray}
  */
-function createTray(inpOptions, mainWindow) {
+function createTrayIcon(inpOptions, mainWindow) {
   const options = Object.assign({}, inpOptions);
 
   if (options.tray) {
-    let iconPath = path.join(__dirname, '../', '/icon.png');
-    let appIcon = new Tray(iconPath);
-    let contextMenu = Menu.buildFromTemplate([
+    const iconPath = path.join(__dirname, '../', '/icon.png');
+    const appIcon = new Tray(iconPath);
+
+    const onClick = () => {
+      if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow.show();
+      }
+    };
+
+    const contextMenu = Menu.buildFromTemplate([
       {
         label: options.name,
-        click: () => {
-          mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
-        }
+        click: onClick,
       },
       {
         label: 'Quit',
-        click: app.exit
-      }
+        click: app.exit,
+      },
     ]);
 
-    appIcon.on('click', () => {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
-    })
+    appIcon.on('click', onClick);
 
     mainWindow.on('show', () => {
-      appIcon.setHighlightMode('always')
-    })
+      appIcon.setHighlightMode('always');
+    });
 
     mainWindow.on('hide', () => {
-      appIcon.setHighlightMode('never')
-    })
+      appIcon.setHighlightMode('never');
+    });
 
     if (options.counter) {
       mainWindow.on('page-title-updated', (e, title) => {
         const itemCountRegex = /[([{](\d*?)\+?[}\])]/;
         const match = itemCountRegex.exec(title);
         if (match) {
-          appIcon.setToolTip(' (' + match[1] + ') ' + options.name);
+          appIcon.setToolTip(`(${match[1]})  ${options.name}`);
         } else {
-          appIcon.setToolTip(options.name)
+          appIcon.setToolTip(options.name);
         }
       });
     } else {
@@ -53,11 +59,11 @@ function createTray(inpOptions, mainWindow) {
         if (mainWindow.isFocused()) {
           return;
         }
-        appIcon.setToolTip('• ' + options.name);
+        appIcon.setToolTip(`•  ${options.name}`);
       });
 
       mainWindow.on('focus', () => {
-        appIcon.setToolTip(options.name)
+        appIcon.setToolTip(options.name);
       });
     }
 
@@ -70,4 +76,4 @@ function createTray(inpOptions, mainWindow) {
   return null;
 }
 
-export default createTray;
+export default createTrayIcon;
