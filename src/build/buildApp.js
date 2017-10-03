@@ -40,6 +40,11 @@ function selectAppArgs(options) {
     internalUrls: options.internalUrls,
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
+    appCopyright: options.appCopyright,
+    appVersion: options.appVersion,
+    buildVersion: options.buildVersion,
+    win32metadata: options.win32metadata,
+    versionString: options.versionString,
     processEnvs: options.processEnvs,
   };
 }
