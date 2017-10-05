@@ -417,7 +417,7 @@ Prevents application from being run multiple times. If such an attempt occurs th
 --tray
 ```
 
-Application will stays as an icon in the system tray. Prevents application from being closed from clicking the cross button on the window.
+Application will stay as an icon in the system tray. Prevents application from being closed from clicking the window close button.
 
 #### [basic-auth-username]
 
