@@ -48,7 +48,7 @@ function selectAppArgs(options) {
     processEnvs: options.processEnvs,
     tray: options.tray,
     basicAuthUsername: options.basicAuthUsername,
-    basicAuthPassword: options.basicAuthPassword
+    basicAuthPassword: options.basicAuthPassword,
   };
 }
 
