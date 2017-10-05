@@ -40,6 +40,7 @@
     - [[zoom]](#zoom)
     - [[crash-reporter]](#crash-reporter)
     - [[single-instance]](#single-instance)
+    - [[tray]](#tray)
     - [[basic-auth-username]](#basic-auth-username)
     - [[basic-auth-password]](#basic-auth-username)
 - [Programmatic API](#programmatic-api)
@@ -410,6 +411,14 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
 
+#### [tray]
+
+```
+--tray
+```
+
+Application will stay as an icon in the system tray. Prevents application from being closed from clicking the window close button.
+
 #### [basic-auth-username]
 
 ```
@@ -417,6 +426,7 @@ Prevents application from being run multiple times. If such an attempt occurs th
 ```
 
 Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
+
 
 #### [processEnvs]
 

@@ -6,6 +6,7 @@ import electronDownload from 'electron-dl';
 
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
+import createTrayIcon from './components/trayIcon/trayIcon';
 import helpers from './helpers/helpers';
 import inferFlash from './helpers/inferFlash';
 
@@ -103,6 +104,7 @@ if (appArgs.crashReporter) {
 
 app.on('ready', () => {
   mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
+  createTrayIcon(appArgs, mainWindow);
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {

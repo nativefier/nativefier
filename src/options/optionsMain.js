@@ -66,6 +66,7 @@ export default function (inpOptions) {
       FileDescription: inpOptions.name,
     },
     processEnvs: inpOptions.processEnvs,
+    tray: inpOptions.tray || false,
     basicAuthUsername: inpOptions.basicAuthUsername || null,
     basicAuthPassword: inpOptions.basicAuthPassword || null,
   };
@@ -102,4 +103,3 @@ export default function (inpOptions) {
 
   return asyncConfig(options);
 }
-
