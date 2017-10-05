@@ -89,7 +89,7 @@ To support conversion of a `.png` or `.ico` into a `.icns` for a packaged macOS 
 
 #### [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html)
 
-You need [XCode](https://developer.apple.com/xcode/) installed.
+You need [Xcode](https://developer.apple.com/xcode/) installed.
 
 #### [imagemagick](http://www.imagemagick.org/script/index.php)
 

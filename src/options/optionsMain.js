@@ -67,6 +67,8 @@ export default function (inpOptions) {
     },
     processEnvs: inpOptions.processEnvs,
     tray: inpOptions.tray || false,
+    basicAuthUsername: inpOptions.basicAuthUsername || null,
+    basicAuthPassword: inpOptions.basicAuthPassword || null
   };
 
   if (options.verbose) {

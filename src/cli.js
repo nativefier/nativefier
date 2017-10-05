@@ -4,6 +4,7 @@ import 'source-map-support/register';
 import program from 'commander';
 import nativefier from './index';
 
+const dns = require('dns');
 const packageJson = require('./../package');
 
 function collect(val, memo) {
@@ -22,6 +23,15 @@ function getProcessEnvs(val) {
   pEnv.processEnvs = parseJson(val);
   return pEnv;
 }
+
+function checkInternet() {
+  dns.lookup('npmjs.com', (err) => {
+    if (err && err.code === 'ENOTFOUND') {
+      console.log('\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.');
+    }
+  });
+}
+
 
 if (require.main === module) {
   program
@@ -73,12 +83,14 @@ if (require.main === module) {
     .option('--single-instance', 'allow only a single instance of the application')
     .option('--processEnvs <json-string>', 'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.', getProcessEnvs)
     .option('--tray', 'allow app to stay in system tray')
+    .option('--basic-auth-username <value>', 'basic http(s) auth username')
+    .option('--basic-auth-password <value>', 'basic http(s) auth password')
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {
     program.help();
   }
-
+  checkInternet();
   nativefier(program, (error, appPath) => {
     if (error) {
       console.error(error);

@@ -49,6 +49,14 @@ if (appArgs.diskCacheSize) {
   app.commandLine.appendSwitch('disk-cache-size', appArgs.diskCacheSize);
 }
 
+if (appArgs.basicAuthUsername) {
+  app.commandLine.appendSwitch('basic-auth-username', appArgs.basicAuthUsername);
+}
+
+if (appArgs.basicAuthPassword) {
+  app.commandLine.appendSwitch('basic-auth-password', appArgs.basicAuthPassword);
+}
+
 // do nothing for setDockBadge if not OSX
 let setDockBadge = () => {};
 
@@ -102,7 +110,12 @@ app.on('ready', () => {
 app.on('login', (event, webContents, request, authInfo, callback) => {
     // for http authentication
   event.preventDefault();
-  createLoginWindow(callback);
+
+  if (appArgs.basicAuthUsername !== null && appArgs.basicAuthPassword !== null) {
+    callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
+  } else {
+    createLoginWindow(callback);
+  }
 });
 
 if (appArgs.singleInstance) {

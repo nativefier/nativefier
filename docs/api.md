@@ -41,6 +41,8 @@
     - [[crash-reporter]](#crash-reporter)
     - [[single-instance]](#single-instance)
     - [[tray]](#tray)
+    - [[basic-auth-username]](#basic-auth-username)
+    - [[basic-auth-password]](#basic-auth-username)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -416,6 +418,15 @@ Prevents application from being run multiple times. If such an attempt occurs th
 ```
 
 Application will stays as an icon in the system tray. Prevents application from being closed from clicking the cross button on the window.
+
+#### [basic-auth-username]
+
+```
+--basic-auth-username <value> --basic-auth-password <value>
+```
+
+Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
+
 
 #### [processEnvs]
 

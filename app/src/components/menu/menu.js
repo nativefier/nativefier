@@ -72,6 +72,11 @@ function createMenu({ nativefierVersion,
           role: 'paste',
         },
         {
+          label: 'Paste and Match Style',
+          accelerator: 'CmdOrCtrl+Shift+V',
+          role: 'pasteandmatchstyle',
+        },
+        {
           label: 'Select All',
           accelerator: 'CmdOrCtrl+A',
           role: 'selectall',
