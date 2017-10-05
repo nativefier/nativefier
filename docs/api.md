@@ -40,6 +40,8 @@
     - [[zoom]](#zoom)
     - [[crash-reporter]](#crash-reporter)
     - [[single-instance]](#single-instance)
+    - [[basic-auth-username]](#basic-auth-username)
+    - [[basic-auth-password]](#basic-auth-username)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -407,6 +409,14 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 ```
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
+
+#### [basic-auth-username]
+
+```
+--basic-auth-username <value> --basic-auth-password <value>
+```
+
+Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
 
 #### [processEnvs]
 

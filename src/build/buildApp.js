@@ -46,6 +46,8 @@ function selectAppArgs(options) {
     win32metadata: options.win32metadata,
     versionString: options.versionString,
     processEnvs: options.processEnvs,
+    basicAuthUsername: options.basicAuthUsername,
+    basicAuthPassword: options.basicAuthPassword,
   };
 }
 
