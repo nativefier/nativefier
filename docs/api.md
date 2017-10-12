@@ -298,7 +298,7 @@ Forces the packaged app to ignore web security errors, such as [Mixed Content](h
 ```
 --internal-urls <regex>
 ```
-Customize what should open in an external browser.
+Customize what should open in an external browser. If the URL does not match the regex, it will open in an external browser.
 
 #### [flash]
 
