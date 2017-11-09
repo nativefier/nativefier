@@ -12,7 +12,7 @@ function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERS
         throw new Error(`Bad request: Status code ${response.status}`);
       }
 
-      const data = response.data;
+      const { data } = response;
       const electronVersionToChromeVersion = _.zipObject(
         data.map(d => d.version),
         data.map(d => d.chrome),

@@ -2,7 +2,7 @@ import chai from 'chai';
 import _ from 'lodash';
 import inferUserAgent from './../../lib/infer/inferUserAgent';
 
-const assert = chai.assert;
+const { assert } = chai;
 
 const TEST_RESULT = {
   darwin: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Safari/537.36',
@@ -17,7 +17,7 @@ function testPlatform(platform) {
     });
 }
 
-describe('Infer User Agent', function () {
+describe('Infer User Agent', function testInferUserAgent() {
   this.timeout(15000);
   it('Can infer userAgent for all platforms', (done) => {
     const testPromises = _.keys(TEST_RESULT).map(platform => testPlatform(platform));

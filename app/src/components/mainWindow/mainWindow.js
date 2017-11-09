@@ -127,7 +127,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       if (response !== 0) {
         return;
       }
-      const session = mainWindow.webContents.session;
+      const { session } = mainWindow.webContents;
       session.clearStorageData(() => {
         session.clearCache(() => {
           mainWindow.loadURL(options.targetUrl);

@@ -13,7 +13,7 @@ import PackagerConsole from './../helpers/packagerConsole';
 import buildApp from './buildApp';
 
 const copy = ncp.ncp;
-const isWindows = helpers.isWindows;
+const { isWindows } = helpers;
 
 /**
  * Checks the app path array to determine if the packaging was completed successfully
@@ -153,7 +153,6 @@ function buildMain(inpOptions, callback) {
   const options = Object.assign({}, inpOptions);
 
   // pre process app
-
   const tmpObj = tmp.dirSync({ unsafeCleanup: true });
   const tmpPath = tmpObj.name;
 
@@ -163,37 +162,37 @@ function buildMain(inpOptions, callback) {
   const progress = new DishonestProgress(5);
 
   async.waterfall([
-    (callback) => {
+    (cb) => {
       progress.tick('inferring');
       optionsFactory(options)
         .then((result) => {
-          callback(null, result);
+          cb(null, result);
         }).catch((error) => {
-          callback(error);
+          cb(error);
         });
     },
-    (options, callback) => {
+    (opts, cb) => {
       progress.tick('copying');
-      buildApp(options.dir, tmpPath, options, (error) => {
+      buildApp(opts.dir, tmpPath, opts, (error) => {
         if (error) {
-          callback(error);
+          cb(error);
           return;
         }
         // Change the reference file for the Electron app to be the temporary path
-        const newOptions = Object.assign({}, options, { dir: tmpPath });
-        callback(null, newOptions);
+        const newOptions = Object.assign({}, opts, { dir: tmpPath });
+        cb(null, newOptions);
       });
     },
-    (options, callback) => {
+    (opts, cb) => {
       progress.tick('icons');
-      iconBuild(options, (error, optionsWithIcon) => {
-        callback(null, optionsWithIcon);
+      iconBuild(opts, (error, optionsWithIcon) => {
+        cb(null, optionsWithIcon);
       });
     },
-    (options, callback) => {
+    (opts, cb) => {
       progress.tick('packaging');
       // maybe skip passing icon parameter to electron packager
-      let packageOptions = maybeNoIconOption(options);
+      let packageOptions = maybeNoIconOption(opts);
       // maybe skip passing other parameters to electron packager
       packageOptions = maybeNoAppCopyrightOption(packageOptions);
       packageOptions = maybeNoAppVersionOption(packageOptions);
@@ -208,20 +207,20 @@ function buildMain(inpOptions, callback) {
         packagerConsole.restore();
 
         // pass options which still contains the icon to waterfall
-        callback(error, options, appPathArray);
+        cb(error, opts, appPathArray);
       });
     },
-    (options, appPathArray, callback) => {
+    (opts, appPathArray, cb) => {
       progress.tick('finalizing');
       // somehow appPathArray is a 1 element array
       const appPath = getAppPath(appPathArray);
       if (!appPath) {
-        callback();
+        cb();
         return;
       }
 
-      maybeCopyIcons(options, appPath, (error) => {
-        callback(error, appPath);
+      maybeCopyIcons(opts, appPath, (error) => {
+        cb(error, appPath);
       });
     },
   ], (error, appPath) => {

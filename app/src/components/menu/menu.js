@@ -224,7 +224,7 @@ function createMenu({
 
   if (disableDevTools) {
     // remove last item (dev tools) from menu > view
-    const submenu = template[1].submenu;
+    const { submenu } = template[1];
     submenu.splice(submenu.length - 1, 1);
   }
 

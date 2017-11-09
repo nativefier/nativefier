@@ -1,8 +1,7 @@
 import chai from 'chai';
 import normalizeUrl from '../../../src/options/normalizeUrl';
 
-const assert = chai.assert;
-const expect = chai.expect;
+const { assert, expect } = chai;
 
 describe('Normalize URL', () => {
   describe('given a valid URL without a protocol', () => {
