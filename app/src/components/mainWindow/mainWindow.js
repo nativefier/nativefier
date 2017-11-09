@@ -6,7 +6,9 @@ import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
-const { isOSX, linkIsInternal, getCssToInject, shouldInjectCss } = helpers;
+const {
+  isOSX, linkIsInternal, getCssToInject, shouldInjectCss,
+} = helpers;
 
 const ZOOM_INTERVAL = 0.1;
 

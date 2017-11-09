@@ -32,9 +32,9 @@ function checkApp(appPath, inputOptions, callback) {
     const nativefierConfig = JSON.parse(fs.readFileSync(nativefierConfigPath));
 
     assert.strictEqual(inputOptions.targetUrl, nativefierConfig.targetUrl, 'Packaged app must have the same targetUrl as the input parameters');
-        // app name is not consistent for linux
-        // assert.strictEqual(inputOptions.appName, nativefierConfig.name,
-        // 'Packaged app must have the same name as the input parameters');
+    // app name is not consistent for linux
+    // assert.strictEqual(inputOptions.appName, nativefierConfig.name,
+    // 'Packaged app must have the same name as the input parameters');
     callback();
   } catch (exception) {
     callback(exception);

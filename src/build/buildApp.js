@@ -95,7 +95,7 @@ function maybeCopyScripts(srcs, dest) {
 }
 
 function normalizeAppName(appName, url) {
-    // use a simple 3 byte random string to prevent collision
+  // use a simple 3 byte random string to prevent collision
   const hash = crypto.createHash('md5');
   hash.update(url);
   const postFixHash = hash.digest('hex').substring(0, 6);

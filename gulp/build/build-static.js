@@ -5,7 +5,7 @@ import helpers from './../helpers/gulp-helpers';
 const { buildES6 } = helpers;
 
 gulp.task('build-static-not-js', () => gulp.src([PATHS.APP_STATIC_ALL, '!**/*.js'])
-        .pipe(gulp.dest(PATHS.APP_STATIC_DEST)));
+  .pipe(gulp.dest(PATHS.APP_STATIC_DEST)));
 
 gulp.task('build-static-js', done => buildES6(PATHS.APP_STATIC_JS, PATHS.APP_STATIC_DEST, done));
 

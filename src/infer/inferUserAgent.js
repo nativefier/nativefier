@@ -13,8 +13,10 @@ function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERS
       }
 
       const data = response.data;
-      const electronVersionToChromeVersion = _.zipObject(data.map(d => d.version),
-                                                         data.map(d => d.chrome));
+      const electronVersionToChromeVersion = _.zipObject(
+        data.map(d => d.version),
+        data.map(d => d.chrome),
+      );
 
       if (!(electronVersion in electronVersionToChromeVersion)) {
         throw new Error(`Electron version '${electronVersion}' not found in retrieved version list!`);

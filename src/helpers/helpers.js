@@ -12,10 +12,9 @@ function isWindows() {
 }
 
 function downloadFile(fileUrl) {
-  return axios.get(
-    fileUrl, {
-      responseType: 'arraybuffer',
-    })
+  return axios.get(fileUrl, {
+    responseType: 'arraybuffer',
+  })
     .then((response) => {
       if (!response.data) {
         return null;
