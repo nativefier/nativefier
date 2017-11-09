@@ -2,41 +2,39 @@
 
 ## Environment Setup
 
-First clone the project
+First, clone the project
 
 ```bash
 git clone https://github.com/jiahaog/nativefier.git
 cd nativefier
 ```
 
-Install dependencies
+Install dependencies and build:
 
 ```bash
-# OSX and Linux
+# macOS and Linux
 npm run dev-up
 
 # Windows
-npm install
-cd app
-npm install
+npm run dev-up-win
 ```
 
-Don't forget to compile source files:
+If dependencies are installed and you just want to re-build,
 
 ```bash
 npm run build
 ```
 
-You can set up symlinks so that you can run `nativefier` for your local changes
+You can set up a symbolic link so that running `nativefier` invokes your development version including your changes:
 
 ```bash
 npm link
 ```
 
-After doing so, you can then run Nativefier with your test parameters
+After doing so (and not forgetting to build with `npm run build`), you can run Nativefier with your test parameters:
 
 ```bash
-nativefier <...>
+nativefier <--your-awesome-new-flag>
 ```
 
 Or you can automatically watch the files for changes with:
@@ -48,5 +46,12 @@ npm run watch
 ## Tests
 
 ```bash
+# To run all tests (unit, end-to-end),
 npm test
+
+# To run only unit tests,
+npm run jest
+
+# To run only end-to-end tests,
+npm run e2e
 ```

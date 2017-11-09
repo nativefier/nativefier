@@ -12,8 +12,10 @@
   "main": "lib/index.js",
   "scripts": {
     "dev-up": "npm install && (cd ./app && npm install) && npm run build",
+    "dev-up-win": "npm install & cd app & npm install & cd .. & npm run build",
     "test": "jest && gulp test",
     "jest": "jest",
+    "e2e": "gulp test",
     "tdd": "gulp tdd",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
