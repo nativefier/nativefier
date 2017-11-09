@@ -64,7 +64,7 @@
     "babel-core": "^6.26.0",
     "babel-jest": "^21.2.0",
     "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "del": "^3.0.0",
@@ -88,7 +88,14 @@
   },
   "babel": {
     "presets": [
-      "es2015"
+      [
+        "env",
+        {
+          "targets": {
+            "node": "4.0.0"
+          }
+        }
+      ]
     ]
   },
   "jest": {
