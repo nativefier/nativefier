@@ -5,7 +5,12 @@ addons:
     repo_token: CODE_CLIMATE_TOKEN
 
 node_js:
-  - node
+  # NPM currently does not support node 9 https://github.com/nodejs/node/issues/16649, we have to
+  # wait for the next release
+  # - node
+  - 'lts/*'
+  - '8'
+  - '7'
   - '6'
   - '5'
   - '4'
