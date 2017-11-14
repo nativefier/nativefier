@@ -7,7 +7,7 @@ import os from 'os';
 import path from 'path';
 import convertToIcns from './../../lib/helpers/convertToIcns';
 
-const assert = chai.assert;
+const { assert } = chai;
 
 // Prerequisite for test: to use OSX with sips, iconutil and imagemagick convert
 

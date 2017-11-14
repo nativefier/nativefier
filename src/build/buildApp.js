@@ -60,7 +60,7 @@ function maybeCopyScripts(srcs, dest) {
   }
   const promises = srcs.map(src => new Promise((resolve, reject) => {
     if (!fs.existsSync(src)) {
-      reject('Error copying injection files: file not found');
+      reject(new Error('Error copying injection files: file not found'));
       return;
     }
 
@@ -76,7 +76,7 @@ function maybeCopyScripts(srcs, dest) {
 
     copy(src, path.join(dest, 'inject', destFileName), (error) => {
       if (error) {
-        reject(`Error Copying injection files: ${error}`);
+        reject(new Error(`Error Copying injection files: ${error}`));
         return;
       }
       resolve();
@@ -95,7 +95,7 @@ function maybeCopyScripts(srcs, dest) {
 }
 
 function normalizeAppName(appName, url) {
-    // use a simple 3 byte random string to prevent collision
+  // use a simple 3 byte random string to prevent collision
   const hash = crypto.createHash('md5');
   hash.update(url);
   const postFixHash = hash.digest('hex').substring(0, 6);
@@ -130,8 +130,8 @@ function buildApp(src, dest, options, callback) {
     fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
 
     maybeCopyScripts(options.inject, dest)
-      .catch((error) => {
-        console.warn(error);
+      .catch((err) => {
+        console.warn(err);
       })
       .then(() => {
         changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);

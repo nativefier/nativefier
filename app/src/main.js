@@ -72,7 +72,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', (event, hasVisibleWindows) => {
   if (isOSX()) {
-        // this is called when the dock is clicked
+    // this is called when the dock is clicked
     if (!hasVisibleWindows) {
       mainWindow.show();
     }
@@ -108,7 +108,7 @@ app.on('ready', () => {
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
-    // for http authentication
+  // for http authentication
   event.preventDefault();
 
   if (appArgs.basicAuthUsername !== null && appArgs.basicAuthPassword !== null) {

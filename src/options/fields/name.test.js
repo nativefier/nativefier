@@ -75,7 +75,7 @@ describe('handling inferTitle results', () => {
 
   describe('when inferTitle resolves with an error', () => {
     test('it should return the default app name', () => {
-      inferTitle.mockImplementationOnce(() => Promise.reject('some error'));
+      inferTitle.mockImplementationOnce(() => Promise.reject(new Error('some error')));
 
       return name(params).then((result) => {
         expect(result).toBe(DEFAULT_APP_NAME);

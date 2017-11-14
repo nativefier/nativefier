@@ -1,6 +1,5 @@
 // TODO: remove this file and use quiet mode of new version of electron packager
 class PackagerConsole {
-
   constructor() {
     this.logs = [];
   }

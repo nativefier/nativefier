@@ -29,7 +29,7 @@ describe('when the icon parameter is not passed', () => {
 
   describe('when inferIcon resolves with an error', () => {
     test('it should handle the error', () => {
-      inferIcon.mockImplementationOnce(() => Promise.reject('some error'));
+      inferIcon.mockImplementationOnce(() => Promise.reject(new Error('some error')));
       const params = { targetUrl: 'some url', platform: 'mac' };
 
       return icon(params).then((result) => {

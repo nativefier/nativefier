@@ -1,6 +1,8 @@
 import path from 'path';
 
-const { app, Tray, Menu, ipcMain } = require('electron');
+const {
+  app, Tray, Menu, ipcMain,
+} = require('electron');
 
 /**
  *

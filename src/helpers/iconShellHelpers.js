@@ -23,12 +23,13 @@ const SCRIPT_PATHS = {
 function iconShellHelper(shellScriptPath, icoSrc, dest) {
   return new Promise((resolve, reject) => {
     if (isWindows()) {
-      reject('OSX or Linux is required');
+      reject(new Error('OSX or Linux is required'));
       return;
     }
 
     shell.exec(`${shellScriptPath} ${icoSrc} ${dest}`, { silent: true }, (exitCode, stdOut, stdError) => {
       if (exitCode) {
+        // eslint-disable-next-line prefer-promise-reject-errors
         reject({
           stdOut,
           stdError,
@@ -66,7 +67,7 @@ function convertToIco(icoSrc) {
 
 function convertToIcns(icoSrc) {
   if (!isOSX()) {
-    return new Promise((resolve, reject) => reject('OSX is required to convert to a .icns icon'));
+    return new Promise((resolve, reject) => reject(new Error('OSX is required to convert to a .icns icon')));
   }
   return iconShellHelper(SCRIPT_PATHS.convertToIcns, icoSrc, `${getTmpDirPath()}/icon.icns`);
 }

@@ -8,7 +8,7 @@ import nativefier from './../../lib/index';
 
 const PLATFORMS = ['darwin', 'linux'];
 tmp.setGracefulCleanup();
-const assert = chai.assert;
+const { assert } = chai;
 
 function checkApp(appPath, inputOptions, callback) {
   try {
@@ -32,16 +32,16 @@ function checkApp(appPath, inputOptions, callback) {
     const nativefierConfig = JSON.parse(fs.readFileSync(nativefierConfigPath));
 
     assert.strictEqual(inputOptions.targetUrl, nativefierConfig.targetUrl, 'Packaged app must have the same targetUrl as the input parameters');
-        // app name is not consistent for linux
-        // assert.strictEqual(inputOptions.appName, nativefierConfig.name,
-        // 'Packaged app must have the same name as the input parameters');
+    // app name is not consistent for linux
+    // assert.strictEqual(inputOptions.appName, nativefierConfig.name,
+    // 'Packaged app must have the same name as the input parameters');
     callback();
   } catch (exception) {
     callback(exception);
   }
 }
 
-describe('Nativefier Module', function () {
+describe('Nativefier Module', function testNativefierModule() {
   this.timeout(240000);
   it('Can build an app from a target url', (done) => {
     async.eachSeries(PLATFORMS, (platform, callback) => {
@@ -63,8 +63,8 @@ describe('Nativefier Module', function () {
           return;
         }
 
-        checkApp(appPath, options, (error) => {
-          callback(error);
+        checkApp(appPath, options, (err) => {
+          callback(err);
         });
       });
     }, (error) => {

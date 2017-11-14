@@ -3,7 +3,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
-const DEFAULT_CHROME_VERSION = '56.0.2924.87';
+const DEFAULT_CHROME_VERSION = '58.0.3029.110';
 
 function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERSIONS_URL) {
   return axios.get(url, { timeout: 5000 })
@@ -12,9 +12,11 @@ function getChromeVersionForElectronVersion(electronVersion, url = ELECTRON_VERS
         throw new Error(`Bad request: Status code ${response.status}`);
       }
 
-      const data = response.data;
-      const electronVersionToChromeVersion = _.zipObject(data.map(d => d.version),
-                                                         data.map(d => d.chrome));
+      const { data } = response;
+      const electronVersionToChromeVersion = _.zipObject(
+        data.map(d => d.version),
+        data.map(d => d.chrome),
+      );
 
       if (!(electronVersion in electronVersionToChromeVersion)) {
         throw new Error(`Electron version '${electronVersion}' not found in retrieved version list!`);

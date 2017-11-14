@@ -2,6 +2,7 @@
 .DS_Store
 
 # Node.js
+package-lock.json
 
 # ignore compiled lib files
 lib/*

@@ -498,7 +498,7 @@ nativefier(options, function(error, appPath) {
 
 #### [version-string]
 
-*Object* (**deprecated** and will be removed in a future major version (of `electron-packager`), please use the
+*Object* (**deprecated** as removed in `electron-packager` 9.0.0, please use the
 [`win32metadata`](#win32metadata) parameter instead)
 
 #### [win32metadata]

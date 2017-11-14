@@ -13,23 +13,25 @@ import { Menu, shell, clipboard } from 'electron';
  * @param clearAppData
  * @param disableDevTools
  */
-function createMenu({ nativefierVersion,
-                      appQuit,
-                      zoomIn,
-                      zoomOut,
-                      zoomReset,
-                      zoomBuildTimeValue,
-                      goBack,
-                      goForward,
-                      getCurrentUrl,
-                      clearAppData,
-                      disableDevTools }) {
+function createMenu({
+  nativefierVersion,
+  appQuit,
+  zoomIn,
+  zoomOut,
+  zoomReset,
+  zoomBuildTimeValue,
+  goBack,
+  goForward,
+  getCurrentUrl,
+  clearAppData,
+  disableDevTools,
+}) {
   if (Menu.getApplicationMenu()) {
     return;
   }
   const zoomResetLabel = (zoomBuildTimeValue === 1.0) ?
-      'Reset Zoom' :
-      `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
+    'Reset Zoom' :
+    `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
 
   const template = [
     {
@@ -221,8 +223,8 @@ function createMenu({ nativefierVersion,
   ];
 
   if (disableDevTools) {
-        // remove last item (dev tools) from menu > view
-    const submenu = template[1].submenu;
+    // remove last item (dev tools) from menu > view
+    const { submenu } = template[1];
     submenu.splice(submenu.length - 1, 1);
   }
 
@@ -272,7 +274,7 @@ function createMenu({ nativefierVersion,
         label: 'Bring All to Front',
         role: 'front',
       },
-        );
+    );
   }
 
   const menu = Menu.buildFromTemplate(template);

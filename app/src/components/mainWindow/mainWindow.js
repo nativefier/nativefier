@@ -6,7 +6,9 @@ import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
-const { isOSX, linkIsInternal, getCssToInject, shouldInjectCss } = helpers;
+const {
+  isOSX, linkIsInternal, getCssToInject, shouldInjectCss,
+} = helpers;
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -125,7 +127,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       if (response !== 0) {
         return;
       }
-      const session = mainWindow.webContents.session;
+      const { session } = mainWindow.webContents;
       session.clearStorageData(() => {
         session.clearCache(() => {
           mainWindow.loadURL(options.targetUrl);

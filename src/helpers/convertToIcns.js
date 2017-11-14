@@ -3,7 +3,7 @@ import path from 'path';
 import tmp from 'tmp';
 import helpers from './helpers';
 
-const isOSX = helpers.isOSX;
+const { isOSX } = helpers;
 tmp.setGracefulCleanup();
 
 const PNG_TO_ICNS_BIN_PATH = path.join(__dirname, '../..', 'bin/convertToIcns');
