@@ -121,15 +121,15 @@ See [Development](docs/development.md).
 
 ## Docker Image
 
-The [Dockerfile](Dockerfile) is designed that you can use it like the "normal" nativefier app. By default the command `nativefier --version` will be executed. Before you can use the Image you have to build it like follow:
+The [Dockerfile](Dockerfile) is designed to be used like the "normal" nativefier app. By default, the command `nativefier --help` will be executed. Before you can use the image you have to build it like follow:
 
     docker build -t local/nativefier .
  
-After that you can build your first nativefier app to the local `$TARGET-PATH`. Please ensure that you have write access to the `$TARGET-PATH`:
+After that, you can build your first nativefier app to the local `$TARGET-PATH`. Ensure you have write access to the `$TARGET-PATH`:
 
     docker run -v $TARGET-PATH:/target local/nativefier https://my-web-app.com/ /target/
-    
-You can also use additional source or nativefier options like e.g. use a icon:
+
+You can also pass nativefier flags, and mount additional volumes to provide local files. For example, to use a icon:
 
     docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
 
