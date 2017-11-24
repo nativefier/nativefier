@@ -1,35 +1,33 @@
-FROM node:8-alpine
-LABEL description="Alpine image to build nativfier apps"
+FROM node:8-stretch
+LABEL description="Debian image to build nativefier apps"
 
-### Dependencies
-RUN apk add --no-cache \
-    wine \
-    freetype \
-    imagemagick \
-    ### make symbolic link to use `wine`
-    && ln -s /usr/bin/wine64 /usr/bin/wine
+# Get wine32, not 64, to work around binary incompatibility with rcedit.
+# https://github.com/jiahaog/nativefier/issues/375#issuecomment-304247033
+# Forced us to use Debian rather than Alpine, which doesn't do multiarch.
+RUN dpkg --add-architecture i386
+
+# Install dependencies
+RUN apt-get update \
+    && apt-get --yes install wine32 imagemagick \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Add sources
 COPY . /nativefier
 
-### Build app package for nativefier installation
-RUN cd /nativefier/app && npm install \
-    # Build and install nativefier binary
-    && cd /nativefier && npm install && npm run build \
-    # Expose globally
-    && npm link
+# Build nativefier and link globally
+WORKDIR /nativefier/app
+RUN npm install
+WORKDIR /nativefier
+RUN npm install && npm run build && npm link
 
-### Use 1000 as default user not root
+# Use 1000 as default user not root
 USER 1000
 
-### Check that installation was sucessful and cache electron installations.
-### Ensures that no addtional download will be needed at `docker run` runtime.
+# Run a {lin,mac,win} build: 1. to check installation was sucessful,
+# 2. to cache electron distributables and avoid downloads at runtime.
 RUN nativefier https://github.com/jiahaog/nativefier /tmp/nativefier \
     && nativefier -p osx https://github.com/jiahaog/nativefier /tmp/nativefier \
-# TODO: windows are currently not possible, because of non 64-bit `node-rcedit`,
-#       see https://github.com/electron/node-rcedit/issues/22.
-#    && nativefier -p windows https://github.com/jiahaog/nativefier /tmp/nativefier \
-    #remove not need test aplication
+    && nativefier -p windows https://github.com/jiahaog/nativefier /tmp/nativefier \
     && rm -rf /tmp/nativefier
 
 ENTRYPOINT ["nativefier"]
