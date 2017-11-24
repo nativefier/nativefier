@@ -122,7 +122,9 @@ if (appArgs.singleInstance) {
   const shouldQuit = app.makeSingleInstance(() => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
-      if (mainWindow.isMinimized()) {
+      if (!mainWindow.isVisible()) { // tray
+        mainWindow.show();
+      } if (mainWindow.isMinimized()) { // minimized
         mainWindow.restore();
       }
       mainWindow.focus();
