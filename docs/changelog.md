@@ -1,5 +1,5 @@
 
-7.5.2 / 2017-11-24
+7.5.4 / 2017-11-24
 ==================
 
   * Update Dockerfile to node8-alpine, fix typos
