@@ -1,4 +1,10 @@
 
+7.5.2 / 2017-11-24
+==================
+
+  * Update Dockerfile to node8-alpine, fix typos
+  * Upgrade dependencies and default to latest Electron 1.7.9 (PR #483)
+
 7.5.0 / 2017-11-12
 ==================
 
