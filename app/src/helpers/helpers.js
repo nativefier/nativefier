@@ -55,6 +55,10 @@ function debugLog(browserWindow, message) {
   console.log(message);
 }
 
+function getAppIcon() {
+  return path.join(__dirname, '../', `/icon.${isWindows() ? 'ico' : 'png'}`);
+}
+
 export default {
   isOSX,
   isLinux,
@@ -63,4 +67,5 @@ export default {
   getCssToInject,
   debugLog,
   shouldInjectCss,
+  getAppIcon,
 };
