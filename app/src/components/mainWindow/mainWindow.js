@@ -7,7 +7,7 @@ import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
 const {
-  isOSX, linkIsInternal, getCssToInject, shouldInjectCss, getAppIcon
+  isOSX, linkIsInternal, getCssToInject, shouldInjectCss, getAppIcon,
 } = helpers;
 
 const ZOOM_INTERVAL = 0.1;
