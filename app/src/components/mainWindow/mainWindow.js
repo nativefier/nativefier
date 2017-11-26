@@ -7,7 +7,7 @@ import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
 const {
-  isOSX, linkIsInternal, getCssToInject, shouldInjectCss,
+  isOSX, linkIsInternal, getCssToInject, shouldInjectCss, getAppIcon,
 } = helpers;
 
 const ZOOM_INTERVAL = 0.1;
@@ -86,7 +86,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       zoomFactor: options.zoom,
     },
     // after webpack path here should reference `resources/app/`
-    icon: path.join(__dirname, '../', '/icon.png'),
+    icon: getAppIcon(),
     // set to undefined and not false because explicitly setting to false will disable full screen
     fullscreen: options.fullScreen || undefined,
   });
