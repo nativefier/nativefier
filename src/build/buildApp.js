@@ -48,6 +48,7 @@ function selectAppArgs(options) {
     win32metadata: options.win32metadata,
     versionString: options.versionString,
     processEnvs: options.processEnvs,
+    fileDownloadOptions: options.fileDownloadOptions,
     tray: options.tray,
     basicAuthUsername: options.basicAuthUsername,
     basicAuthPassword: options.basicAuthPassword,

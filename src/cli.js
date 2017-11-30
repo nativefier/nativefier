@@ -85,6 +85,7 @@ if (require.main === module) {
     .option('--crash-reporter <value>', 'remote server URL to send crash reports')
     .option('--single-instance', 'allow only a single instance of the application')
     .option('--processEnvs <json-string>', 'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.', getProcessEnvs)
+    .option('--file-download-options <json-string>', 'a JSON string of key/value pairs to be set as file download options.  See https://github.com/sindresorhus/electron-dl for available options.', parseJson)
     .option('--tray', 'allow app to stay in system tray')
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
