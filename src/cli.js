@@ -52,7 +52,7 @@ if (require.main === module) {
     .option('--no-overwrite', 'do not override output directory if it already exists, defaults to false')
     .option('-c, --conceal', 'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/')
     .option('--counter', 'if the target app should use a persistant counter badge in the dock (OSX only), defaults to false')
-    .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .icns file on OSX, .png for Windows and Linux)')
+    .option('-i, --icon <value>', 'the icon file to use as the icon for the app (should be a .png)')
     .option('--width <value>', 'set window default width, defaults to 1280px', parseInt)
     .option('--height <value>', 'set window default height, defaults to 800px', parseInt)
     .option('--min-width <value>', 'set window minimum width, defaults to 0px', parseInt)
