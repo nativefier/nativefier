@@ -5,6 +5,7 @@ import path from 'path';
 
 const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');
 const log = require('loglevel');
+
 function isOSX() {
   return os.platform() === 'darwin';
 }

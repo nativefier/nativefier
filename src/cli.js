@@ -7,6 +7,7 @@ import nativefier from './index';
 const dns = require('dns');
 const packageJson = require('./../package');
 const log = require('loglevel');
+
 function collect(val, memo) {
   memo.push(val);
   return memo;
