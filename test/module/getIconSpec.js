@@ -8,7 +8,7 @@ import path from 'path';
 import convertToIcns from './../../lib/helpers/convertToIcns';
 
 const { assert } = chai;
-
+const log = require('loglevel');
 // Prerequisite for test: to use OSX with sips, iconutil and imagemagick convert
 
 function testConvertPng(pngName, done) {
@@ -27,7 +27,7 @@ function testConvertPng(pngName, done) {
 describe('Get Icon Module', () => {
   it('Can convert icons', () => {
     if (os.platform() !== 'darwin') {
-      console.warn('Skipping png conversion tests, OSX is required');
+      log.warn('Skipping png conversion tests, OSX is required');
       return;
     }
 

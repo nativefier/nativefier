@@ -3,7 +3,7 @@ import path from 'path';
 import helpers from './helpers';
 
 const { isOSX, isWindows, isLinux } = helpers;
-
+const log = require('loglevel');
 /**
  * Synchronously find a file or directory
  * @param {RegExp} pattern regex
@@ -76,7 +76,7 @@ function inferFlash() {
     return linuxMatch();
   }
 
-  console.warn('Unable to determine OS to infer flash player');
+  log.warn('Unable to determine OS to infer flash player');
   return null;
 }
 export default inferFlash;

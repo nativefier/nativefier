@@ -5,7 +5,7 @@ import path from 'path';
 import ncp from 'ncp';
 
 const copy = ncp.ncp;
-
+const log = require('loglevel');
 /**
  * Only picks certain app args to pass to nativefier.json
  * @param options
@@ -131,7 +131,7 @@ function buildApp(src, dest, options, callback) {
 
     maybeCopyScripts(options.inject, dest)
       .catch((err) => {
-        console.warn(err);
+        log.warn(err);
       })
       .then(() => {
         changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);

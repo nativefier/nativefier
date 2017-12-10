@@ -6,7 +6,7 @@ import nativefier from './index';
 
 const dns = require('dns');
 const packageJson = require('./../package');
-
+const log = require('loglevel');
 function collect(val, memo) {
   memo.push(val);
   return memo;
@@ -27,7 +27,7 @@ function getProcessEnvs(val) {
 function checkInternet() {
   dns.lookup('npmjs.com', (err) => {
     if (err && err.code === 'ENOTFOUND') {
-      console.log('\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.');
+      log.warn('\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.');
     }
   });
 }
@@ -101,6 +101,6 @@ if (require.main === module) {
       // app exists and --overwrite is not passed
       return;
     }
-    console.log(`App built to ${appPath}`);
+    log.info(`App built to ${appPath}`);
   });
 }
