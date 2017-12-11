@@ -1,5 +1,6 @@
 import gulp from 'gulp';
 import PATHS from './helpers/src-paths';
+
 const log = require('loglevel');
 
 gulp.task('watch', ['build'], () => {
