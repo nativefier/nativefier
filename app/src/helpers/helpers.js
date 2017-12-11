@@ -52,7 +52,6 @@ function debugLog(browserWindow, message) {
   setTimeout(() => {
     browserWindow.webContents.send('debug', message);
   }, 3000);
-  // eslint-disable-next-line no-console
   log.info(message);
 }
 

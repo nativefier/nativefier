@@ -94,7 +94,7 @@ if (require.main === module) {
   checkInternet();
   nativefier(program, (error, appPath) => {
     if (error) {
-      console.error(error);
+      log.error(error);
       return;
     }
 
