@@ -1,9 +1,11 @@
 import gulp from 'gulp';
 import PATHS from './helpers/src-paths';
 
+const log = require('loglevel');
+
 gulp.task('watch', ['build'], () => {
   const handleError = function watch(error) {
-    console.error(error);
+    log.error(error);
   };
   gulp.watch(PATHS.APP_ALL, ['build-app'])
     .on('error', handleError);

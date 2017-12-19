@@ -7,7 +7,5 @@ plugins:
 rules:
   # TODO: Remove this when we have shifted away from the async package
   no-shadow: 'warn'
-  # Remove no-console when we have moved to a proper logging lib with logging levels
-  no-console: 'off'
   # Gulpfiles and tests use dev dependencies
   import/no-extraneous-dependencies: ['error', { devDependencies: ['gulpfile.babel.js', 'gulp/**/**.js', 'test/**/**.js']}]

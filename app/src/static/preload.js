@@ -6,7 +6,7 @@ import path from 'path';
 import fs from 'fs';
 
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
-
+const log = require('loglevel');
 /**
  * Patches window.Notification to set a callback on a new Notification
  * @param callback
@@ -71,15 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ipcRenderer.on('params', (event, message) => {
   const appArgs = JSON.parse(message);
-  console.log('nativefier.json', appArgs);
+  log.info('nativefier.json', appArgs);
 });
 
 ipcRenderer.on('debug', (event, message) => {
   // eslint-disable-next-line no-console
-  console.log('debug:', message);
+  log.info('debug:', message);
 });
 
 ipcRenderer.on('change-zoom', (event, message) => {
   webFrame.setZoomFactor(message);
 });
-
