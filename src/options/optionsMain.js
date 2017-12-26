@@ -33,8 +33,6 @@ export default function (inpOptions) {
     minHeight: inpOptions.minHeight,
     maxWidth: inpOptions.maxWidth,
     maxHeight: inpOptions.maxHeight,
-    x: inpOptions.x,
-    y: inpOptions.y,
     showMenuBar: inpOptions.showMenuBar || false,
     fastQuit: inpOptions.fastQuit || false,
     userAgent: inpOptions.userAgent,
@@ -101,6 +99,14 @@ export default function (inpOptions) {
 
   if (options.height > options.maxHeight) {
     options.height = options.maxHeight;
+  }
+
+  if (typeof inpOptions.x !== 'undefined') {
+    options.x = inpOptions.x;
+  }
+
+  if (typeof inpOptions.y !== 'undefined') {
+    options.y = inpOptions.y;
   }
 
   return asyncConfig(options);
