@@ -60,6 +60,8 @@ if (require.main === module) {
     .option('--min-height <value>', 'set window minimum height, defaults to 0px', parseInt)
     .option('--max-width <value>', 'set window maximum width, default is no limit', parseInt)
     .option('--max-height <value>', 'set window maximum height, default is no limit', parseInt)
+    .option('--x <value>', 'set window x location', parseInt)
+    .option('--y <value>', 'set window y location', parseInt)
     .option('-m, --show-menu-bar', 'set menu bar visible, defaults to false')
     .option('-f, --fast-quit', 'quit app after window close (OSX only), defaults to false')
     .option('-u, --user-agent <value>', 'set the user agent string for the app')
