@@ -33,6 +33,8 @@ export default function (inpOptions) {
     minHeight: inpOptions.minHeight,
     maxWidth: inpOptions.maxWidth,
     maxHeight: inpOptions.maxHeight,
+    x: inpOptions.x,
+    y: inpOptions.y,
     showMenuBar: inpOptions.showMenuBar || false,
     fastQuit: inpOptions.fastQuit || false,
     userAgent: inpOptions.userAgent,
