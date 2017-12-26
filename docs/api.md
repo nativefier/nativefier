@@ -21,6 +21,8 @@
     - [[min-height]](#min-height)
     - [[max-width]](#max-width)
     - [[max-height]](#max-height)
+    - [[x]](#x)
+    - [[y]](#y)
     - [[show-menu-bar]](#show-menu-bar)
     - [[fast-quit]](#fast-quit)
     - [[user-agent]](#user-agent)
@@ -228,6 +230,22 @@ Maximum width of the packaged application, default is no limit.
 ```
 
 Maximum height of the packaged application, default is no limit.
+
+#### [x]
+
+```
+--x <value>
+```
+
+X location of the packaged application window.
+
+#### [y]
+
+```
+--y <value>
+```
+
+Y location of the packaged application window.
 
 #### [show-menu-bar]
 
