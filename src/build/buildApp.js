@@ -21,6 +21,8 @@ function selectAppArgs(options) {
     minHeight: options.minHeight,
     maxWidth: options.maxWidth,
     maxHeight: options.maxHeight,
+    x: options.x,
+    y: options.y,
     showMenuBar: options.showMenuBar,
     fastQuit: options.fastQuit,
     userAgent: options.userAgent,

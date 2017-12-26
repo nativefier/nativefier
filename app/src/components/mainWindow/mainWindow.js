@@ -71,8 +71,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     minHeight: options.minHeight,
     maxWidth: options.maxWidth,
     maxHeight: options.maxHeight,
-    x: mainWindowState.x,
-    y: mainWindowState.y,
+    x: options.x,
+    y: options.y,
     autoHideMenuBar: !options.showMenuBar,
     // Convert dashes to spaces because on linux the app name is joined with dashes
     title: options.name,

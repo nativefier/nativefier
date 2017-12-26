@@ -101,5 +101,13 @@ export default function (inpOptions) {
     options.height = options.maxHeight;
   }
 
+  if (typeof inpOptions.x !== 'undefined') {
+    options.x = inpOptions.x;
+  }
+
+  if (typeof inpOptions.y !== 'undefined') {
+    options.y = inpOptions.y;
+  }
+
   return asyncConfig(options);
 }
