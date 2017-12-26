@@ -61,6 +61,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   const mainWindowState = windowStateKeeper({
     defaultWidth: options.width || 1280,
     defaultHeight: options.height || 800,
+    x: options.x,
+    y: options.y,
   });
 
   const mainWindow = new BrowserWindow({
