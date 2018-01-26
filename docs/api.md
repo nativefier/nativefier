@@ -460,6 +460,20 @@ Example:
 nativefier <your-geolocation-enabled-website> --processEnvs '{"GOOGLE_API_KEY": "<your-google-api-key>"}'
 ```
 
+#### [file-download-options]
+
+```
+--file-download-options <json-string>
+```
+
+a JSON string of key/value pairs to be set as file download options.  See [electron-dl](https://github.com/sindresorhus/electron-dl) for available options.
+
+Example:
+
+```bash
+nativefier <your-website> --file-download-options '{"saveAs": true}'
+```
+
 ## Programmatic API
 
 You can use the Nativefier programmatic API as well.
@@ -498,6 +512,9 @@ var options = {
     honest: false,
     zoom: 1.0,
     singleInstance: false,
+    fileDownloadOptions: {
+      saveAs: true // always show "Save As" dialog
+    },
     processEnvs: {
       "GOOGLE_API_KEY": "<your-google-api-key>"
     }
