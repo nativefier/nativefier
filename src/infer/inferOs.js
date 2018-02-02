@@ -2,7 +2,7 @@ import os from 'os';
 
 function inferPlatform() {
   const platform = os.platform();
-  if (platform === 'darwin' || platform === 'win32' || platform === 'linux') {
+  if ((platform === 'darwin' || platform === 'mas') || platform === 'win32' || platform === 'linux') {
     return platform;
   }
 

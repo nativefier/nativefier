@@ -63,7 +63,7 @@ function maybeCopyIcons(options, appPath, callback) {
     return;
   }
 
-  if (options.platform === 'darwin') {
+  if (options.platform === 'darwin' || options.platform === 'mas') {
     callback();
     return;
   }

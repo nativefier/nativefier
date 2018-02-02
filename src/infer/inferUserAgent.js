@@ -30,6 +30,7 @@ export function getUserAgentString(chromeVersion, platform) {
   let userAgent;
   switch (platform) {
     case 'darwin':
+    case 'mas':
       userAgent = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
       break;
     case 'win32':
