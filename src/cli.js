@@ -43,7 +43,7 @@ if (require.main === module) {
       program.out = appDir;
     })
     .option('-n, --name <value>', 'app name')
-    .option('-p, --platform <value>', '\'osx\', \'linux\' or \'windows\'')
+    .option('-p, --platform <value>', '\'osx\', \'mas\', \'linux\' or \'windows\'')
     .option('-a, --arch <value>', '\'ia32\' or \'x64\' or \'armv7l\'')
     .option('--app-version <value>', 'The release version of the application.  Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.')
     .option('--build-version <value>', 'The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.')

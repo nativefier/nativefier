@@ -93,7 +93,7 @@ The name of the application, which will affect strings in titles and the icon.
 ```
 -p, --platform <value>
 ```
-Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, or `osx`.
+Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
 
 The alternative values `win32` (for Windows) or `darwin`, `mac` (for OSX) can also be used.
 
