@@ -29,6 +29,7 @@
     - [[honest]](#honest)
     - [[ignore-certificate]](#ignore-certificate)
     - [[insecure]](#insecure)
+    - [[internal-urls]](#internal-urls)
     - [[flash]](#flash)
     - [[flash-path]](#flash-path)
     - [[disk-cache-size]](#disk-cache-size)
@@ -308,6 +309,20 @@ Passes the enable-es3-apis flag to the Chrome engine, to force the activation of
 --insecure
 ```
 Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
+
+
+#### [internal-urls]
+
+```
+--internal-urls <regex>
+```
+Regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser. Defaults to URLs on same second-level domain as app.
+
+Example:
+
+```bash
+nativefier https://google.com --internal-urls ".*?\.google\.*?"
+```
 
 #### [flash]
 
