@@ -42,11 +42,11 @@
   "homepage": "https://github.com/jiahaog/nativefier#readme",
   "dependencies": {
     "async": "^2.6.0",
-    "axios": "^0.17.1",
+    "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "cheerio": "^1.0.0-rc.2",
     "commander": "^2.14.0",
-    "electron-packager": "^10.1.2",
+    "electron-packager": "^11.1.0",
     "gitcloud": "^0.1.0",
     "hasbin": "^1.2.3",
     "lodash": "^4.17.5",
@@ -79,7 +79,7 @@
     "isparta": "^4.0.0",
     "jest": "^22.1.4",
     "regenerator-runtime": "^0.11.1",
-    "require-dir": "^0.3.2",
+    "require-dir": "^1.0.0",
     "run-sequence": "^2.2.1",
     "webpack-stream": "^4.0.0"
   },
