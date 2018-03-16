@@ -89,6 +89,7 @@ if (require.main === module) {
     .option('--tray', 'allow app to stay in system tray')
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
+    .option('--always-on-top', 'enable always on top window')
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {

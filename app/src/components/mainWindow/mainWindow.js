@@ -89,6 +89,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     icon: getAppIcon(),
     // set to undefined and not false because explicitly setting to false will disable full screen
     fullscreen: options.fullScreen || undefined,
+    // Whether the window should always stay on top of other windows. Default is false.
+    alwaysOnTop: options.alwaysOnTop,
   });
 
   mainWindowState.manage(mainWindow);

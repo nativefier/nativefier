@@ -52,6 +52,7 @@ function selectAppArgs(options) {
     tray: options.tray,
     basicAuthUsername: options.basicAuthUsername,
     basicAuthPassword: options.basicAuthPassword,
+    alwaysOnTop: options.alwaysOnTop,
   };
 }
 

@@ -46,6 +46,7 @@
     - [[tray]](#tray)
     - [[basic-auth-username]](#basic-auth-username)
     - [[basic-auth-password]](#basic-auth-username)
+    - [[always-on-top]](#always-on-top)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -488,6 +489,16 @@ Example:
 ```bash
 nativefier <your-website> --file-download-options '{"saveAs": true}'
 ```
+
+#### [always-on-top]
+
+```
+--always-on-top
+```
+
+Enable always on top for the packaged application.
+
+
 
 ## Programmatic API
 

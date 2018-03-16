@@ -70,6 +70,7 @@ export default function (inpOptions) {
     tray: inpOptions.tray || false,
     basicAuthUsername: inpOptions.basicAuthUsername || null,
     basicAuthPassword: inpOptions.basicAuthPassword || null,
+    alwaysOnTop: inpOptions.alwaysOnTop || false,
   };
 
   if (options.verbose) {
