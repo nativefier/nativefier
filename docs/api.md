@@ -519,10 +519,12 @@ Prevents application from being run multiple times. If such an attempt occurs th
 #### [tray]
 
 ```
---tray
+--tray [start-in-tray]
 ```
 
 Application will stay as an icon in the system tray. Prevents application from being closed from clicking the window close button.
+
+When the optional argument `start-in-tray` is provided, i.e. the application is started using `--tray start-in-tray`, the main window will not be shown on first start.
 
 #### [basic-auth-username]
 
