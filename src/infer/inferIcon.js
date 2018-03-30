@@ -48,7 +48,7 @@ function mapIconWithMatchScore(fileIndex, targetUrl) {
 function inferIconFromStore(targetUrl, platform) {
   const allowedFormats = new Set(allowedIconFormats(platform));
 
-  return gitCloud('http://jiahaog.com/nativefier-icons/')
+  return gitCloud('https://jiahaog.github.io/nativefier-icons/')
     .then((fileIndex) => {
       const iconWithScores = mapIconWithMatchScore(fileIndex, targetUrl);
       const maxScore = getMaxMatchScore(iconWithScores);
