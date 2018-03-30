@@ -29,6 +29,7 @@ after_script:
 
 deploy:
   provider: npm
+  skip_cleanup: true
   email: jiahaog@gmail.com
   api_key:
     secure: d/wwkEjXrgP7fJrbkqdSH2779ijL6zIMjRokGP6ojB+7SNiefO0tR8A+hVifeePRC8tDmg4Q/SaVN61+sVNiJc2lDMej6UyRy1WuYW9sYovc5ZRHfba/xUVlq8xQbww/bz2MD8Um9/ayKMViw1Mkt5BQ1sBf/4Q3Ua6WSGsy2rET234rVuk5eR9cYeA/WTH+/w4ae59ki2qyezFwSgCaM9SkxStKez+btKcltIpCBi/k28DjWFPhmGarouR5MYwGG0CqaLzYKgxWqaKS6wN/nO0YrdHBJyciZhccbxWOg9G2sKPTBsebYdyPCe9ykEAGkeibVjvUBGYsDxObTo5W4ccYgq9g/nSbSxyaYn022Xs7EJcGfZf8KWAeZuLrwtb/VgRQyZI5QOMRjN8s50oirVyWBH/lGD4VdKDix3TMbwsgs1Q3VbmU/4bSqeh3HSDK/chEDsw3rzu2c/D/Fl/4kh0MOX4q/qO/2bj9aEpX/Gc4JVqL9y89IeoYGE7ZzecCq64L0oKbNT0qAUjthFAu0a4E+zOedj5z/HpEMaqeH6FBF8a/Ds95QB9NX0REBsHazKcjOCv4wc6sItY4Wdj+l0/lkTSwuPhdgH9gwDbnwlSGG9j01k3aFhdxTm2k2nRzjoUs2iRZjnUwVLxVFn0jUyKh7mkRZZalaNeLQb0zTu4=
