@@ -15,6 +15,7 @@
     - [[conceal]](#conceal)
     - [[icon]](#icon)
     - [[counter]](#counter)
+    - [[bounce]](#bounce)
     - [[width]](#width)
     - [[height]](#height)
     - [[min-width]](#min-width)
@@ -97,7 +98,7 @@ The name of the application, which will affect strings in titles and the icon.
 ```
 Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
 
-The alternative values `win32` (for Windows) or `darwin`, `mac` (for OSX) can also be used.
+The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
 
 #### [arch]
 
@@ -165,7 +166,7 @@ Specifies if the source code within the nativefied app should be packaged into a
 
 The icon parameter should be a path to a `.png` file.
 
-##### Packaging for OSX
+##### Packaging for macOS
 
 The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
@@ -184,6 +185,14 @@ To retrieve the `.icns` file from the downloaded file, extract it first and pres
 ```
 
 Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).  Same limitations as the badge option (above).
+
+#### [bounce]
+
+```
+--bounce
+```
+
+(macOS only) When the the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
 
 #### [width]
 
@@ -263,7 +272,7 @@ Specifies if the menu bar should be shown.
 -f, --fast-quit
 ```
 
-(OSX Only) Specifies to quit the app after closing all windows, defaults to false.
+(macOS only) Specifies to quit the app after closing all windows, defaults to false.
 
 #### [user-agent]
 
@@ -526,6 +535,7 @@ var options = {
     asar: false, // see conceal
     icon: '~/Desktop/icon.png',
     counter: false,
+    bounce: false,
     width: 1280,
     height: 800,
     showMenuBar: false,

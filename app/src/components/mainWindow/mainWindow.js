@@ -181,7 +181,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       const itemCountRegex = /[([{](\d*?)\+?[}\])]/;
       const match = itemCountRegex.exec(title);
       if (match) {
-        setDockBadge(match[1]);
+        setDockBadge(match[1], options.bounce);
       } else {
         setDockBadge('');
       }
@@ -191,7 +191,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       if (!isOSX() || mainWindow.isFocused()) {
         return;
       }
-      setDockBadge('•');
+      setDockBadge('•', options.bounce);
     });
     mainWindow.on('focus', () => {
       setDockBadge('');
