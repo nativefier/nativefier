@@ -15,6 +15,7 @@
     - [[conceal]](#conceal)
     - [[icon]](#icon)
     - [[counter]](#counter)
+    - [[bounce]](#bounce)
     - [[width]](#width)
     - [[height]](#height)
     - [[min-width]](#min-width)
@@ -184,6 +185,14 @@ To retrieve the `.icns` file from the downloaded file, extract it first and pres
 ```
 
 Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).  Same limitations as the badge option (above).
+
+#### [bounce]
+
+```
+--bounce
+```
+
+When the the counter increases, the dock icon will bounce for one second. This only works if the counter (above) is active.
 
 #### [width]
 
@@ -526,6 +535,7 @@ var options = {
     asar: false, // see conceal
     icon: '~/Desktop/icon.png',
     counter: false,
+    bounce: false,
     width: 1280,
     height: 800,
     showMenuBar: false,

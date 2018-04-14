@@ -27,6 +27,7 @@ export default function (inpOptions) {
     asar: inpOptions.conceal || false,
     icon: inpOptions.icon,
     counter: inpOptions.counter || false,
+    bounce: inpOptions.bounce || false,
     width: inpOptions.width || 1280,
     height: inpOptions.height || 800,
     minWidth: inpOptions.minWidth,

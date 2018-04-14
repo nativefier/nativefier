@@ -62,7 +62,13 @@ if (appArgs.basicAuthPassword) {
 let setDockBadge = () => {};
 
 if (isOSX()) {
-  setDockBadge = app.dock.setBadge;
+  let currentBadgeCount = 0;
+
+  setDockBadge = (count, bounce = false) => {
+    app.dock.setBadge(count);
+    if (bounce && count > currentBadgeCount) app.dock.bounce();
+    currentBadgeCount = count;
+  };
 }
 
 app.on('window-all-closed', () => {

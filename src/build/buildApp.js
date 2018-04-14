@@ -15,6 +15,7 @@ function selectAppArgs(options) {
     name: options.name,
     targetUrl: options.targetUrl,
     counter: options.counter,
+    bounce: options.bounce,
     width: options.width,
     height: options.height,
     minWidth: options.minWidth,
