@@ -106,16 +106,16 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   const onZoomIn = () => {
     currentZoom += ZOOM_INTERVAL;
-    mainWindow.webContents.send('change-zoom', currentZoom);
+    mainWindow.webContents.setZoomFactor(currentZoom);
   };
 
   const onZoomOut = () => {
     currentZoom -= ZOOM_INTERVAL;
-    mainWindow.webContents.send('change-zoom', currentZoom);
+    mainWindow.webContents.setZoomFactor(currentZoom);
   };
 
   const onZoomReset = () => {
-    mainWindow.webContents.send('change-zoom', options.zoom);
+    mainWindow.webContents.setZoomFactor(options.zoom);
   };
 
   const clearAppData = () => {
