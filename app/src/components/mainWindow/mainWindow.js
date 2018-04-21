@@ -102,16 +102,16 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
   }
 
-  let currentZoom = options.zoom;
-
   const onZoomIn = () => {
-    currentZoom += ZOOM_INTERVAL;
-    mainWindow.webContents.setZoomFactor(currentZoom);
+    mainWindow.webContents.getZoomFactor((zoomFactor) => {
+      mainWindow.webContents.setZoomFactor(zoomFactor + ZOOM_INTERVAL);
+    });
   };
 
   const onZoomOut = () => {
-    currentZoom -= ZOOM_INTERVAL;
-    mainWindow.webContents.setZoomFactor(currentZoom);
+    mainWindow.webContents.getZoomFactor((zoomFactor) => {
+      mainWindow.webContents.setZoomFactor(zoomFactor - ZOOM_INTERVAL);
+    });
   };
 
   const onZoomReset = () => {
