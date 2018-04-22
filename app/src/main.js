@@ -38,6 +38,10 @@ if (appArgs.ignoreCertificate) {
   app.commandLine.appendSwitch('ignore-certificate-errors');
 }
 
+if (appArgs.disableGpu) {
+  app.disableHardwareAcceleration();
+}
+
 if (appArgs.ignoreGpuBlacklist) {
   app.commandLine.appendSwitch('ignore-gpu-blacklist');
 }

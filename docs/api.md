@@ -48,6 +48,7 @@
     - [[basic-auth-username]](#basic-auth-username)
     - [[basic-auth-password]](#basic-auth-username)
     - [[always-on-top]](#always-on-top)
+    - [[disable-gpu]](#disable-gpu)
 - [Programmatic API](#programmatic-api)
 
 ## Command Line
@@ -297,6 +298,13 @@ If this flag is passed, it will not override the user agent.
 --ignore-certificate
 ```
 Forces the packaged app to ignore certificate errors.
+
+#### [disable-gpu]
+
+```
+--disable-gpu
+```
+Disable hardware acceleration for the packaged application.
 
 #### [ignore-gpu-blacklist]
 

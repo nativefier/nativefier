@@ -29,6 +29,7 @@ function selectAppArgs(options) {
     userAgent: options.userAgent,
     nativefierVersion: options.nativefierVersion,
     ignoreCertificate: options.ignoreCertificate,
+    disableGpu: options.disableGpu,
     ignoreGpuBlacklist: options.ignoreGpuBlacklist,
     enableEs3Apis: options.enableEs3Apis,
     insecure: options.insecure,
