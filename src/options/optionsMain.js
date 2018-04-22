@@ -38,6 +38,7 @@ export default function (inpOptions) {
     fastQuit: inpOptions.fastQuit || false,
     userAgent: inpOptions.userAgent,
     ignoreCertificate: inpOptions.ignoreCertificate || false,
+    disableGpu: inpOptions.disableGpu || false,
     ignoreGpuBlacklist: inpOptions.ignoreGpuBlacklist || false,
     enableEs3Apis: inpOptions.enableEs3Apis || false,
     insecure: inpOptions.insecure || false,
