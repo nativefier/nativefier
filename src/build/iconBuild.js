@@ -96,6 +96,7 @@ function iconBuild(inpOptions, callback) {
     })
     .catch((error) => {
       log.warn('Skipping icon conversion to .icns', error);
+      options.icon = undefined;
       returnCallback();
     });
 }
