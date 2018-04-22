@@ -1,7 +1,7 @@
 import { shell } from 'electron';
 import contextMenu from 'electron-context-menu';
 
-function initContextMenu(createNewWindow) {
+function initContextMenu(createNewWindow, createNewTab) {
   contextMenu({
     prepend: (params) => {
       const items = [];
@@ -18,6 +18,14 @@ function initContextMenu(createNewWindow) {
             createNewWindow(params.linkURL);
           },
         });
+        if (createNewTab) {
+          items.push({
+            label: 'Open Link in New Tab',
+            click: () => {
+              createNewTab(params.linkURL, false);
+            },
+          });
+        }
       }
       return items;
     },

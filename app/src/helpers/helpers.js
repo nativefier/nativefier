@@ -59,6 +59,10 @@ function getAppIcon() {
   return path.join(__dirname, '../', `/icon.${isWindows() ? 'ico' : 'png'}`);
 }
 
+function nativeTabsSupported() {
+  return isOSX();
+}
+
 export default {
   isOSX,
   isLinux,
@@ -68,4 +72,5 @@ export default {
   debugLog,
   shouldInjectCss,
   getAppIcon,
+  nativeTabsSupported,
 };

@@ -7,7 +7,7 @@ import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
 const {
-  isOSX, linkIsInternal, getCssToInject, shouldInjectCss, getAppIcon,
+  isOSX, linkIsInternal, getCssToInject, shouldInjectCss, getAppIcon, nativeTabsSupported,
 } = helpers;
 
 const ZOOM_INTERVAL = 0.1;
@@ -66,6 +66,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   const DEFAULT_WINDOW_OPTIONS = {
     // Convert dashes to spaces because on linux the app name is joined with dashes
     title: options.name,
+    tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
     webPreferences: {
       javascript: true,
       plugins: true,
@@ -105,18 +106,29 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
   }
 
+  const withFocusedWindow = (block) => {
+    const focusedWindow = BrowserWindow.getFocusedWindow();
+    if (focusedWindow) { block(focusedWindow); }
+  };
+
   const adjustWindowZoom = (window, adjustment) => {
     window.webContents.getZoomFactor((zoomFactor) => {
       window.webContents.setZoomFactor(zoomFactor + adjustment);
     });
   };
 
-  const onZoomIn = () => adjustWindowZoom(mainWindow, ZOOM_INTERVAL);
+  const onZoomIn = () => {
+    withFocusedWindow(focusedWindow => adjustWindowZoom(focusedWindow, ZOOM_INTERVAL));
+  };
 
-  const onZoomOut = () => adjustWindowZoom(mainWindow, -ZOOM_INTERVAL);
+  const onZoomOut = () => {
+    withFocusedWindow(focusedWindow => adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL));
+  };
 
   const onZoomReset = () => {
-    mainWindow.webContents.setZoomFactor(options.zoom);
+    withFocusedWindow((focusedWindow) => {
+      focusedWindow.webContents.setZoomFactor(options.zoom);
+    });
   };
 
   const clearAppData = () => {
@@ -140,24 +152,48 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   };
 
   const onGoBack = () => {
-    mainWindow.webContents.goBack();
+    withFocusedWindow((focusedWindow) => {
+      focusedWindow.webContents.goBack();
+    });
   };
 
   const onGoForward = () => {
-    mainWindow.webContents.goForward();
+    withFocusedWindow((focusedWindow) => {
+      focusedWindow.webContents.goForward();
+    });
   };
 
-  const getCurrentUrl = () => mainWindow.webContents.getURL();
+  const getCurrentUrl = () => {
+    withFocusedWindow((focusedWindow) => {
+      focusedWindow.webContents.getURL();
+    });
+  };
 
   let createNewWindow;
 
-  const onNewWindow = (event, urlToGo) => {
-    if (mainWindow.useDefaultWindowBehaviour) {
-      mainWindow.useDefaultWindowBehaviour = false;
-      return;
-    }
+  const createNewTab = (url, foreground) => {
+    withFocusedWindow((focusedWindow) => {
+      const newTab = createNewWindow(url);
+      focusedWindow.addTabbedWindow(newTab);
+      if (!foreground) {
+        focusedWindow.focus();
+      }
+      return newTab;
+    });
+    return undefined;
+  };
 
+  const onNewWindow = (event, urlToGo, _, disposition) => {
     event.preventDefault();
+    if (nativeTabsSupported()) {
+      if (disposition === 'background-tab') {
+        createNewTab(urlToGo, false);
+        return;
+      } else if (disposition === 'foreground-tab') {
+        createNewTab(urlToGo, true);
+        return;
+      }
+    }
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       shell.openExternal(urlToGo);
       return;
@@ -200,7 +236,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   createMenu(menuOptions);
   if (!options.disableContextMenu) {
-    initContextMenu(createNewWindow);
+    initContextMenu(createNewWindow, nativeTabsSupported() ? createNewTab : undefined);
   }
 
   if (options.userAgent) {
@@ -233,10 +269,16 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   mainWindow.webContents.on('new-window', onNewWindow);
+
   mainWindow.loadURL(options.targetUrl);
+
+  mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
 
   mainWindow.on('close', (event) => {
     if (mainWindow.isFullScreen()) {
+      if (nativeTabsSupported()) {
+        mainWindow.moveTabToNewWindow();
+      }
       mainWindow.setFullScreen(false);
       mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event, options.fastQuit));
     }
@@ -245,13 +287,5 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   return mainWindow;
 }
-
-ipcMain.on('cancelNewWindowOverride', () => {
-  const allWindows = BrowserWindow.getAllWindows();
-  allWindows.forEach((window) => {
-    // eslint-disable-next-line no-param-reassign
-    window.useDefaultWindowBehaviour = false;
-  });
-});
 
 export default createMainWindow;
