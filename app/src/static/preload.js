@@ -1,7 +1,7 @@
 /**
  Preload file that will be executed in the renderer process
  */
-import { ipcRenderer, webFrame } from 'electron';
+import { ipcRenderer } from 'electron';
 import path from 'path';
 import fs from 'fs';
 
@@ -77,8 +77,4 @@ ipcRenderer.on('params', (event, message) => {
 ipcRenderer.on('debug', (event, message) => {
   // eslint-disable-next-line no-console
   log.info('debug:', message);
-});
-
-ipcRenderer.on('change-zoom', (event, message) => {
-  webFrame.setZoomFactor(message);
 });
