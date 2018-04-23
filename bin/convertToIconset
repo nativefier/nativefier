@@ -48,14 +48,18 @@ if [ -z "${DEST}" ]; then
 	echo >&2 "No destination specified"; exit 1
 fi
 
-if [[ -e "$(which convert)" ]]; then
+HAVE_IMAGEMAGICK=
+HAVE_SIPS=
+
+type convert &>/dev/null && HAVE_IMAGEMAGICK=true
+type sips &>/dev/null && HAVE_SIPS=true
+
+if [[ ! -z "$HAVE_IMAGEMAGICK" ]]; then
   PNG_PATH="$(mktemp -d)/icon.png"
   "${BASH_SOURCE%/*}/convertToPng" "${SOURCE}" "${PNG_PATH}"
   make_iconset_imagemagick "${PNG_PATH}" "${DEST}"
-elif [[ -e "$(which sips)" ]]; then
+elif [[ ! -z "$HAVE_SIPS" ]]; then
   make_iconset_sips "${SOURCE}" "${DEST}"
 else
   echo >&2 "Cannot find convert or sips executables"; exit 1;
 fi
-
-true
