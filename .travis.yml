@@ -16,7 +16,7 @@ node_js:
   - '4'
 
 before_install:
-  - npm install -g npm
+  - npm install -g npm@5.8.x
 
 install:
   - npm run dev-up
