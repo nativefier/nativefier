@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # USAGE
 
@@ -25,7 +25,6 @@ fi
 
 NAME=$(basename "${SOURCE}")
 EXT="${NAME##*.}"
-BASE="${NAME%.*}"
 
 if [ "${EXT}" == "ico" ]; then
     cp "${SOURCE}" "${DEST}"

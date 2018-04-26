@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # USAGE
 
@@ -28,7 +28,6 @@ fi
 
 # File Infrastructure
 NAME=$(basename "${SOURCE}")
-EXT="${NAME##*.}"
 BASE="${NAME%.*}"
 TEMP_DIR="convert_temp"
 
