@@ -93,7 +93,7 @@ You need [Xcode](https://developer.apple.com/xcode/) installed.
 
 #### [imagemagick](http://www.imagemagick.org/script/index.php)
 
-Make sure `convert` and `identify` are in your `$PATH`.
+Make sure `convert` and `identify` are in your `$PATH`. If the tools are not found then nativefier will fallback on using the built-in macOS tool `sips` to perform the conversion.
 
 ### Flash
 

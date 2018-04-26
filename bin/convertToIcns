@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 ### USAGE
 
@@ -9,16 +9,21 @@
 # exit the shell script on error immediately
 set -e
 
-# import script as variable
-CONVERT_TO_PNG="${BASH_SOURCE%/*}/convertToPng"
-
 # Exec Paths
-type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Convert executable"; exit 1; }
-type iconutil >/dev/null 2>&1 || { echo >&2 "Cannot find required iconutil executable"; exit 1; }
+HAVE_IMAGEMAGICK=
+HAVE_ICONUTIL=
+HAVE_SIPS=
+
+type convert &>/dev/null && HAVE_IMAGEMAGICK=true
+type iconutil &>/dev/null && HAVE_ICONUTIL=true
+type sips &>/dev/null && HAVE_SIPS=true
+
+[[ -z "$HAVE_ICONUTIL" ]] && { echo >&2 "Cannot find required iconutil executable"; exit 1; }
+[[ -z "$HAVE_IMAGEMAGICK" && -z "$HAVE_SIPS" ]] && { echo >&2 "Cannot find required image converter, please install sips or imagemagick"; exit 1; }
 
 # Parameters
-SOURCE=$1
-DEST=$2
+SOURCE="$1"
+DEST="$2"
 
 # Check source and destination arguments
 if [ -z "${SOURCE}" ]; then
@@ -31,37 +36,16 @@ if [ -z "${DEST}" ]; then
 	exit 1
 fi
 
-# File Infrastructure
-NAME=$(basename "${SOURCE}")
-EXT="${NAME##*.}"
-BASE="${NAME%.*}"
-TEMP_DIR="temp_icon"
-ICONSET="${BASE}.iconset"
+TEMP_DIR="$(mktemp -d)"
+ICONSET="${TEMP_DIR}/converted.iconset"
 
 function cleanUp() {
     rm -rf "${TEMP_DIR}"
-    rm -rf "${ICONSET}"
 }
 
 trap cleanUp EXIT
 
-mkdir -p "${TEMP_DIR}"
-mkdir -p "${ICONSET}"
-
-PNG_PATH="${TEMP_DIR}/icon.png"
-${CONVERT_TO_PNG} "${SOURCE}" "${PNG_PATH}"
-
-# Resample image into iconset
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 16x16 "${ICONSET}/icon_16x16.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_16x16@2x.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 32x32 "${ICONSET}/icon_32x32.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 64x64 "${ICONSET}/icon_32x32@2x.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 128x128 "${ICONSET}/icon_128x128.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_128x128@2x.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 256x256 "${ICONSET}/icon_256x256.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_256x256@2x.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 512x512 "${ICONSET}/icon_512x512.png"
-convert "${PNG_PATH}" -define png:big-depth=16 -define png:color-type=6 -sample 1024x1024 "${ICONSET}/icon_512x512@2x.png"
+"${BASH_SOURCE%/*}/convertToIconset" "${SOURCE}" "${ICONSET}"
 
 # Create an icns file lefrom the iconset
 iconutil -c icns "${ICONSET}" -o "${DEST}"

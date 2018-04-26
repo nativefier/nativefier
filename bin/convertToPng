@@ -12,8 +12,8 @@ type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Con
 type identify >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Identify executable"; exit 1; }
 
 # Parameters
-SOURCE=$1
-DEST=$2
+SOURCE="$1"
+DEST="$2"
 
 # Check source and destination arguments
 if [ -z "${SOURCE}" ]; then
@@ -42,7 +42,7 @@ mkdir -p "${TEMP_DIR}"
 
 # check if .ico is a sequence
 # pipe into cat so no exit code is given for grep if no matches are found
-IS_ICO_SET="$(identify ${SOURCE} | grep -e "\w\.ico\[0" | cat )"
+IS_ICO_SET="$(identify "${SOURCE}" | grep -e "\w\.ico\[0" | cat )"
 
 convert "${SOURCE}" "${TEMP_DIR}/${BASE}.png"
 if [ "${IS_ICO_SET}" ]; then

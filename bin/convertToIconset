@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+
+### USAGE
+
+# ./convertToIconset <input png> <outp iconset>
+# Example
+# ./convertToIconset ~/sample.png ~/Desktop/converted.iconset
+
+# exit the shell script on error immediately
+set -e
+
+make_iconset_imagemagick() {
+  local file iconset
+  file="${1}"
+  iconset="${2}"
+
+  mkdir "$iconset"
+
+  for size in {16,32,64,128,256,512}; do
+    convert "${file}" -define png:big-depth=16 -define png:color-type=6 -sample "${size}x${size}" "${iconset}/icon_${size}x${size}.png"
+    convert "${file}" -define png:big-depth=16 -define png:color-type=6 -sample "$((size * 2))x$((size * 2))" "${iconset}/icon_${size}x${size}@2x.png"
+  done
+}
+
+make_iconset_sips() {
+  local file iconset
+  file="${1}"
+  iconset="${2}"
+
+  mkdir "$iconset"
+
+  for size in {16,32,64,128,256,512}; do
+    sips --setProperty format png --resampleHeightWidth "${size}" "${size}" "${file}" --out "${iconset}/icon_${size}x${size}.png" &> /dev/null
+    sips --setProperty format png --resampleHeightWidth "$((size * 2))" "$((size * 2))" "${file}" --out "${iconset}/icon_${size}x${size}@2x.png" &> /dev/null
+  done
+}
+
+# Parameters
+SOURCE="$1"
+DEST="$2"
+
+# Check source and destination arguments
+if [ -z "${SOURCE}" ]; then
+	echo >&2 "No source image specified"; exit 1
+fi
+
+if [ -z "${DEST}" ]; then
+	echo >&2 "No destination specified"; exit 1
+fi
+
+HAVE_IMAGEMAGICK=
+HAVE_SIPS=
+
+type convert &>/dev/null && HAVE_IMAGEMAGICK=true
+type sips &>/dev/null && HAVE_SIPS=true
+
+if [[ ! -z "$HAVE_IMAGEMAGICK" ]]; then
+  PNG_PATH="$(mktemp -d)/icon.png"
+  "${BASH_SOURCE%/*}/convertToPng" "${SOURCE}" "${PNG_PATH}"
+  make_iconset_imagemagick "${PNG_PATH}" "${DEST}"
+elif [[ ! -z "$HAVE_SIPS" ]]; then
+  make_iconset_sips "${SOURCE}" "${DEST}"
+else
+  echo >&2 "Cannot find convert or sips executables"; exit 1;
+fi
