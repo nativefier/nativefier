@@ -118,6 +118,10 @@ app.on('ready', () => {
   createTrayIcon(appArgs, mainWindow);
 });
 
+app.on('new-window-for-tab', () => {
+  mainWindow.emit('new-tab');
+});
+
 app.on('login', (event, webContents, request, authInfo, callback) => {
   // for http authentication
   event.preventDefault();
