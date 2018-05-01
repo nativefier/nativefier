@@ -1,7 +1,7 @@
-import { shell, BrowserWindow } from 'electron';
+import { shell } from 'electron';
 import contextMenu from 'electron-context-menu';
 
-function initContextMenu() {
+function initContextMenu(createNewWindow) {
   contextMenu({
     prepend: (params) => {
       const items = [];
@@ -15,7 +15,7 @@ function initContextMenu() {
         items.push({
           label: 'Open Link in New Window',
           click: () => {
-            new BrowserWindow().loadURL(params.linkURL);
+            createNewWindow(params.linkURL);
           },
         });
       }
