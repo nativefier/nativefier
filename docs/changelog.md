@@ -1,4 +1,18 @@
 
+7.6.2 / 2018-05-01
+==================
+
+  * Fix #94, Fix #575 - Fix run-time crash due to insufficient permissions (PR #581)
+  * Fix #574 - Allow build to continue if icon conversion fails (PR#585)
+  * Fix #199 - On macOS, perform image conversion tasks using `sips` when available (PR #583).
+  * Fix #95, Fix #384 - Add cut/copy/paste context menu entries, using `electron-context-menu` (PR #588)
+  * Fix #364 - Add `--disable-gpu` flag to disable hardware acceleration (PR #584)
+  * Fix #474 - Remember custom zoom level (PR #582)
+  * Fix #590, Fix #439 - Ensure children windows have the same behavior as the mainWindow (PR #591)
+  * macOS: Add `--bounce` option for dock counter (PR #570)
+  * Default to latest stable electron 1.8.6 and update dependencies (electron-packager)
+  * Enforce staying on `npm@5.8.x` for a little while, as npm@6 breaks under Node 4, which we still support.
+
 7.6.1 / 2018-03-29
 ==================
 
