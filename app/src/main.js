@@ -108,7 +108,7 @@ if (appArgs.crashReporter) {
       companyName: appArgs.companyName || '',
       productName: appArgs.name,
       submitURL: appArgs.crashReporter,
-      autoSubmit: true,
+      uploadToServer: true,
     });
   });
 }
