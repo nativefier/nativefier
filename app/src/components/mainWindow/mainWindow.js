@@ -63,17 +63,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     defaultHeight: options.height || 800,
   });
 
-  const mainWindow = new BrowserWindow({
-    frame: !options.hideWindowFrame,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
-    minWidth: options.minWidth,
-    minHeight: options.minHeight,
-    maxWidth: options.maxWidth,
-    maxHeight: options.maxHeight,
-    x: options.x,
-    y: options.y,
-    autoHideMenuBar: !options.showMenuBar,
+  const DEFAULT_WINDOW_OPTIONS = {
     // Convert dashes to spaces because on linux the app name is joined with dashes
     title: options.name,
     webPreferences: {
@@ -85,13 +75,26 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       preload: path.join(__dirname, 'static', 'preload.js'),
       zoomFactor: options.zoom,
     },
+  };
+
+  const mainWindow = new BrowserWindow(Object.assign({
+    frame: !options.hideWindowFrame,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    minWidth: options.minWidth,
+    minHeight: options.minHeight,
+    maxWidth: options.maxWidth,
+    maxHeight: options.maxHeight,
+    x: options.x,
+    y: options.y,
+    autoHideMenuBar: !options.showMenuBar,
     // after webpack path here should reference `resources/app/`
     icon: getAppIcon(),
     // set to undefined and not false because explicitly setting to false will disable full screen
     fullscreen: options.fullScreen || undefined,
     // Whether the window should always stay on top of other windows. Default is false.
     alwaysOnTop: options.alwaysOnTop,
-  });
+  }, DEFAULT_WINDOW_OPTIONS));
 
   mainWindowState.manage(mainWindow);
 
@@ -102,20 +105,18 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
   }
 
-  let currentZoom = options.zoom;
-
-  const onZoomIn = () => {
-    currentZoom += ZOOM_INTERVAL;
-    mainWindow.webContents.send('change-zoom', currentZoom);
+  const adjustWindowZoom = (window, adjustment) => {
+    window.webContents.getZoomFactor((zoomFactor) => {
+      window.webContents.setZoomFactor(zoomFactor + adjustment);
+    });
   };
 
-  const onZoomOut = () => {
-    currentZoom -= ZOOM_INTERVAL;
-    mainWindow.webContents.send('change-zoom', currentZoom);
-  };
+  const onZoomIn = () => adjustWindowZoom(mainWindow, ZOOM_INTERVAL);
+
+  const onZoomOut = () => adjustWindowZoom(mainWindow, -ZOOM_INTERVAL);
 
   const onZoomReset = () => {
-    mainWindow.webContents.send('change-zoom', options.zoom);
+    mainWindow.webContents.setZoomFactor(options.zoom);
   };
 
   const clearAppData = () => {
@@ -148,6 +149,41 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   const getCurrentUrl = () => mainWindow.webContents.getURL();
 
+  let createNewWindow;
+
+  const onNewWindow = (event, urlToGo) => {
+    if (mainWindow.useDefaultWindowBehaviour) {
+      mainWindow.useDefaultWindowBehaviour = false;
+      return;
+    }
+
+    event.preventDefault();
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+      shell.openExternal(urlToGo);
+      return;
+    }
+    // eslint-disable-next-line no-param-reassign
+    event.guest = createNewWindow(urlToGo);
+  };
+
+  const sendParamsOnDidFinishLoad = (window) => {
+    window.webContents.on('did-finish-load', () => {
+      window.webContents.send('params', JSON.stringify(options));
+    });
+  };
+
+  createNewWindow = (url) => {
+    const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
+    if (options.userAgent) {
+      window.webContents.setUserAgent(options.userAgent);
+    }
+    maybeInjectCss(window);
+    sendParamsOnDidFinishLoad(window);
+    window.webContents.on('new-window', onNewWindow);
+    window.loadURL(url);
+    return window;
+  };
+
   const menuOptions = {
     nativefierVersion: options.nativefierVersion,
     appQuit: onAppQuit,
@@ -164,7 +200,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   createMenu(menuOptions);
   if (!options.disableContextMenu) {
-    initContextMenu(mainWindow);
+    initContextMenu(createNewWindow);
   }
 
   if (options.userAgent) {
@@ -172,9 +208,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   maybeInjectCss(mainWindow);
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.webContents.send('params', JSON.stringify(options));
-  });
+  sendParamsOnDidFinishLoad(mainWindow);
 
   if (options.counter) {
     mainWindow.on('page-title-updated', (e, title) => {
@@ -198,19 +232,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   }
 
-  mainWindow.webContents.on('new-window', (event, urlToGo) => {
-    if (mainWindow.useDefaultWindowBehaviour) {
-      mainWindow.useDefaultWindowBehaviour = false;
-      return;
-    }
-
-    if (linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
-      return;
-    }
-    event.preventDefault();
-    shell.openExternal(urlToGo);
-  });
-
+  mainWindow.webContents.on('new-window', onNewWindow);
   mainWindow.loadURL(options.targetUrl);
 
   mainWindow.on('close', (event) => {

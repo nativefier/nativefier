@@ -68,6 +68,7 @@ if (require.main === module) {
     .option('-u, --user-agent <value>', 'set the user agent string for the app')
     .option('--honest', 'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser')
     .option('--ignore-certificate', 'ignore certificate related errors')
+    .option('--disable-gpu', 'disable hardware acceleration')
     .option('--ignore-gpu-blacklist', 'allow WebGl apps to work on non supported graphics cards')
     .option('--enable-es3-apis', 'force activation of WebGl 2.0')
     .option('--insecure', 'enable loading of insecure content, defaults to false')
