@@ -13,7 +13,7 @@ gulp.task('mocha', (done) => {
     .pipe(istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', () => gulp.src(PATHS.TEST_SRC, { read: false })
       .pipe(mocha({
-        compilers: 'js:babel-core/register',
+        require: 'babel-core/register',
         recursive: true,
       }))
       .pipe(istanbul.writeReports({

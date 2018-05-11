@@ -202,13 +202,15 @@ function buildMain(inpOptions, callback) {
 
       packagerConsole.override();
 
-      packager(packageOptions, (error, appPathArray) => {
-        // restore console.error
-        packagerConsole.restore();
-
-        // pass options which still contains the icon to waterfall
-        cb(error, opts, appPathArray);
-      });
+      packager(packageOptions)
+        .then(appPathArray => {
+          packagerConsole.restore(); // restore console.error
+          cb(null, opts, appPathArray); // options still contain the icon to waterfall
+        })
+        .catch(error => {
+          packagerConsole.restore(); // restore console.error
+          cb(error, opts); // options still contain the icon to waterfall
+        });
     },
     (opts, appPathArray, cb) => {
       progress.tick('finalizing');
