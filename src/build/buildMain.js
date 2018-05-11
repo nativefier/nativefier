@@ -203,11 +203,11 @@ function buildMain(inpOptions, callback) {
       packagerConsole.override();
 
       packager(packageOptions)
-        .then(appPathArray => {
+        .then((appPathArray) => {
           packagerConsole.restore(); // restore console.error
           cb(null, opts, appPathArray); // options still contain the icon to waterfall
         })
-        .catch(error => {
+        .catch((error) => {
           packagerConsole.restore(); // restore console.error
           cb(error, opts); // options still contain the icon to waterfall
         });
