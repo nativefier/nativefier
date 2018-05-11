@@ -199,7 +199,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       return;
     }
     // eslint-disable-next-line no-param-reassign
-    event.guest = createNewWindow(urlToGo);
+    event.newGuest = createNewWindow(urlToGo);
   };
 
   const sendParamsOnDidFinishLoad = (window) => {
