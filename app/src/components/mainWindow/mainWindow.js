@@ -185,6 +185,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   const onNewWindow = (event, urlToGo, _, disposition) => {
     event.preventDefault();
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+      shell.openExternal(urlToGo);
+      return;
+    }
     if (nativeTabsSupported()) {
       if (disposition === 'background-tab') {
         createNewTab(urlToGo, false);
@@ -193,10 +197,6 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         createNewTab(urlToGo, true);
         return;
       }
-    }
-    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
-      shell.openExternal(urlToGo);
-      return;
     }
     // eslint-disable-next-line no-param-reassign
     event.newGuest = createNewWindow(urlToGo);
