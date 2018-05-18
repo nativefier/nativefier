@@ -216,6 +216,16 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     maybeInjectCss(window);
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
+    if (url === 'about:blank') {
+      window.hide();
+      window.webContents.once('did-stop-loading', () => {
+        if (window.webContents.getURL() === 'about:blank') {
+          window.close();
+        } else {
+          window.show();
+        }
+      });
+    }
     window.loadURL(url);
     return window;
   };
