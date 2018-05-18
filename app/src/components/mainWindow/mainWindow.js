@@ -216,6 +216,19 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     return undefined;
   };
 
+  const createAboutBlankWindow = () => {
+    const window = createNewWindow('about:blank');
+    window.hide();
+    window.webContents.once('did-stop-loading', () => {
+      if (window.webContents.getURL() === 'about:blank') {
+        window.close();
+      } else {
+        window.show();
+      }
+    });
+    return window;
+  };
+
   const onNewWindow = (event, urlToGo, _, disposition) => {
     const preventDefault = (newGuest) => {
       event.preventDefault();
@@ -227,6 +240,9 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       shell.openExternal(urlToGo);
       preventDefault();
+    } else if (urlToGo === 'about:blank') {
+      const newWindow = createAboutBlankWindow();
+      preventDefault(newWindow);
     } else if (nativeTabsSupported()) {
       if (disposition === 'background-tab') {
         const newTab = createNewTab(urlToGo, false);
