@@ -1,4 +1,13 @@
 
+7.6.3 / 2018-05-23
+==================
+
+  * macOS: Add tabs, used automatically instead of windows (PR #579).
+    Provided by Electron and (so far) no available for Windows/Linux, contributions welcome.
+  * Fix #547 - Default to Electron 2.0.2 (including Chrome 61, Node 8.9.3, V8 6.1.534.41, GTK3 on Linux) (PR #587)
+  * Fix Gmail complaining window creation was prevented by a popup blocker (PR #603)
+  * Fix two build-time deprecation warnings
+
 7.6.2 / 2018-05-01
 ==================
 
