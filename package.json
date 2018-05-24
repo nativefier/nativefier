@@ -13,13 +13,11 @@
   "scripts": {
     "dev-up": "npm install && (cd ./app && npm install) && npm run build",
     "dev-up-win": "npm install & cd app & npm install & cd .. & npm run build",
-    "test": "jest && gulp test",
-    "jest": "jest",
-    "e2e": "gulp test",
+    "test": "jest",
     "tdd": "gulp tdd",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "ci": "gulp build test && npm run lint",
+    "ci": "npm run lint && npm test",
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "while true ; do gulp watch ; done",
@@ -73,10 +71,7 @@
     "eslint-plugin-import": "^2.8.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
-    "gulp-istanbul": "^1.1.3",
-    "gulp-mocha": "^5.0.0",
     "gulp-sourcemaps": "^2.6.4",
-    "isparta": "^4.0.0",
     "jest": "^22.1.4",
     "regenerator-runtime": "^0.11.1",
     "require-dir": "^1.0.0",
@@ -96,11 +91,6 @@
           }
         }
       ]
-    ]
-  },
-  "jest": {
-    "testMatch": [
-      "**/src/**/?(*.)(spec|test).js?(x)"
     ]
   }
 }

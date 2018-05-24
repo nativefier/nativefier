@@ -4,7 +4,7 @@ import runSequence from 'run-sequence';
 import PATHS from './helpers/src-paths';
 
 gulp.task('build', (callback) => {
-  runSequence('clean', ['build-cli', 'build-app', 'build-tests'], callback);
+  runSequence('clean', ['build-cli', 'build-app'], callback);
 });
 
 gulp.task('clean', (callback) => {
