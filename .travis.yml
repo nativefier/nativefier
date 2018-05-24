@@ -9,8 +9,9 @@ node_js:
   - '8'
   - '7'
   - '6'
-  - '5'
-  - '4'
+  # jest doesn't work with these versions TODO: find a workaround
+  # - '5'
+  # - '4'
 
 before_install:
   - npm install -g npm@5.8.x
@@ -33,4 +34,4 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    node: '4'
+    node: '8'
