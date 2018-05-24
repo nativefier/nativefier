@@ -3,9 +3,11 @@ import fields from './fields';
 
 jest.mock('./fields');
 
-fields.mockImplementation(() => [Promise.resolve({
-  someField: 'newValue',
-})]);
+fields.mockImplementation(() => [
+  Promise.resolve({
+    someField: 'newValue',
+  }),
+]);
 
 test('it should merge the result of the promise', () => {
   const param = { another: 'field', someField: 'oldValue' };
@@ -15,4 +17,3 @@ test('it should merge the result of the promise', () => {
     expect(result).toEqual(expected);
   });
 });
-

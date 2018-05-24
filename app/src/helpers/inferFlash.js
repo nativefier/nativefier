@@ -47,7 +47,7 @@ function findSync(pattern, basePath, findDir) {
         matches.push(childPath);
       }
     });
-  }(basePath));
+  })(basePath);
   return matches;
 }
 
@@ -56,11 +56,18 @@ function linuxMatch() {
 }
 
 function windowsMatch() {
-  return findSync(/pepflashplayer\.dll/, 'C:\\Program Files (x86)\\Google\\Chrome')[0];
+  return findSync(
+    /pepflashplayer\.dll/,
+    'C:\\Program Files (x86)\\Google\\Chrome',
+  )[0];
 }
 
 function darwinMatch() {
-  return findSync(/PepperFlashPlayer.plugin/, '/Applications/Google Chrome.app/', true)[0];
+  return findSync(
+    /PepperFlashPlayer.plugin/,
+    '/Applications/Google Chrome.app/',
+    true,
+  )[0];
 }
 
 function inferFlash() {

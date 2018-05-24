@@ -1,7 +1,9 @@
 import normalizeUrl from './normalizeUrl';
 
 test("a proper URL shouldn't be mangled", () => {
-  expect(normalizeUrl('http://www.google.com')).toEqual('http://www.google.com');
+  expect(normalizeUrl('http://www.google.com')).toEqual(
+    'http://www.google.com',
+  );
 });
 
 test('missing protocol should default to http', () => {
@@ -9,5 +11,7 @@ test('missing protocol should default to http', () => {
 });
 
 test("a proper URL shouldn't be mangled", () => {
-  expect(() => { normalizeUrl('http://ssddfoo bar'); }).toThrow('Your Url: "http://ssddfoo bar" is invalid!');
+  expect(() => {
+    normalizeUrl('http://ssddfoo bar');
+  }).toThrow('Your Url: "http://ssddfoo bar" is invalid!');
 });

@@ -1,11 +1,15 @@
-extends: airbnb-base 
-env: 
+extends:
+  - airbnb-base
+  - prettier
+env:
   # TODO: find out how to turn this on only for src/**/*.test.js files
   jest: true
 plugins:
   - import
+  - prettier
 rules:
   # TODO: Remove this when we have shifted away from the async package
   no-shadow: 'warn'
   # Gulpfiles and tests use dev dependencies
   import/no-extraneous-dependencies: ['error', { devDependencies: ['gulpfile.babel.js', 'gulp/**/**.js', 'test/**/**.js']}]
+  prettier/prettier: "error"

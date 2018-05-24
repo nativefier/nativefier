@@ -8,7 +8,9 @@ function createLoginWindow(loginCallback) {
     frame: false,
     resizable: false,
   });
-  loginWindow.loadURL(`file://${path.join(__dirname, '/static/login/login.html')}`);
+  loginWindow.loadURL(
+    `file://${path.join(__dirname, '/static/login/login.html')}`,
+  );
 
   ipcMain.once('login-message', (event, usernameAndPassword) => {
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);

@@ -25,31 +25,30 @@ function getMaxMatchScore(iconWithScores) {
  */
 function getMatchingIcons(iconsWithScores, maxScore) {
   return iconsWithScores
-    .filter(item => item.score === maxScore)
-    .map(item => Object.assign({}, item, { ext: path.extname(item.url) }));
+    .filter((item) => item.score === maxScore)
+    .map((item) => Object.assign({}, item, { ext: path.extname(item.url) }));
 }
 
 function mapIconWithMatchScore(fileIndex, targetUrl) {
   const normalisedTargetUrl = targetUrl.toLowerCase();
-  return fileIndex
-    .map((item) => {
-      const itemWords = item.name.split(GITCLOUD_SPACE_DELIMITER);
-      const score = itemWords.reduce((currentScore, word) => {
-        if (normalisedTargetUrl.includes(word)) {
-          return currentScore + 1;
-        }
-        return currentScore;
-      }, 0);
+  return fileIndex.map((item) => {
+    const itemWords = item.name.split(GITCLOUD_SPACE_DELIMITER);
+    const score = itemWords.reduce((currentScore, word) => {
+      if (normalisedTargetUrl.includes(word)) {
+        return currentScore + 1;
+      }
+      return currentScore;
+    }, 0);
 
-      return Object.assign({}, item, { score });
-    });
+    return Object.assign({}, item, { score });
+  });
 }
 
 function inferIconFromStore(targetUrl, platform) {
   const allowedFormats = new Set(allowedIconFormats(platform));
 
-  return gitCloud('https://jiahaog.github.io/nativefier-icons/')
-    .then((fileIndex) => {
+  return gitCloud('https://jiahaog.github.io/nativefier-icons/').then(
+    (fileIndex) => {
       const iconWithScores = mapIconWithMatchScore(fileIndex, targetUrl);
       const maxScore = getMaxMatchScore(iconWithScores);
 
@@ -58,7 +57,9 @@ function inferIconFromStore(targetUrl, platform) {
       }
 
       const iconsMatchingScore = getMatchingIcons(iconWithScores, maxScore);
-      const iconsMatchingExt = iconsMatchingScore.filter(icon => allowedFormats.has(icon.ext));
+      const iconsMatchingExt = iconsMatchingScore.filter((icon) =>
+        allowedFormats.has(icon.ext),
+      );
       const matchingIcon = iconsMatchingExt[0];
       const iconUrl = matchingIcon && matchingIcon.url;
 
@@ -66,7 +67,8 @@ function inferIconFromStore(targetUrl, platform) {
         return null;
       }
       return downloadFile(iconUrl);
-    });
+    },
+  );
 }
 
 function writeFilePromise(outPath, data) {
@@ -88,15 +90,14 @@ function inferFromPage(targetUrl, platform, outDir) {
   }
 
   // todo might want to pass list of preferences instead
-  return pageIcon(targetUrl, { ext: preferredExt })
-    .then((icon) => {
-      if (!icon) {
-        return null;
-      }
+  return pageIcon(targetUrl, { ext: preferredExt }).then((icon) => {
+    if (!icon) {
+      return null;
+    }
 
-      const outfilePath = path.join(outDir, `/icon${icon.ext}`);
-      return writeFilePromise(outfilePath, icon.data);
-    });
+    const outfilePath = path.join(outDir, `/icon${icon.ext}`);
+    return writeFilePromise(outfilePath, icon.data);
+  });
 }
 
 /**
@@ -106,15 +107,14 @@ function inferFromPage(targetUrl, platform, outDir) {
  * @param {string} outDir
  */
 function inferIconFromUrlToPath(targetUrl, platform, outDir) {
-  return inferIconFromStore(targetUrl, platform)
-    .then((icon) => {
-      if (!icon) {
-        return inferFromPage(targetUrl, platform, outDir);
-      }
+  return inferIconFromStore(targetUrl, platform).then((icon) => {
+    if (!icon) {
+      return inferFromPage(targetUrl, platform, outDir);
+    }
 
-      const outfilePath = path.join(outDir, `/icon${icon.ext}`);
-      return writeFilePromise(outfilePath, icon.data);
-    });
+    const outfilePath = path.join(outDir, `/icon${icon.ext}`);
+    return writeFilePromise(outfilePath, icon.data);
+  });
 }
 
 /**

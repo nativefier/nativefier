@@ -55,11 +55,17 @@ if (appArgs.diskCacheSize) {
 }
 
 if (appArgs.basicAuthUsername) {
-  app.commandLine.appendSwitch('basic-auth-username', appArgs.basicAuthUsername);
+  app.commandLine.appendSwitch(
+    'basic-auth-username',
+    appArgs.basicAuthUsername,
+  );
 }
 
 if (appArgs.basicAuthPassword) {
-  app.commandLine.appendSwitch('basic-auth-password', appArgs.basicAuthPassword);
+  app.commandLine.appendSwitch(
+    'basic-auth-password',
+    appArgs.basicAuthPassword,
+  );
 }
 
 // do nothing for setDockBadge if not OSX
@@ -126,7 +132,10 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   // for http authentication
   event.preventDefault();
 
-  if (appArgs.basicAuthUsername !== null && appArgs.basicAuthPassword !== null) {
+  if (
+    appArgs.basicAuthUsername !== null &&
+    appArgs.basicAuthPassword !== null
+  ) {
     callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
   } else {
     createLoginWindow(callback);
@@ -137,9 +146,12 @@ if (appArgs.singleInstance) {
   const shouldQuit = app.makeSingleInstance(() => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
-      if (!mainWindow.isVisible()) { // tray
+      if (!mainWindow.isVisible()) {
+        // tray
         mainWindow.show();
-      } if (mainWindow.isMinimized()) { // minimized
+      }
+      if (mainWindow.isMinimized()) {
+        // minimized
         mainWindow.restore();
       }
       mainWindow.focus();

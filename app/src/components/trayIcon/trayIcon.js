@@ -1,8 +1,6 @@
 import helpers from './../../helpers/helpers';
 
-const {
-  app, Tray, Menu, ipcMain, nativeImage,
-} = require('electron');
+const { app, Tray, Menu, ipcMain, nativeImage } = require('electron');
 
 const { getAppIcon } = helpers;
 

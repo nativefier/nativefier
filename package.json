@@ -23,7 +23,8 @@
     "watch": "while true ; do gulp watch ; done",
     "package-placeholder": "npm run build && node lib/cli.js http://www.bennish.net/web-notifications.html ~/Desktop --overwrite --name notification-test --icon ./test-resources/iconSampleGrey.png --inject ./test-resources/test-injection.js --inject ./test-resources/test-injection.css && open ~/Desktop/notification-test-darwin-x64/notification-test.app",
     "start-placeholder": "npm run build && electron app",
-    "changelog": "./scripts/changelog"
+    "changelog": "./scripts/changelog",
+    "format": "prettier --write '{gulp,src}/**/*.js' 'app/src/**/*.js'"
   },
   "bin": {
     "nativefier": "lib/cli.js"
@@ -68,11 +69,14 @@
     "del": "^3.0.0",
     "eslint": "^4.17.0",
     "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.6.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
     "jest": "^22.1.4",
+    "prettier": "^1.12.1",
     "regenerator-runtime": "^0.11.1",
     "require-dir": "^1.0.0",
     "run-sequence": "^2.2.1",

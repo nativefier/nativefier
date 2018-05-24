@@ -19,4 +19,3 @@ test('it should return a list of promises', () => {
     expect(value).toBeInstanceOf(Promise);
   });
 });
-

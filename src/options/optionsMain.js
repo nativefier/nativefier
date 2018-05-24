@@ -13,7 +13,7 @@ const { inferPlatform, inferArch } = inferOs;
  * @param {Object} inpOptions
  * @returns {Promise}
  */
-export default function (inpOptions) {
+export default function(inpOptions) {
   const options = {
     dir: PLACEHOLDER_APP_DIR,
     name: inpOptions.name,
@@ -93,7 +93,10 @@ export default function (inpOptions) {
     options.platform = 'win32';
   }
 
-  if (options.platform.toLowerCase() === 'osx' || options.platform.toLowerCase() === 'mac') {
+  if (
+    options.platform.toLowerCase() === 'osx' ||
+    options.platform.toLowerCase() === 'mac'
+  ) {
     options.platform = 'darwin';
   }
 

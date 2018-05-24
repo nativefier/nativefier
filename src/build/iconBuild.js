@@ -84,7 +84,9 @@ function iconBuild(inpOptions, callback) {
   }
 
   if (!isOSX()) {
-    log.warn('Skipping icon conversion to .icns, conversion is only supported on OSX');
+    log.warn(
+      'Skipping icon conversion to .icns, conversion is only supported on OSX',
+    );
     returnCallback();
     return;
   }

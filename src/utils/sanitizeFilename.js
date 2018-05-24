@@ -2,7 +2,7 @@ import _ from 'lodash';
 import sanitizeFilenameLib from 'sanitize-filename';
 import { DEFAULT_APP_NAME } from './../constants';
 
-export default function (platform, str) {
+export default function(platform, str) {
   let result = sanitizeFilenameLib(str);
 
   // remove all non ascii or use default app name

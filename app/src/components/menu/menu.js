@@ -29,9 +29,10 @@ function createMenu({
   if (Menu.getApplicationMenu()) {
     return;
   }
-  const zoomResetLabel = (zoomBuildTimeValue === 1.0) ?
-    'Reset Zoom' :
-    `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
+  const zoomResetLabel =
+    zoomBuildTimeValue === 1.0
+      ? 'Reset Zoom'
+      : `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
 
   const template = [
     {

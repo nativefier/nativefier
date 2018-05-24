@@ -29,12 +29,17 @@ describe('when the icon parameter is not passed', () => {
 
   describe('when inferIcon resolves with an error', () => {
     test('it should handle the error', () => {
-      inferIcon.mockImplementationOnce(() => Promise.reject(new Error('some error')));
+      inferIcon.mockImplementationOnce(() =>
+        Promise.reject(new Error('some error')),
+      );
       const params = { targetUrl: 'some url', platform: 'mac' };
 
       return icon(params).then((result) => {
         expect(result).toBe(null);
-        expect(inferIcon).toHaveBeenCalledWith(params.targetUrl, params.platform);
+        expect(inferIcon).toHaveBeenCalledWith(
+          params.targetUrl,
+          params.platform,
+        );
         expect(log.warn).toHaveBeenCalledTimes(1);
       });
     });

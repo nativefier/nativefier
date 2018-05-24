@@ -3,7 +3,7 @@ import sanitizeFilename from './sanitizeFilename';
 import { DEFAULT_APP_NAME } from './../constants';
 
 jest.mock('sanitize-filename');
-sanitizeFilenameLib.mockImplementation(str => str);
+sanitizeFilenameLib.mockImplementation((str) => str);
 
 test('it should call the sanitize-filename npm module', () => {
   const param = 'abc';

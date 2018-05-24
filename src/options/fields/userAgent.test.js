@@ -13,6 +13,8 @@ test('when a userAgent parameter is passed', () => {
 test('no userAgent parameter is passed', () => {
   const params = { electronVersion: '123', platform: 'mac' };
   userAgent(params);
-  expect(inferUserAgent).toHaveBeenCalledWith(params.electronVersion, params.platform);
+  expect(inferUserAgent).toHaveBeenCalledWith(
+    params.electronVersion,
+    params.platform,
+  );
 });
-

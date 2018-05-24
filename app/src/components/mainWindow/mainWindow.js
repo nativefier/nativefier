@@ -7,7 +7,12 @@ import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
 
 const {
-  isOSX, linkIsInternal, getCssToInject, shouldInjectCss, getAppIcon, nativeTabsSupported,
+  isOSX,
+  linkIsInternal,
+  getCssToInject,
+  shouldInjectCss,
+  getAppIcon,
+  nativeTabsSupported,
 } = helpers;
 
 const ZOOM_INTERVAL = 0.1;
@@ -37,7 +42,10 @@ function maybeInjectCss(browserWindow) {
 
   browserWindow.webContents.on('did-finish-load', () => {
     // remove the injection of css the moment the page is loaded
-    browserWindow.webContents.removeListener('did-get-response-details', injectCss);
+    browserWindow.webContents.removeListener(
+      'did-get-response-details',
+      injectCss,
+    );
   });
 
   // on every page navigation inject the css
@@ -47,7 +55,6 @@ function maybeInjectCss(browserWindow) {
     browserWindow.webContents.on('did-get-response-details', injectCss);
   });
 }
-
 
 /**
  *
@@ -78,24 +85,29 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     },
   };
 
-  const mainWindow = new BrowserWindow(Object.assign({
-    frame: !options.hideWindowFrame,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
-    minWidth: options.minWidth,
-    minHeight: options.minHeight,
-    maxWidth: options.maxWidth,
-    maxHeight: options.maxHeight,
-    x: options.x,
-    y: options.y,
-    autoHideMenuBar: !options.showMenuBar,
-    // after webpack path here should reference `resources/app/`
-    icon: getAppIcon(),
-    // set to undefined and not false because explicitly setting to false will disable full screen
-    fullscreen: options.fullScreen || undefined,
-    // Whether the window should always stay on top of other windows. Default is false.
-    alwaysOnTop: options.alwaysOnTop,
-  }, DEFAULT_WINDOW_OPTIONS));
+  const mainWindow = new BrowserWindow(
+    Object.assign(
+      {
+        frame: !options.hideWindowFrame,
+        width: mainWindowState.width,
+        height: mainWindowState.height,
+        minWidth: options.minWidth,
+        minHeight: options.minHeight,
+        maxWidth: options.maxWidth,
+        maxHeight: options.maxHeight,
+        x: options.x,
+        y: options.y,
+        autoHideMenuBar: !options.showMenuBar,
+        // after webpack path here should reference `resources/app/`
+        icon: getAppIcon(),
+        // set to undefined and not false because explicitly setting to false will disable full screen
+        fullscreen: options.fullScreen || undefined,
+        // Whether the window should always stay on top of other windows. Default is false.
+        alwaysOnTop: options.alwaysOnTop,
+      },
+      DEFAULT_WINDOW_OPTIONS,
+    ),
+  );
 
   mainWindowState.manage(mainWindow);
 
@@ -103,12 +115,17 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   if (options.maximize) {
     mainWindow.maximize();
     options.maximize = undefined;
-    fs.writeFileSync(path.join(__dirname, '..', 'nativefier.json'), JSON.stringify(options));
+    fs.writeFileSync(
+      path.join(__dirname, '..', 'nativefier.json'),
+      JSON.stringify(options),
+    );
   }
 
   const withFocusedWindow = (block) => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
-    if (focusedWindow) { block(focusedWindow); }
+    if (focusedWindow) {
+      block(focusedWindow);
+    }
   };
 
   const adjustWindowZoom = (window, adjustment) => {
@@ -118,11 +135,15 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   };
 
   const onZoomIn = () => {
-    withFocusedWindow(focusedWindow => adjustWindowZoom(focusedWindow, ZOOM_INTERVAL));
+    withFocusedWindow((focusedWindow) =>
+      adjustWindowZoom(focusedWindow, ZOOM_INTERVAL),
+    );
   };
 
   const onZoomOut = () => {
-    withFocusedWindow(focusedWindow => adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL));
+    withFocusedWindow((focusedWindow) =>
+      adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL),
+    );
   };
 
   const onZoomReset = () => {
@@ -132,23 +153,28 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   };
 
   const clearAppData = () => {
-    dialog.showMessageBox(mainWindow, {
-      type: 'warning',
-      buttons: ['Yes', 'Cancel'],
-      defaultId: 1,
-      title: 'Clear cache confirmation',
-      message: 'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?',
-    }, (response) => {
-      if (response !== 0) {
-        return;
-      }
-      const { session } = mainWindow.webContents;
-      session.clearStorageData(() => {
-        session.clearCache(() => {
-          mainWindow.loadURL(options.targetUrl);
+    dialog.showMessageBox(
+      mainWindow,
+      {
+        type: 'warning',
+        buttons: ['Yes', 'Cancel'],
+        defaultId: 1,
+        title: 'Clear cache confirmation',
+        message:
+          'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?',
+      },
+      (response) => {
+        if (response !== 0) {
+          return;
+        }
+        const { session } = mainWindow.webContents;
+        session.clearStorageData(() => {
+          session.clearCache(() => {
+            mainWindow.loadURL(options.targetUrl);
+          });
         });
-      });
-    });
+      },
+    );
   };
 
   const onGoBack = () => {
@@ -236,7 +262,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   createMenu(menuOptions);
   if (!options.disableContextMenu) {
-    initContextMenu(createNewWindow, nativeTabsSupported() ? createNewTab : undefined);
+    initContextMenu(
+      createNewWindow,
+      nativeTabsSupported() ? createNewTab : undefined,
+    );
   }
 
   if (options.userAgent) {
@@ -280,7 +309,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         mainWindow.moveTabToNewWindow();
       }
       mainWindow.setFullScreen(false);
-      mainWindow.once('leave-full-screen', maybeHideWindow.bind(this, mainWindow, event, options.fastQuit));
+      mainWindow.once(
+        'leave-full-screen',
+        maybeHideWindow.bind(this, mainWindow, event, options.fastQuit),
+      );
     }
     maybeHideWindow(mainWindow, event, options.fastQuit, options.tray);
   });

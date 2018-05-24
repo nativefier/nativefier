@@ -14,7 +14,8 @@ function shellExec(cmd, silent, callback) {
 }
 
 function buildES6(src, dest, callback) {
-  return gulp.src(src)
+  return gulp
+    .src(src)
     .pipe(sourcemaps.init())
     .pipe(babel())
     .on('error', callback)

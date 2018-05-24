@@ -64,30 +64,33 @@ function maybeCopyScripts(srcs, dest) {
       resolve();
     });
   }
-  const promises = srcs.map(src => new Promise((resolve, reject) => {
-    if (!fs.existsSync(src)) {
-      reject(new Error('Error copying injection files: file not found'));
-      return;
-    }
+  const promises = srcs.map(
+    (src) =>
+      new Promise((resolve, reject) => {
+        if (!fs.existsSync(src)) {
+          reject(new Error('Error copying injection files: file not found'));
+          return;
+        }
 
-    let destFileName;
-    if (path.extname(src) === '.js') {
-      destFileName = 'inject.js';
-    } else if (path.extname(src) === '.css') {
-      destFileName = 'inject.css';
-    } else {
-      resolve();
-      return;
-    }
+        let destFileName;
+        if (path.extname(src) === '.js') {
+          destFileName = 'inject.js';
+        } else if (path.extname(src) === '.css') {
+          destFileName = 'inject.css';
+        } else {
+          resolve();
+          return;
+        }
 
-    copy(src, path.join(dest, 'inject', destFileName), (error) => {
-      if (error) {
-        reject(new Error(`Error Copying injection files: ${error}`));
-        return;
-      }
-      resolve();
-    });
-  }));
+        copy(src, path.join(dest, 'inject', destFileName), (error) => {
+          if (error) {
+            reject(new Error(`Error Copying injection files: ${error}`));
+            return;
+          }
+          resolve();
+        });
+      }),
+  );
 
   return new Promise((resolve, reject) => {
     Promise.all(promises)
@@ -133,7 +136,10 @@ function buildApp(src, dest, options, callback) {
       return;
     }
 
-    fs.writeFileSync(path.join(dest, '/nativefier.json'), JSON.stringify(appArgs));
+    fs.writeFileSync(
+      path.join(dest, '/nativefier.json'),
+      JSON.stringify(appArgs),
+    );
 
     maybeCopyScripts(options.inject, dest)
       .catch((err) => {
@@ -145,6 +151,5 @@ function buildApp(src, dest, options, callback) {
       });
   });
 }
-
 
 export default buildApp;

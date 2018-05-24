@@ -27,18 +27,22 @@ function iconShellHelper(shellScriptPath, icoSrc, dest) {
       return;
     }
 
-    shell.exec(`${shellScriptPath} ${icoSrc} ${dest}`, { silent: true }, (exitCode, stdOut, stdError) => {
-      if (exitCode) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        reject({
-          stdOut,
-          stdError,
-        });
-        return;
-      }
+    shell.exec(
+      `${shellScriptPath} ${icoSrc} ${dest}`,
+      { silent: true },
+      (exitCode, stdOut, stdError) => {
+        if (exitCode) {
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject({
+            stdOut,
+            stdError,
+          });
+          return;
+        }
 
-      resolve(dest);
-    });
+        resolve(dest);
+      },
+    );
   });
 }
 
@@ -54,22 +58,40 @@ function getTmpDirPath() {
  */
 
 function singleIco(icoSrc) {
-  return iconShellHelper(SCRIPT_PATHS.singleIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
+  return iconShellHelper(
+    SCRIPT_PATHS.singleIco,
+    icoSrc,
+    `${getTmpDirPath()}/icon.ico`,
+  );
 }
 
 function convertToPng(icoSrc) {
-  return iconShellHelper(SCRIPT_PATHS.convertToPng, icoSrc, `${getTmpDirPath()}/icon.png`);
+  return iconShellHelper(
+    SCRIPT_PATHS.convertToPng,
+    icoSrc,
+    `${getTmpDirPath()}/icon.png`,
+  );
 }
 
 function convertToIco(icoSrc) {
-  return iconShellHelper(SCRIPT_PATHS.convertToIco, icoSrc, `${getTmpDirPath()}/icon.ico`);
+  return iconShellHelper(
+    SCRIPT_PATHS.convertToIco,
+    icoSrc,
+    `${getTmpDirPath()}/icon.ico`,
+  );
 }
 
 function convertToIcns(icoSrc) {
   if (!isOSX()) {
-    return new Promise((resolve, reject) => reject(new Error('OSX is required to convert to a .icns icon')));
+    return new Promise((resolve, reject) =>
+      reject(new Error('OSX is required to convert to a .icns icon')),
+    );
   }
-  return iconShellHelper(SCRIPT_PATHS.convertToIcns, icoSrc, `${getTmpDirPath()}/icon.icns`);
+  return iconShellHelper(
+    SCRIPT_PATHS.convertToIcns,
+    icoSrc,
+    `${getTmpDirPath()}/icon.icns`,
+  );
 }
 
 export default {

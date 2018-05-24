@@ -28,7 +28,10 @@ function getAppPath(appPathArray) {
   }
 
   if (appPathArray.length > 1) {
-    log.warn('Warning: This should not be happening, packaged app path contains more than one element:', appPathArray);
+    log.warn(
+      'Warning: This should not be happening, packaged app path contains more than one element:',
+      appPathArray,
+    );
   }
 
   return appPathArray[0];
@@ -43,7 +46,9 @@ function maybeNoIconOption(options) {
   const packageOptions = JSON.parse(JSON.stringify(options));
   if (options.platform === 'win32' && !isWindows()) {
     if (!hasBinary.sync('wine')) {
-      log.warn('Wine is required to set the icon for a Windows app when packaging on non-windows platforms');
+      log.warn(
+        'Wine is required to set the icon for a Windows app when packaging on non-windows platforms',
+      );
       packageOptions.icon = null;
     }
   }
@@ -86,7 +91,9 @@ function removeInvalidOptions(options, param) {
   const packageOptions = JSON.parse(JSON.stringify(options));
   if (options.platform === 'win32' && !isWindows()) {
     if (!hasBinary.sync('wine')) {
-      log.warn(`Wine is required to use "${param}" option for a Windows app when packaging on non-windows platforms`);
+      log.warn(
+        `Wine is required to use "${param}" option for a Windows app when packaging on non-windows platforms`,
+      );
       packageOptions[param] = null;
     }
   }
@@ -161,74 +168,80 @@ function buildMain(inpOptions, callback) {
 
   const progress = new DishonestProgress(5);
 
-  async.waterfall([
-    (cb) => {
-      progress.tick('inferring');
-      optionsFactory(options)
-        .then((result) => {
-          cb(null, result);
-        }).catch((error) => {
-          cb(error);
+  async.waterfall(
+    [
+      (cb) => {
+        progress.tick('inferring');
+        optionsFactory(options)
+          .then((result) => {
+            cb(null, result);
+          })
+          .catch((error) => {
+            cb(error);
+          });
+      },
+      (opts, cb) => {
+        progress.tick('copying');
+        buildApp(opts.dir, tmpPath, opts, (error) => {
+          if (error) {
+            cb(error);
+            return;
+          }
+          // Change the reference file for the Electron app to be the temporary path
+          const newOptions = Object.assign({}, opts, {
+            dir: tmpPath,
+          });
+          cb(null, newOptions);
         });
-    },
-    (opts, cb) => {
-      progress.tick('copying');
-      buildApp(opts.dir, tmpPath, opts, (error) => {
-        if (error) {
-          cb(error);
+      },
+      (opts, cb) => {
+        progress.tick('icons');
+        iconBuild(opts, (error, optionsWithIcon) => {
+          cb(null, optionsWithIcon);
+        });
+      },
+      (opts, cb) => {
+        progress.tick('packaging');
+        // maybe skip passing icon parameter to electron packager
+        let packageOptions = maybeNoIconOption(opts);
+        // maybe skip passing other parameters to electron packager
+        packageOptions = maybeNoAppCopyrightOption(packageOptions);
+        packageOptions = maybeNoAppVersionOption(packageOptions);
+        packageOptions = maybeNoBuildVersionOption(packageOptions);
+        packageOptions = maybeNoVersionStringOption(packageOptions);
+        packageOptions = maybeNoWin32metadataOption(packageOptions);
+
+        packagerConsole.override();
+
+        packager(packageOptions)
+          .then((appPathArray) => {
+            packagerConsole.restore(); // restore console.error
+            cb(null, opts, appPathArray); // options still contain the icon to waterfall
+          })
+          .catch((error) => {
+            packagerConsole.restore(); // restore console.error
+            cb(error, opts); // options still contain the icon to waterfall
+          });
+      },
+      (opts, appPathArray, cb) => {
+        progress.tick('finalizing');
+        // somehow appPathArray is a 1 element array
+        const appPath = getAppPath(appPathArray);
+        if (!appPath) {
+          cb();
           return;
         }
-        // Change the reference file for the Electron app to be the temporary path
-        const newOptions = Object.assign({}, opts, { dir: tmpPath });
-        cb(null, newOptions);
-      });
-    },
-    (opts, cb) => {
-      progress.tick('icons');
-      iconBuild(opts, (error, optionsWithIcon) => {
-        cb(null, optionsWithIcon);
-      });
-    },
-    (opts, cb) => {
-      progress.tick('packaging');
-      // maybe skip passing icon parameter to electron packager
-      let packageOptions = maybeNoIconOption(opts);
-      // maybe skip passing other parameters to electron packager
-      packageOptions = maybeNoAppCopyrightOption(packageOptions);
-      packageOptions = maybeNoAppVersionOption(packageOptions);
-      packageOptions = maybeNoBuildVersionOption(packageOptions);
-      packageOptions = maybeNoVersionStringOption(packageOptions);
-      packageOptions = maybeNoWin32metadataOption(packageOptions);
 
-      packagerConsole.override();
-
-      packager(packageOptions)
-        .then((appPathArray) => {
-          packagerConsole.restore(); // restore console.error
-          cb(null, opts, appPathArray); // options still contain the icon to waterfall
-        })
-        .catch((error) => {
-          packagerConsole.restore(); // restore console.error
-          cb(error, opts); // options still contain the icon to waterfall
+        maybeCopyIcons(opts, appPath, (error) => {
+          cb(error, appPath);
         });
+      },
+    ],
+    (error, appPath) => {
+      packagerConsole.playback();
+      callback(error, appPath);
     },
-    (opts, appPathArray, cb) => {
-      progress.tick('finalizing');
-      // somehow appPathArray is a 1 element array
-      const appPath = getAppPath(appPathArray);
-      if (!appPath) {
-        cb();
-        return;
-      }
-
-      maybeCopyIcons(opts, appPath, (error) => {
-        cb(error, appPath);
-      });
-    },
-  ], (error, appPath) => {
-    packagerConsole.playback();
-    callback(error, appPath);
-  });
+  );
 }
 
 export default buildMain;

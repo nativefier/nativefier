@@ -12,9 +12,10 @@ function isWindows() {
 }
 
 function downloadFile(fileUrl) {
-  return axios.get(fileUrl, {
-    responseType: 'arraybuffer',
-  })
+  return axios
+    .get(fileUrl, {
+      responseType: 'arraybuffer',
+    })
     .then((response) => {
       if (!response.data) {
         return null;
@@ -55,7 +56,9 @@ function allowedIconFormats(platform) {
         formats.push('.ico');
         break;
       default:
-        throw new Error(`function allowedIconFormats error: Unknown platform ${platform}`);
+        throw new Error(
+          `function allowedIconFormats error: Unknown platform ${platform}`,
+        );
     }
     return formats;
   }
@@ -89,7 +92,9 @@ function allowedIconFormats(platform) {
       }
       break;
     default:
-      throw new Error(`function allowedIconFormats error: Unknown platform ${platform}`);
+      throw new Error(
+        `function allowedIconFormats error: Unknown platform ${platform}`,
+      );
   }
   return formats;
 }

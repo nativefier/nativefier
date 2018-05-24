@@ -26,22 +26,29 @@ function convertToIcns(pngSrc, icnsDest, callback) {
     return;
   }
 
-  shell.exec(`${PNG_TO_ICNS_BIN_PATH} ${pngSrc} ${icnsDest}`, { silent: true }, (exitCode, stdOut, stdError) => {
-    if (stdOut.includes('icon.iconset:error') || exitCode) {
-      if (exitCode) {
-        callback({
-          stdOut,
-          stdError,
-        }, pngSrc);
+  shell.exec(
+    `${PNG_TO_ICNS_BIN_PATH} ${pngSrc} ${icnsDest}`,
+    { silent: true },
+    (exitCode, stdOut, stdError) => {
+      if (stdOut.includes('icon.iconset:error') || exitCode) {
+        if (exitCode) {
+          callback(
+            {
+              stdOut,
+              stdError,
+            },
+            pngSrc,
+          );
+          return;
+        }
+
+        callback(stdOut, pngSrc);
         return;
       }
 
-      callback(stdOut, pngSrc);
-      return;
-    }
-
-    callback(null, icnsDest);
-  });
+      callback(null, icnsDest);
+    },
+  );
 }
 
 /**

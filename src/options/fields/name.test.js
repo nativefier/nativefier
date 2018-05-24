@@ -14,14 +14,16 @@ const mockedResult = 'mock name';
 
 describe('well formed name parameters', () => {
   const params = { name: 'appname', platform: 'something' };
-  test('it should not call inferTitle', () => name(params).then((result) => {
-    expect(inferTitle).toHaveBeenCalledTimes(0);
-    expect(result).toBe(params.name);
-  }));
+  test('it should not call inferTitle', () =>
+    name(params).then((result) => {
+      expect(inferTitle).toHaveBeenCalledTimes(0);
+      expect(result).toBe(params.name);
+    }));
 
-  test('it should call sanitize filename', () => name(params).then((result) => {
-    expect(sanitizeFilename).toHaveBeenCalledWith(params.platform, result);
-  }));
+  test('it should call sanitize filename', () =>
+    name(params).then((result) => {
+      expect(sanitizeFilename).toHaveBeenCalledWith(params.platform, result);
+    }));
 });
 
 describe('bad name parameters', () => {
@@ -31,9 +33,10 @@ describe('bad name parameters', () => {
 
   const params = { targetUrl: 'some url' };
   describe('when the name is undefined', () => {
-    test('it should call inferTitle', () => name(params).then(() => {
-      expect(inferTitle).toHaveBeenCalledWith(params.targetUrl);
-    }));
+    test('it should call inferTitle', () =>
+      name(params).then(() => {
+        expect(inferTitle).toHaveBeenCalledWith(params.targetUrl);
+      }));
   });
 
   describe('when the name is an empty string', () => {
@@ -46,9 +49,10 @@ describe('bad name parameters', () => {
     });
   });
 
-  test('it should call sanitize filename', () => name(params).then((result) => {
-    expect(sanitizeFilename).toHaveBeenCalledWith(params.platform, result);
-  }));
+  test('it should call sanitize filename', () =>
+    name(params).then((result) => {
+      expect(sanitizeFilename).toHaveBeenCalledWith(params.platform, result);
+    }));
 });
 
 describe('handling inferTitle results', () => {
@@ -75,7 +79,9 @@ describe('handling inferTitle results', () => {
 
   describe('when inferTitle resolves with an error', () => {
     test('it should return the default app name', () => {
-      inferTitle.mockImplementationOnce(() => Promise.reject(new Error('some error')));
+      inferTitle.mockImplementationOnce(() =>
+        Promise.reject(new Error('some error')),
+      );
 
       return name(params).then((result) => {
         expect(result).toBe(DEFAULT_APP_NAME);
