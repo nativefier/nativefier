@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import async from 'async';
 
-import nativefier from './index';
+import nativefier from '../src';
 
 const PLATFORMS = ['darwin', 'linux'];
 tmp.setGracefulCleanup();
