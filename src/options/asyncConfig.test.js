@@ -9,11 +9,10 @@ fields.mockImplementation(() => [
   }),
 ]);
 
-test('it should merge the result of the promise', () => {
+test('it should merge the result of the promise', async () => {
   const param = { another: 'field', someField: 'oldValue' };
   const expected = { another: 'field', someField: 'newValue' };
 
-  return asyncConfig(param).then((result) => {
-    expect(result).toEqual(expected);
-  });
+  const result = await asyncConfig(param);
+  expect(result).toEqual(expected);
 });

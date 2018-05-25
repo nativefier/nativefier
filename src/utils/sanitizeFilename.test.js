@@ -13,7 +13,7 @@ test('it should call the sanitize-filename npm module', () => {
 
 describe('replacing non ascii characters', () => {
   const nonAscii = '�';
-  test('it should return a result without non ascii cahracters', () => {
+  test('it should return a result without non ascii characters', () => {
     const param = `${nonAscii}abc`;
     const expectedResult = 'abc';
     const result = sanitizeFilename('', param);

@@ -3,16 +3,16 @@ import { inferUserAgent } from './../../infer';
 
 jest.mock('./../../infer/inferUserAgent');
 
-test('when a userAgent parameter is passed', () => {
+test('when a userAgent parameter is passed', async () => {
   expect(inferUserAgent).toHaveBeenCalledTimes(0);
 
   const params = { userAgent: 'valid user agent' };
-  expect(userAgent(params)).resolves.toBe(params.userAgent);
+  await expect(userAgent(params)).resolves.toBe(params.userAgent);
 });
 
-test('no userAgent parameter is passed', () => {
+test('no userAgent parameter is passed', async () => {
   const params = { electronVersion: '123', platform: 'mac' };
-  userAgent(params);
+  await userAgent(params);
   expect(inferUserAgent).toHaveBeenCalledWith(
     params.electronVersion,
     params.platform,
