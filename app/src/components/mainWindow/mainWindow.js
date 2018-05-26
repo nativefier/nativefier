@@ -210,22 +210,30 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   };
 
   const onNewWindow = (event, urlToGo, _, disposition) => {
-    event.preventDefault();
+    const preventDefault = (newGuest) => {
+      event.preventDefault();
+      if (newGuest) {
+        // eslint-disable-next-line no-param-reassign
+        event.newGuest = newGuest;
+      }
+    };
     if (nativeTabsSupported()) {
       if (disposition === 'background-tab') {
-        createNewTab(urlToGo, false);
+        const newTab = createNewTab(urlToGo, false);
+        preventDefault(newTab);
         return;
       } else if (disposition === 'foreground-tab') {
-        createNewTab(urlToGo, true);
+        const newTab = createNewTab(urlToGo, true);
+        preventDefault(newTab);
         return;
       }
     }
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       shell.openExternal(urlToGo);
+      preventDefault();
+      // eslint-disable-next-line no-useless-return
       return;
     }
-    // eslint-disable-next-line no-param-reassign
-    event.newGuest = createNewWindow(urlToGo);
   };
 
   const sendParamsOnDidFinishLoad = (window) => {
