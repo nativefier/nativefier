@@ -217,22 +217,17 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         event.newGuest = newGuest;
       }
     };
-    if (nativeTabsSupported()) {
-      if (disposition === 'background-tab') {
-        const newTab = createNewTab(urlToGo, false);
-        preventDefault(newTab);
-        return;
-      } else if (disposition === 'foreground-tab') {
-        const newTab = createNewTab(urlToGo, true);
-        preventDefault(newTab);
-        return;
-      }
-    }
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       shell.openExternal(urlToGo);
       preventDefault();
-      // eslint-disable-next-line no-useless-return
-      return;
+    } else if (nativeTabsSupported()) {
+      if (disposition === 'background-tab') {
+        const newTab = createNewTab(urlToGo, false);
+        preventDefault(newTab);
+      } else if (disposition === 'foreground-tab') {
+        const newTab = createNewTab(urlToGo, true);
+        preventDefault(newTab);
+      }
     }
   };
 
