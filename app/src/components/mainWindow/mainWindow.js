@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import windowStateKeeper from 'electron-window-state';
+import mainWindowHelpers from './mainWindowHelpers';
 import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
@@ -14,6 +15,8 @@ const {
   getAppIcon,
   nativeTabsSupported,
 } = helpers;
+
+const { onNewWindowHelper } = mainWindowHelpers;
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -195,6 +198,13 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   };
 
+  const onWillNavigate = (event, urlToGo) => {
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+      event.preventDefault();
+      shell.openExternal(urlToGo);
+    }
+  };
+
   let createNewWindow;
 
   const createNewTab = (url, foreground) => {
@@ -209,6 +219,19 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     return undefined;
   };
 
+  const createAboutBlankWindow = () => {
+    const window = createNewWindow('about:blank');
+    window.hide();
+    window.webContents.once('did-stop-loading', () => {
+      if (window.webContents.getURL() === 'about:blank') {
+        window.close();
+      } else {
+        window.show();
+      }
+    });
+    return window;
+  };
+
   const onNewWindow = (event, urlToGo, _, disposition) => {
     const preventDefault = (newGuest) => {
       event.preventDefault();
@@ -217,23 +240,17 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         event.newGuest = newGuest;
       }
     };
-    if (nativeTabsSupported()) {
-      if (disposition === 'background-tab') {
-        const newTab = createNewTab(urlToGo, false);
-        preventDefault(newTab);
-        return;
-      } else if (disposition === 'foreground-tab') {
-        const newTab = createNewTab(urlToGo, true);
-        preventDefault(newTab);
-        return;
-      }
-    }
-    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
-      shell.openExternal(urlToGo);
-      preventDefault();
-      // eslint-disable-next-line no-useless-return
-      return;
-    }
+    onNewWindowHelper(
+      urlToGo,
+      disposition,
+      options.targetUrl,
+      options.internalUrls,
+      preventDefault,
+      shell.openExternal,
+      createAboutBlankWindow,
+      nativeTabsSupported,
+      createNewTab,
+    );
   };
 
   const sendParamsOnDidFinishLoad = (window) => {
@@ -250,6 +267,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     maybeInjectCss(window);
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
+    window.webContents.on('will-navigate', onWillNavigate);
     window.loadURL(url);
     return window;
   };
@@ -306,6 +324,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   mainWindow.webContents.on('new-window', onNewWindow);
+  mainWindow.webContents.on('will-navigate', onWillNavigate);
 
   mainWindow.loadURL(options.targetUrl);
 
