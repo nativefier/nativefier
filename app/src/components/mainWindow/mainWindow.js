@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import windowStateKeeper from 'electron-window-state';
+import mainWindowHelpers from './mainWindowHelpers';
 import helpers from './../../helpers/helpers';
 import createMenu from './../menu/menu';
 import initContextMenu from './../contextMenu/contextMenu';
@@ -14,6 +15,8 @@ const {
   getAppIcon,
   nativeTabsSupported,
 } = helpers;
+
+const { onNewWindowHelper } = mainWindowHelpers;
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -230,21 +233,17 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         event.newGuest = newGuest;
       }
     };
-    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
-      shell.openExternal(urlToGo);
-      preventDefault();
-    } else if (urlToGo === 'about:blank') {
-      const newWindow = createAboutBlankWindow();
-      preventDefault(newWindow);
-    } else if (nativeTabsSupported()) {
-      if (disposition === 'background-tab') {
-        const newTab = createNewTab(urlToGo, false);
-        preventDefault(newTab);
-      } else if (disposition === 'foreground-tab') {
-        const newTab = createNewTab(urlToGo, true);
-        preventDefault(newTab);
-      }
-    }
+    onNewWindowHelper(
+      urlToGo,
+      disposition,
+      options.targetUrl,
+      options.internalUrls,
+      preventDefault,
+      shell.openExternal,
+      createAboutBlankWindow,
+      nativeTabsSupported,
+      createNewTab,
+    );
   };
 
   const sendParamsOnDidFinishLoad = (window) => {
