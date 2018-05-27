@@ -195,6 +195,13 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   };
 
+  const onWillNavigate = (event, urlToGo) => {
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+      event.preventDefault();
+      shell.openExternal(urlToGo);
+    }
+  };
+
   let createNewWindow;
 
   const createNewTab = (url, foreground) => {
@@ -245,6 +252,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     maybeInjectCss(window);
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
+    window.webContents.on('will-navigate', onWillNavigate);
     window.loadURL(url);
     return window;
   };
@@ -301,6 +309,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   mainWindow.webContents.on('new-window', onNewWindow);
+  mainWindow.webContents.on('will-navigate', onWillNavigate);
 
   mainWindow.loadURL(options.targetUrl);
 
