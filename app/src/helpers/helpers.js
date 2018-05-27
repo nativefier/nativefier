@@ -19,6 +19,10 @@ function isWindows() {
 }
 
 function linkIsInternal(currentUrl, newUrl, internalUrlRegex) {
+  if (newUrl === 'about:blank') {
+    return true;
+  }
+
   if (internalUrlRegex) {
     const regex = RegExp(internalUrlRegex);
     return regex.test(newUrl);
