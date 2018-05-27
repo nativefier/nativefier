@@ -20,9 +20,9 @@ function testPlatform(platform) {
 
 describe('Infer User Agent', () => {
   test('Can infer userAgent for all platforms', async () => {
-    const testPromises = _.keys(TEST_RESULT).map((platform) =>
-      testPlatform(platform),
-    );
+    const testPromises = _
+      .keys(TEST_RESULT)
+      .map((platform) => testPlatform(platform));
     await Promise.all(testPromises);
   });
 
