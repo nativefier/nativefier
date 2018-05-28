@@ -1,6 +1,6 @@
 import helpers from './helpers';
 
-const { linkIsInternal } = helpers;
+const { linkIsInternal, getCounterValue } = helpers;
 
 const internalUrl = 'https://medium.com/';
 const internalUrlSubPath = 'topic/technology';
@@ -27,4 +27,20 @@ test('urls from different sites should not be internal', () => {
 
 test('all urls should be internal with wildcard regex', () => {
   expect(linkIsInternal(internalUrl, externalUrl, wildcardRegex)).toEqual(true);
+});
+
+const smallCounterTitle = 'Inbox (11) - nobody@example.com - Gmail';
+const largeCounterTitle = 'Inbox (8,756) - nobody@example.com - Gmail';
+const noCounterTitle = 'Inbox - nobody@example.com - Gmail';
+
+test('getCounterValue should return undefined for titles without counter numbers', () => {
+  expect(getCounterValue(noCounterTitle)).toEqual(undefined);
+});
+
+test('getCounterValue should return a string for small counter numbers in the title', () => {
+  expect(getCounterValue(smallCounterTitle)).toEqual('11');
+});
+
+test('getCounterValue should return a string for large counter numbers in the title', () => {
+  expect(getCounterValue(largeCounterTitle)).toEqual('8,756');
 });
