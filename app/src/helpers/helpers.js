@@ -67,6 +67,12 @@ function nativeTabsSupported() {
   return isOSX();
 }
 
+function getCounterValue(title) {
+  const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
+  const match = itemCountRegex.exec(title);
+  return match ? match[1] : undefined;
+}
+
 export default {
   isOSX,
   isLinux,
@@ -77,4 +83,5 @@ export default {
   shouldInjectCss,
   getAppIcon,
   nativeTabsSupported,
+  getCounterValue,
 };

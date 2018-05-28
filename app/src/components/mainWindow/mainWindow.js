@@ -14,6 +14,7 @@ const {
   shouldInjectCss,
   getAppIcon,
   nativeTabsSupported,
+  getCounterValue,
 } = helpers;
 
 const { onNewWindowHelper } = mainWindowHelpers;
@@ -303,10 +304,9 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   if (options.counter) {
     mainWindow.on('page-title-updated', (e, title) => {
-      const itemCountRegex = /[([{](\d*?)\+?[}\])]/;
-      const match = itemCountRegex.exec(title);
-      if (match) {
-        setDockBadge(match[1], options.bounce);
+      const counterValue = getCounterValue(title);
+      if (counterValue) {
+        setDockBadge(counterValue, options.bounce);
       } else {
         setDockBadge('');
       }

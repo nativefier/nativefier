@@ -2,7 +2,7 @@ import helpers from './../../helpers/helpers';
 
 const { app, Tray, Menu, ipcMain, nativeImage } = require('electron');
 
-const { getAppIcon } = helpers;
+const { getAppIcon, getCounterValue } = helpers;
 
 /**
  *
@@ -49,10 +49,9 @@ function createTrayIcon(inpOptions, mainWindow) {
 
     if (options.counter) {
       mainWindow.on('page-title-updated', (e, title) => {
-        const itemCountRegex = /[([{](\d*?)\+?[}\])]/;
-        const match = itemCountRegex.exec(title);
-        if (match) {
-          appIcon.setToolTip(`(${match[1]})  ${options.name}`);
+        const counterValue = getCounterValue(title);
+        if (counterValue) {
+          appIcon.setToolTip(`(${counterValue})  ${options.name}`);
         } else {
           appIcon.setToolTip(options.name);
         }
