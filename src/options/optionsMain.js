@@ -73,6 +73,7 @@ export default function(inpOptions) {
     basicAuthUsername: inpOptions.basicAuthUsername || null,
     basicAuthPassword: inpOptions.basicAuthPassword || null,
     alwaysOnTop: inpOptions.alwaysOnTop || false,
+    titleBarStyle: inpOptions.titleBarStyle || null,
   };
 
   if (options.verbose) {
