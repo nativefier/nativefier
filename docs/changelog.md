@@ -1,4 +1,17 @@
 
+7.6.4 / 2018-05-31
+==================
+
+  * Add `--title-bar-style` flag (macOS only) (PR #627)
+  * Make the `--counter` regexp allow punctuation (e.g. "1,234") (fix #610, PR #626)
+  * Fix sites that use about:blank redirect technique (PR #623)
+  * Always open external links externally (fix #621 - PRs #622 #624)
+  * Only override the default window opening behavior when necessary (fix #616 - PR #620)
+  * Don't run tests on node 4 and 5, due to Jest not supporting those.
+    In time, Nativefier will stop supporting them too and will enforce node>=6.
+  * Tests cleanups: use async/await, separate e2e tests, mocha -> jest.
+  * Use [prettier](https://github.com/prettier/prettier) for code formatting.
+
 7.6.3 / 2018-05-23
 ==================
 
