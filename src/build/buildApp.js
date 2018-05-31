@@ -55,6 +55,7 @@ function selectAppArgs(options) {
     basicAuthUsername: options.basicAuthUsername,
     basicAuthPassword: options.basicAuthPassword,
     alwaysOnTop: options.alwaysOnTop,
+    titleBarStyle: options.titleBarStyle,
   };
 }
 

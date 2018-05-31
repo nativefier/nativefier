@@ -195,6 +195,10 @@ if (require.main === module) {
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
     .option('--always-on-top', 'enable always on top window')
+    .option(
+      '--title-bar-style <value>',
+      "(macOS only) set title bar style ('hidden', 'hiddenInset').  Consider injecting custom CSS (via --inject) for better integration.",
+    )
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {

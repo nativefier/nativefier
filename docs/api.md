@@ -38,6 +38,7 @@
     - [[full-screen]](#full-screen)
     - [[maximize]](#maximize)
     - [[hide-window-frame]](#hide-window-frame)
+    - [[title-bar-style]](#title-bar-style)
     - [[verbose]](#verbose)
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
@@ -405,8 +406,41 @@ Makes the packaged app start maximized.
 --hide-window-frame
 ```
 
-Disable window frame and controls
+Disable window frame and controls.
 
+#### [title-bar-style]
+
+```
+--title-bar-style <value>
+```
+
+(macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://github.com/electron/electron/blob/master/docs/api/frameless-window.md#alternatives-on-macos) documentation.
+
+Consider injecting a custom CSS (via `--inject`) for better integration. Specifically, the CSS should specify a draggable region. For instance, if the target website has a `<header>` element, you can make it draggable like so.
+
+```css
+/* site.css */
+
+/* header is draggable... */
+header {
+  -webkit-app-region: drag;
+}
+
+/* but any buttons inside the header shouldn't be draggable */
+header button {
+  -webkit-app-region: no-drag;
+}
+
+/* perhaps move some items out of way for the traffic light */
+header div:first-child {
+  margin-left: 100px;
+  margin-top: 25px;
+}
+```
+
+```sh
+nativefier http://google.com --inject site.css --title-bar-style 'hiddenInset'
+```
 
 #### [verbose]
 
