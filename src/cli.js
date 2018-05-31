@@ -37,7 +37,7 @@ function checkInternet() {
 
 if (require.main === module) {
   program
-    .version(packageJson.version)
+    .version(packageJson.version, '--version, -V, -v')
     .arguments('<targetUrl> [dest]')
     .action((targetUrl, appDir) => {
       program.targetUrl = targetUrl;
