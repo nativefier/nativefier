@@ -14,6 +14,7 @@
     "dev-up": "npm install && (cd ./app && npm install) && npm run build",
     "dev-up-win": "npm install & cd app & npm install & cd .. & npm run build",
     "test": "jest src",
+    "guard": "jest --watch src",
     "e2e": "jest e2e",
     "tdd": "gulp tdd",
     "lint": "eslint .",
