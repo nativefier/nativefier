@@ -18,8 +18,7 @@ function inferTitle(url) {
     const $ = cheerio.load(data);
     return $('title')
       .first()
-      .text()
-      .replace(/\//g, '');
+      .text();
   });
 }
 
