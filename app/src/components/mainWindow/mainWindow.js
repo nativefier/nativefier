@@ -129,8 +129,9 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   const withFocusedWindow = (block) => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     if (focusedWindow) {
-      block(focusedWindow);
+      return block(focusedWindow);
     }
+    return undefined;
   };
 
   const adjustWindowZoom = (window, adjustment) => {
@@ -194,11 +195,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   };
 
-  const getCurrentUrl = () => {
-    withFocusedWindow((focusedWindow) => {
-      focusedWindow.webContents.getURL();
-    });
-  };
+  const getCurrentUrl = () =>
+    withFocusedWindow((focusedWindow) => focusedWindow.webContents.getURL());
 
   const onWillNavigate = (event, urlToGo) => {
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
