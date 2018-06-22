@@ -8,14 +8,19 @@ import fs from 'fs';
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
 const log = require('loglevel');
 /**
- * Patches window.Notification to set a callback on a new Notification
- * @param callback
+ * Patches window.Notification to:
+ * - set a callback on a new Notification
+ * - set a callback for clicks on notifications
+ * @param createCallback
+ * @param clickCallback
  */
-function setNotificationCallback(callback) {
+function setNotificationCallback(createCallback, clickCallback) {
   const OldNotify = window.Notification;
   const newNotify = (title, opt) => {
-    callback(title, opt);
-    return new OldNotify(title, opt);
+    createCallback(title, opt);
+    const instance = new OldNotify(title, opt);
+    instance.addEventListener('click', clickCallback);
+    return instance;
   };
   newNotify.requestPermission = OldNotify.requestPermission.bind(OldNotify);
   Object.defineProperty(newNotify, 'permission', {
@@ -35,9 +40,14 @@ function injectScripts() {
   require(INJECT_JS_PATH);
 }
 
-setNotificationCallback((title, opt) => {
+function notifyNotificationCreate(title, opt) {
   ipcRenderer.send('notification', title, opt);
-});
+}
+function notifyNotificationClick() {
+  ipcRenderer.send('notification-click');
+}
+
+setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
 
 document.addEventListener('DOMContentLoaded', () => {
   injectScripts();
