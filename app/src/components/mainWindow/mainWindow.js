@@ -323,9 +323,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   ipcMain.on('notification-click', () => {
-    if (mainWindow.isMinimized()) {
-      mainWindow.restore();
-    }
+    mainWindow.show();
   });
 
   mainWindow.webContents.on('new-window', onNewWindow);
