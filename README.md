@@ -42,7 +42,7 @@ View the changelog [here](https://github.com/jiahaog/nativefier/blob/development
 
 - Automatically retrieves the correct icon and app name
 - Flash Support (with [`--flash`](docs/api.md#flash) flag)
-- Javascript and CSS injection
+- JavaScript and CSS injection
 
 ## Installation
 
