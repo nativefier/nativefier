@@ -1,4 +1,12 @@
 
+7.6.5 / 2018-07-21
+==================
+
+  * Fix "Copy Current URL" causing `TypeError` (#633, PR #634)
+  * Add Unix/Mac-conventional `-v` version flag (PR #628)
+  * Bump default Electron to 2.0.5
+  * Dev: Add `jest --watch` helper for npm scripts, Code cleanups, Add tests
+
 7.6.4 / 2018-05-31
 ==================
 
