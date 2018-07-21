@@ -1,4 +1,4 @@
-import helpers from './../../helpers/helpers';
+import helpers from '../../helpers/helpers';
 
 const { linkIsInternal } = helpers;
 

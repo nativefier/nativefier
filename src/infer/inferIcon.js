@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import tmp from 'tmp';
 import gitCloud from 'gitcloud';
-import helpers from './../helpers/helpers';
+import helpers from '../helpers/helpers';
 
 const { downloadFile, allowedIconFormats } = helpers;
 tmp.setGracefulCleanup();

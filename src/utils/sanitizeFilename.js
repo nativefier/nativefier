@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import sanitizeFilenameLib from 'sanitize-filename';
-import { DEFAULT_APP_NAME } from './../constants';
+import { DEFAULT_APP_NAME } from '../constants';
 
 export default function(platform, str) {
   let result = sanitizeFilenameLib(str);

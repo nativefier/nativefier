@@ -5,8 +5,8 @@ import program from 'commander';
 import nativefier from './index';
 
 const dns = require('dns');
-const packageJson = require('./../package');
 const log = require('loglevel');
+const packageJson = require('./../package');
 
 function collect(val, memo) {
   memo.push(val);

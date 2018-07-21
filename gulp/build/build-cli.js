@@ -1,6 +1,6 @@
 import gulp from 'gulp';
-import PATHS from './../helpers/src-paths';
-import helpers from './../helpers/gulp-helpers';
+import PATHS from '../helpers/src-paths';
+import helpers from '../helpers/gulp-helpers';
 
 const { buildES6 } = helpers;
 

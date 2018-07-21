@@ -5,11 +5,11 @@ import ncp from 'ncp';
 import async from 'async';
 import hasBinary from 'hasbin';
 import log from 'loglevel';
-import DishonestProgress from './../helpers/dishonestProgress';
-import optionsFactory from './../options/optionsMain';
+import DishonestProgress from '../helpers/dishonestProgress';
+import optionsFactory from '../options/optionsMain';
 import iconBuild from './iconBuild';
-import helpers from './../helpers/helpers';
-import PackagerConsole from './../helpers/packagerConsole';
+import helpers from '../helpers/helpers';
+import PackagerConsole from '../helpers/packagerConsole';
 import buildApp from './buildApp';
 
 const copy = ncp.ncp;

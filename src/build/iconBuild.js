@@ -1,7 +1,7 @@
 import path from 'path';
 import log from 'loglevel';
-import helpers from './../helpers/helpers';
-import iconShellHelpers from './../helpers/iconShellHelpers';
+import helpers from '../helpers/helpers';
+import iconShellHelpers from '../helpers/iconShellHelpers';
 
 const { isOSX } = helpers;
 const { convertToPng, convertToIco, convertToIcns } = iconShellHelpers;

@@ -1,6 +1,6 @@
 import gulp from 'gulp';
 import webpack from 'webpack-stream';
-import PATHS from './../helpers/src-paths';
+import PATHS from '../helpers/src-paths';
 
 const webpackConfig = require('./../../webpack.config.js');
 

@@ -1,8 +1,8 @@
 import log from 'loglevel';
 import name from './name';
-import { DEFAULT_APP_NAME } from './../../constants';
-import { inferTitle } from './../../infer';
-import { sanitizeFilename } from './../../utils';
+import { DEFAULT_APP_NAME } from '../../constants';
+import { inferTitle } from '../../infer';
+import { sanitizeFilename } from '../../utils';
 
 jest.mock('./../../infer/inferTitle');
 jest.mock('./../../utils/sanitizeFilename');

@@ -1,4 +1,4 @@
-import { inferUserAgent } from './../../infer';
+import { inferUserAgent } from '../../infer';
 
 export default function({ userAgent, electronVersion, platform }) {
   if (userAgent) {

@@ -1,7 +1,7 @@
 import log from 'loglevel';
-import { sanitizeFilename } from './../../utils';
-import { inferTitle } from './../../infer';
-import { DEFAULT_APP_NAME } from './../../constants';
+import { sanitizeFilename } from '../../utils';
+import { inferTitle } from '../../infer';
+import { DEFAULT_APP_NAME } from '../../constants';
 
 function tryToInferName({ name, targetUrl }) {
   // .length also checks if its the commanderJS function or a string

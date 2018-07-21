@@ -3,9 +3,9 @@ import path from 'path';
 import { BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import mainWindowHelpers from './mainWindowHelpers';
-import helpers from './../../helpers/helpers';
-import createMenu from './../menu/menu';
-import initContextMenu from './../contextMenu/contextMenu';
+import helpers from '../../helpers/helpers';
+import createMenu from '../menu/menu';
+import initContextMenu from '../contextMenu/contextMenu';
 
 const {
   isOSX,

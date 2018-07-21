@@ -1,6 +1,6 @@
 import sanitizeFilenameLib from 'sanitize-filename';
 import sanitizeFilename from './sanitizeFilename';
-import { DEFAULT_APP_NAME } from './../constants';
+import { DEFAULT_APP_NAME } from '../constants';
 
 jest.mock('sanitize-filename');
 sanitizeFilenameLib.mockImplementation((str) => str);

@@ -1,9 +1,9 @@
 import log from 'loglevel';
 
-import inferOs from './../infer/inferOs';
+import inferOs from '../infer/inferOs';
 import normalizeUrl from './normalizeUrl';
-import packageJson from './../../package.json';
-import { ELECTRON_VERSION, PLACEHOLDER_APP_DIR } from './../constants';
+import packageJson from '../../package.json';
+import { ELECTRON_VERSION, PLACEHOLDER_APP_DIR } from '../constants';
 import asyncConfig from './asyncConfig';
 
 const { inferPlatform, inferArch } = inferOs;
