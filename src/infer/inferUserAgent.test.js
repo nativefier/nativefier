@@ -31,7 +31,7 @@ describe('Infer User Agent', () => {
 
     const TIMEOUT_URL = 'http://www.google.com:81/';
     await expect(inferUserAgent('1.6.7', 'darwin', TIMEOUT_URL)).resolves.toBe(
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36',
     );
   });
 });

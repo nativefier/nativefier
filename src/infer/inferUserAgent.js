@@ -3,7 +3,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
-const DEFAULT_CHROME_VERSION = '58.0.3029.110';
+const DEFAULT_CHROME_VERSION = '61.0.3163.100';
 
 function getChromeVersionForElectronVersion(
   electronVersion,
