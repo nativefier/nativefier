@@ -1,36 +1,26 @@
 language: node_js
-
 addons:
   code_climate:
     repo_token: CODE_CLIMATE_TOKEN
-
 node_js:
-  - '10'
-  - '8'
-  - '7'
-  - '6'
-  # jest doesn't work with these versions TODO: find a workaround
-  # - '5'
-  # - '4'
-
+- '10'
+- '8'
+- '7'
+- '6'
 before_install:
-  - npm install -g npm@5.8.x
-
+- npm install -g npm@5.8.x
 install:
-  - npm run dev-up
-
+- npm run dev-up
 script:
-  - npm run ci
-
+- npm run ci
 after_script:
-  - codeclimate-test-reporter < ./coverage/lcov.info
-
+- codeclimate-test-reporter < ./coverage/lcov.info
 deploy:
   provider: npm
   skip_cleanup: true
   email: jiahaog@gmail.com
   api_key:
-    secure: d/wwkEjXrgP7fJrbkqdSH2779ijL6zIMjRokGP6ojB+7SNiefO0tR8A+hVifeePRC8tDmg4Q/SaVN61+sVNiJc2lDMej6UyRy1WuYW9sYovc5ZRHfba/xUVlq8xQbww/bz2MD8Um9/ayKMViw1Mkt5BQ1sBf/4Q3Ua6WSGsy2rET234rVuk5eR9cYeA/WTH+/w4ae59ki2qyezFwSgCaM9SkxStKez+btKcltIpCBi/k28DjWFPhmGarouR5MYwGG0CqaLzYKgxWqaKS6wN/nO0YrdHBJyciZhccbxWOg9G2sKPTBsebYdyPCe9ykEAGkeibVjvUBGYsDxObTo5W4ccYgq9g/nSbSxyaYn022Xs7EJcGfZf8KWAeZuLrwtb/VgRQyZI5QOMRjN8s50oirVyWBH/lGD4VdKDix3TMbwsgs1Q3VbmU/4bSqeh3HSDK/chEDsw3rzu2c/D/Fl/4kh0MOX4q/qO/2bj9aEpX/Gc4JVqL9y89IeoYGE7ZzecCq64L0oKbNT0qAUjthFAu0a4E+zOedj5z/HpEMaqeH6FBF8a/Ds95QB9NX0REBsHazKcjOCv4wc6sItY4Wdj+l0/lkTSwuPhdgH9gwDbnwlSGG9j01k3aFhdxTm2k2nRzjoUs2iRZjnUwVLxVFn0jUyKh7mkRZZalaNeLQb0zTu4=
+    secure: al3oL4T5teMYt8GBAN1yx1l5Q25opB2LxYCAl6mbdnuhFBHO47aUnbEa/xJc2B0s6E9S8gJR2pYkg02WBPhr94GU+Pg3Gi/Lu8SqBLbrUzB4PT1ow30aoGIi4qaCvjRSbFuHr1I3gF/OZwcVlibU2C8GHArG2AV+TC2Krpsr6aa4V2qGmJwUMNP+rok2k9YZuUIB5lt8ZONwykYLrDxLOKZiZJ9nCLRBwJLpEUp4+z4k8zE7OTiU8/lFQMUV+WSvZVjjV+d8UCnLGN8LplZGY+VSAoh3JjrTTgXLkoT2EeZ1GFdhToanZnVkcrkT5BgNTEfq3OPB/rkqgCtwCUrOuudJE1uoXauVbYM7EwuahdRFC89Z9VBSHdsSw8Qk4cgSphS+U4+G3/+7oel8zWdHrH+iDj+YWFyB0WeyBvCqiqqzjwTo1Zjw6zzKUQxnmuhBEJ94jktTNV+ixV58VAy+oFecAFB4D8JMIw/ibgoB5ZJJdB8iRmrjhJoUjvUY8S7RpilcieDt0NO0h0y8/Qk0XLy/hgyuohsAsrl/lz4qP/dJVGVO6eSHVSn6tGUbMPymKKY5/s9czQT0fd6zE1ajdefva0YuePsuVVba1OophZM3UtfxPl7mwWiruTlRqwySa287a7ugTIM4wrO4T98zz0aqkYCJoZ9hgdYryrngRvM=
   on:
     tags: true
     repo: jiahaog/nativefier
