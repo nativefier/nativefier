@@ -46,7 +46,7 @@ I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser
 ### Requirements
 
 - macOS 10.9+ / Windows / Linux
-- [Node.js](https://nodejs.org/) `>=4`
+- [Node.js](https://nodejs.org/) `>=6` (4.x may work but is no longer tested, please upgrade)
 - See [optional dependencies](#optional-dependencies) for more.
 
 ```bash
