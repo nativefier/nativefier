@@ -1,4 +1,13 @@
 
+7.6.7 / 2018-07-31
+==================
+
+  * Fix broken `--version` (issue #660)
+  * Bump default Electron to 2.0.6
+  * **Upcoming compatibility break notice:**
+    **Nativefier may still work with node 4.x & 5.x, but <6.x is no longer tested.**
+    **Minimum node version will be enforced to >=6.x at some point soon.**
+
 7.6.6 / 2018-07-22
 ==================
 
