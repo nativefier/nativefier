@@ -164,7 +164,11 @@ Specifies if the source code within the nativefied app should be packaged into a
 -i, --icon <path>
 ```
 
-##### Packaging for Windows and Linux
+##### Packaging for Windows
+
+The icon parameter should be a path to a `.ico` file.
+
+##### Packaging for Linux
 
 The icon parameter should be a path to a `.png` file.
 
