@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { app, crashReporter } from 'electron';
 import electronDownload from 'electron-dl';
-import badge from 'electron-windows-badge';
+import Badge from 'electron-windows-badge';
 
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
@@ -84,8 +84,9 @@ if (isOSX()) {
   let currentBadgeCount = 0;
 
   setDockBadge = (count, bounce = false) => {
-    const badge = Badge(mainWindow);
-    badge.update(count);
+    const badge = new Badge(mainWindow);
+    const theCount = count || "0";
+    badge.update(theCount);
     currentBadgeCount = count;
   };
 }
