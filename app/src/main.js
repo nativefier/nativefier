@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { app, crashReporter } from 'electron';
 import electronDownload from 'electron-dl';
+import Badge from 'electron-windows-badge';
 
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
@@ -10,7 +11,7 @@ import createTrayIcon from './components/trayIcon/trayIcon';
 import helpers from './helpers/helpers';
 import inferFlash from './helpers/inferFlash';
 
-const { isOSX } = helpers;
+const { isOSX, isWindows } = helpers;
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
@@ -68,7 +69,7 @@ if (appArgs.basicAuthPassword) {
   );
 }
 
-// do nothing for setDockBadge if not OSX
+// do nothing for setDockBadge if not OSX or Windows
 let setDockBadge = () => {};
 
 if (isOSX()) {
@@ -77,6 +78,15 @@ if (isOSX()) {
   setDockBadge = (count, bounce = false) => {
     app.dock.setBadge(count);
     if (bounce && count > currentBadgeCount) app.dock.bounce();
+    currentBadgeCount = count;
+  };
+}else if(isWindows()){
+  let currentBadgeCount = 0;
+
+  setDockBadge = (count, bounce = false) => {
+    const badge = new Badge(mainWindow);
+    const theCount = count || "0";
+    badge.update(theCount);
     currentBadgeCount = count;
   };
 }
