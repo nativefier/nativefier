@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
-import { app, crashReporter } from 'electron';
+import { app, crashReporter, BrowserWindow, ipcMain } from 'electron';
 import electronDownload from 'electron-dl';
 
 import createLoginWindow from './components/login/loginWindow';
@@ -10,7 +10,7 @@ import createTrayIcon from './components/trayIcon/trayIcon';
 import helpers from './helpers/helpers';
 import inferFlash from './helpers/inferFlash';
 
-const { isOSX } = helpers;
+const { isOSX, getAppIcon } = helpers;
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
@@ -26,6 +26,7 @@ if (appArgs.processEnvs) {
 }
 
 let mainWindow;
+let onlineStatusWindow;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
@@ -91,7 +92,11 @@ app.on('activate', (event, hasVisibleWindows) => {
   if (isOSX()) {
     // this is called when the dock is clicked
     if (!hasVisibleWindows) {
-      mainWindow.show();
+      if (mainWindow) {
+        mainWindow.show();
+      } else {
+        onlineStatusWindow.show();
+      }
     }
   }
 });
@@ -120,8 +125,32 @@ if (appArgs.crashReporter) {
 }
 
 app.on('ready', () => {
-  mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
-  createTrayIcon(appArgs, mainWindow);
+  onlineStatusWindow = new BrowserWindow({
+    width: 300,
+    height: 200,
+    frame: false,
+    resizable: false,
+    show: false,
+    backgroundColor: 'white',
+    title: appArgs.title,
+    icon: getAppIcon(),
+  });
+  onlineStatusWindow.loadURL(`file://${__dirname}/static/online-status.html`);
+});
+
+ipcMain.on('online-status-changed', (event, status) => {
+  if (status === 'online') {
+    onlineStatusWindow.hide();
+    if (!mainWindow) {
+      mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
+      mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+      });
+      createTrayIcon(appArgs, mainWindow);
+    }
+  } else {
+    onlineStatusWindow.show();
+  }
 });
 
 app.on('new-window-for-tab', () => {

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<style>
+  .center {
+    margin: auto;
+    text-align: center;
+    width: 50%;
+  }
+
+  .hide {
+    display: none;
+  }
+</style>
+
+<body>
+  <div id="checkingInternet" class="center">
+    <h1>Checking Internet Connectiong...</h1>
+  </div>
+  <div id="online" class="center hide">
+    <h1>You are now connected to Internet!</h1>
+  </div>
+  <div id="noInternet" class="center hide">
+    <img src="nointernet.gif" width="110" height="90">
+    <h2>No Internet Connection!</h2>
+  </div>
+  <script>
+    const checkingInternet = document.getElementById("checkingInternet");
+    const online = document.getElementById("online");
+    const noInternet = document.getElementById("noInternet");
+    const { ipcRenderer } = require('electron')
+    const updateOnlineStatus = () => {
+      ipcRenderer.send('online-status-changed', navigator.onLine ? 'online' : 'offline')
+      checkingInternet.style.display = "none";
+      if (navigator.onLine) {
+        online.style.display = "block";
+        noInternet.style.display = "none";
+      } else {
+        online.style.display = "none";
+        noInternet.style.display = "block";
+      }
+    }
+    window.addEventListener('online', updateOnlineStatus)
+    window.addEventListener('offline', updateOnlineStatus)
+    updateOnlineStatus()
+  </script>
+</body>
+
+</html>
