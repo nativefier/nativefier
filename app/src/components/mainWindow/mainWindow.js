@@ -322,6 +322,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   }
 
+  ipcMain.on('notification-click', () => {
+    mainWindow.show();
+  });
+
   mainWindow.webContents.on('new-window', onNewWindow);
   mainWindow.webContents.on('will-navigate', onWillNavigate);
 
