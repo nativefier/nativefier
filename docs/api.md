@@ -190,7 +190,7 @@ To retrieve the `.icns` file from the downloaded file, extract it first and pres
 --counter
 ```
 
-Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).  Same limitations as the badge option (above).
+Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).
 
 #### [bounce]
 
