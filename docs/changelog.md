@@ -1,3 +1,10 @@
+7.6.8 / 2018-10-06
+==================
+
+  * Bump default Electron to 3.0.3, based on Chrome 66 / Node 10 / V8 6.6
+  * Show application window on notification click (#640)
+  * Update docs: Windows icon requirements (#663), badge option (#693)
+  * Bump deps (eslint-config-prettier, eslint-plugin-prettier)
 
 7.6.7 / 2018-07-31
 ==================
