@@ -14,7 +14,7 @@ function createTrayIcon(inpOptions, mainWindow) {
   const options = Object.assign({}, inpOptions);
 
   if (options.tray) {
-    const iconPath = getAppIcon();
+    const iconPath = options.trayIcon ? options.trayIcon : getAppIcon();
     const nimage = nativeImage.createFromPath(iconPath);
     const appIcon = new Tray(nimage);
 

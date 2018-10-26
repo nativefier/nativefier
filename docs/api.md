@@ -508,6 +508,14 @@ Prevents application from being run multiple times. If such an attempt occurs th
 
 Application will stay as an icon in the system tray. Prevents application from being closed from clicking the window close button.
 
+#### [tray-icon]
+
+```
+--tray-icon
+```
+
+Allows applications to specify a specific path to a tray icon when used with tray mode.
+
 #### [basic-auth-username]
 
 ```

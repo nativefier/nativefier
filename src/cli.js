@@ -192,6 +192,7 @@ if (require.main === module) {
       parseJson,
     )
     .option('--tray', 'allow app to stay in system tray')
+    .option('--tray-icon', 'allows the app to specify a tray icon to use')
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
     .option('--always-on-top', 'enable always on top window')
