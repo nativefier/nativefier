@@ -65,7 +65,7 @@ if (require.main === module) {
     )
     .option(
       '-e, --electron-version <value>',
-      "electron version to package, without the 'v', see https://github.com/atom/electron/releases",
+      "electron version to package, without the 'v', see https://github.com/electron/electron/releases",
     )
     .option(
       '--no-overwrite',
@@ -73,7 +73,7 @@ if (require.main === module) {
     )
     .option(
       '-c, --conceal',
-      'packages the source code within your app into an archive, defaults to false, see http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/',
+      'packages the source code within your app into an archive, defaults to false, see https://electronjs.org/docs/tutorial/application-packaging',
     )
     .option(
       '--counter',
