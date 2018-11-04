@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
-import { app, crashReporter } from 'electron';
+import { app, crashReporter, globalShortcut } from 'electron';
 import electronDownload from 'electron-dl';
 
 import createLoginWindow from './components/login/loginWindow';
@@ -122,6 +122,17 @@ if (appArgs.crashReporter) {
 app.on('ready', () => {
   mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
   createTrayIcon(appArgs, mainWindow);
+
+  // Register global shortcuts
+  if (appArgs.globalShortcuts) {
+    appArgs.globalShortcuts.forEach((shortcut) => {
+      globalShortcut.register(shortcut.key, () => {
+        shortcut.inputEvents.forEach((inputEvent) => {
+          mainWindow.webContents.sendInputEvent(inputEvent);
+        });
+      });
+    });
+  }
 });
 
 app.on('new-window-for-tab', () => {

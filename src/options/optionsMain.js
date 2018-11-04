@@ -1,3 +1,4 @@
+import fs from 'fs';
 import log from 'loglevel';
 
 import inferOs from '../infer/inferOs';
@@ -74,6 +75,7 @@ export default function(inpOptions) {
     basicAuthPassword: inpOptions.basicAuthPassword || null,
     alwaysOnTop: inpOptions.alwaysOnTop || false,
     titleBarStyle: inpOptions.titleBarStyle || null,
+    globalShortcuts: inpOptions.globalShortcuts || null,
   };
 
   if (options.verbose) {
@@ -115,6 +117,11 @@ export default function(inpOptions) {
 
   if (typeof inpOptions.y !== 'undefined') {
     options.y = inpOptions.y;
+  }
+
+  if (options.globalShortcuts) {
+    const globalShortcutsFileContent = fs.readFileSync(options.globalShortcuts);
+    options.globalShortcuts = JSON.parse(globalShortcutsFileContent);
   }
 
   return asyncConfig(options);
