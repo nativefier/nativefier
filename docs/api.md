@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Command Line](#command-line)
     - [Target Url](#target-url)
     - [[dest]](#dest)
@@ -10,10 +11,17 @@
     - [[name]](#name)
     - [[platform]](#platform)
     - [[arch]](#arch)
+    - [[app-copyright]](#app-copyright)
+    - [[app-version]](#app-version)
+    - [[build-version]](#build-version)
     - [[electron-version]](#electron-version)
     - [[no-overwrite]](#no-overwrite)
     - [[conceal]](#conceal)
     - [[icon]](#icon)
+      - [Packaging for Windows](#packaging-for-windows)
+      - [Packaging for Linux](#packaging-for-linux)
+      - [Packaging for macOS](#packaging-for-macos)
+        - [Manually Converting `.icns`](#manually-converting-icns)
     - [[counter]](#counter)
     - [[bounce]](#bounce)
     - [[width]](#width)
@@ -29,6 +37,9 @@
     - [[user-agent]](#user-agent)
     - [[honest]](#honest)
     - [[ignore-certificate]](#ignore-certificate)
+    - [[disable-gpu]](#disable-gpu)
+    - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
+    - [[enable-es3-apis]](#enable-es3-apis)
     - [[insecure]](#insecure)
     - [[internal-urls]](#internal-urls)
     - [[flash]](#flash)
@@ -42,15 +53,20 @@
     - [[verbose]](#verbose)
     - [[disable-context-menu]](#disable-context-menu)
     - [[disable-dev-tools]](#disable-dev-tools)
-    - [[zoom]](#zoom)
     - [[crash-reporter]](#crash-reporter)
+    - [[zoom]](#zoom)
     - [[single-instance]](#single-instance)
     - [[tray]](#tray)
     - [[basic-auth-username]](#basic-auth-username)
-    - [[basic-auth-password]](#basic-auth-username)
+    - [[processEnvs]](#processenvs)
+    - [[file-download-options]](#file-download-options)
     - [[always-on-top]](#always-on-top)
-    - [[disable-gpu]](#disable-gpu)
+    - [[global-shortcuts]](#global-shortcuts)
 - [Programmatic API](#programmatic-api)
+  - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
+    - [[version-string]](#version-string)
+    - [[win32metadata]](#win32metadata)
+      - [Programmatic API](#programmatic-api)
 
 ## Command Line
 
@@ -553,6 +569,112 @@ nativefier <your-website> --file-download-options '{"saveAs": true}'
 
 Enable always on top for the packaged application.
 
+#### [global-shortcuts]
+
+```
+--global-shortcuts shortcuts.json
+```
+
+Register global shortcuts which will trigger input events like key presses or pointer events in the application.
+
+You may define multiple global shortcuts which can trigger a series of input events. It has the following structure:
+
+
+```js
+[
+  {
+    // Key is passed as first argument to globalShortcut.register
+    "key": "CommandOrControl+Shift+Z",
+    // The input events exactly match the event config in Electron for contents.sendInputEvent(event)
+    "inputEvents": [
+      {
+        // Available event types: mouseDown, mouseUp, mouseEnter, mouseLeave, contextMenu, mouseWheel, mouseMove, keyDown, keyUp or char
+        "type": "keyDown",
+        // Further config depends on your event type. See docs at: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
+        "keyCode": "Space"
+      }
+    ]
+  }
+]
+```
+
+**Important note for using modifier keys:**
+
+If you want to trigger key events which include a modifier (Ctrl, Shift,...), you need to keyDown the modifier key first, then keyDown the actual key _including_ the modifier key as modifier property and then keyUp both keys again. No idea what this means? See the example for `MediaPreviousTrack` below!
+
+**For more details, please see the Electron documentation:**
+
+* List of available keys: https://github.com/electron/electron/blob/master/docs/api/accelerator.md
+* Details about how to create input event objects: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
+
+Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to get your play/pause/previous/next media keys working:
+```json
+[
+  {
+    "key": "MediaPlayPause",
+    "inputEvents": [
+      {
+        "type": "keyDown",
+        "keyCode": "Space"
+      }
+    ]
+  },
+  {
+    "key": "MediaPreviousTrack",
+    "inputEvents": [
+      {
+        "type": "keyDown",
+        "keyCode": "Shift"
+      },
+      {
+        "type": "keyDown",
+        "keyCode": "Left",
+        "modifiers": [
+          "shift"
+        ]
+      },
+      {
+        "type": "keyUp",
+        "keyCode": "Left",
+        "modifiers": [
+          "shift"
+        ]
+      },
+      {
+        "type": "keyUp",
+        "keyCode": "Shift"
+      }
+    ]
+  },
+  {
+    "key": "MediaNextTrack",
+    "inputEvents": [
+      {
+        "type": "keyDown",
+        "keyCode": "Shift"
+      },
+      {
+        "type": "keyDown",
+        "keyCode": "Right",
+        "modifiers": [
+          "shift"
+        ]
+      },
+      {
+        "type": "keyUp",
+        "keyCode": "Right",
+        "modifiers": [
+          "shift"
+        ]
+      },
+      {
+        "type": "keyUp",
+        "keyCode": "Shift"
+      }
+    ]
+  }
+]
+```
 
 
 ## Programmatic API

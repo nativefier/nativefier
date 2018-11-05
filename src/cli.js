@@ -199,6 +199,10 @@ if (require.main === module) {
       '--title-bar-style <value>',
       "(macOS only) set title bar style ('hidden', 'hiddenInset').  Consider injecting custom CSS (via --inject) for better integration.",
     )
+    .option(
+      '--global-shortcuts <value>',
+      'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
+    )
     .parse(process.argv);
 
   if (!process.argv.slice(2).length) {

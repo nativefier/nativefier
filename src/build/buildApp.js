@@ -56,6 +56,7 @@ function selectAppArgs(options) {
     basicAuthPassword: options.basicAuthPassword,
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle,
+    globalShortcuts: options.globalShortcuts,
   };
 }
 
