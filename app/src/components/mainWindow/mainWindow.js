@@ -43,6 +43,10 @@ function maybeInjectCss(browserWindow) {
   const injectCss = () => {
     browserWindow.webContents.insertCSS(cssToInject);
   };
+  const onHeadersReceived = (details, callback) => {
+    injectCss();
+    callback({ cancel: false, responseHeaders: details.responseHeaders });
+  };
 
   browserWindow.webContents.on('did-finish-load', () => {
     // remove the injection of css the moment the page is loaded
@@ -53,10 +57,10 @@ function maybeInjectCss(browserWindow) {
   browserWindow.webContents.on('did-navigate', () => {
     // we have to inject the css in onHeadersReceived to prevent the fouc
     // will run multiple times
-    browserWindow.webContents.session.webRequest.onHeadersReceived(function(details, callback) {
-        injectCss();
-        callback({cancel: false, responseHeaders: details.responseHeaders});
-    });
+    browserWindow.webContents.session.webRequest.onHeadersReceived(
+      null,
+      onHeadersReceived,
+    );
   });
 }
 
