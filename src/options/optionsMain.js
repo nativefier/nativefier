@@ -63,6 +63,7 @@ export default function(inpOptions) {
     buildVersion: inpOptions.buildVersion,
     appCopyright: inpOptions.appCopyright,
     versionString: inpOptions.versionString,
+    appBundleId: inpOptions.appBundleId,
     win32metadata: inpOptions.win32metadata || {
       ProductName: inpOptions.name,
       InternalName: inpOptions.name,
