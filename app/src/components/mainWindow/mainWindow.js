@@ -43,20 +43,24 @@ function maybeInjectCss(browserWindow) {
   const injectCss = () => {
     browserWindow.webContents.insertCSS(cssToInject);
   };
+  const onHeadersReceived = (details, callback) => {
+    injectCss();
+    callback({ cancel: false, responseHeaders: details.responseHeaders });
+  };
 
   browserWindow.webContents.on('did-finish-load', () => {
     // remove the injection of css the moment the page is loaded
-    browserWindow.webContents.removeListener(
-      'did-get-response-details',
-      injectCss,
-    );
+    browserWindow.webContents.session.webRequest.onHeadersReceived(null);
   });
 
   // on every page navigation inject the css
   browserWindow.webContents.on('did-navigate', () => {
-    // we have to inject the css in did-get-response-details to prevent the fouc
+    // we have to inject the css in onHeadersReceived to prevent the fouc
     // will run multiple times
-    browserWindow.webContents.on('did-get-response-details', injectCss);
+    browserWindow.webContents.session.webRequest.onHeadersReceived(
+      null,
+      onHeadersReceived,
+    );
   });
 }
 
