@@ -3,6 +3,7 @@ addons:
   code_climate:
     repo_token: CODE_CLIMATE_TOKEN
 node_js:
+- '11'
 - '10'
 - '8'
 - '7'
