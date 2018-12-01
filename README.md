@@ -32,7 +32,7 @@ Nativefier is a command-line tool to easily create a desktop application for any
 
 I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com) ([relevant Hacker News thread](https://news.ycombinator.com/item?id=10930718)).
 
-[Changelog](https://github.com/jiahaog/nativefier/blob/development/docs/changelog.md). [Developer docs](https://github.com/jiahaog/nativefier/blob/master/docs/development.md).
+[Changelog](https://github.com/jiahaog/nativefier/blob/master/docs/changelog.md). [Developer docs](https://github.com/jiahaog/nativefier/blob/master/docs/development.md).
 
 ### Features
 
