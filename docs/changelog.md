@@ -1,3 +1,12 @@
+
+7.6.9 / 2018-12-01
+==================
+
+  * Add `start-in-tray` CLI option to `--tray` flag to let app start in background (PR #564, Fixes #522)
+  * Add `--global-shortcuts` flag to trigger in-app input events (PR #698, Fixes #15)
+  * Fix CSS injection broken with Electron 3 (PR #709, Fixes #703)
+  * Bump default Electron to 3.0.10
+
 7.6.8 / 2018-10-06
 ==================
 
