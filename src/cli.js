@@ -13,6 +13,17 @@ function collect(val, memo) {
   return memo;
 }
 
+function parseMaybeBoolString(val) {
+  switch (val) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      return val;
+  }
+}
+
 function parseJson(val) {
   if (!val) return {};
   return JSON.parse(val);
@@ -36,6 +47,22 @@ function checkInternet() {
 }
 
 if (require.main === module) {
+  const sanitizedArgs = [];
+  process.argv.forEach((arg) => {
+    if (sanitizedArgs.length > 0) {
+      const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
+
+      // Work around commander.js not supporting default argument for options
+      if (
+        previousArg === '--tray' &&
+        !['true', 'false', 'start-in-tray'].includes(arg)
+      ) {
+        sanitizedArgs.push('true');
+      }
+    }
+    sanitizedArgs.push(arg);
+  });
+
   program
     .version(packageJson.version, '-v, --version')
     .arguments('<targetUrl> [dest]')
@@ -191,7 +218,11 @@ if (require.main === module) {
       'a JSON string of key/value pairs to be set as file download options.  See https://github.com/sindresorhus/electron-dl for available options.',
       parseJson,
     )
-    .option('--tray', 'allow app to stay in system tray')
+    .option(
+      '--tray [start-in-tray]',
+      "Allow app to stay in system tray. If 'start-in-tray' is given as argument, don't show main window on first start",
+      parseMaybeBoolString,
+    )
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
     .option('--always-on-top', 'enable always on top window')
@@ -203,7 +234,7 @@ if (require.main === module) {
       '--global-shortcuts <value>',
       'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
-    .parse(process.argv);
+    .parse(sanitizedArgs);
 
   if (!process.argv.slice(2).length) {
     program.help();

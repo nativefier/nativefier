@@ -113,6 +113,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         // Whether the window should always stay on top of other windows. Default is false.
         alwaysOnTop: options.alwaysOnTop,
         titleBarStyle: options.titleBarStyle,
+        show: options.tray !== 'start-in-tray',
       },
       DEFAULT_WINDOW_OPTIONS,
     ),
