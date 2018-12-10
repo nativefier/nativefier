@@ -3,6 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import { app, crashReporter, globalShortcut } from 'electron';
 import electronDownload from 'electron-dl';
+import installExtension, {
+  REACT_DEVELOPER_TOOLS,
+} from 'electron-devtools-installer';
 
 import createLoginWindow from './components/login/loginWindow';
 import createMainWindow from './components/mainWindow/mainWindow';
@@ -134,6 +137,16 @@ app.on('ready', () => {
     });
   }
 });
+
+app.on('ready', () => {
+  installExtension(REACT_DEVELOPER_TOOLS)
+    .then((name) => {
+      console.log("Successfully installed", name)
+    })
+    .catch((err) =>{
+      console.log('An error occurred when trying to add extention: ', err)
+    });
+})
 
 app.on('new-window-for-tab', () => {
   mainWindow.emit('new-tab');
