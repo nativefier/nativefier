@@ -2,20 +2,35 @@
 
 ## Environment Setup
 
-First, clone the project
+This documentation will guide you through the process of installing nativefier to your local environment. At the same time, it will provide you with the latest versions of the required dependecies. Let's begin!
+
+First, go ahead and clone the repository will the command described below.
 
 ```bash
 git clone https://github.com/jiahaog/nativefier.git
-cd nativefier
-```
 
+```
+Once the repository is successfully cloned to your local environment, navigate to it with following command:
 Install dependencies and build:
 
+```
+cd nativefier
+
+```
+### macOS and Linux
+For macOS and Linux execute the following install script to install all the necessary dependencies.
 ```bash
 # macOS and Linux
-npm run dev-up
+bash nativefier-install.sh
 
-# Windows
+```
+
+### Windows
+For Windows users, install the dependencies, and build, by executing the command below.
+
+```bash
+#Windows
+
 npm run dev-up-win
 ```
 
