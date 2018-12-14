@@ -94,7 +94,7 @@ To support conversion of a `.png` or `.ico` into a `.icns` for a packaged macOS 
 
 ## How it works
 
-A template app with the appropriate plumbing is included in the `./app` folder. When `nativefier` is ran, this template is parameterized, and packaged using [Electron Packager](https://github.com/electron-userland/electron-packager).
+A template app with the appropriate plumbing is included in the `./app` folder. When `nativefier` is run, this template is parameterized, and packaged using [Electron Packager](https://github.com/electron-userland/electron-packager).
 
 In addition, I built [GitCloud](https://github.com/jiahaog/gitcloud) to use GitHub as an icon index, and also the [pageIcon](https://github.com/jiahaog/page-icon) fallback to infer a relevant icon from a URL.
 
