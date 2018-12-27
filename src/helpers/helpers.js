@@ -11,6 +11,10 @@ function isWindows() {
   return os.platform() === 'win32';
 }
 
+function isLinux() {
+  return os.platform() === 'linux';
+}
+
 function downloadFile(fileUrl) {
   return axios
     .get(fileUrl, {
@@ -102,6 +106,7 @@ function allowedIconFormats(platform) {
 export default {
   isOSX,
   isWindows,
+  isLinux,
   downloadFile,
   allowedIconFormats,
 };
