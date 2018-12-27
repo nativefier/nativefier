@@ -5,14 +5,14 @@ import ncp from 'ncp';
 import async from 'async';
 import hasBinary from 'hasbin';
 import log from 'loglevel';
+import _ from 'lodash';
+import fs from 'fs';
 import DishonestProgress from '../helpers/dishonestProgress';
 import optionsFactory from '../options/optionsMain';
 import iconBuild from './iconBuild';
 import helpers from '../helpers/helpers';
 import PackagerConsole from '../helpers/packagerConsole';
 import buildApp from './buildApp';
-import _ from 'lodash';
-import fs from 'fs';
 
 const copy = ncp.ncp;
 const { isWindows, isLinux } = helpers;
@@ -97,8 +97,8 @@ function maybeCreateLinuxLauncher(options, appPath, callback) {
 
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-  const binaryPath = path.join(appPath,'/'+options.name)
-  const iconPath = path.join(appPath,'/resources/app/icon.png')
+  const binaryPath = path.join(appPath, `/${options.name}`);
+  const iconPath = path.join(appPath, '/resources/app/icon.png');
   const normalizedName = _.kebabCase(packageJson.name.toLowerCase());
 
   const desktopFile = `#!/usr/bin/env xdg-open
@@ -106,15 +106,14 @@ function maybeCreateLinuxLauncher(options, appPath, callback) {
   Version=1.0
   Type=Application
   Terminal=false
-  Exec=`+ binaryPath +`
-  Name=`+ packageJson.name +`
-  Icon=`+ iconPath +`
-  StartupWMClass=`+ normalizedName
+  Exec=${binaryPath}
+  Name=${packageJson.name}
+  Icon=${iconPath}
+  StartupWMClass=${normalizedName}`;
 
   fs.write(packageJsonPath, desktopFile, (err) => {
     callback(err);
-  })
-
+  });
 }
 
 /**
