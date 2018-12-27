@@ -95,7 +95,7 @@ function maybeCreateLinuxLauncher(options, appPath, callback) {
     return;
   }
 
-  const packageJsonPath = path.join(appPath, '/package.json');
+  const packageJsonPath = path.join(appPath, '/resources/app/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
   const binaryPath = path.join(appPath, `/${options.name}`);
   const iconPath = path.join(appPath, '/resources/app/icon.png');
@@ -107,13 +107,18 @@ function maybeCreateLinuxLauncher(options, appPath, callback) {
   Type=Application
   Terminal=false
   Exec=${binaryPath}
-  Name=${packageJson.name}
+  Name=${options.name}
   Icon=${iconPath}
   StartupWMClass=${normalizedName}`;
 
-  fs.write(packageJsonPath, desktopFile, (err) => {
-    callback(err);
-  });
+  const desktopFilePath = path.join(appPath, `${options.name}.desktop`);
+
+  try {
+    fs.writeFileSync(desktopFilePath, desktopFile);
+    fs.chmodSync(desktopFilePath, 0o755);
+  } catch (error) {
+    callback(error);
+  }
 }
 
 /**
@@ -266,11 +271,11 @@ function buildMain(inpOptions, callback) {
           return;
         }
 
-        maybeCopyIcons(opts, appPath, (error) => {
+        maybeCreateLinuxLauncher(opts, appPath, (error) => {
           cb(error, appPath);
         });
 
-        maybeCreateLinuxLauncher(opts, appPath, (error) => {
+        maybeCopyIcons(opts, appPath, (error) => {
           cb(error, appPath);
         });
       },
