@@ -1,4 +1,10 @@
 
+7.6.10 / 2019-01-01
+===================
+
+  * Fix CSS & JavaScript injection (Fixes #703, Fixes #731, PR #732)
+  * Bump default Electron to 3.0.13
+
 7.6.9 / 2018-12-01
 ==================
 
