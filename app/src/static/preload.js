@@ -1,9 +1,22 @@
 /**
  Preload file that will be executed in the renderer process
  */
-import { ipcRenderer } from 'electron';
-import path from 'path';
-import fs from 'fs';
+
+/**
+ * Note: This needs to be attached prior to the imports, as the they will delay
+ * the attachment till after the event has been raised.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Due to the early attachment, this triggers a linter error
+  // because it's not yet been defined.
+  // eslint-disable-next-line no-use-before-define
+  injectScripts();
+});
+
+// Disable imports being first due to the above event attachment
+import { ipcRenderer } from 'electron'; // eslint-disable-line import/first
+import path from 'path'; // eslint-disable-line import/first
+import fs from 'fs'; // eslint-disable-line import/first
 
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
 const log = require('loglevel');
@@ -48,10 +61,6 @@ function notifyNotificationClick() {
 }
 
 setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
-
-document.addEventListener('DOMContentLoaded', () => {
-  injectScripts();
-});
 
 ipcRenderer.on('params', (event, message) => {
   const appArgs = JSON.parse(message);
