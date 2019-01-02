@@ -396,6 +396,8 @@ Forces the maximum disk space to be used by the disk cache. Value is given in by
 
 Allows you to inject a javascript or css file. This command can be run multiple times to inject the files.
 
+_Note:_ The javascript file is loaded _after_ `DOMContentLoaded`, so you can assume the DOM is complete & available.
+
 Example:
 
 ```bash
