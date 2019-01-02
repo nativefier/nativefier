@@ -55,10 +55,10 @@ function maybeInjectCss(browserWindow) {
 
   // on every page navigation inject the css
   browserWindow.webContents.on('did-navigate', () => {
-    // we have to inject the css in onHeadersReceived to prevent the fouc
-    // will run multiple times
+    // we have to inject the css in onHeadersReceived so they're early enough
+    // will run multiple times, so did-finish-load will remove this handler
     browserWindow.webContents.session.webRequest.onHeadersReceived(
-      null,
+      [], // Pass an empty filter list; null will not match _any_ urls
       onHeadersReceived,
     );
   });
