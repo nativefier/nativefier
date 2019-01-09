@@ -26,9 +26,9 @@ function iconShellHelper(shellScriptPath, icoSrc, dest) {
       reject(new Error('OSX or Linux is required'));
       return;
     }
-
+    
     shell.exec(
-      `${shellScriptPath} ${icoSrc} ${dest}`,
+      `"${shellScriptPath}" "${icoSrc}" "${dest}"`,
       { silent: true },
       (exitCode, stdOut, stdError) => {
         if (exitCode) {
