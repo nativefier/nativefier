@@ -28,7 +28,7 @@ function iconShellHelper(shellScriptPath, icoSrc, dest) {
     }
 
     shell.exec(
-      `${shellScriptPath} ${icoSrc} ${dest}`,
+      `"${shellScriptPath}" "${icoSrc}" "${dest}"`,
       { silent: true },
       (exitCode, stdOut, stdError) => {
         if (exitCode) {

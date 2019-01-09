@@ -27,7 +27,7 @@ function convertToIcns(pngSrc, icnsDest, callback) {
   }
 
   shell.exec(
-    `${PNG_TO_ICNS_BIN_PATH} ${pngSrc} ${icnsDest}`,
+    `"${PNG_TO_ICNS_BIN_PATH}" "${pngSrc}" "${icnsDest}"`,
     { silent: true },
     (exitCode, stdOut, stdError) => {
       if (stdOut.includes('icon.iconset:error') || exitCode) {
