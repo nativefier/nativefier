@@ -5,7 +5,6 @@
 package-lock.json
 
 # ignore compiled lib files
-lib/*
 app/lib/*
 built-tests
 

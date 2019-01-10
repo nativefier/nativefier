@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.js"],"names":["buildApp"],"mappings":";;;;;;AAAA;;AACA;;AAEA;;;;;;kBAEeA,mB","file":"index.js","sourcesContent":["import 'source-map-support/register';\nimport 'babel-polyfill';\n\nimport buildApp from './build/buildMain';\n\nexport default buildApp;\n"]}
