@@ -56,6 +56,7 @@
     - [[crash-reporter]](#crash-reporter)
     - [[zoom]](#zoom)
     - [[single-instance]](#single-instance)
+    - [[clear-cache]](#clear-cache)
     - [[tray]](#tray)
     - [[basic-auth-username]](#basic-auth-username)
     - [[processEnvs]](#processenvs)
@@ -518,6 +519,14 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
 Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
 
+#### [clear-cache]
+
+```
+--clear-cache
+```
+
+Prevents the application from preserving cache between launches.
+
 #### [tray]
 
 ```
@@ -720,6 +729,7 @@ var options = {
     honest: false,
     zoom: 1.0,
     singleInstance: false,
+    clearCache: false,
     fileDownloadOptions: {
       saveAs: true // always show "Save As" dialog
     },

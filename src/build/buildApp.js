@@ -44,6 +44,7 @@ function selectAppArgs(options) {
     internalUrls: options.internalUrls,
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
+    clearCache: options.clearCache,
     appCopyright: options.appCopyright,
     appVersion: options.appVersion,
     buildVersion: options.buildVersion,

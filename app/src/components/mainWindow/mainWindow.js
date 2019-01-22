@@ -64,6 +64,17 @@ function maybeInjectCss(browserWindow) {
   });
 }
 
+function clearCache(browserWindow, targetUrl = null) {
+  const { session } = browserWindow.webContents;
+  session.clearStorageData(() => {
+    session.clearCache(() => {
+      if (targetUrl) {
+        browserWindow.loadURL(targetUrl);
+      }
+    });
+  });
+}
+
 /**
  *
  * @param {{}} inpOptions AppArgs from nativefier.json
@@ -178,12 +189,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         if (response !== 0) {
           return;
         }
-        const { session } = mainWindow.webContents;
-        session.clearStorageData(() => {
-          session.clearCache(() => {
-            mainWindow.loadURL(options.targetUrl);
-          });
-        });
+        clearCache(mainWindow, options.targetUrl);
       },
     );
   };
@@ -334,6 +340,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   mainWindow.webContents.on('new-window', onNewWindow);
   mainWindow.webContents.on('will-navigate', onWillNavigate);
 
+  if (options.clearCache) {
+    clearCache(mainWindow);
+  }
+
   mainWindow.loadURL(options.targetUrl);
 
   mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
@@ -350,6 +360,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       );
     }
     maybeHideWindow(mainWindow, event, options.fastQuit, options.tray);
+
+    if (options.clearCache) {
+      clearCache(mainWindow);
+    }
   });
 
   return mainWindow;

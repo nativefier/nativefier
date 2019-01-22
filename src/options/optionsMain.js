@@ -59,6 +59,7 @@ export default function(inpOptions) {
     zoom: inpOptions.zoom || 1.0,
     internalUrls: inpOptions.internalUrls || null,
     singleInstance: inpOptions.singleInstance || false,
+    clearCache: inpOptions.clearCache || false,
     appVersion: inpOptions.appVersion,
     buildVersion: inpOptions.buildVersion,
     appCopyright: inpOptions.appCopyright,
