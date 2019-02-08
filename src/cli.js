@@ -209,6 +209,10 @@ if (require.main === module) {
       'allow only a single instance of the application',
     )
     .option(
+      '--clear-cache',
+      'prevent the application from preserving cache between launches',
+    )
+    .option(
       '--processEnvs <json-string>',
       'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.',
       getProcessEnvs,
