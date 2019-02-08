@@ -3,6 +3,7 @@
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
+- [Packaging Squirrel-based installers](#packaging-squirrel-based-installers)
 - [Command Line](#command-line)
     - [Target Url](#target-url)
     - [[dest]](#dest)
@@ -67,6 +68,10 @@
     - [[version-string]](#version-string)
     - [[win32metadata]](#win32metadata)
       - [Programmatic API](#programmatic-api)
+
+## Packaging Squirrel-based installers
+
+See [PR #744 - Support packaging nativefier applications into Squirrel-based installers](https://github.com/jiahaog/nativefier/pull/744)
 
 ## Command Line
 
