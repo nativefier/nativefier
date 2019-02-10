@@ -72,7 +72,7 @@
     "del": "^3.0.0",
     "eslint": "^5.2.0",
     "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-config-prettier": "^3.0.1",
+    "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-prettier": "^3.0.0",
     "gulp": "^3.9.1",
