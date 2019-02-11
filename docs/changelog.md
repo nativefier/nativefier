@@ -1,4 +1,12 @@
 
+7.6.11 / 2019-02-10
+===================
+
+  * Add `--clear-cache` flag to cleanup session on start/exit ("incognito" mode) (Fixes #316, PR #747)
+  * Support packaging Nativefier applications as [Squirrel](https://github.com/Squirrel/)-based installers (PR #744)
+  * Icon conversion: don't crash if source/destination paths have spaces (PR #736)
+  * Bump default Electron to 3.1.3
+
 7.6.10 / 2019-01-01
 ===================
 
