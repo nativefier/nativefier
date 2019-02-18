@@ -97,7 +97,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       javascript: true,
       plugins: true,
       // node globals causes problems with sites like messenger.com
-      nodeIntegration: false,
+      nodeIntegration: options.nodeIntegration,
       webSecurity: !options.insecure,
       preload: path.join(__dirname, 'static', 'preload.js'),
       zoomFactor: options.zoom,
