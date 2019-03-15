@@ -348,6 +348,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
 
+  mainWindow.on('new-tab-with-url', (url) => createNewTab(url, true));
+
   mainWindow.on('close', (event) => {
     if (mainWindow.isFullScreen()) {
       if (nativeTabsSupported()) {

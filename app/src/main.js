@@ -104,6 +104,10 @@ app.on('activate', (event, hasVisibleWindows) => {
   }
 });
 
+app.on('open-url', (event, url) => {
+  mainWindow.emit('new-tab-with-url', url);
+});
+
 app.on('before-quit', () => {
   // not fired when the close button on the window is clicked
   if (isOSX()) {
