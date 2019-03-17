@@ -36,7 +36,7 @@ function createMenu({
 
   const template = [
     {
-      label: 'Edit',
+      label: '&Edit',
       submenu: [
         {
           label: 'Undo',
@@ -93,7 +93,7 @@ function createMenu({
       ],
     },
     {
-      label: 'View',
+      label: '&View',
       submenu: [
         {
           label: 'Back',
@@ -188,7 +188,7 @@ function createMenu({
       ],
     },
     {
-      label: 'Window',
+      label: '&Window',
       role: 'window',
       submenu: [
         {
@@ -204,7 +204,7 @@ function createMenu({
       ],
     },
     {
-      label: 'Help',
+      label: '&Help',
       role: 'help',
       submenu: [
         {
@@ -231,7 +231,7 @@ function createMenu({
 
   if (process.platform === 'darwin') {
     template.unshift({
-      label: 'Electron',
+      label: 'E&lectron',
       submenu: [
         {
           label: 'Services',
