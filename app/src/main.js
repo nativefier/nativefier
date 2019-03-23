@@ -134,7 +134,12 @@ if (shouldQuit) {
 } else {
   app.on('second-instance', () => {
     if (mainWindow) {
+      if (!mainWindow.isVisible()) {
+        // try
+        mainWindow.show();
+      }
       if (mainWindow.isMinimized()) {
+        // minimized
         mainWindow.restore();
       }
       mainWindow.focus();
