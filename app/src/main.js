@@ -128,16 +128,16 @@ if (appArgs.crashReporter) {
 }
 
 // quit if singleInstance mode and there's already another instance running
-let shouldQuit = appArgs.singleInstance && !app.requestSingleInstanceLock();
+const shouldQuit = appArgs.singleInstance && !app.requestSingleInstanceLock();
 if (shouldQuit) {
   app.quit();
 } else {
-  app.on('second-instance', (event, commandLine, workingDirectory) => {
+  app.on('second-instance', () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) {
-        mainWindow.restore()
+        mainWindow.restore();
       }
-      mainWindow.focus()
+      mainWindow.focus();
     }
   });
 
