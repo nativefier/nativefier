@@ -1,4 +1,11 @@
 
+7.6.12 / 2019-03-25
+===================
+
+  * Fix crash when launching a second instance using option --single-instance (Fixes #664, PR #772)
+  * Prevent menu from opening on Alt+Shift, by defining Alt+... menu shortcuts (PR #768)
+  * Bump default Electron to 3.1.7
+
 7.6.11 / 2019-02-10
 ===================
 
