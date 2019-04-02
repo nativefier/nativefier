@@ -15,7 +15,7 @@ const electronSquirrelStartup = require('electron-squirrel-startup');
 // Entrypoint for electron-squirrel-startup.
 // See https://github.com/jiahaog/nativefier/pull/744 for sample use case
 if (electronSquirrelStartup) {
-  app.quit();
+  app.exit();
 }
 
 const { isOSX } = helpers;
