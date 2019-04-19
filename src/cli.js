@@ -240,7 +240,7 @@ if (require.main === module) {
     )
     .option(
       '--darwin-dark-mode-support',
-      "(macOS only) enable Dark Mode support on macOS 10.14+",
+      '(macOS only) enable Dark Mode support on macOS 10.14+',
     )
     .parse(sanitizedArgs);
 
