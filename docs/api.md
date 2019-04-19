@@ -64,6 +64,7 @@
     - [[file-download-options]](#file-download-options)
     - [[always-on-top]](#always-on-top)
     - [[global-shortcuts]](#global-shortcuts)
+    - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
 - [Programmatic API](#programmatic-api)
   - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
     - [[version-string]](#version-string)
@@ -694,6 +695,13 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 ]
 ```
 
+#### [darwin-dark-mode-support]
+
+```
+--darwin-dark-mode-support
+```
+
+Enables Dark Mode support on macOS 10.4+.
 
 ## Programmatic API
 
