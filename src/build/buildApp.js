@@ -58,6 +58,7 @@ function selectAppArgs(options) {
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle,
     globalShortcuts: options.globalShortcuts,
+    backgroundColor: options.backgroundColor,
   };
 }
 
@@ -133,6 +134,7 @@ function changeAppPackageJsonName(appPath, name, url) {
  */
 function buildApp(src, dest, options, callback) {
   const appArgs = selectAppArgs(options);
+
   copy(src, dest, (error) => {
     if (error) {
       callback(`Error Copying temporary directory: ${error}`);

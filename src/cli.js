@@ -238,6 +238,10 @@ if (require.main === module) {
       '--global-shortcuts <value>',
       'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
+    .option(
+      '--backgroundColor <value>',
+      'Sets a background color of the window whilest the app is still loading',
+    )
     .parse(sanitizedArgs);
 
   if (!process.argv.slice(2).length) {
