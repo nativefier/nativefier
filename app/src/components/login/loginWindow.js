@@ -7,6 +7,9 @@ function createLoginWindow(loginCallback) {
     height: 400,
     frame: false,
     resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+    },
   });
   loginWindow.loadURL(
     `file://${path.join(__dirname, '/static/login/login.html')}`,
