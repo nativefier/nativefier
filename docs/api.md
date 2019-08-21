@@ -64,6 +64,7 @@
     - [[file-download-options]](#file-download-options)
     - [[always-on-top]](#always-on-top)
     - [[global-shortcuts]](#global-shortcuts)
+    - [[browserwindow-options]](#browserwindow-options)
 - [Programmatic API](#programmatic-api)
   - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
     - [[version-string]](#version-string)
@@ -692,6 +693,21 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
     ]
   }
 ]
+```
+
+#### [browserwindow-options]
+
+```
+--browserwindow-options <json-string>
+```
+
+a JSON string that will be sent directly into electron BrowserWindow options.
+See [Electron's BrowserWindow API Documentation](https://github.com/electron/electron/blob/3-1-x/docs/api/browser-window.md#new-browserwindowoptions) for the complete list of options.
+
+Example:
+
+```bash
+nativefier <your-website> --browserwindow-options '{ "webPreferences": { "defaultFontFamily": { "standard": "Comic Sans MS", "serif": "Comic Sans MS" } } }'
 ```
 
 
