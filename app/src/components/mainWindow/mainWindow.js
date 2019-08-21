@@ -104,6 +104,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     },
   };
 
+  const browserwindowOptions = Object.assign({}, options.browserwindowOptions);
+
   const mainWindow = new BrowserWindow(
     Object.assign(
       {
@@ -127,6 +129,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         show: options.tray !== 'start-in-tray',
       },
       DEFAULT_WINDOW_OPTIONS,
+      browserwindowOptions,
     ),
   );
 

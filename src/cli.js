@@ -238,6 +238,11 @@ if (require.main === module) {
       '--global-shortcuts <value>',
       'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
+    .option(
+      '--browserwindow-options <json-string>',
+      'a JSON string that will be sent directly into electron BrowserWindow options. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#browserwindow-options',
+      parseJson,
+    )
     .parse(sanitizedArgs);
 
   if (!process.argv.slice(2).length) {
