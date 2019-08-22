@@ -367,7 +367,11 @@ Example:
 
 ```bash
 nativefier https://google.com --internal-urls ".*?\.google\.*?"
-or if you want to allow all domains for example for external auths
+```
+
+Or, if you want to allow all domains for example for external auths,
+
+```bash
 nativefier https://google.com --internal-urls ".*?"
 ```
 
