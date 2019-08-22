@@ -239,7 +239,7 @@ if (require.main === module) {
       'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
     .option(
-      '--backgroundColor <value>',
+      '--background-color <value>',
       "Sets the background color (for seamless experience while the app is loading). Example value: '#2e2c29'",
     )
     .option(
