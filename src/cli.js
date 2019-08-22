@@ -240,7 +240,7 @@ if (require.main === module) {
     )
     .option(
       '--backgroundColor <value>',
-      "Sets the background color (for seamless experience while the app is loading)",
+      "Sets the background color (for seamless experience while the app is loading). Example value: '#2e2c29'",
     )
     .option(
       '--darwin-dark-mode-support',
