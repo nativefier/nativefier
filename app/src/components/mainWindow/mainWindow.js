@@ -104,6 +104,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     },
   };
 
+  const browserwindowOptions = Object.assign({}, options.browserwindowOptions);
+
   const mainWindow = new BrowserWindow(
     Object.assign(
       {
@@ -128,6 +130,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         backgroundColor: options.backgroundColor,
       },
       DEFAULT_WINDOW_OPTIONS,
+      browserwindowOptions,
     ),
   );
 

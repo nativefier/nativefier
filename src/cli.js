@@ -239,6 +239,11 @@ if (require.main === module) {
       'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
     .option(
+      '--browserwindow-options <json-string>',
+      'a JSON string that will be sent directly into electron BrowserWindow options. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#browserwindow-options',
+      parseJson,
+    )
+    .option(
       '--background-color <value>',
       "Sets the background color (for seamless experience while the app is loading). Example value: '#2e2c29'",
     )

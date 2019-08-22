@@ -58,6 +58,7 @@ function selectAppArgs(options) {
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle,
     globalShortcuts: options.globalShortcuts,
+    browserwindowOptions: options.browserwindowOptions,
     backgroundColor: options.backgroundColor,
     darwinDarkModeSupport: options.darwinDarkModeSupport,
   };
