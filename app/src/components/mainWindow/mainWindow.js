@@ -125,6 +125,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
         alwaysOnTop: options.alwaysOnTop,
         titleBarStyle: options.titleBarStyle,
         show: options.tray !== 'start-in-tray',
+        backgroundColor: options.backgroundColor,
       },
       DEFAULT_WINDOW_OPTIONS,
     ),
