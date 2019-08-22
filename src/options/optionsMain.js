@@ -77,6 +77,7 @@ export default function(inpOptions) {
     alwaysOnTop: inpOptions.alwaysOnTop || false,
     titleBarStyle: inpOptions.titleBarStyle || null,
     globalShortcuts: inpOptions.globalShortcuts || null,
+    darwinDarkModeSupport: inpOptions.darwinDarkModeSupport || false,
   };
 
   if (options.verbose) {

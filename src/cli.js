@@ -238,6 +238,10 @@ if (require.main === module) {
       '--global-shortcuts <value>',
       'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
+    .option(
+      '--darwin-dark-mode-support',
+      '(macOS only) enable Dark Mode support on macOS 10.14+',
+    )
     .parse(sanitizedArgs);
 
   if (!process.argv.slice(2).length) {
