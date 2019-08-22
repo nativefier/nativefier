@@ -59,6 +59,7 @@ function selectAppArgs(options) {
     titleBarStyle: options.titleBarStyle,
     globalShortcuts: options.globalShortcuts,
     backgroundColor: options.backgroundColor,
+    darwinDarkModeSupport: options.darwinDarkModeSupport,
   };
 }
 

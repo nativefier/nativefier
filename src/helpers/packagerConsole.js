@@ -6,6 +6,7 @@ class PackagerConsole {
     this.logs = [];
   }
 
+  // eslint-disable-next-line no-underscore-dangle
   _log(...messages) {
     this.logs.push(...messages);
   }
