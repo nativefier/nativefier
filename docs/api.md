@@ -702,7 +702,7 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 ```
 
 a JSON string that will be sent directly into electron BrowserWindow options.
-See [Electron's BrowserWindow API Documentation](https://github.com/electron/electron/blob/3-1-x/docs/api/browser-window.md#new-browserwindowoptions) for the complete list of options.
+See [Electron's BrowserWindow API Documentation](https://electronjs.org/docs/api/browser-window#new-browserwindowoptions) for the complete list of options.
 
 Example:
 
