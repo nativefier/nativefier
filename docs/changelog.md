@@ -1,4 +1,15 @@
 
+7.7.0 / 2019-08-22
+==================
+
+  * Default to Electron 5.x (#796)
+  * Add `--darwin-dark-mode-support` to support macOS 10.4+ Dark Mode (PR #796)
+  * Add `--browserwindow-options` to completely expose Electron options (PR #835)
+  * Add `--background-color` to set background color (fixes #795) (PR #819)
+  * Restore login functionality broken since Electron 5.x (PR #826)
+  * Squirrel: resolve .quit() issue with missing ../screen (PR #784)
+  * Doc: improve doc for `--internal-urls` (PR #833)
+
 7.6.12 / 2019-03-25
 ===================
 
