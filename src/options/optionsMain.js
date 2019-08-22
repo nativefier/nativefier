@@ -78,6 +78,8 @@ export default function(inpOptions) {
     titleBarStyle: inpOptions.titleBarStyle || null,
     globalShortcuts: inpOptions.globalShortcuts || null,
     browserwindowOptions: inpOptions.browserwindowOptions,
+    backgroundColor: inpOptions.backgroundColor || null,
+    darwinDarkModeSupport: inpOptions.darwinDarkModeSupport || false,
   };
 
   if (options.verbose) {

@@ -243,6 +243,14 @@ if (require.main === module) {
       'a JSON string that will be sent directly into electron BrowserWindow options. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#browserwindow-options',
       parseJson,
     )
+    .option(
+      '--background-color <value>',
+      "Sets the background color (for seamless experience while the app is loading). Example value: '#2e2c29'",
+    )
+    .option(
+      '--darwin-dark-mode-support',
+      '(macOS only) enable Dark Mode support on macOS 10.14+',
+    )
     .parse(sanitizedArgs);
 
   if (!process.argv.slice(2).length) {
