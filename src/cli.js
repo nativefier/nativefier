@@ -240,7 +240,7 @@ if (require.main === module) {
     )
     .option(
       '--backgroundColor <value>',
-      'Sets a background color of the window whilest the app is still loading',
+      "Sets the background color (for seamless experience while the app is loading)",
     )
     .parse(sanitizedArgs);
 
