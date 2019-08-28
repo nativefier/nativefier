@@ -58,7 +58,7 @@ function maybeInjectCss(browserWindow) {
     // we have to inject the css in onHeadersReceived so they're early enough
     // will run multiple times, so did-finish-load will remove this handler
     browserWindow.webContents.session.webRequest.onHeadersReceived(
-      [], // Pass an empty filter list; null will not match _any_ urls
+      { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
       onHeadersReceived,
     );
   });
