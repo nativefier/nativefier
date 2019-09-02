@@ -133,7 +133,9 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       browserwindowOptions,
     ),
   );
-
+  
+  // remove any menus
+  mainWindow.removeMenu();
   mainWindowState.manage(mainWindow);
 
   // after first run, no longer force maximize to be true
@@ -281,6 +283,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     }
     maybeInjectCss(window);
     sendParamsOnDidFinishLoad(window);
+    // remove any menus
+    window.removeMenu();
     window.webContents.on('new-window', onNewWindow);
     window.webContents.on('will-navigate', onWillNavigate);
     window.loadURL(url);
@@ -301,7 +305,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     disableDevTools: options.disableDevTools,
   };
 
-  createMenu(menuOptions);
+  // disable menu creation
+  //createMenu(menuOptions);
   if (!options.disableContextMenu) {
     initContextMenu(
       createNewWindow,
