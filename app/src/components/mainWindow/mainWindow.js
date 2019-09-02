@@ -370,6 +370,8 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     }
   });
 
+  // remove the menu
+  mainWindow.removeMenu();
   return mainWindow;
 }
 
