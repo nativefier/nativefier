@@ -3,11 +3,10 @@ addons:
   code_climate:
     repo_token: CODE_CLIMATE_TOKEN
 node_js:
+- '12'
 - '11'
 - '10'
 - '8'
-- '7'
-- '6'
 before_install:
 - npm install -g npm@5.8.x
 install:
