@@ -11,7 +11,7 @@ export default function(platform, str) {
 
   // spaces will cause problems with Ubuntu when pinned to the dock
   if (platform === 'linux') {
-    return _.kebabCase(result);
+    return result.replace(' ','');
   }
   return result;
 }

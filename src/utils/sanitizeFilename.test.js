@@ -27,9 +27,9 @@ describe('replacing non ascii characters', () => {
 });
 
 describe('when the platform is linux', () => {
-  test('it should return a kebab cased name', () => {
+  test('it should return a name without spaces', () => {
     const param = 'some name';
-    const expectedResult = 'some-name';
+    const expectedResult = 'somename';
     const result = sanitizeFilename('linux', param);
     expect(result).toBe(expectedResult);
   });
