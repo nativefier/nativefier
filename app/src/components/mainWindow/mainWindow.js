@@ -281,7 +281,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     }
 
     if (options.proxyRules) {
-      mainWindow.webContents.session.setProxy(
+      window.webContents.session.setProxy(
         {
           proxyRules: options.proxyRules,
         },
