@@ -75,6 +75,15 @@ function clearCache(browserWindow, targetUrl = null) {
   });
 }
 
+function setProxyRules(browserWindow, proxyRules) {
+  browserWindow.webContents.session.setProxy(
+    {
+      proxyRules,
+    },
+    () => {},
+  );
+}
+
 /**
  *
  * @param {{}} inpOptions AppArgs from nativefier.json
@@ -281,12 +290,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     }
 
     if (options.proxyRules) {
-      window.webContents.session.setProxy(
-        {
-          proxyRules: options.proxyRules,
-        },
-        () => {},
-      );
+      setProxyRules(window, options.proxyRules);
     }
 
     maybeInjectCss(window);
@@ -324,12 +328,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   if (options.proxyRules) {
-    mainWindow.webContents.session.setProxy(
-      {
-        proxyRules: options.proxyRules,
-      },
-      () => {},
-    );
+    setProxyRules(mainWindow, options.proxyRules);
   }
 
   maybeInjectCss(mainWindow);
