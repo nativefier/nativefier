@@ -279,6 +279,16 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     if (options.userAgent) {
       window.webContents.setUserAgent(options.userAgent);
     }
+
+    if (options.proxyRules) {
+      mainWindow.webContents.session.setProxy(
+        {
+          proxyRules: options.proxyRules,
+        },
+        () => {},
+      );
+    }
+
     maybeInjectCss(window);
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
@@ -311,6 +321,15 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   if (options.userAgent) {
     mainWindow.webContents.setUserAgent(options.userAgent);
+  }
+
+  if (options.proxyRules) {
+    mainWindow.webContents.session.setProxy(
+      {
+        proxyRules: options.proxyRules,
+      },
+      () => {},
+    );
   }
 
   maybeInjectCss(mainWindow);
