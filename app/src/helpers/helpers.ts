@@ -56,7 +56,7 @@ export function getAppIcon(): string | undefined {
 }
 
 export function getCounterValue(title: string): string | undefined {
-  const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
+  const itemCountRegex = /[([{]([\d.,:]*)\+?[}\])]/;
   const match = itemCountRegex.exec(title);
   return match ? match[1] : undefined;
 }
