@@ -43,6 +43,7 @@
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[insecure]](#insecure)
     - [[internal-urls]](#internal-urls)
+    - [[proxy-rules]](#proxy-rules)
     - [[flash]](#flash)
     - [[flash-path]](#flash-path)
     - [[disk-cache-size]](#disk-cache-size)
@@ -376,6 +377,21 @@ Or, if you want to allow all domains for example for external auths,
 
 ```bash
 nativefier https://google.com --internal-urls ".*?"
+```
+
+
+#### [proxy-rules]
+
+```
+--proxy-rules <value>
+```
+
+Proxy rules. See [proxyRules](https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback) for more details.
+
+Example:
+
+```bash
+nativefier https://google.com --proxy-rules http://127.0.0.1:1080
 ```
 
 #### [flash]

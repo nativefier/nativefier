@@ -201,6 +201,10 @@ if (require.main === module) {
       'regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser.  (default: URLs on same second-level domain as app)',
     )
     .option(
+      '--proxy-rules <value>',
+      'proxy rules. See https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback',
+    )
+    .option(
       '--crash-reporter <value>',
       'remote server URL to send crash reports',
     )
