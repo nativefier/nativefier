@@ -140,10 +140,15 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   if (options.maximize) {
     mainWindow.maximize();
     options.maximize = undefined;
-    fs.writeFileSync(
-      path.join(__dirname, '..', 'nativefier.json'),
-      JSON.stringify(options),
-    );
+    try {
+      fs.writeFileSync(
+        path.join(__dirname, '..', 'nativefier.json'),
+        JSON.stringify(options),
+      );
+    } catch (exception) {
+      // eslint-disable-next-line no-console
+      console.log(`WARNING: Ignored nativefier.json rewrital (${exception})`);
+    }
   }
 
   const withFocusedWindow = (block) => {
