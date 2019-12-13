@@ -224,7 +224,7 @@ Use a counter that persists even with window focus for the application badge for
 --bounce
 ```
 
-(macOS only) When the the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
+(macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
 
 #### [width]
 
