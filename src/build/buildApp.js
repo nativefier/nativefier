@@ -112,11 +112,12 @@ function maybeCopyScripts(srcs, dest) {
 
 function normalizeAppName(appName, url) {
   // use a simple 3 byte random string to prevent collision
-  const hash = crypto.createHash('md5');
-  hash.update(url);
-  const postFixHash = hash.digest('hex').substring(0, 6);
+  // const hash = crypto.createHash('md5');
+  // hash.update(url);
+  // const postFixHash = hash.digest('hex').substring(0, 6);
   const normalized = _.kebabCase(appName.toLowerCase());
-  return `${normalized}-nativefier-${postFixHash}`;
+  return `${normalized}`;
+  //return `${normalized}-nativefier-${postFixHash}`;
 }
 
 function changeAppPackageJsonName(appPath, name, url) {
