@@ -1,5 +1,4 @@
 import fs from 'fs';
-import crypto from 'crypto';
 import _ from 'lodash';
 import path from 'path';
 import ncp from 'ncp';
@@ -110,20 +109,14 @@ function maybeCopyScripts(srcs, dest) {
   });
 }
 
-function normalizeAppName(appName, url) {
-  // use a simple 3 byte random string to prevent collision
-  // const hash = crypto.createHash('md5');
-  // hash.update(url);
-  // const postFixHash = hash.digest('hex').substring(0, 6);
-  const normalized = _.kebabCase(appName.toLowerCase());
-  return `${normalized}`;
-  //return `${normalized}-nativefier-${postFixHash}`;
+function normalizeAppName(appName) {
+  return _.kebabCase(`${appName.toLowerCase()}`);
 }
 
-function changeAppPackageJsonName(appPath, name, url) {
+function changeAppPackageJsonName(appPath, name) {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
-  packageJson.name = normalizeAppName(name, url);
+  packageJson.name = normalizeAppName(name);
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 }
 
@@ -155,7 +148,7 @@ function buildApp(src, dest, options, callback) {
         log.warn(err);
       })
       .then(() => {
-        changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+        changeAppPackageJsonName(dest, appArgs.name);
         callback();
       });
   });
