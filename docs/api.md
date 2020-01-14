@@ -745,7 +745,7 @@ Enables Dark Mode support on macOS 10.4+.
 #### [background-color]
 
 ```
---background-color
+--background-color <string>
 ```
 
 See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
