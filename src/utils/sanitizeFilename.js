@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import sanitizeFilenameLib from 'sanitize-filename';
 import { DEFAULT_APP_NAME } from '../constants';
 
@@ -11,7 +10,7 @@ export default function(platform, str) {
 
   // spaces will cause problems with Ubuntu when pinned to the dock
   if (platform === 'linux') {
-    return _.kebabCase(result);
+    return result.replace(/ /g, '');
   }
   return result;
 }
