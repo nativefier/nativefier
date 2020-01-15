@@ -26,9 +26,6 @@ function createMenu({
   clearAppData,
   disableDevTools,
 }) {
-  if (Menu.getApplicationMenu()) {
-    return;
-  }
   const zoomResetLabel =
     zoomBuildTimeValue === 1.0
       ? 'Reset Zoom'

@@ -58,6 +58,7 @@ export default function(inpOptions) {
     tmpdir: false,
     zoom: inpOptions.zoom || 1.0,
     internalUrls: inpOptions.internalUrls || null,
+    proxyRules: inpOptions.proxyRules || null,
     singleInstance: inpOptions.singleInstance || false,
     clearCache: inpOptions.clearCache || false,
     appVersion: inpOptions.appVersion,

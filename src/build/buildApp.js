@@ -42,6 +42,7 @@ function selectAppArgs(options) {
     disableDevTools: options.disableDevTools,
     zoom: options.zoom,
     internalUrls: options.internalUrls,
+    proxyRules: options.proxyRules,
     crashReporter: options.crashReporter,
     singleInstance: options.singleInstance,
     clearCache: options.clearCache,

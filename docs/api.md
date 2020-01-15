@@ -43,6 +43,7 @@
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[insecure]](#insecure)
     - [[internal-urls]](#internal-urls)
+    - [[proxy-rules]](#proxy-rules)
     - [[flash]](#flash)
     - [[flash-path]](#flash-path)
     - [[disk-cache-size]](#disk-cache-size)
@@ -223,7 +224,7 @@ Use a counter that persists even with window focus for the application badge for
 --bounce
 ```
 
-(macOS only) When the the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
+(macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
 
 #### [width]
 
@@ -376,6 +377,21 @@ Or, if you want to allow all domains for example for external auths,
 
 ```bash
 nativefier https://google.com --internal-urls ".*?"
+```
+
+
+#### [proxy-rules]
+
+```
+--proxy-rules <value>
+```
+
+Proxy rules. See [proxyRules](https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback) for more details.
+
+Example:
+
+```bash
+nativefier https://google.com --proxy-rules http://127.0.0.1:1080
 ```
 
 #### [flash]
@@ -729,7 +745,7 @@ Enables Dark Mode support on macOS 10.4+.
 #### [background-color]
 
 ```
---background-color
+--background-color <string>
 ```
 
 See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
