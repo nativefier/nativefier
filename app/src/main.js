@@ -23,7 +23,7 @@ const { isOSX } = helpers;
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
-const fileDownloadOptions = Object.assign({}, appArgs.fileDownloadOptions);
+const fileDownloadOptions = { ...appArgs.fileDownloadOptions };
 electronDownload(fileDownloadOptions);
 
 if (appArgs.processEnvs) {

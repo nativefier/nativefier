@@ -1,7 +1,8 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import convertToIcns from './convertToIcns';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
+
+import { convertToIcns } from './convertToIcns';
 
 // Prerequisite for test: to use OSX with sips, iconutil and imagemagick convert
 

@@ -1,5 +1,5 @@
-import optionsMain from './optionsMain';
-import asyncConfig from './asyncConfig';
+import { getOptions } from './optionsMain';
+import { asyncConfig } from './asyncConfig';
 
 jest.mock('./asyncConfig');
 const mockedAsyncConfig = { some: 'options' };
@@ -9,7 +9,7 @@ test('it should call the async config', async () => {
   const params = {
     targetUrl: 'http://example.com',
   };
-  const result = await optionsMain(params);
+  const result = await getOptions(params);
   expect(asyncConfig).toHaveBeenCalledWith(expect.objectContaining(params));
   expect(result).toEqual(mockedAsyncConfig);
 });

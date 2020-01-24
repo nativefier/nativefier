@@ -1,38 +1,35 @@
-import path from 'path';
-import log from 'loglevel';
-import helpers from '../helpers/helpers';
-import iconShellHelpers from '../helpers/iconShellHelpers';
+import * as path from 'path';
 
-const { isOSX } = helpers;
-const { convertToPng, convertToIco, convertToIcns } = iconShellHelpers;
+import { isOSX } from '../helpers/helpers';
+import {
+  convertToPng,
+  convertToIco,
+  convertToIcns,
+} from '../helpers/iconShellHelpers';
 
-function iconIsIco(iconPath) {
+import log = require('loglevel');
+
+function iconIsIco(iconPath: string): boolean {
   return path.extname(iconPath) === '.ico';
 }
 
-function iconIsPng(iconPath) {
+function iconIsPng(iconPath: string): boolean {
   return path.extname(iconPath) === '.png';
 }
 
-function iconIsIcns(iconPath) {
+function iconIsIcns(iconPath: string): boolean {
   return path.extname(iconPath) === '.icns';
 }
 
 /**
- * @callback augmentIconsCallback
- * @param error
- * @param options
- */
-
-/**
  * Will check and convert a `.png` to `.icns` if necessary and augment
  * options.icon with the result
- *
- * @param inpOptions will need options.platform and options.icon
- * @param {augmentIconsCallback} callback
  */
-function iconBuild(inpOptions, callback) {
-  const options = Object.assign({}, inpOptions);
+export function iconBuild(
+  inpOptions: any,
+  callback: (error: any, options: any) => void,
+): void {
+  const options = { ...inpOptions };
   const returnCallback = () => {
     callback(null, options);
   };
@@ -102,5 +99,3 @@ function iconBuild(inpOptions, callback) {
       returnCallback();
     });
 }
-
-export default iconBuild;

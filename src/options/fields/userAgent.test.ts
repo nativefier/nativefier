@@ -1,4 +1,4 @@
-import userAgent from './userAgent';
+import { userAgent } from './userAgent';
 import { inferUserAgent } from '../../infer';
 
 jest.mock('./../../infer/inferUserAgent');
@@ -6,8 +6,8 @@ jest.mock('./../../infer/inferUserAgent');
 test('when a userAgent parameter is passed', async () => {
   expect(inferUserAgent).toHaveBeenCalledTimes(0);
 
-  const params = { userAgent: 'valid user agent' };
-  await expect(userAgent(params)).resolves.toBe(params.userAgent);
+  const params = { userAgentString: 'valid user agent' };
+  await expect(userAgent(params)).resolves.toBe(params.userAgentString);
 });
 
 test('no userAgent parameter is passed', async () => {

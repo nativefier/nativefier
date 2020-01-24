@@ -1,7 +1,17 @@
-import ProgressBar from 'progress';
+import ProgressBar = require('progress'); // require-d because default-exports a function, which makes tsc complain and demand an `esModuleInterop` flag
 
-class DishonestProgress {
-  constructor(total) {
+export class DishonestProgress {
+  private tickParts: number;
+
+  private bar: ProgressBar;
+
+  private tickingPrevious: {
+    message: string;
+    remainder: number;
+    interval: null | NodeJS.Timeout;
+  };
+
+  constructor(total: number) {
     this.tickParts = total * 10;
 
     this.bar = new ProgressBar('  :task [:bar] :percent', {
@@ -19,7 +29,7 @@ class DishonestProgress {
     };
   }
 
-  tick(message) {
+  tick(message: string): void {
     const {
       remainder: prevRemainder,
       message: prevMessage,
@@ -66,5 +76,3 @@ class DishonestProgress {
     }, 200);
   }
 }
-
-export default DishonestProgress;

@@ -1,9 +1,9 @@
-import asyncConfig from './asyncConfig';
-import fields from './fields';
+import { asyncConfig } from './asyncConfig';
+import { getProcessedOptions } from './fields';
 
 jest.mock('./fields');
 
-fields.mockImplementation(() => [
+getProcessedOptions.mockImplementation(() => [
   Promise.resolve({
     someField: 'newValue',
   }),

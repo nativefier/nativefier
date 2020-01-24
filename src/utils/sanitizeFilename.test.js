@@ -1,15 +1,5 @@
-import sanitizeFilenameLib from 'sanitize-filename';
-import sanitizeFilename from './sanitizeFilename';
+import { sanitizeFilename } from './sanitizeFilename';
 import { DEFAULT_APP_NAME } from '../constants';
-
-jest.mock('sanitize-filename');
-sanitizeFilenameLib.mockImplementation((str) => str);
-
-test('it should call the sanitize-filename npm module', () => {
-  const param = 'abc';
-  sanitizeFilename('', param);
-  expect(sanitizeFilenameLib).toHaveBeenCalledWith(param);
-});
 
 describe('replacing non ascii characters', () => {
   const nonAscii = '�';

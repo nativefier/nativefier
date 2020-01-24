@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
   injectScripts();
 });
 
-// Disable imports being first due to the above event attachment
-import { ipcRenderer } from 'electron'; // eslint-disable-line import/first
-import path from 'path'; // eslint-disable-line import/first
-import fs from 'fs'; // eslint-disable-line import/first
+// Only do imports late, after the above event attachment
+import { ipcRenderer } from 'electron';
+import path from 'path';
+import fs from 'fs';
 
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
 const log = require('loglevel');

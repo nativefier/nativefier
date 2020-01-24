@@ -9,12 +9,12 @@
     "native",
     "wrapper"
   ],
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "scripts": {
     "dev-up": "npm install && (cd ./app && npm install) && npm run build",
     "dev-up-win": "npm install & cd app & npm install & cd .. & npm run build",
-    "test": "jest src",
-    "guard": "jest --watch src",
+    "test": "jest",
+    "guard": "jest --watch",
     "e2e": "jest e2e",
     "tdd": "gulp tdd",
     "lint": "eslint .",
@@ -23,13 +23,13 @@
     "clean": "gulp clean",
     "build": "gulp build",
     "watch": "while true ; do gulp watch ; done",
-    "package-placeholder": "npm run build && node lib/cli.js http://www.bennish.net/web-notifications.html ~/Desktop --overwrite --name notification-test --icon ./test-resources/iconSampleGrey.png --inject ./test-resources/test-injection.js --inject ./test-resources/test-injection.css && open ~/Desktop/notification-test-darwin-x64/notification-test.app",
+    "package-placeholder": "npm run build && node lib/src/cli.js http://www.bennish.net/web-notifications.html ~/Desktop --overwrite --name notification-test --icon ./test-resources/iconSampleGrey.png --inject ./test-resources/test-injection.js --inject ./test-resources/test-injection.css && open ~/Desktop/notification-test-darwin-x64/notification-test.app",
     "start-placeholder": "npm run build && electron app",
-    "changelog": "./scripts/changelog",
+    "changelog": "./docs/generate-changelog",
     "format": "prettier --write '{gulp,src}/**/*.js' 'app/src/**/*.js'"
   },
   "bin": {
-    "nativefier": "lib/cli.js"
+    "nativefier": "lib/src/cli.js"
   },
   "repository": {
     "type": "git",
@@ -41,13 +41,29 @@
     "url": "https://github.com/jiahaog/nativefier/issues"
   },
   "homepage": "https://github.com/jiahaog/nativefier#readme",
+  "jest": {
+    "testEnvironment": "node",
+    "testRegex": "lib/.*test.[jt]s$"
+  },
   "dependencies": {
+    "@types/async": "^3.0.3",
+    "@types/cheerio": "^0.22.15",
+    "@types/electron-packager": "^14.0.0",
+    "@types/jest": "^24.0.25",
+    "@types/lodash": "^4.14.149",
+    "@types/ncp": "^2.0.3",
+    "@types/node": "12.x",
+    "@types/page-icon": "^0.3.2",
+    "@types/progress": "^2.0.3",
+    "@types/shelljs": "^0.8.6",
+    "@types/tmp": "^0.1.0",
+    "@types/validator": "^12.0.1",
     "async": "^2.6.0",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "babel-polyfill": "^6.26.0",
     "cheerio": "^1.0.0-rc.2",
-    "commander": "^2.14.0",
-    "electron-packager": "^12.2.0",
+    "commander": "^4.0.1",
+    "electron-packager": "^14.1.1",
     "gitcloud": "^0.1.0",
     "hasbin": "^1.2.3",
     "lodash": "^4.17.5",
@@ -58,10 +74,12 @@
     "sanitize-filename": "^1.6.1",
     "shelljs": "^0.8.1",
     "source-map-support": "^0.5.3",
-    "tmp": "0.0.33",
-    "validator": "^10.2.0"
+    "tmp": "0.1.0",
+    "validator": "^12.1.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^2.13.0",
+    "@typescript-eslint/parser": "^2.13.0",
     "babel-core": "^6.26.0",
     "babel-jest": "^23.4.0",
     "babel-loader": "^7.1.2",
@@ -70,22 +88,21 @@
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
     "del": "^3.0.0",
-    "eslint": "^5.2.0",
-    "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-import": "^2.8.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
     "eslint-plugin-prettier": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
-    "jest": "^23.4.1",
+    "jest": "^24.9.0",
     "prettier": "^1.12.1",
     "require-dir": "^1.0.0",
     "run-sequence": "^2.2.1",
+    "typescript": "^3.7.4",
     "webpack-stream": "^5.0.0"
   },
   "engines": {
-    "node": ">= 4.0"
+    "node": ">= 8.0"
   },
   "babel": {
     "plugins": [

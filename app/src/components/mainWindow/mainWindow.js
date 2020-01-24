@@ -92,7 +92,7 @@ function setProxyRules(browserWindow, proxyRules) {
  * @returns {electron.BrowserWindow}
  */
 function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
-  const options = Object.assign({}, inpOptions);
+  const options = { ...inpOptions };
   const mainWindowState = windowStateKeeper({
     defaultWidth: options.width || 1280,
     defaultHeight: options.height || 800,
@@ -113,35 +113,31 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     },
   };
 
-  const browserwindowOptions = Object.assign({}, options.browserwindowOptions);
+  const browserwindowOptions = { ...options.browserwindowOptions };
 
-  const mainWindow = new BrowserWindow(
-    Object.assign(
-      {
-        frame: !options.hideWindowFrame,
-        width: mainWindowState.width,
-        height: mainWindowState.height,
-        minWidth: options.minWidth,
-        minHeight: options.minHeight,
-        maxWidth: options.maxWidth,
-        maxHeight: options.maxHeight,
-        x: options.x,
-        y: options.y,
-        autoHideMenuBar: !options.showMenuBar,
-        // after webpack path here should reference `resources/app/`
-        icon: getAppIcon(),
-        // set to undefined and not false because explicitly setting to false will disable full screen
-        fullscreen: options.fullScreen || undefined,
-        // Whether the window should always stay on top of other windows. Default is false.
-        alwaysOnTop: options.alwaysOnTop,
-        titleBarStyle: options.titleBarStyle,
-        show: options.tray !== 'start-in-tray',
-        backgroundColor: options.backgroundColor,
-      },
-      DEFAULT_WINDOW_OPTIONS,
-      browserwindowOptions,
-    ),
-  );
+  const mainWindow = new BrowserWindow({
+    frame: !options.hideWindowFrame,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
+    minWidth: options.minWidth,
+    minHeight: options.minHeight,
+    maxWidth: options.maxWidth,
+    maxHeight: options.maxHeight,
+    x: options.x,
+    y: options.y,
+    autoHideMenuBar: !options.showMenuBar,
+    // after webpack path here should reference `resources/app/`
+    icon: getAppIcon(),
+    // set to undefined and not false because explicitly setting to false will disable full screen
+    fullscreen: options.fullScreen || undefined,
+    // Whether the window should always stay on top of other windows. Default is false.
+    alwaysOnTop: options.alwaysOnTop,
+    titleBarStyle: options.titleBarStyle,
+    show: options.tray !== 'start-in-tray',
+    backgroundColor: options.backgroundColor,
+    ...DEFAULT_WINDOW_OPTIONS,
+    ...browserwindowOptions,
+  });
 
   mainWindowState.manage(mainWindow);
 
@@ -291,7 +287,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   createNewWindow = (url) => {
     const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
     if (options.userAgent) {
-      window.webContents.setUserAgent(options.userAgent);
+      window.webContents.userAgent = options.userAgent;
     }
 
     if (options.proxyRules) {
@@ -329,7 +325,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
   }
 
   if (options.userAgent) {
-    mainWindow.webContents.setUserAgent(options.userAgent);
+    mainWindow.webContents.userAgent = options.userAgent;
   }
 
   if (options.proxyRules) {

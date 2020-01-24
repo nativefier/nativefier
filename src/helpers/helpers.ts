@@ -1,17 +1,22 @@
-import os from 'os';
-import axios from 'axios';
-import hasBinary from 'hasbin';
-import path from 'path';
+import * as os from 'os';
+import * as path from 'path';
 
-function isOSX() {
+import axios from 'axios';
+import * as hasbin from 'hasbin';
+
+type DownloadResult = {
+  data: Buffer;
+  ext: string;
+};
+
+export function isOSX(): boolean {
   return os.platform() === 'darwin';
 }
 
-function isWindows() {
+export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
-
-function downloadFile(fileUrl) {
+export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
   return axios
     .get(fileUrl, {
       responseType: 'arraybuffer',
@@ -27,10 +32,10 @@ function downloadFile(fileUrl) {
     });
 }
 
-function allowedIconFormats(platform) {
-  const hasIdentify = hasBinary.sync('identify');
-  const hasConvert = hasBinary.sync('convert');
-  const hasIconUtil = hasBinary.sync('iconutil');
+export function getAllowedIconFormats(platform: string): string[] {
+  const hasIdentify = hasbin.sync('identify');
+  const hasConvert = hasbin.sync('convert');
+  const hasIconUtil = hasbin.sync('iconutil');
 
   const pngToIcns = hasConvert && hasIconUtil;
   const pngToIco = hasConvert;
@@ -43,7 +48,7 @@ function allowedIconFormats(platform) {
 
   const formats = [];
 
-  // todo shell scripting is not supported on windows, temporary override
+  // TODO shell scripting is not supported on windows, temporary override
   if (isWindows()) {
     switch (platform) {
       case 'darwin':
@@ -56,9 +61,7 @@ function allowedIconFormats(platform) {
         formats.push('.ico');
         break;
       default:
-        throw new Error(
-          `function allowedIconFormats error: Unknown platform ${platform}`,
-        );
+        throw new Error(`Unknown platform ${platform}`);
     }
     return formats;
   }
@@ -92,16 +95,7 @@ function allowedIconFormats(platform) {
       }
       break;
     default:
-      throw new Error(
-        `function allowedIconFormats error: Unknown platform ${platform}`,
-      );
+      throw new Error(`Unknown platform ${platform}`);
   }
   return formats;
 }
-
-export default {
-  isOSX,
-  isWindows,
-  downloadFile,
-  allowedIconFormats,
-};

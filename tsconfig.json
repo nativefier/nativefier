@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+      "allowJs": true,
+      "outDir": "./lib",
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "target": "es5"
+  },
+  "include": [
+      "./src/**/*"
+  ]
+}

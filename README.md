@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 [![Dependency Status](https://david-dm.org/jiahaog/nativefier.svg)](https://david-dm.org/jiahaog/nativefier)
 
-![Dock](screenshots/dock.png)
+![Dock](dock.png)
 
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
@@ -13,7 +13,7 @@ You want to make a native wrapper for WhatsApp Web (or any web page).
 nativefier web.whatsapp.com
 ```
 
-![Walkthrough](screenshots/walkthrough.gif)
+![Walkthrough](walkthrough.gif)
 
 You're done.
 
@@ -121,3 +121,21 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 ## License
 
 [MIT](LICENSE.md)
+
+## TS TODO
+
+- [ ] Move cli to TS
+- [ ] Move app to TS
+- [ ] Move tests to TS
+- [ ] Get rid of Babel / webpack
+- [ ] Get rid of Gulp
+- [ ] Get rid of async
+- [ ] Make tsc strict(er)
+- [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
+- [ ] Fix tsconfig to output to /lib, not /lib/src
+- [ ] ? Get rid of chai
+- [ ] ? Get rid of micro-packages easily inlined
+- [ ] ESLint cleanup: upgrade, review rules, move away from yml
+- [ ] Package.json nits: move away from "^A.B.C" to more understandable "A.x
+- [ ] Upgrade electron-packager and other deps
+- [ ] Make exports more idiomatic without default & index.ts crap

@@ -1,16 +1,17 @@
-import fs from 'fs';
-import crypto from 'crypto';
-import _ from 'lodash';
-import path from 'path';
-import ncp from 'ncp';
+import * as fs from 'fs';
+import * as crypto from 'crypto';
+import * as path from 'path';
 
-const copy = ncp.ncp;
-const log = require('loglevel');
+import { kebabCase } from 'lodash';
+import { ncp } from 'ncp';
+
+import log = require('loglevel');
+
 /**
  * Only picks certain app args to pass to nativefier.json
  * @param options
  */
-function selectAppArgs(options) {
+function selectAppArgs(options): any {
   return {
     name: options.name,
     targetUrl: options.targetUrl,
@@ -65,7 +66,7 @@ function selectAppArgs(options) {
   };
 }
 
-function maybeCopyScripts(srcs, dest) {
+async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   if (!srcs) {
     return new Promise((resolve) => {
       resolve();
@@ -89,7 +90,7 @@ function maybeCopyScripts(srcs, dest) {
           return;
         }
 
-        copy(src, path.join(dest, 'inject', destFileName), (error) => {
+        ncp(src, path.join(dest, 'inject', destFileName), (error) => {
           if (error) {
             reject(new Error(`Error Copying injection files: ${error}`));
             return;
@@ -110,18 +111,22 @@ function maybeCopyScripts(srcs, dest) {
   });
 }
 
-function normalizeAppName(appName, url) {
+function normalizeAppName(appName: string, url: string): string {
   // use a simple 3 byte random string to prevent collision
   const hash = crypto.createHash('md5');
   hash.update(url);
   const postFixHash = hash.digest('hex').substring(0, 6);
-  const normalized = _.kebabCase(appName.toLowerCase());
+  const normalized = kebabCase(appName.toLowerCase());
   return `${normalized}-nativefier-${postFixHash}`;
 }
 
-function changeAppPackageJsonName(appPath, name, url) {
+function changeAppPackageJsonName(
+  appPath: any,
+  name: string,
+  url: string,
+): void {
   const packageJsonPath = path.join(appPath, '/package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath));
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
   packageJson.name = normalizeAppName(name, url);
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 }
@@ -129,16 +134,16 @@ function changeAppPackageJsonName(appPath, name, url) {
 /**
  * Creates a temporary directory and copies the './app folder' inside,
  * and adds a text file with the configuration for the single page app.
- *
- * @param {string} src
- * @param {string} dest
- * @param {{}} options
- * @param callback
  */
-function buildApp(src, dest, options, callback) {
+export function buildApp(
+  src: string,
+  dest: string,
+  options: any,
+  callback?: (message?: string) => void,
+): void {
   const appArgs = selectAppArgs(options);
 
-  copy(src, dest, (error) => {
+  ncp(src, dest, (error) => {
     if (error) {
       callback(`Error Copying temporary directory: ${error}`);
       return;
@@ -159,5 +164,3 @@ function buildApp(src, dest, options, callback) {
       });
   });
 }
-
-export default buildApp;

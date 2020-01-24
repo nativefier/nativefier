@@ -1,4 +1,4 @@
-import normalizeUrl from './normalizeUrl';
+import { normalizeUrl } from './normalizeUrl';
 
 test("a proper URL shouldn't be mangled", () => {
   expect(normalizeUrl('http://www.google.com')).toEqual(

@@ -1,7 +1,7 @@
-import fields from './index';
-import icon from './icon';
-import userAgent from './userAgent';
-import name from './name';
+import { getProcessedOptions } from './index';
+import { icon } from './icon';
+import { userAgent } from './userAgent';
+import { name } from './name';
 
 jest.mock('./icon');
 jest.mock('./name');
@@ -13,7 +13,7 @@ modules.forEach((module) => {
 });
 
 test('it should return a list of promises', () => {
-  const result = fields({});
+  const result = getProcessedOptions({});
   expect(result).toHaveLength(3);
   result.forEach((value) => {
     expect(value).toBeInstanceOf(Promise);

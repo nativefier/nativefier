@@ -1,19 +1,19 @@
-#! /usr/bin/env node
-
+#!/usr/bin/env node
 import 'source-map-support/register';
-import program from 'commander';
+
+import * as dns from 'dns';
+import * as commander from 'commander';
+import * as packageJson from '../package.json';
 import nativefier from './index';
 
-const dns = require('dns');
-const log = require('loglevel');
-const packageJson = require('./../package');
+import log = require('loglevel');
 
-function collect(val, memo) {
+function collect(val: any, memo: any[]): any[] {
   memo.push(val);
   return memo;
 }
 
-function parseMaybeBoolString(val) {
+function parseMaybeBoolString(val: string): boolean | string {
   switch (val) {
     case 'true':
       return true;
@@ -24,19 +24,19 @@ function parseMaybeBoolString(val) {
   }
 }
 
-function parseJson(val) {
+function parseJson(val: string): any {
   if (!val) return {};
   return JSON.parse(val);
 }
 
-function getProcessEnvs(val) {
-  if (!val) return {};
-  const pEnv = {};
-  pEnv.processEnvs = parseJson(val);
-  return pEnv;
+function getProcessEnvs(val: string): any {
+  if (!val) {
+    return {};
+  }
+  return { processEnvs: parseJson(val) };
 }
 
-function checkInternet() {
+function checkInternet(): void {
   dns.lookup('npmjs.com', (err) => {
     if (err && err.code === 'ENOTFOUND') {
       log.warn(
@@ -63,12 +63,12 @@ if (require.main === module) {
     sanitizedArgs.push(arg);
   });
 
-  program
+  commander
     .version(packageJson.version, '-v, --version')
     .arguments('<targetUrl> [dest]')
     .action((targetUrl, appDir) => {
-      program.targetUrl = targetUrl;
-      program.out = appDir;
+      commander.targetUrl = targetUrl;
+      commander.out = appDir;
     })
     .option('-n, --name <value>', 'app name')
     .option('-p, --platform <value>', "'osx', 'mas', 'linux' or 'windows'")
@@ -258,10 +258,10 @@ if (require.main === module) {
     .parse(sanitizedArgs);
 
   if (!process.argv.slice(2).length) {
-    program.help();
+    commander.help();
   }
   checkInternet();
-  nativefier(program, (error, appPath) => {
+  nativefier(commander, (error, appPath) => {
     if (error) {
       log.error(error);
       return;

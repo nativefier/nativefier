@@ -11,7 +11,7 @@ const { getAppIcon, getCounterValue } = helpers;
  * @returns {electron.Tray}
  */
 function createTrayIcon(inpOptions, mainWindow) {
-  const options = Object.assign({}, inpOptions);
+  const options = { ...inpOptions };
 
   if (options.tray) {
     const iconPath = getAppIcon();
