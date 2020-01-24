@@ -1,4 +1,16 @@
 
+7.7.1 / 2020-01-23
+==================
+
+  * Feature: proxy rules with `--proxy-rules` flag (PR #854)
+  * Fix weirdly platform-dependent folder naming logic (PR #850, issue #708)
+  * Fix filter exception when injecting CSS (PR #837)
+  * Fix Handle nativefier.json readonly access with options.maximize (PR #856)
+  * Fix/app: Application menu support on Electron 5.x (PR #876)
+  * Doc: Clarify `--background-color` arguments (PR #891)
+  * Doc: Fix duplicate word for `--bounce` doc (PR #883)
+  * Bump default Electron to 5.0.13
+
 7.7.0 / 2019-08-22
 ==================
 
