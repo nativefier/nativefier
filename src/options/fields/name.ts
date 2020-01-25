@@ -1,8 +1,20 @@
+import log = require('loglevel');
+
 import { sanitizeFilename } from '../../utils';
 import { inferTitle } from '../../infer';
 import { DEFAULT_APP_NAME } from '../../constants';
 
-import log = require('loglevel');
+type NameParamsProvided = {
+  nameToUse: string;
+  platform: string;
+};
+
+type NameParamsNeedsInfer = {
+  targetUrl: string;
+  platform: string;
+};
+
+type NameParams = NameParamsProvided | NameParamsNeedsInfer;
 
 async function tryToInferName(targetUrl: string): Promise<string> {
   try {
@@ -16,16 +28,11 @@ async function tryToInferName(targetUrl: string): Promise<string> {
   }
 }
 
-export async function name({
-  nameToUse,
-  platform,
-  targetUrl,
-}): Promise<string> {
-  // .length also checks if its the commanderJS function or a string
-  if (nameToUse && nameToUse.length > 0) {
-    return sanitizeFilename(platform, nameToUse);
+export async function name(params: NameParams): Promise<string> {
+  if ('nameToUse' in params) {
+    return sanitizeFilename(params.platform, params.nameToUse);
   }
 
-  const inferredName = await tryToInferName(targetUrl);
-  return sanitizeFilename(platform, inferredName);
+  const inferredName = await tryToInferName(params.targetUrl);
+  return sanitizeFilename(params.platform, inferredName);
 }
