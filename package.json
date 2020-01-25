@@ -94,7 +94,7 @@
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
     "gulp-sourcemaps": "^2.6.4",
-    "jest": "^24.9.0",
+    "jest": "^25.1.0",
     "prettier": "^1.12.1",
     "require-dir": "^1.0.0",
     "run-sequence": "^2.2.1",

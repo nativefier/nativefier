@@ -1,16 +1,21 @@
 import { getOptions } from './optionsMain';
-import { asyncConfig } from './asyncConfig';
+import * as asyncConfig from './asyncConfig';
 
-jest.mock('./asyncConfig');
 const mockedAsyncConfig = { some: 'options' };
-asyncConfig.mockImplementation(() => Promise.resolve(mockedAsyncConfig));
+let asyncConfigMock: jasmine.Spy;
+
+beforeAll(() => {
+  asyncConfigMock = spyOn(asyncConfig, 'asyncConfig').and.returnValue(
+    mockedAsyncConfig,
+  );
+});
 
 test('it should call the async config', async () => {
   const params = {
     targetUrl: 'http://example.com',
   };
   const result = await getOptions(params);
-  expect(asyncConfig).toHaveBeenCalledWith(expect.objectContaining(params));
+  expect(asyncConfigMock).toHaveBeenCalledWith(expect.objectContaining(params));
   expect(result).toEqual(mockedAsyncConfig);
 });
 
