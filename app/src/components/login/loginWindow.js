@@ -8,7 +8,7 @@ function createLoginWindow(loginCallback) {
     frame: false,
     resizable: false,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: true, // TODO work around this; insecure
     },
   });
   loginWindow.loadURL(
