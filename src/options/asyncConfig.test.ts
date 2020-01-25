@@ -3,7 +3,7 @@ import { getProcessedOptions } from './fields';
 
 jest.mock('./fields');
 
-getProcessedOptions.mockImplementation(() => [
+(getProcessedOptions as jest.Mock).mockImplementation(() => [
   Promise.resolve({
     someField: 'newValue',
   }),
