@@ -124,15 +124,16 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 
 ## TS TODO
 
-- [ ] Move cli to TS
+- [x] Move cli to TS
 - [ ] Move app to TS
-- [ ] Move tests to TS
 - [ ] Get rid of Babel / webpack
-- [ ] Get rid of Gulp
+- [ ] Move from Gulp to simple npm scripts
 - [ ] Get rid of async
-- [ ] Make tsc strict(er)
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
-- [ ] Fix tsconfig to output to /lib, not /lib/src
+- [ ] Tweak tsconfigs: make tsc strict(er), incremental builds
+- [ ] Use new TS build system for faster builds & cleaner output dir structure (output to /lib, not /lib/src)
+- [ ] Move all src to src (/{cli, app})
+- [ ] Review .npmignore and what's packaged to npm
 - [ ] ? Get rid of chai
 - [ ] ? Get rid of micro-packages easily inlined
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
