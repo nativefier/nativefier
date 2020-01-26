@@ -1,14 +1,14 @@
 import * as path from 'path';
 
+import * as log from 'loglevel';
+import electronPackager = require('electron-packager');
+
 import { isOSX } from '../helpers/helpers';
 import {
   convertToPng,
   convertToIco,
   convertToIcns,
 } from '../helpers/iconShellHelpers';
-
-import log = require('loglevel');
-import electronPackager = require('electron-packager');
 
 function iconIsIco(iconPath: string): boolean {
   return path.extname(iconPath) === '.ico';

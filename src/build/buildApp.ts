@@ -3,9 +3,8 @@ import * as crypto from 'crypto';
 import * as path from 'path';
 
 import { kebabCase } from 'lodash';
+import * as log from 'loglevel';
 import { ncp } from 'ncp';
-
-import log = require('loglevel');
 
 /**
  * Only picks certain app args to pass to nativefier.json

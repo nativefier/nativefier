@@ -1,6 +1,6 @@
-import { inferIcon } from '../../infer';
+import * as log from 'loglevel';
 
-import log = require('loglevel');
+import { inferIcon } from '../../infer';
 
 type IconParamsProvided = {
   icon: string;

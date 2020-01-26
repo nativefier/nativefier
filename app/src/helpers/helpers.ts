@@ -3,7 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { BrowserWindow } from 'electron';
-import log from 'loglevel';
+import * as log from 'loglevel';
 import wurl from 'wurl';
 
 const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');

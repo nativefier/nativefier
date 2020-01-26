@@ -88,6 +88,10 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testPathIgnorePatterns": ["/node_modules/", "<rootDir>/app/src.*", "<rootDir>/src.*"]
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/app/src.*",
+      "<rootDir>/src.*"
+    ]
   }
 }

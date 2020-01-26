@@ -11,7 +11,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ipcRenderer } from 'electron';
-import log from 'loglevel';
+import * as log from 'loglevel';
 
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
 /**

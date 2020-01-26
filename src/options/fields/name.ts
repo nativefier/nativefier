@@ -1,4 +1,4 @@
-import log = require('loglevel');
+import * as log from 'loglevel';
 
 import { sanitizeFilename } from '../../utils';
 import { inferTitle } from '../../infer';

@@ -3,11 +3,10 @@ import 'source-map-support/register';
 
 import * as commander from 'commander';
 import * as dns from 'dns';
+import * as log from 'loglevel';
 
 import { buildMain } from './index';
 import * as packageJson from '../package.json';
-
-import log = require('loglevel');
 
 function collect(val: any, memo: any[]): any[] {
   memo.push(val);

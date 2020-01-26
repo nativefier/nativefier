@@ -3,17 +3,15 @@ import * as path from 'path';
 import * as async from 'async';
 import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
+import * as log from 'loglevel';
 import { ncp } from 'ncp';
 import * as tmp from 'tmp';
 
 import { DishonestProgress } from '../helpers/dishonestProgress';
 import { isWindows } from '../helpers/helpers';
-import { PackagerConsole } from '../helpers/packagerConsole';
 import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
 import { buildIcon } from './buildIcon';
-
-import log = require('loglevel');
 
 /**
  * Checks the app path array to determine if packaging completed successfully
@@ -92,9 +90,6 @@ export function buildMain(
   const tmpObj = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
   const tmpPath = tmpObj.name;
 
-  // todo check if this is still needed on later version of packager
-  const packagerConsole = new PackagerConsole();
-
   const progress = new DishonestProgress(5);
 
   async.waterfall(
@@ -138,15 +133,11 @@ export function buildMain(
         packageOptions = trimOptionRequiringWine(opts, 'versionString');
         packageOptions = trimOptionRequiringWine(opts, 'win32metadata');
 
-        packagerConsole.override();
-
         electronPackager(packageOptions)
           .then((appPathArray) => {
-            packagerConsole.restore(); // restore console.error
             cb(null, opts, appPathArray); // options still contain the icon to waterfall
           })
           .catch((error) => {
-            packagerConsole.restore(); // restore console.error
             cb(error, opts); // options still contain the icon to waterfall
           });
       },
@@ -165,7 +156,6 @@ export function buildMain(
       },
     ],
     (error, appPath) => {
-      packagerConsole.playback();
       callback(error, appPath);
     },
   );

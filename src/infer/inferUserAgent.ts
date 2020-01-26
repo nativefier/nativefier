@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import axios from 'axios';
-
-import log = require('loglevel');
+import * as log from 'loglevel';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
 const DEFAULT_CHROME_VERSION = '78.0.3904.130'; // TODO make constant and share with tests
