@@ -4,7 +4,6 @@
   "description": "Placeholder for the nativefier cli to override with a target url",
   "main": "lib/main.js",
   "dependencies": {
-    "electron": "7.x",
     "electron-context-menu": "0.x",
     "electron-dl": "3.x",
     "electron-squirrel-startup": "1.x",
@@ -13,7 +12,9 @@
     "source-map-support": "0.x",
     "wurl": "2.x"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "electron": "7.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -12,11 +12,11 @@ import { createTrayIcon } from './components/trayIcon';
 import * as helpers from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 
-// Entrypoint for electron-squirrel-startup.
-// See https://github.com/jiahaog/nativefier/pull/744 for sample use case
-if (require('electron-squirrel-startup')) {
-  app.exit();
-}
+// Entrypoint for Squirrel, a windows update framework. See https://github.com/jiahaog/nativefier/pull/744
+// TODO disabled for now, breaks build: Uncaught Exception: Error: Cannot find module '/tmp/app-linux-x64/resources/app/node_modules/electron-squirrel-startup/node_modules/debug/src/index.js'. Please verify that the package.json has a valid "main" entry
+// if (require('electron-squirrel-startup')) {
+//   app.exit();
+// }
 
 const { isOSX } = helpers;
 
