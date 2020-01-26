@@ -46,7 +46,6 @@
     "test": "npm run test:unit && npm run test:integration"
   },
   "dependencies": {
-    "@types/async": "3.x",
     "@types/cheerio": "0.x",
     "@types/electron-packager": "14.x",
     "@types/lodash": "4.x",
@@ -56,7 +55,6 @@
     "@types/shelljs": "0.x",
     "@types/tmp": "0.x",
     "@types/validator": "12.x",
-    "async": "2.x",
     "axios": "0.x",
     "cheerio": "^1.0.0-rc.3",
     "commander": "4.x",
