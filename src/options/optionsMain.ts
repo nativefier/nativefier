@@ -2,16 +2,17 @@ import * as fs from 'fs';
 
 import * as log from 'loglevel';
 
-import { inferPlatform, inferArch } from '../infer';
-import { normalizeUrl } from './normalizeUrl';
 import * as packageJson from '../../package.json';
 import { ELECTRON_VERSION, PLACEHOLDER_APP_DIR } from '../constants';
+import { inferPlatform, inferArch } from '../infer';
 import { asyncConfig } from './asyncConfig';
+import { normalizeUrl } from './normalizeUrl';
 
 /**
- * Extracts only desired keys from inpOptions and augments it with defaults
+ * Extracts only desired keys from input options and augments it with defaults
  */
 export function getOptions(inputOptions: any): Promise<any> {
+  // TODO type inputOptions and/or options as electronPackager.Options
   const options: any = {
     dir: PLACEHOLDER_APP_DIR,
     name: inputOptions.name,
@@ -51,8 +52,7 @@ export function getOptions(inputOptions: any): Promise<any> {
     disableContextMenu: inputOptions.disableContextMenu,
     disableDevTools: inputOptions.disableDevTools,
     crashReporter: inputOptions.crashReporter,
-    // workaround for electron-packager#375
-    tmpdir: false,
+    tmpdir: false, // workaround for electron-packager#375
     zoom: inputOptions.zoom || 1.0,
     internalUrls: inputOptions.internalUrls || null,
     proxyRules: inputOptions.proxyRules || null,

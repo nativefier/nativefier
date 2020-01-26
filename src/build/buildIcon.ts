@@ -8,6 +8,7 @@ import {
 } from '../helpers/iconShellHelpers';
 
 import log = require('loglevel');
+import electronPackager = require('electron-packager');
 
 function iconIsIco(iconPath: string): boolean {
   return path.extname(iconPath) === '.ico';
@@ -26,7 +27,7 @@ function iconIsIcns(iconPath: string): boolean {
  * options.icon with the result
  */
 export function buildIcon(
-  inpOptions: any,
+  inpOptions: electronPackager.Options,
   callback: (error: any, options: any) => void,
 ): void {
   const options = { ...inpOptions };

@@ -40,7 +40,7 @@ function getAppPath(appPathArray: any[]): any {
  * folder, which the BrowserWindow is hard-coded to read the icon from
  */
 function maybeCopyIcons(
-  options: any,
+  options: electronPackager.Options,
   appPath: string,
   callback: (error?: any) => void,
 ): void {
@@ -66,7 +66,10 @@ function maybeCopyIcons(
  * Removes a specific option from an options object if building for Windows
  * while not on Windows and Wine is not installed
  */
-function trimWineRequiringOption(options: any, optionToRemove: string): any {
+function trimOptionRequiringWine(
+  options: electronPackager.Options,
+  optionToRemove: string,
+): electronPackager.Options {
   const packageOptions = JSON.parse(JSON.stringify(options));
   if (options.platform === 'win32' && !isWindows()) {
     if (!hasbin.sync('wine')) {
@@ -118,22 +121,22 @@ export function buildMain(
           cb(null, newOptions);
         });
       },
-      (opts, cb) => {
+      (opts: electronPackager.Options, cb) => {
         progress.tick('icons');
         buildIcon(opts, (error, optionsWithIcon) => {
           cb(null, optionsWithIcon);
         });
       },
-      (opts, cb) => {
+      (opts: electronPackager.Options, cb) => {
         progress.tick('packaging');
         // maybe skip passing icon parameter to electron packager
-        let packageOptions = trimWineRequiringOption(opts, 'icon');
+        let packageOptions = trimOptionRequiringWine(opts, 'icon');
         // maybe skip passing other parameters to electron packager
-        packageOptions = trimWineRequiringOption(opts, 'appCopyright');
-        packageOptions = trimWineRequiringOption(opts, 'appVersion');
-        packageOptions = trimWineRequiringOption(opts, 'buildVersion');
-        packageOptions = trimWineRequiringOption(opts, 'versionString');
-        packageOptions = trimWineRequiringOption(opts, 'win32metadata');
+        packageOptions = trimOptionRequiringWine(opts, 'appCopyright');
+        packageOptions = trimOptionRequiringWine(opts, 'appVersion');
+        packageOptions = trimOptionRequiringWine(opts, 'buildVersion');
+        packageOptions = trimOptionRequiringWine(opts, 'versionString');
+        packageOptions = trimOptionRequiringWine(opts, 'win32metadata');
 
         packagerConsole.override();
 
@@ -147,7 +150,7 @@ export function buildMain(
             cb(error, opts); // options still contain the icon to waterfall
           });
       },
-      (opts, appPathArray, cb) => {
+      (opts: electronPackager.Options, appPathArray, cb) => {
         progress.tick('finalizing');
         // somehow appPathArray is a 1 element array
         const appPath = getAppPath(appPathArray);
