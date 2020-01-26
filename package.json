@@ -91,7 +91,6 @@
     "babel-plugin-transform-object-rest-spread": "6.x",
     "babel-preset-env": "1.x",
     "babel-register": "6.x",
-    "chai": "4.x",
     "del": "3.x",
     "eslint": "6.x",
     "eslint-config-prettier": "6.x",
