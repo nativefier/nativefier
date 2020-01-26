@@ -1,6 +1,5 @@
 import * as path from 'path';
 
-import * as async from 'async';
 import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
@@ -10,44 +9,43 @@ import * as tmp from 'tmp';
 import { isWindows } from '../helpers/helpers';
 import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
-import { buildIcon } from './buildIcon';
+import { convertIconIfNecessary } from './buildIcon';
 
 /**
  * Checks the app path array to determine if packaging completed successfully
- * @param appPathArray Result from electron-packager
  */
-function getAppPath(appPathArray: any[]): any {
-  if (appPathArray.length === 0) {
-    // directory already exists, --overwrite is not set
-    return null;
+function getAppPath(appPath: string | string[]): string {
+  if (!Array.isArray(appPath)) {
+    return appPath;
   }
 
-  if (appPathArray.length > 1) {
+  if (appPath.length === 0) {
+    return null; // directory already exists and `--overwrite` not set
+  }
+
+  if (appPath.length > 1) {
     log.warn(
       'Warning: This should not be happening, packaged app path contains more than one element:',
-      appPathArray,
+      appPath,
     );
   }
 
-  return appPathArray[0];
+  return appPath[0];
 }
 
 /**
  * For Windows & Linux, we have to copy over the icon to the resources/app
  * folder, which the BrowserWindow is hard-coded to read the icon from
  */
-function maybeCopyIcons(
+function copyIconsIfNecessary(
   options: electronPackager.Options,
   appPath: string,
-  callback: (error?: any) => void,
 ): void {
   if (!options.icon) {
-    callback();
     return;
   }
 
   if (options.platform === 'darwin' || options.platform === 'mas') {
-    callback();
     return;
   }
 
@@ -55,7 +53,7 @@ function maybeCopyIcons(
   const destIconPath = path.join(appPath, 'resources/app');
   const destFileName = `icon${path.extname(options.icon)}`;
   ncp(options.icon, path.join(destIconPath, destFileName), (error) => {
-    callback(error);
+    throw error;
   });
 }
 
@@ -79,80 +77,30 @@ function trimOptionRequiringWine(
   return packageOptions;
 }
 
-export function buildMain(
-  inpOptions: any,
-  callback: (error: any, appPath?: any) => void,
-) {
-  const options = { ...inpOptions };
+export async function buildMain(inpOptions: any): Promise<string> {
+  const options = await getOptions(inpOptions);
 
-  // pre process app
-  const tmpObj = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
-  const tmpPath = tmpObj.name;
+  log.info('copying');
+  const tmpDir = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
+  const tmpPath = tmpDir.name;
+  await buildApp(options.dir, tmpPath, options);
 
-  async.waterfall(
-    [
-      (cb) => {
-        getOptions(options)
-          .then((result) => {
-            cb(null, result);
-          })
-          .catch((error) => {
-            cb(error);
-          });
-      },
-      (opts, cb) => {
-        log.info('copying');
-        buildApp(opts.dir, tmpPath, opts, (error) => {
-          if (error) {
-            cb(error);
-            return;
-          }
-          // Change the reference file for the Electron app to be the temporary path
-          const newOptions = { ...opts, dir: tmpPath };
-          cb(null, newOptions);
-        });
-      },
-      (opts: electronPackager.Options, cb) => {
-        log.info('icons');
-        buildIcon(opts, (error, optionsWithIcon) => {
-          cb(null, optionsWithIcon);
-        });
-      },
-      (opts: electronPackager.Options, cb) => {
-        log.info('packaging');
-        // maybe skip passing icon parameter to electron packager
-        let packageOptions = trimOptionRequiringWine(opts, 'icon');
-        // maybe skip passing other parameters to electron packager
-        packageOptions = trimOptionRequiringWine(opts, 'appCopyright');
-        packageOptions = trimOptionRequiringWine(opts, 'appVersion');
-        packageOptions = trimOptionRequiringWine(opts, 'buildVersion');
-        packageOptions = trimOptionRequiringWine(opts, 'versionString');
-        packageOptions = trimOptionRequiringWine(opts, 'win32metadata');
+  log.info('icons');
+  const optionsWithTmpPath = { ...options, dir: tmpPath };
+  const optionsWithIcon = await convertIconIfNecessary(optionsWithTmpPath);
 
-        electronPackager(packageOptions)
-          .then((appPathArray) => {
-            cb(null, opts, appPathArray); // options still contain the icon to waterfall
-          })
-          .catch((error) => {
-            cb(error, opts); // options still contain the icon to waterfall
-          });
-      },
-      (opts: electronPackager.Options, appPathArray, cb) => {
-        log.info('finalizing');
-        // somehow appPathArray is a 1 element array
-        const appPath = getAppPath(appPathArray);
-        if (!appPath) {
-          cb();
-          return;
-        }
+  log.info('packaging');
+  let packageOptions = trimOptionRequiringWine(optionsWithIcon, 'icon');
+  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'appCopyright');
+  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'appVersion');
+  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'buildVersion');
+  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'versionString');
+  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'win32metadata');
+  const appPathArray = await electronPackager(packageOptions);
 
-        maybeCopyIcons(opts, appPath, (error) => {
-          cb(error, appPath);
-        });
-      },
-    ],
-    (error, appPath) => {
-      callback(error, appPath);
-    },
-  );
+  log.info('finalizing');
+  const appPath = getAppPath(appPathArray);
+
+  await copyIconsIfNecessary(packageOptions, appPath);
+  return appPath;
 }

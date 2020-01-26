@@ -17,14 +17,14 @@ const OPTIONS_NEEDING_POSTPROCESSING = [
   },
 ];
 
-export function getProcessedOptions(options): Promise<any>[] {
-  return OPTIONS_NEEDING_POSTPROCESSING.map(
-    async ({ optionName, processor }) => {
+export function getProcessedOptions(options): Promise<any[]> {
+  return Promise.all(
+    OPTIONS_NEEDING_POSTPROCESSING.map(async ({ optionName, processor }) => {
       const result = await processor(options);
 
       return {
         [optionName]: result,
       };
-    },
+    }),
   );
 }

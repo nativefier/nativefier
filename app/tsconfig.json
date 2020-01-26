@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
       "allowJs": true,
+      "declaration": true,
       "esModuleInterop": true,
       "incremental": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
       "outDir": "./lib",
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,
-      "target": "es5"
+      "target": "es2016"
   },
   "include": [
       "./src/**/*"

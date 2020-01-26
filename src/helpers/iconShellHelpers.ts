@@ -1,17 +1,16 @@
 import * as path from 'path';
-import * as tmp from 'tmp';
 
 import * as shell from 'shelljs';
+import * as tmp from 'tmp';
+tmp.setGracefulCleanup();
 
 import { isWindows, isOSX } from './helpers';
 
-tmp.setGracefulCleanup();
-
 const SCRIPT_PATHS = {
-  singleIco: path.join(__dirname, '../..', 'bin/singleIco'),
-  convertToPng: path.join(__dirname, '../..', 'bin/convertToPng'),
-  convertToIco: path.join(__dirname, '../..', 'bin/convertToIco'),
-  convertToIcns: path.join(__dirname, '../..', 'bin/convertToIcns'),
+  singleIco: path.join(__dirname, '../../icon-scripts/singleIco'),
+  convertToPng: path.join(__dirname, '../../icon-scripts/convertToPng'),
+  convertToIco: path.join(__dirname, '../../icon-scripts/convertToIco'),
+  convertToIcns: path.join(__dirname, '../../icon-scripts/convertToIcns'),
 };
 
 /**
@@ -52,12 +51,6 @@ function getTmpDirPath(): string {
   return tempIconDirObj.name;
 }
 
-/**
- * Converts the ico to a temporary directory which will be cleaned up on process exit
- * @param {string} icoSrc path to a .ico file
- * @return {Promise}
- */
-
 export function singleIco(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.singleIco,
@@ -66,7 +59,7 @@ export function singleIco(icoSrc: string): Promise<string> {
   );
 }
 
-export function convertToPng(icoSrc: string): Promise<string> {
+export async function convertToPng(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToPng,
     icoSrc,
@@ -74,7 +67,7 @@ export function convertToPng(icoSrc: string): Promise<string> {
   );
 }
 
-export function convertToIco(icoSrc: string): Promise<string> {
+export async function convertToIco(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToIco,
     icoSrc,
@@ -82,10 +75,10 @@ export function convertToIco(icoSrc: string): Promise<string> {
   );
 }
 
-export function convertToIcns(icoSrc: string): Promise<string> {
+export async function convertToIcns(icoSrc: string): Promise<string> {
   if (!isOSX()) {
     return new Promise((resolve, reject) =>
-      reject(new Error('OSX is required to convert to a .icns icon')),
+      reject(new Error('macOS is required to convert to a .icns icon')),
     );
   }
   return iconShellHelper(

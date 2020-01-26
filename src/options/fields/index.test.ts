@@ -8,14 +8,15 @@ jest.mock('./name');
 jest.mock('./userAgent');
 
 const modules = [icon, userAgent, name];
-modules.forEach((module) => {
+for (const module of modules) {
   (module as jest.Mock).mockImplementation(() => Promise.resolve());
-});
+}
 
-test('it should return a list of promises', () => {
-  const result = getProcessedOptions({});
-  expect(result).toHaveLength(3);
-  result.forEach((value) => {
-    expect(value).toBeInstanceOf(Promise);
-  });
+test('it should resolve to a list', async () => {
+  const results = await getProcessedOptions({});
+  expect(results).toEqual([
+    { userAgent: undefined },
+    { icon: undefined },
+    { name: undefined },
+  ]);
 });

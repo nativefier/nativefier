@@ -261,16 +261,15 @@ if (require.main === module) {
     commander.help();
   }
   checkInternet();
-  buildMain(commander, (error, appPath) => {
-    if (error) {
-      log.error(error);
-      return;
-    }
-
-    if (!appPath) {
-      // app exists and --overwrite is not passed
-      return;
-    }
-    log.info(`App built to ${appPath}`);
-  });
+  buildMain(commander)
+    .then((appPath) => {
+      if (!appPath) {
+        log.info(`App *not* built to ${appPath}`);
+        return;
+      }
+      log.info(`App built to ${appPath}`);
+    })
+    .catch((error) => {
+      log.error('Error during build:', error);
+    });
 }

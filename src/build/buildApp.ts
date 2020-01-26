@@ -1,16 +1,18 @@
 import * as fs from 'fs';
 import * as crypto from 'crypto';
 import * as path from 'path';
+import { promisify } from 'util';
 
 import { kebabCase } from 'lodash';
 import * as log from 'loglevel';
 import { ncp } from 'ncp';
 
+const writeFileAsync = promisify(fs.writeFile);
+
 /**
  * Only picks certain app args to pass to nativefier.json
- * @param options
  */
-function selectAppArgs(options): any {
+function pickElectronAppArgs(options): any {
   return {
     name: options.name,
     targetUrl: options.targetUrl,
@@ -131,35 +133,31 @@ function changeAppPackageJsonName(
 }
 
 /**
- * Creates a temporary directory and copies the './app folder' inside,
- * and adds a text file with the configuration for the single page app.
+ * Creates a temporary directory, copies the './app folder' inside,
+ * and adds a text file with the app configuration.
  */
-export function buildApp(
+export async function buildApp(
   src: string,
   dest: string,
   options: any,
-  callback?: (message?: string) => void,
-): void {
-  const appArgs = selectAppArgs(options);
+): Promise<void> {
+  const appArgs = pickElectronAppArgs(options);
 
-  ncp(src, dest, (error) => {
+  ncp(src, dest, async (error) => {
     if (error) {
-      callback(`Error Copying temporary directory: ${error}`);
-      return;
+      throw `Error copying electron app to temporary directory: ${error}`;
     }
 
-    fs.writeFileSync(
+    await writeFileAsync(
       path.join(dest, '/nativefier.json'),
       JSON.stringify(appArgs),
     );
 
-    maybeCopyScripts(options.inject, dest)
-      .catch((err) => {
-        log.warn(err);
-      })
-      .then(() => {
-        changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
-        callback();
-      });
+    try {
+      await maybeCopyScripts(options.inject, dest);
+    } catch (err) {
+      log.error(err);
+    }
+    changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
   });
 }

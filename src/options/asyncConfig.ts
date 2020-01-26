@@ -12,10 +12,10 @@ function inferredOptions(oldOptions, fieldResults) {
   return { ...oldOptions, ...newOptions };
 }
 
-// Takes the options object and infers new values
-// which may need async work
+/**
+ * Takes the options object and infers new values needing async work
+ */
 export async function asyncConfig(options) {
-  const tasks = getProcessedOptions(options);
-  const fieldResults = await Promise.all(tasks);
-  return inferredOptions(options, fieldResults);
+  const processedOptions = await getProcessedOptions(options);
+  return inferredOptions(options, processedOptions);
 }

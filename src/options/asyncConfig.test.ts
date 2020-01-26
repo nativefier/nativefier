@@ -3,13 +3,13 @@ import { getProcessedOptions } from './fields';
 
 jest.mock('./fields');
 
-(getProcessedOptions as jest.Mock).mockImplementation(() => [
-  Promise.resolve({
+(getProcessedOptions as jest.Mock).mockResolvedValue([
+  {
     someField: 'newValue',
-  }),
+  },
 ]);
 
-test('it should merge the result of the promise', async () => {
+test('it should merge the results', async () => {
   const param = { another: 'field', someField: 'oldValue' };
   const expected = { another: 'field', someField: 'newValue' };
 

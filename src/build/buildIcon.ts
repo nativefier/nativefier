@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import * as log from 'loglevel';
-import electronPackager = require('electron-packager');
+import * as electronPackager from 'electron-packager';
 
 import { isOSX } from '../helpers/helpers';
 import {
@@ -23,80 +23,60 @@ function iconIsIcns(iconPath: string): boolean {
 }
 
 /**
- * Will check and convert a `.png` to `.icns` if necessary and augment
- * options.icon with the result
+ * Will convert a `.png` icon to the appropriate arch format (if necessary),
+ * and return adjusted options
  */
-export function buildIcon(
-  inpOptions: electronPackager.Options,
-  callback: (error: any, options: any) => void,
-): void {
-  const options = { ...inpOptions };
-  const returnCallback = () => {
-    callback(null, options);
-  };
-
+export async function convertIconIfNecessary(
+  options: electronPackager.Options,
+): Promise<electronPackager.Options> {
   if (!options.icon) {
-    returnCallback();
-    return;
+    return options;
   }
 
   if (options.platform === 'win32') {
     if (iconIsIco(options.icon)) {
-      returnCallback();
-      return;
+      return options;
     }
 
-    convertToIco(options.icon)
-      .then((outPath) => {
-        options.icon = outPath;
-        returnCallback();
-      })
-      .catch((error) => {
-        log.warn('Skipping icon conversion to .ico', error);
-        returnCallback();
-      });
-    return;
+    try {
+      const iconPath = await convertToIco(options.icon);
+      return { ...options, icon: iconPath };
+    } catch (error) {
+      log.warn('Failed to convert icon to .ico, skipping.', error);
+      return options;
+    }
   }
 
   if (options.platform === 'linux') {
     if (iconIsPng(options.icon)) {
-      returnCallback();
-      return;
+      return options;
     }
 
-    convertToPng(options.icon)
-      .then((outPath) => {
-        options.icon = outPath;
-        returnCallback();
-      })
-      .catch((error) => {
-        log.warn('Skipping icon conversion to .png', error);
-        returnCallback();
-      });
-    return;
+    try {
+      const iconPath = await convertToPng(options.icon);
+      return { ...options, icon: iconPath };
+    } catch (error) {
+      log.warn('Failed to convert icon to .png, skipping.', error);
+      return options;
+    }
   }
 
   if (iconIsIcns(options.icon)) {
-    returnCallback();
-    return;
+    return options;
   }
 
   if (!isOSX()) {
     log.warn(
-      'Skipping icon conversion to .icns, conversion is only supported on OSX',
+      'Skipping icon conversion to .icns, conversion is only supported on macOS',
     );
-    returnCallback();
-    return;
+    return options;
   }
 
-  convertToIcns(options.icon)
-    .then((outPath) => {
-      options.icon = outPath;
-      returnCallback();
-    })
-    .catch((error) => {
-      log.warn('Skipping icon conversion to .icns', error);
-      options.icon = undefined;
-      returnCallback();
-    });
+  try {
+    const iconPath = await convertToIcns(options.icon);
+    return { ...options, icon: iconPath };
+  } catch (error) {
+    log.warn('Failed to convert icon to .icns, skipping.', error);
+    return { ...options, icon: undefined };
+  }
 }
