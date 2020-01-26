@@ -147,3 +147,4 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] Address TODOs in code
 - [ ] Cleanup/port old npm tasks/scripts
 - [ ] Error on using electron < 7
+- [ ] Add coverage report and improve coverage

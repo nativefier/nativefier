@@ -7,7 +7,6 @@ import * as log from 'loglevel';
 import { ncp } from 'ncp';
 import * as tmp from 'tmp';
 
-import { DishonestProgress } from '../helpers/dishonestProgress';
 import { isWindows } from '../helpers/helpers';
 import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
@@ -90,12 +89,9 @@ export function buildMain(
   const tmpObj = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
   const tmpPath = tmpObj.name;
 
-  const progress = new DishonestProgress(5);
-
   async.waterfall(
     [
       (cb) => {
-        progress.tick('inferring');
         getOptions(options)
           .then((result) => {
             cb(null, result);
@@ -105,7 +101,7 @@ export function buildMain(
           });
       },
       (opts, cb) => {
-        progress.tick('copying');
+        log.info('copying');
         buildApp(opts.dir, tmpPath, opts, (error) => {
           if (error) {
             cb(error);
@@ -117,13 +113,13 @@ export function buildMain(
         });
       },
       (opts: electronPackager.Options, cb) => {
-        progress.tick('icons');
+        log.info('icons');
         buildIcon(opts, (error, optionsWithIcon) => {
           cb(null, optionsWithIcon);
         });
       },
       (opts: electronPackager.Options, cb) => {
-        progress.tick('packaging');
+        log.info('packaging');
         // maybe skip passing icon parameter to electron packager
         let packageOptions = trimOptionRequiringWine(opts, 'icon');
         // maybe skip passing other parameters to electron packager
@@ -142,7 +138,7 @@ export function buildMain(
           });
       },
       (opts: electronPackager.Options, appPathArray, cb) => {
-        progress.tick('finalizing');
+        log.info('finalizing');
         // somehow appPathArray is a 1 element array
         const appPath = getAppPath(appPathArray);
         if (!appPath) {

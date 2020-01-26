@@ -83,7 +83,7 @@ export function getOptions(inputOptions: any): Promise<any> {
   if (options.verbose) {
     log.setLevel('trace');
   } else {
-    log.setLevel('error');
+    log.setLevel('info');
   }
 
   if (options.flashPluginDir) {
