@@ -99,10 +99,9 @@ export function createMainWindow(
     webPreferences: {
       javascript: true,
       plugins: true,
-      // node globals causes problems with sites like messenger.com
-      nodeIntegration: false,
+      nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
       webSecurity: !options.insecure,
-      preload: path.join(__dirname, 'static', 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
       zoomFactor: options.zoom,
     },
   };
