@@ -5,7 +5,7 @@ import { inferTitle } from '../../infer';
 import { DEFAULT_APP_NAME } from '../../constants';
 
 type NameParamsProvided = {
-  nameToUse: string;
+  name: string;
   platform: string;
 };
 
@@ -29,8 +29,8 @@ async function tryToInferName(targetUrl: string): Promise<string> {
 }
 
 export async function name(params: NameParams): Promise<string> {
-  if ('nameToUse' in params) {
-    return sanitizeFilename(params.platform, params.nameToUse);
+  if ('name' in params) {
+    return sanitizeFilename(params.platform, params.name);
   }
 
   const inferredName = await tryToInferName(params.targetUrl);

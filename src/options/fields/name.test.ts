@@ -11,7 +11,7 @@ jest.mock('loglevel');
 
 const inferTitleMockedResult = 'mock name';
 const NAME_PARAMS_PROVIDED = {
-  nameToUse: 'appname',
+  name: 'appname',
   platform: 'something',
 };
 const NAME_PARAMS_NEEDS_INFER = {
@@ -27,7 +27,7 @@ describe('well formed name parameters', () => {
     const result = await name(NAME_PARAMS_PROVIDED);
 
     expect(inferTitle).toHaveBeenCalledTimes(0);
-    expect(result).toBe(NAME_PARAMS_PROVIDED.nameToUse);
+    expect(result).toBe(NAME_PARAMS_PROVIDED.name);
   });
 
   test('it should call sanitize filename', async () => {
@@ -54,7 +54,7 @@ describe('bad name parameters', () => {
   test('it should call inferTitle when the name is an empty string', async () => {
     const testParams = {
       ...params,
-      nameToUse: '',
+      name: '',
     };
 
     await name(testParams);

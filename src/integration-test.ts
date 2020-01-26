@@ -3,15 +3,15 @@ import * as path from 'path';
 
 import * as async from 'async';
 import * as tmp from 'tmp';
+tmp.setGracefulCleanup();
 
 import { buildMain } from './index';
 
 const PLATFORMS = ['darwin', 'linux'];
-tmp.setGracefulCleanup();
 
-function checkApp(appPath, inputOptions, callback) {
+function checkApp(appPath: string, inputOptions, callback) {
   try {
-    let relPathToConfig;
+    let relPathToConfig: string;
 
     switch (inputOptions.platform) {
       case 'darwin':
@@ -51,22 +51,21 @@ function checkApp(appPath, inputOptions, callback) {
 
 describe('Nativefier', () => {
   jest.setTimeout(240000);
+
   test('can build an app from a target url', (done) => {
     async.eachSeries(
       PLATFORMS,
       (platform, callback) => {
-        const tmpObj = tmp.dirSync({ unsafeCleanup: true });
+        const tempDirectory = tmp.dirSync({ unsafeCleanup: true });
 
-        const tmpPath = tmpObj.name;
+        const tmpPath = tempDirectory.name;
         const options = {
           name: 'google-test-app',
-          targetUrl: 'http://google.com',
+          targetUrl: 'https://google.com',
           out: tmpPath,
           overwrite: true,
-          platform: null,
+          platform,
         };
-
-        options.platform = platform;
         buildMain(options, (error, appPath) => {
           if (error) {
             callback(error);
