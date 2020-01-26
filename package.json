@@ -58,7 +58,6 @@
     "@types/validator": "12.x",
     "async": "2.x",
     "axios": "0.x",
-    "babel-polyfill": "6.x",
     "cheerio": "^1.0.0-rc.3",
     "commander": "4.x",
     "electron-packager": "14.x",

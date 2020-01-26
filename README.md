@@ -128,9 +128,9 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Move app to TS
 - [x] Package.json nits: move away from "^A.B.C" to more understandable "A.x
 - [x] Upgrade electron-packager and other deps
-- [ ] Fix node_modules badly pruned when copied to app
-- [ ] Get rid of Babel / webpack
-- [ ] Move from Gulp to simple npm scripts
+- [x] Fix node_modules badly pruned when copied to app
+- [x] Get rid of Babel / webpack
+- [x] Move from Gulp to simple npm scripts
 - [ ] Get rid of async
 - [ ] Remove last `require()`s
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
