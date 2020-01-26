@@ -1,17 +1,17 @@
 import * as path from 'path';
 
 import * as async from 'async';
-import * as ncp from 'ncp';
 import * as electronPackager from 'electron-packager';
-import * as tmp from 'tmp';
 import * as hasbin from 'hasbin';
+import { ncp } from 'ncp';
+import * as tmp from 'tmp';
 
 import { DishonestProgress } from '../helpers/dishonestProgress';
-import { getOptions } from '../options/optionsMain';
-import { iconBuild } from './iconBuild';
 import { isWindows } from '../helpers/helpers';
 import { PackagerConsole } from '../helpers/packagerConsole';
+import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
+import { buildIcon } from './buildIcon';
 
 import log = require('loglevel');
 
@@ -57,7 +57,7 @@ function maybeCopyIcons(
   // windows & linux: put the icon file into the app
   const destIconPath = path.join(appPath, 'resources/app');
   const destFileName = `icon${path.extname(options.icon)}`;
-  ncp.ncp(options.icon, path.join(destIconPath, destFileName), (error) => {
+  ncp(options.icon, path.join(destIconPath, destFileName), (error) => {
     callback(error);
   });
 }
@@ -120,7 +120,7 @@ export function buildMain(
       },
       (opts, cb) => {
         progress.tick('icons');
-        iconBuild(opts, (error, optionsWithIcon) => {
+        buildIcon(opts, (error, optionsWithIcon) => {
           cb(null, optionsWithIcon);
         });
       },

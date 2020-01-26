@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 
-import * as dns from 'dns';
 import * as commander from 'commander';
+import * as dns from 'dns';
+
+import { buildMain } from './index';
 import * as packageJson from '../package.json';
-import nativefier from './index';
 
 import log = require('loglevel');
 
@@ -13,7 +14,7 @@ function collect(val: any, memo: any[]): any[] {
   return memo;
 }
 
-function parseMaybeBoolString(val: string): boolean | string {
+function parseStringAsBoolean(val: string): boolean | string {
   switch (val) {
     case 'true':
       return true;
@@ -229,7 +230,7 @@ if (require.main === module) {
     .option(
       '--tray [start-in-tray]',
       "Allow app to stay in system tray. If 'start-in-tray' is given as argument, don't show main window on first start",
-      parseMaybeBoolString,
+      parseStringAsBoolean,
     )
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
@@ -261,7 +262,7 @@ if (require.main === module) {
     commander.help();
   }
   checkInternet();
-  nativefier(commander, (error, appPath) => {
+  buildMain(commander, (error, appPath) => {
     if (error) {
       log.error(error);
       return;

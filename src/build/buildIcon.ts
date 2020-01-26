@@ -25,7 +25,7 @@ function iconIsIcns(iconPath: string): boolean {
  * Will check and convert a `.png` to `.icns` if necessary and augment
  * options.icon with the result
  */
-export function iconBuild(
+export function buildIcon(
   inpOptions: any,
   callback: (error: any, options: any) => void,
 ): void {

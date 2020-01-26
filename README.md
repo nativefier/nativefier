@@ -132,6 +132,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] Get rid of Babel / webpack
 - [ ] Move from Gulp to simple npm scripts
 - [ ] Get rid of async
+- [ ] Remove last `require()`s
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [ ] Tweak tsconfigs: make tsc strict(er), incremental builds
 - [ ] Use new TS build system for faster builds & cleaner output dir structure (output to /lib, not /lib/src)

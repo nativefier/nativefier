@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
       "allowJs": false,
+      "incremental": true,
       "outDir": "./lib",
       "resolveJsonModule": true,
       "skipLibCheck": true,

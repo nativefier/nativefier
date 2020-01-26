@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
       "allowJs": true,
-      "outDir": "./lib",
       "esModuleInterop": true,
+      "incremental": true,
+      "outDir": "./lib",
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,
