@@ -132,7 +132,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Get rid of Babel / webpack
 - [x] Move from Gulp to simple npm scripts
 - [x] Replace quirky & broken `progress` with basic logging and restore electron-packager logging
-- [ ] Replace `async` module + callbacks with real native async/await
+- [x] Replace `async` module + callbacks with real native async/await
 - [ ] Remove last `require()`s
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [ ] Tweak tsconfigs: make tsc strict(er)
