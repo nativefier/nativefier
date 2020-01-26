@@ -131,8 +131,8 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Fix node_modules badly pruned when copied to app
 - [x] Get rid of Babel / webpack
 - [x] Move from Gulp to simple npm scripts
+- [x] Replace quirky & broken `progress` with basic logging and restore electron-packager logging
 - [ ] Replace `async` module + callbacks with real native async/await
-- [ ] Replace `progress` with less quirky logging and restore electron-packager logging
 - [ ] Remove last `require()`s
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [ ] Tweak tsconfigs: make tsc strict(er)
@@ -148,3 +148,4 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] Cleanup/port old npm tasks/scripts
 - [ ] Error on using electron < 7
 - [ ] Add coverage report and improve coverage
+- [ ] GitHub Issue+PR templates
