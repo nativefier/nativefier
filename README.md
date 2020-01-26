@@ -125,7 +125,10 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 ## TS TODO
 
 - [x] Move cli to TS
-- [ ] Move app to TS
+- [x] Move app to TS
+- [x] Package.json nits: move away from "^A.B.C" to more understandable "A.x
+- [x] Upgrade electron-packager and other deps
+- [ ] Fix node_modules badly pruned when copied to app
 - [ ] Get rid of Babel / webpack
 - [ ] Move from Gulp to simple npm scripts
 - [ ] Get rid of async
@@ -134,9 +137,8 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] Use new TS build system for faster builds & cleaner output dir structure (output to /lib, not /lib/src)
 - [ ] Move all src to src (/{cli, app})
 - [ ] Review .npmignore and what's packaged to npm
+- [ ] Try to remove @ts-ignore
 - [ ] ? Get rid of chai
 - [ ] ? Get rid of micro-packages easily inlined
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
-- [ ] Package.json nits: move away from "^A.B.C" to more understandable "A.x
-- [ ] Upgrade electron-packager and other deps
 - [ ] Make exports more idiomatic without default & index.ts crap

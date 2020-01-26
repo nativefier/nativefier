@@ -2,6 +2,7 @@
   "compilerOptions": {
       "allowJs": true,
       "outDir": "./lib",
+      "esModuleInterop": true,
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,

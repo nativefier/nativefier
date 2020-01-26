@@ -1,17 +1,12 @@
-import helpers from '../../helpers/helpers';
+import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
 
-const { app, Tray, Menu, ipcMain, nativeImage } = require('electron');
+import { getAppIcon, getCounterValue } from '../helpers/helpers';
 
-const { getAppIcon, getCounterValue } = helpers;
-
-/**
- *
- * @param {{}} inpOptions AppArgs from nativefier.json
- * @param {electron.BrowserWindow} mainWindow MainWindow created from main.js
- * @returns {electron.Tray}
- */
-function createTrayIcon(inpOptions, mainWindow) {
-  const options = { ...inpOptions };
+export function createTrayIcon(
+  nativefierOptions,
+  mainWindow: BrowserWindow,
+): Tray {
+  const options = { ...nativefierOptions };
 
   if (options.tray) {
     const iconPath = getAppIcon();
@@ -38,14 +33,6 @@ function createTrayIcon(inpOptions, mainWindow) {
     ]);
 
     appIcon.on('click', onClick);
-
-    mainWindow.on('show', () => {
-      appIcon.setHighlightMode('always');
-    });
-
-    mainWindow.on('hide', () => {
-      appIcon.setHighlightMode('never');
-    });
 
     if (options.counter) {
       mainWindow.on('page-title-updated', (e, title) => {
@@ -77,5 +64,3 @@ function createTrayIcon(inpOptions, mainWindow) {
 
   return null;
 }
-
-export default createTrayIcon;

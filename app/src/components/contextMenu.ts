@@ -1,9 +1,9 @@
 import { shell } from 'electron';
 import contextMenu from 'electron-context-menu';
 
-function initContextMenu(createNewWindow, createNewTab) {
+export function initContextMenu(createNewWindow, createNewTab): void {
   contextMenu({
-    prepend: (params) => {
+    prepend: (actions, params) => {
       const items = [];
       if (params.linkURL) {
         items.push({
@@ -31,5 +31,3 @@ function initContextMenu(createNewWindow, createNewTab) {
     },
   });
 }
-
-export default initContextMenu;

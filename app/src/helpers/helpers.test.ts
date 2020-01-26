@@ -1,6 +1,4 @@
-import helpers from './helpers';
-
-const { linkIsInternal, getCounterValue } = helpers;
+import { linkIsInternal, getCounterValue } from './helpers';
 
 const internalUrl = 'https://medium.com/';
 const internalUrlSubPath = 'topic/technology';

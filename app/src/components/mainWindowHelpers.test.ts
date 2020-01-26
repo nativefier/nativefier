@@ -1,6 +1,4 @@
-import mainWindowHelpers from './mainWindowHelpers';
-
-const { onNewWindowHelper } = mainWindowHelpers;
+import { onNewWindowHelper } from './mainWindowHelpers';
 
 const originalUrl = 'https://medium.com/';
 const internalUrl = 'https://medium.com/topics/technology';

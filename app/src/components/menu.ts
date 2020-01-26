@@ -1,19 +1,6 @@
 import { Menu, shell, clipboard } from 'electron';
 
-/**
- * @param nativefierVersion
- * @param appQuit
- * @param zoomIn
- * @param zoomOut
- * @param zoomReset
- * @param zoomBuildTimeValue
- * @param goBack
- * @param goForward
- * @param getCurrentUrl
- * @param clearAppData
- * @param disableDevTools
- */
-function createMenu({
+export function createMenu({
   nativefierVersion,
   appQuit,
   zoomIn,
@@ -25,13 +12,13 @@ function createMenu({
   getCurrentUrl,
   clearAppData,
   disableDevTools,
-}) {
+}): void {
   const zoomResetLabel =
     zoomBuildTimeValue === 1.0
       ? 'Reset Zoom'
       : `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
 
-  const template = [
+  const template: any[] = [
     {
       label: '&Edit',
       submenu: [
@@ -278,5 +265,3 @@ function createMenu({
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
 }
-
-export default createMenu;

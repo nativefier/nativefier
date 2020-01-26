@@ -1,13 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import windowStateKeeper from 'electron-window-state';
-import mainWindowHelpers from './mainWindowHelpers';
-import helpers from '../../helpers/helpers';
-import createMenu from '../menu/menu';
-import initContextMenu from '../contextMenu/contextMenu';
 
-const {
+import {
   isOSX,
   linkIsInternal,
   getCssToInject,
@@ -15,13 +12,14 @@ const {
   getAppIcon,
   nativeTabsSupported,
   getCounterValue,
-} = helpers;
-
-const { onNewWindowHelper } = mainWindowHelpers;
+} from '../helpers/helpers';
+import { initContextMenu } from './contextMenu';
+import { onNewWindowHelper } from './mainWindowHelpers';
+import { createMenu } from './menu';
 
 const ZOOM_INTERVAL = 0.1;
 
-function maybeHideWindow(window, event, fastQuit, tray) {
+function hideWindow(window, event, fastQuit, tray): void {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
     event.preventDefault();
@@ -33,7 +31,7 @@ function maybeHideWindow(window, event, fastQuit, tray) {
   // will close the window on other platforms
 }
 
-function maybeInjectCss(browserWindow) {
+function injectCss(browserWindow: BrowserWindow): void {
   if (!shouldInjectCss()) {
     return;
   }
@@ -64,35 +62,31 @@ function maybeInjectCss(browserWindow) {
   });
 }
 
-function clearCache(browserWindow, targetUrl = null) {
+async function clearCache(browserWindow: BrowserWindow): Promise<void> {
   const { session } = browserWindow.webContents;
-  session.clearStorageData(() => {
-    session.clearCache(() => {
-      if (targetUrl) {
-        browserWindow.loadURL(targetUrl);
-      }
-    });
+  await session.clearStorageData();
+  await session.clearCache();
+}
+
+function setProxyRules(browserWindow: BrowserWindow, proxyRules): void {
+  browserWindow.webContents.session.setProxy({
+    proxyRules,
+    pacScript: '',
+    proxyBypassRules: '',
   });
 }
 
-function setProxyRules(browserWindow, proxyRules) {
-  browserWindow.webContents.session.setProxy(
-    {
-      proxyRules,
-    },
-    () => {},
-  );
-}
-
 /**
- *
- * @param {{}} inpOptions AppArgs from nativefier.json
+ * @param {{}} nativefierOptions AppArgs from nativefier.json
  * @param {function} onAppQuit
  * @param {function} setDockBadge
- * @returns {electron.BrowserWindow}
  */
-function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
-  const options = { ...inpOptions };
+export function createMainWindow(
+  nativefierOptions,
+  onAppQuit,
+  setDockBadge,
+): BrowserWindow {
+  const options = { ...nativefierOptions };
   const mainWindowState = windowStateKeeper({
     defaultWidth: options.width || 1280,
     defaultHeight: options.height || 800,
@@ -188,24 +182,20 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   };
 
-  const clearAppData = () => {
-    dialog.showMessageBox(
-      mainWindow,
-      {
-        type: 'warning',
-        buttons: ['Yes', 'Cancel'],
-        defaultId: 1,
-        title: 'Clear cache confirmation',
-        message:
-          'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?',
-      },
-      (response) => {
-        if (response !== 0) {
-          return;
-        }
-        clearCache(mainWindow, options.targetUrl);
-      },
-    );
+  const clearAppData = async () => {
+    const response = await dialog.showMessageBox(mainWindow, {
+      type: 'warning',
+      buttons: ['Yes', 'Cancel'],
+      defaultId: 1,
+      title: 'Clear cache confirmation',
+      message:
+        'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?',
+    });
+
+    if (response.response !== 0) {
+      return;
+    }
+    await clearCache(mainWindow);
   };
 
   const onGoBack = () => {
@@ -230,7 +220,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     }
   };
 
-  let createNewWindow;
+  let createNewWindow: (url: string) => BrowserWindow;
 
   const createNewTab = (url, foreground) => {
     withFocusedWindow((focusedWindow) => {
@@ -284,7 +274,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     });
   };
 
-  createNewWindow = (url) => {
+  createNewWindow = (url: string) => {
     const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
     if (options.userAgent) {
       window.webContents.userAgent = options.userAgent;
@@ -294,7 +284,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       setProxyRules(window, options.proxyRules);
     }
 
-    maybeInjectCss(window);
+    injectCss(window);
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
     window.webContents.on('will-navigate', onWillNavigate);
@@ -332,7 +322,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
     setProxyRules(mainWindow, options.proxyRules);
   }
 
-  maybeInjectCss(mainWindow);
+  injectCss(mainWindow);
   sendParamsOnDidFinishLoad(mainWindow);
 
   if (options.counter) {
@@ -369,6 +359,7 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   mainWindow.loadURL(options.targetUrl);
 
+  // @ts-ignore
   mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
 
   mainWindow.on('close', (event) => {
@@ -379,10 +370,10 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
       mainWindow.setFullScreen(false);
       mainWindow.once(
         'leave-full-screen',
-        maybeHideWindow.bind(this, mainWindow, event, options.fastQuit),
+        hideWindow.bind(this, mainWindow, event, options.fastQuit),
       );
     }
-    maybeHideWindow(mainWindow, event, options.fastQuit, options.tray);
+    hideWindow(mainWindow, event, options.fastQuit, options.tray);
 
     if (options.clearCache) {
       clearCache(mainWindow);
@@ -391,5 +382,3 @@ function createMainWindow(inpOptions, onAppQuit, setDockBadge) {
 
   return mainWindow;
 }
-
-export default createMainWindow;

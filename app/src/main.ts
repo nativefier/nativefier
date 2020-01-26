@@ -1,20 +1,20 @@
 import 'source-map-support/register';
+
 import fs from 'fs';
 import path from 'path';
+
 import { app, crashReporter, globalShortcut } from 'electron';
 import electronDownload from 'electron-dl';
 
-import createLoginWindow from './components/login/loginWindow';
-import createMainWindow from './components/mainWindow/mainWindow';
-import createTrayIcon from './components/trayIcon/trayIcon';
-import helpers from './helpers/helpers';
-import inferFlash from './helpers/inferFlash';
-
-const electronSquirrelStartup = require('electron-squirrel-startup');
+import { createLoginWindow } from './components/loginWindow';
+import { createMainWindow } from './components/mainWindow';
+import { createTrayIcon } from './components/trayIcon';
+import * as helpers from './helpers/helpers';
+import { inferFlashPath } from './helpers/inferFlash';
 
 // Entrypoint for electron-squirrel-startup.
 // See https://github.com/jiahaog/nativefier/pull/744 for sample use case
-if (electronSquirrelStartup) {
+if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
@@ -38,7 +38,7 @@ let mainWindow;
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
 } else if (appArgs.flashPluginDir) {
-  const flashPath = inferFlash();
+  const flashPath = inferFlashPath();
   app.commandLine.appendSwitch('ppapi-flash-path', flashPath);
 }
 
@@ -77,13 +77,13 @@ if (appArgs.basicAuthPassword) {
 }
 
 // do nothing for setDockBadge if not OSX
-let setDockBadge = () => {};
+let setDockBadge = (count: number, bounce: boolean) => {};
 
 if (isOSX()) {
   let currentBadgeCount = 0;
 
-  setDockBadge = (count, bounce = false) => {
-    app.dock.setBadge(count);
+  setDockBadge = (count: number, bounce = false) => {
+    app.dock.setBadge(count.toString());
     if (bounce && count > currentBadgeCount) app.dock.bounce();
     currentBadgeCount = count;
   };

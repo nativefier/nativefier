@@ -1,8 +1,8 @@
-import helpers from '../../helpers/helpers';
+import * as helpers from '../helpers/helpers';
 
 const { linkIsInternal } = helpers;
 
-function onNewWindowHelper(
+export function onNewWindowHelper(
   urlToGo,
   disposition,
   targetUrl,
@@ -12,7 +12,7 @@ function onNewWindowHelper(
   createAboutBlankWindow,
   nativeTabsSupported,
   createNewTab,
-) {
+): void {
   if (!linkIsInternal(targetUrl, urlToGo, internalUrls)) {
     openExternal(urlToGo);
     preventDefault();
@@ -29,5 +29,3 @@ function onNewWindowHelper(
     }
   }
 }
-
-export default { onNewWindowHelper };

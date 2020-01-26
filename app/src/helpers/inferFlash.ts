@@ -1,31 +1,34 @@
-import fs from 'fs';
-import path from 'path';
-import helpers from './helpers';
+import * as fs from 'fs';
+import * as path from 'path';
 
-const { isOSX, isWindows, isLinux } = helpers;
-const log = require('loglevel');
+import log from 'loglevel';
+
+import { isOSX, isWindows, isLinux } from './helpers';
+
 /**
  * Synchronously find a file or directory
- * @param {RegExp} pattern regex
  * @param {string} base path
- * @param {boolean} [findDir] if true, search results will be limited to only directories
  * @returns {Array}
  */
-function findSync(pattern, basePath, findDir) {
-  const matches = [];
+function findSync(
+  pattern: RegExp,
+  basePath: string,
+  limitSearchToDirectories = false,
+): string[] {
+  const matches: string[] = [];
 
   (function findSyncRecurse(base) {
-    let children;
+    let children: string[];
     try {
       children = fs.readdirSync(base);
-    } catch (exception) {
-      if (exception.code === 'ENOENT') {
+    } catch (err) {
+      if (err.code === 'ENOENT') {
         return;
       }
-      throw exception;
+      throw err;
     }
 
-    children.forEach((child) => {
+    for (const child of children) {
       const childPath = path.join(base, child);
       const childIsDirectory = fs.lstatSync(childPath).isDirectory();
       const patternMatches = pattern.test(childPath);
@@ -38,7 +41,7 @@ function findSync(pattern, basePath, findDir) {
         return;
       }
 
-      if (!findDir) {
+      if (!limitSearchToDirectories) {
         matches.push(childPath);
         return;
       }
@@ -46,23 +49,23 @@ function findSync(pattern, basePath, findDir) {
       if (childIsDirectory) {
         matches.push(childPath);
       }
-    });
+    }
   })(basePath);
   return matches;
 }
 
-function linuxMatch() {
+function findFlashOnLinux() {
   return findSync(/libpepflashplayer\.so/, '/opt/google/chrome')[0];
 }
 
-function windowsMatch() {
+function findFlashOnWindows() {
   return findSync(
     /pepflashplayer\.dll/,
     'C:\\Program Files (x86)\\Google\\Chrome',
   )[0];
 }
 
-function darwinMatch() {
+function findFlashOnMac() {
   return findSync(
     /PepperFlashPlayer.plugin/,
     '/Applications/Google Chrome.app/',
@@ -70,20 +73,19 @@ function darwinMatch() {
   )[0];
 }
 
-function inferFlash() {
+export function inferFlashPath() {
   if (isOSX()) {
-    return darwinMatch();
+    return findFlashOnMac();
   }
 
   if (isWindows()) {
-    return windowsMatch();
+    return findFlashOnWindows();
   }
 
   if (isLinux()) {
-    return linuxMatch();
+    return findFlashOnLinux();
   }
 
   log.warn('Unable to determine OS to infer flash player');
   return null;
 }
-export default inferFlash;

@@ -1,25 +1,19 @@
 /**
- Preload file that will be executed in the renderer process
- */
-
-/**
- * Note: This needs to be attached prior to the imports, as the they will delay
- * the attachment till after the event has been raised.
+ * Preload file that will be executed in the renderer process.
+ * Note: This needs to be attached **prior to imports**, as imports
+ * would delay the attachment till after the event has been raised.
  */
 document.addEventListener('DOMContentLoaded', () => {
-  // Due to the early attachment, this triggers a linter error
-  // because it's not yet been defined.
-  // eslint-disable-next-line no-use-before-define
-  injectScripts();
+  injectScripts(); // eslint-disable-line @typescript-eslint/no-use-before-define
 });
 
-// Only do imports late, after the above event attachment
+import * as fs from 'fs';
+import * as path from 'path';
+
 import { ipcRenderer } from 'electron';
-import path from 'path';
-import fs from 'fs';
+import log from 'loglevel';
 
 const INJECT_JS_PATH = path.join(__dirname, '../../', 'inject/inject.js');
-const log = require('loglevel');
 /**
  * Patches window.Notification to:
  * - set a callback on a new Notification
@@ -40,6 +34,7 @@ function setNotificationCallback(createCallback, clickCallback) {
     get: () => OldNotify.permission,
   });
 
+  // @ts-ignore
   window.Notification = newNotify;
 }
 
@@ -49,7 +44,6 @@ function injectScripts() {
     return;
   }
   // Dynamically require scripts
-  // eslint-disable-next-line global-require, import/no-dynamic-require
   require(INJECT_JS_PATH);
 }
 
@@ -68,6 +62,5 @@ ipcRenderer.on('params', (event, message) => {
 });
 
 ipcRenderer.on('debug', (event, message) => {
-  // eslint-disable-next-line no-console
   log.info('debug:', message);
 });

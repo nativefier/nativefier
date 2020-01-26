@@ -1,7 +1,8 @@
-import { BrowserWindow, ipcMain } from 'electron';
-import path from 'path';
+import * as path from 'path';
 
-function createLoginWindow(loginCallback) {
+import { BrowserWindow, ipcMain } from 'electron';
+
+export function createLoginWindow(loginCallback): BrowserWindow {
   const loginWindow = new BrowserWindow({
     width: 300,
     height: 400,
@@ -11,9 +12,7 @@ function createLoginWindow(loginCallback) {
       nodeIntegration: true, // TODO work around this; insecure
     },
   });
-  loginWindow.loadURL(
-    `file://${path.join(__dirname, '/static/login/login.html')}`,
-  );
+  loginWindow.loadURL(`file://${path.join(__dirname, '/static/login.html')}`);
 
   ipcMain.once('login-message', (event, usernameAndPassword) => {
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);
@@ -21,5 +20,3 @@ function createLoginWindow(loginCallback) {
   });
   return loginWindow;
 }
-
-export default createLoginWindow;
