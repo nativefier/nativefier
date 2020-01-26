@@ -12,11 +12,8 @@ cd nativefier
 Install dependencies and build:
 
 ```bash
-# macOS and Linux
-npm run dev-up
-
-# Windows
-npm run dev-up-win
+npm install
+npm run build
 ```
 
 If dependencies are installed and you just want to re-build,
@@ -34,13 +31,7 @@ npm link
 After doing so (and not forgetting to build with `npm run build`), you can run Nativefier with your test parameters:
 
 ```bash
-nativefier <--your-awesome-new-flag>
-```
-
-Or you can automatically watch the files for changes with:
-
-```bash
-npm run watch
+nativefier --your-awesome-new-flag
 ```
 
 ## Tests
@@ -54,4 +45,10 @@ npm run jest
 
 # To run only end-to-end tests,
 npm run e2e
+```
+
+Or watch the files for changes with:
+
+```bash
+npm run test:watch
 ```

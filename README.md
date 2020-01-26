@@ -144,3 +144,4 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
 - [ ] Make exports more idiomatic without default & index.ts crap
 - [ ] Address TODOs in code
+- [ ] Cleanup/port old npm tasks/scripts

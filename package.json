@@ -2,6 +2,11 @@
   "name": "nativefier",
   "version": "7.7.1",
   "description": "Wrap web apps natively",
+  "license": "MIT",
+  "author": "Goh Jia Hao",
+  "engines": {
+    "node": ">= 8.0"
+  },
   "keywords": [
     "desktop",
     "electron",
@@ -10,53 +15,39 @@
     "wrapper"
   ],
   "main": "lib/src/index.js",
-  "scripts": {
-    "dev-up": "npm install && (cd ./app && npm install) && npm run build",
-    "dev-up-win": "npm install & cd app & npm install & cd .. & npm run build",
-    "test": "jest",
-    "guard": "jest --watch",
-    "e2e": "jest e2e",
-    "tdd": "gulp tdd",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "ci": "npm run lint && npm test && npm run e2e",
-    "clean-OLD": "gulp clean",
-    "clean": "rm -rf lib/ && rm -rf app/lib/",
-    "build-OLD": "gulp build",
-    "build": "npm run clean && npm run build-cli && npm run build-app && npm run build-app-static",
-    "build-cli": "tsc",
-    "build-app": "cd app && tsc",
-    "build-app-static": "ncp app/src/static/ app/lib/static/",
-    "list-outdated-deps": "npm out; cd app && npm out; true",
-    "postinstall": "cd app && npm install",
-    "watch": "while true ; do gulp watch ; done",
-    "package-placeholder": "npm run build && node lib/src/cli.js http://www.bennish.net/web-notifications.html ~/Desktop --overwrite --name notification-test --icon ./test-resources/iconSampleGrey.png --inject ./test-resources/test-injection.js --inject ./test-resources/test-injection.css && open ~/Desktop/notification-test-darwin-x64/notification-test.app",
-    "start-placeholder": "npm run build && electron app",
-    "changelog": "./docs/generate-changelog",
-    "format": "prettier --write '{gulp,src}/**/*.js' 'app/src/**/*.js'"
-  },
   "bin": {
     "nativefier": "lib/src/cli.js"
   },
+  "homepage": "https://github.com/jiahaog/nativefier",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jiahaog/nativefier.git"
   },
-  "author": "Goh Jia Hao",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jiahaog/nativefier/issues"
   },
-  "homepage": "https://github.com/jiahaog/nativefier#readme",
-  "jest": {
-    "testEnvironment": "node",
-    "testRegex": "lib/.*test.[jt]s$"
+  "scripts": {
+    "build-app-static": "ncp app/src/static/ app/lib/static/",
+    "build-app": "cd app && tsc",
+    "build-cli": "tsc",
+    "build": "npm run clean && npm run build-cli && npm run build-app && npm run build-app-static",
+    "changelog": "./docs/generate-changelog",
+    "ci": "npm run lint && npm test && npm run e2e",
+    "clean": "rm -rf lib/ app/lib/",
+    "clean:full": "rm -rf lib/ app/lib/ node_modules/ app/node_modules/",
+    "lint:fix": "eslint . --fix",
+    "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
+    "lint": "eslint .",
+    "list-outdated-deps": "npm out; cd app && npm out; true",
+    "postinstall": "cd app && npm install",
+    "test:e2e": "jest e2e",
+    "test:watch": "jest --watch",
+    "test": "jest"
   },
   "dependencies": {
     "@types/async": "3.x",
     "@types/cheerio": "0.x",
     "@types/electron-packager": "14.x",
-    "@types/jest": "24.x",
     "@types/lodash": "4.x",
     "@types/ncp": "2.x",
     "@types/node": "12.x",
@@ -85,44 +76,18 @@
     "validator": "12.x"
   },
   "devDependencies": {
+    "@types/jest": "24.x",
     "@typescript-eslint/eslint-plugin": "2.x",
     "@typescript-eslint/parser": "2.x",
-    "babel-core": "6.x",
-    "babel-jest": "23.x",
-    "babel-loader": "7.x",
-    "babel-plugin-transform-object-rest-spread": "6.x",
-    "babel-preset-env": "1.x",
-    "babel-register": "6.x",
-    "del": "3.x",
     "eslint": "6.x",
     "eslint-config-prettier": "6.x",
     "eslint-plugin-prettier": "3.x",
-    "gulp": "3.x",
-    "gulp-babel": "7.x",
-    "gulp-sourcemaps": "2.x",
     "jest": "25.x",
     "prettier": "1.x",
-    "require-dir": "1.x",
-    "run-sequence": "2.x",
-    "typescript": "3.x",
-    "webpack-stream": "5.x"
+    "typescript": "3.x"
   },
-  "engines": {
-    "node": ">= 8.0"
-  },
-  "babel": {
-    "plugins": [
-      "transform-object-rest-spread"
-    ],
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "4.0.0"
-          }
-        }
-      ]
-    ]
+  "jest": {
+    "testEnvironment": "node",
+    "testRegex": "lib/.*test.[jt]s$"
   }
 }
