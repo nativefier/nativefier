@@ -43,8 +43,8 @@ npm test
 # To run only unit tests,
 npm run jest
 
-# To run only end-to-end tests,
-npm run e2e
+# To run only end-to-end integration tests,
+npm run test:integration
 ```
 
 Or watch the files for changes with:

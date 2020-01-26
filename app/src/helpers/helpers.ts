@@ -71,8 +71,8 @@ export function nativeTabsSupported(): boolean {
   return isOSX();
 }
 
-export function getCounterValue(title: string): number | undefined {
+export function getCounterValue(title: string): string {
   const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
   const match = itemCountRegex.exec(title);
-  return match ? parseInt(match[1], 10) : undefined;
+  return match ? match[1] : undefined;
 }

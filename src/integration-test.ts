@@ -1,9 +1,10 @@
-import tmp from 'tmp';
-import fs from 'fs';
-import path from 'path';
-import async from 'async';
+import * as fs from 'fs';
+import * as path from 'path';
 
-import nativefier from '../src';
+import * as async from 'async';
+import * as tmp from 'tmp';
+
+import { buildMain } from './index';
 
 const PLATFORMS = ['darwin', 'linux'];
 tmp.setGracefulCleanup();
@@ -34,7 +35,9 @@ function checkApp(appPath, inputOptions, callback) {
       relPathToConfig,
       'nativefier.json',
     );
-    const nativefierConfig = JSON.parse(fs.readFileSync(nativefierConfigPath));
+    const nativefierConfig = JSON.parse(
+      fs.readFileSync(nativefierConfigPath).toString(),
+    );
 
     expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
     // app name is not consistent for linux
@@ -46,9 +49,9 @@ function checkApp(appPath, inputOptions, callback) {
   }
 }
 
-describe('Nativefier Module', () => {
+describe('Nativefier', () => {
   jest.setTimeout(240000);
-  test('Can build an app from a target url', (done) => {
+  test('can build an app from a target url', (done) => {
     async.eachSeries(
       PLATFORMS,
       (platform, callback) => {
@@ -64,7 +67,7 @@ describe('Nativefier Module', () => {
         };
 
         options.platform = platform;
-        nativefier(options, (error, appPath) => {
+        buildMain(options, (error, appPath) => {
           if (error) {
             callback(error);
             return;

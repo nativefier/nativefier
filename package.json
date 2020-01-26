@@ -32,7 +32,7 @@
     "build-cli": "tsc",
     "build": "npm run clean && npm run build-cli && npm run build-app && npm run build-app-static",
     "changelog": "./docs/generate-changelog",
-    "ci": "npm run lint && npm test && npm run e2e",
+    "ci": "npm run lint && npm test && npm run test:integration",
     "clean": "rm -rf lib/ app/lib/",
     "clean:full": "rm -rf lib/ app/lib/ node_modules/ app/node_modules/",
     "lint:fix": "eslint . --fix",
@@ -40,9 +40,10 @@
     "lint": "eslint .",
     "list-outdated-deps": "npm out; cd app && npm out; true",
     "postinstall": "cd app && npm install",
-    "test:e2e": "jest e2e",
+    "test:integration": "jest --testRegex '.*integration-test.js'",
+    "test:unit": "jest",
     "test:watch": "jest --watch",
-    "test": "jest"
+    "test": "npm run test:unit && npm run test:integration"
   },
   "dependencies": {
     "@types/async": "3.x",
@@ -87,6 +88,6 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testRegex": "lib/.*test.[jt]s$"
+    "testPathIgnorePatterns": ["/node_modules/", "<rootDir>/app/src.*", "<rootDir>/src.*"]
   }
 }
