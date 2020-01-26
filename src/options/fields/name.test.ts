@@ -12,7 +12,8 @@ jest.mock('loglevel');
 const inferTitleMockedResult = 'mock name';
 const NAME_PARAMS_PROVIDED = {
   name: 'appname',
-  platform: 'something',
+  targetUrl: 'https://google.com',
+  platform: 'linux',
 };
 const NAME_PARAMS_NEEDS_INFER = {
   targetUrl: 'https://google.com',

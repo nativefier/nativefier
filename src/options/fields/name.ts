@@ -4,17 +4,11 @@ import { sanitizeFilename } from '../../utils';
 import { inferTitle } from '../../infer';
 import { DEFAULT_APP_NAME } from '../../constants';
 
-type NameParamsProvided = {
-  name: string;
-  platform: string;
-};
-
-type NameParamsNeedsInfer = {
+type NameParams = {
+  name?: string;
   targetUrl: string;
   platform: string;
 };
-
-type NameParams = NameParamsProvided | NameParamsNeedsInfer;
 
 async function tryToInferName(targetUrl: string): Promise<string> {
   try {
@@ -29,7 +23,7 @@ async function tryToInferName(targetUrl: string): Promise<string> {
 }
 
 export async function name(params: NameParams): Promise<string> {
-  if ('name' in params) {
+  if ('name' in params && params.name) {
     return sanitizeFilename(params.platform, params.name);
   }
 
