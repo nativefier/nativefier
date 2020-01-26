@@ -37,10 +37,10 @@ function getAppPath(appPath: string | string[]): string {
  * For Windows & Linux, we have to copy over the icon to the resources/app
  * folder, which the BrowserWindow is hard-coded to read the icon from
  */
-function copyIconsIfNecessary(
+async function copyIconsIfNecessary(
   options: electronPackager.Options,
   appPath: string,
-): void {
+): Promise<void> {
   if (!options.icon) {
     return;
   }
@@ -52,8 +52,14 @@ function copyIconsIfNecessary(
   // windows & linux: put the icon file into the app
   const destIconPath = path.join(appPath, 'resources/app');
   const destFileName = `icon${path.extname(options.icon)}`;
-  ncp(options.icon, path.join(destIconPath, destFileName), (error) => {
-    throw error;
+
+  return new Promise((resolve, reject) => {
+    ncp(options.icon, path.join(destIconPath, destFileName), (error) => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
   });
 }
 

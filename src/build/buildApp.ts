@@ -93,7 +93,7 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
 
         ncp(src, path.join(dest, 'inject', destFileName), (error) => {
           if (error) {
-            reject(new Error(`Error Copying injection files: ${error}`));
+            reject(new Error(`Error copying injection files: ${error}`));
             return;
           }
           resolve();
@@ -122,7 +122,7 @@ function normalizeAppName(appName: string, url: string): string {
 }
 
 function changeAppPackageJsonName(
-  appPath: any,
+  appPath: string,
   name: string,
   url: string,
 ): void {
@@ -143,21 +143,23 @@ export async function buildApp(
 ): Promise<void> {
   const appArgs = pickElectronAppArgs(options);
 
-  ncp(src, dest, async (error) => {
-    if (error) {
-      throw `Error copying electron app to temporary directory: ${error}`;
-    }
+  return new Promise((resolve, reject) => {
+    ncp(src, dest, async (error) => {
+      if (error) {
+        reject(`Error copying electron app to temporary directory: ${error}`);
+      }
 
-    await writeFileAsync(
-      path.join(dest, '/nativefier.json'),
-      JSON.stringify(appArgs),
-    );
+      const appJsonPath = path.join(dest, '/nativefier.json');
+      log.debug(`Writing app config to ${appJsonPath}`);
+      await writeFileAsync(appJsonPath, JSON.stringify(appArgs));
 
-    try {
-      await maybeCopyScripts(options.inject, dest);
-    } catch (err) {
-      log.error(err);
-    }
-    changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+      try {
+        await maybeCopyScripts(options.inject, dest);
+      } catch (err) {
+        log.error('Error while copying scripts', err);
+      }
+      changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+      resolve();
+    });
   });
 }
