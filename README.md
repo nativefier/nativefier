@@ -140,7 +140,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] Move all src to src (/{cli, app})
 - [ ] Review .npmignore and what's packaged to npm
 - [ ] Try to remove @ts-ignore
-- [ ] More test of what's passed to electron-packager
+- [ ] More typing and testing of what's passed to electron-packager
 - [ ] ? Get rid of micro-packages easily inlined
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
 - [ ] Make exports more idiomatic without default & index.ts crap
