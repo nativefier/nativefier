@@ -261,7 +261,7 @@ if (require.main === module) {
     commander.help();
   }
   checkInternet();
-  buildMain(commander)
+  buildMain({ ...commander }) // TODO do something more explicit than destructure to get options pojo
     .then((appPath) => {
       if (!appPath) {
         log.info(`App *not* built to ${appPath}`);
