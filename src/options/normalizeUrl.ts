@@ -1,13 +1,20 @@
 import * as url from 'url';
 
+import * as log from 'loglevel';
 import isURL from 'validator/lib/isURL';
 
-function appendProtocol(testUrl: string): string {
-  const parsed = url.parse(testUrl);
+function appendProtocol(inputUrl: string): string {
+  const parsed = url.parse(inputUrl);
   if (!parsed.protocol) {
-    return `http://${testUrl}`;
+    const urlWithProtocol = `https://${inputUrl}`;
+    log.warn(
+      `URL "${inputUrl}" seems valid, but lacks protocol.`,
+      `Using HTTPS, resulting in "${urlWithProtocol}".`,
+      `Please pass "http://${inputUrl}" if that's what you meant.`,
+    );
+    return urlWithProtocol;
   }
-  return testUrl;
+  return inputUrl;
 }
 
 export function normalizeUrl(testUrl: string): string {
@@ -17,11 +24,11 @@ export function normalizeUrl(testUrl: string): string {
   const validatorOptions = {
     require_protocol: true,
     require_tld: false,
-    allow_trailing_dot: true, // mDNS addresses, https://github.com/jiahaog/nativefier/issues/308
+    allow_trailing_dot: true, // allow mDNS addresses, https://github.com/jiahaog/nativefier/issues/308
   };
   /* eslint-enable */
   if (!isURL(urlWithProtocol, validatorOptions)) {
-    throw new Error(`Your Url: "${urlWithProtocol}" is invalid!`);
+    throw new Error(`Your url "${urlWithProtocol}" is invalid`);
   }
   return urlWithProtocol;
 }
