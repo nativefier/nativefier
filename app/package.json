@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "description": "Placeholder for the nativefier cli to override with a target url",
   "main": "lib/main.js",
+  "author": "Jia Hao",
+  "license": "MIT",
+  "keywords": [
+    "desktop",
+    "electron",
+    "placeholder"
+  ],
+  "scripts": {},
   "dependencies": {
     "electron-context-menu": "0.x",
     "electron-dl": "3.x",
@@ -14,14 +22,5 @@
   },
   "devDependencies": {
     "electron": "7.x"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "desktop",
-    "electron"
-  ],
-  "author": "Jia Hao",
-  "license": "MIT"
+  }
 }
