@@ -136,6 +136,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Cleanup/port old npm tasks/scripts
 - [x] Make exports more idiomatic without default & index.ts crap
 - [x] Get rid of micro-packages easily inlined
+- [ ] More verbose & normal logging everywhere
 - [ ] More typing and testing of what's passed to electron-packager
 - [ ] Tweak tsconfigs: make tsc strict(er)
 - [ ] Add tests
