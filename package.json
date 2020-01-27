@@ -54,7 +54,6 @@
     "@types/page-icon": "0.x",
     "@types/shelljs": "0.x",
     "@types/tmp": "0.x",
-    "@types/validator": "12.x",
     "axios": "0.x",
     "cheerio": "^1.0.0-rc.3",
     "commander": "4.x",
@@ -68,8 +67,7 @@
     "sanitize-filename": "1.x",
     "shelljs": "0.x",
     "source-map-support": "0.x",
-    "tmp": "0.x",
-    "validator": "12.x"
+    "tmp": "0.x"
   },
   "devDependencies": {
     "@types/jest": "24.x",

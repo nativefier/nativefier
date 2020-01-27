@@ -49,7 +49,7 @@ describe('Nativefier', () => {
       const tempDirectory = tmp.dirSync({ unsafeCleanup: true });
       const options = {
         name: 'google-test-app',
-        targetUrl: 'https://google.com',
+        targetUrl: 'https://google.com/',
         out: tempDirectory.name,
         overwrite: true,
         platform,

@@ -12,7 +12,7 @@ beforeAll(() => {
 
 test('it should call the async config', async () => {
   const params = {
-    targetUrl: 'http://example.com',
+    targetUrl: 'https://example.com/',
   };
   const result = await getOptions(params);
   expect(asyncConfigMock).toHaveBeenCalledWith(expect.objectContaining(params));
