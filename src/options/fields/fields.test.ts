@@ -1,4 +1,4 @@
-import { getProcessedOptions } from './index';
+import { getProcessedOptions } from './fields';
 import { icon } from './icon';
 import { userAgent } from './userAgent';
 import { name } from './name';

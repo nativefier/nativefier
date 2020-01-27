@@ -1,4 +1,4 @@
-import { getProcessedOptions } from './fields';
+import { getProcessedOptions } from './fields/fields';
 
 function resultArrayToObject(fieldResults) {
   return fieldResults.reduce(

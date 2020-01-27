@@ -1,5 +1,5 @@
 import { userAgent } from './userAgent';
-import { inferUserAgent } from '../../infer';
+import { inferUserAgent } from '../../infer/inferUserAgent';
 
 jest.mock('./../../infer/inferUserAgent');
 

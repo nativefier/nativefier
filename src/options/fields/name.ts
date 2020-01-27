@@ -1,7 +1,7 @@
 import * as log from 'loglevel';
 
 import { sanitizeFilename } from '../../utils/sanitizeFilename';
-import { inferTitle } from '../../infer';
+import { inferTitle } from '../../infer/inferTitle';
 import { DEFAULT_APP_NAME } from '../../constants';
 
 type NameParams = {

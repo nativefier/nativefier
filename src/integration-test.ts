@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 tmp.setGracefulCleanup();
 
-import { buildMain } from './index';
+import { buildMain } from './main';
 
 function checkApp(appPath: string, inputOptions) {
   let relPathToConfig: string;

@@ -1,7 +1,7 @@
 import { asyncConfig } from './asyncConfig';
-import { getProcessedOptions } from './fields';
+import { getProcessedOptions } from './fields/fields';
 
-jest.mock('./fields');
+jest.mock('./fields/fields');
 
 (getProcessedOptions as jest.Mock).mockResolvedValue([
   {

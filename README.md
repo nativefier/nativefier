@@ -133,19 +133,20 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Move from Gulp to simple npm scripts
 - [x] Replace quirky & broken `progress` with basic logging and restore electron-packager logging
 - [x] Replace `async` module + callbacks with real native async/await
+- [x] Cleanup/port old npm tasks/scripts
+- [x] Make exports more idiomatic without default & index.ts crap
+- [ ] More typing and testing of what's passed to electron-packager
+- [ ] Tweak tsconfigs: make tsc strict(er)
+- [ ] Add tests
+- [ ] Add coverage report and improve coverage
+- [ ] Get rid of micro-packages easily inlined
 - [ ] Remove last `require()`s
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
-- [ ] Tweak tsconfigs: make tsc strict(er)
 - [ ] Use new TS build system for faster builds & cleaner output dir structure (output to /lib, not /lib/src)
 - [ ] Move all src to src (/{cli, app})
 - [ ] Review .npmignore and what's packaged to npm
 - [ ] Try to remove @ts-ignore
-- [ ] More typing and testing of what's passed to electron-packager
-- [ ] ? Get rid of micro-packages easily inlined
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
-- [ ] Make exports more idiomatic without default & index.ts crap
 - [ ] Address TODOs in code
-- [ ] Cleanup/port old npm tasks/scripts
 - [ ] Error on using electron < 7
-- [ ] Add coverage report and improve coverage
 - [ ] GitHub Issue+PR templates

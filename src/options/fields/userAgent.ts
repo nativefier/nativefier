@@ -1,4 +1,4 @@
-import { inferUserAgent } from '../../infer';
+import { inferUserAgent } from '../../infer/inferUserAgent';
 
 type UserAgentOpts = {
   userAgentString?: string;

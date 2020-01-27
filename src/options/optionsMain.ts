@@ -4,7 +4,7 @@ import * as log from 'loglevel';
 
 import * as packageJson from '../../package.json';
 import { ELECTRON_VERSION, PLACEHOLDER_APP_DIR } from '../constants';
-import { inferPlatform, inferArch } from '../infer';
+import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
 import { normalizeUrl } from './normalizeUrl';
 

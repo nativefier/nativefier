@@ -5,7 +5,7 @@ import * as commander from 'commander';
 import * as dns from 'dns';
 import * as log from 'loglevel';
 
-import { buildMain } from './index';
+import { buildMain } from './main';
 import * as packageJson from '../package.json';
 
 function collect(val: any, memo: any[]): any[] {

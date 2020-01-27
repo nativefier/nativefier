@@ -1,6 +1,6 @@
 import * as log from 'loglevel';
 
-import { inferIcon } from '../../infer';
+import { inferIcon } from '../../infer/inferIcon';
 
 type IconParamsProvided = {
   icon: string;

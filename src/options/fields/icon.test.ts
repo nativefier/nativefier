@@ -1,7 +1,7 @@
 import * as log from 'loglevel';
 
 import { icon } from './icon';
-import { inferIcon } from '../../infer';
+import { inferIcon } from '../../infer/inferIcon';
 
 jest.mock('./../../infer/inferIcon');
 jest.mock('loglevel');

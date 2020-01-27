@@ -14,7 +14,7 @@
     "native",
     "wrapper"
   ],
-  "main": "lib/src/index.js",
+  "main": "lib/src/main.js",
   "bin": {
     "nativefier": "lib/src/cli.js"
   },
