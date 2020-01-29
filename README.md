@@ -138,6 +138,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Get rid of micro-packages easily inlined
 - [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [x] More verbose & normal logging everywhere
+- [ ] `test`task: unit & integration tests in parallel, for speed
 - [ ] Disable logging by default in tests & add tasks to enable at any level.
       - [ ] Maybe replace loglevel.
 - [ ] ncp async wrapper
