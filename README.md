@@ -138,6 +138,10 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Get rid of micro-packages easily inlined
 - [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [x] More verbose & normal logging everywhere
+- [ ] Disable logging by default in tests & add tasks to enable at any level.
+      - [ ] Maybe replace loglevel.
+- [ ] ncp async wrapper
+- [ ] Check perms to write dest dir, and error nicely if not writable
 - [ ] Fix icon not showing up on Linux
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
@@ -149,7 +153,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 
 ## TS: Post-beta/launch improvements
 
-- [ ] GitHub Issue+PR templates
+- [ ] GitHub: Create PR template, review Issue template
 - [ ] Improve typing and remove remaining `@ts-ignore`s
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
 - [ ] Tweak tsconfigs: make tsc strict(er)
