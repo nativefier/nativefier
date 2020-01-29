@@ -136,11 +136,13 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Cleanup/port old npm tasks/scripts
 - [x] Make exports more idiomatic without default & index.ts crap
 - [x] Get rid of micro-packages easily inlined
+- [ ] Fix icon not showing up in Linux
 - [ ] More verbose & normal logging everywhere
 - [ ] More typing and testing of what's passed to electron-packager
 - [ ] Tweak tsconfigs: make tsc strict(er)
 - [ ] Add tests
 - [ ] Add coverage report and improve coverage
+- [ ] Test on Windows & macOS
 - [ ] Remove last `require()`s
 - [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [ ] Use new TS build system for faster builds & cleaner output dir structure (output to /lib, not /lib/src)

@@ -11,6 +11,15 @@ import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
 import { convertIconIfNecessary } from './buildIcon';
 
+const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
+  'icon',
+  'appCopyright',
+  'appVersion',
+  'buildVersion',
+  'versionString',
+  'win32metadata',
+];
+
 /**
  * Checks the app path array to determine if packaging completed successfully
  */
@@ -65,12 +74,17 @@ async function copyIconsIfNecessary(
 
 function trimUnprocessableOptions(
   options: electronPackager.Options,
-  optionsToTrim: string[],
 ): electronPackager.Options {
   if (options.platform === 'win32' && !isWindows() && !hasbin.sync('wine')) {
     const optionsPresent = Object.entries(options)
-      .filter(([key, value]) => optionsToTrim.includes(key) && !!value)
+      .filter(
+        ([key, value]) =>
+          OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD.includes(key) && !!value,
+      )
       .map(([key]) => key);
+    if (optionsPresent.length === 0) {
+      return options;
+    }
     log.warn(
       `*Not* setting [${optionsPresent.join(', ')}], as couldn't find Wine.`,
       'Wine is required when packaging a Windows app under on non-Windows platforms.',
@@ -97,14 +111,7 @@ export async function buildMain(inputOptions: any): Promise<string> {
   log.info(
     "Packaging; this might take a while, especially if the requested Electron isn't cached yet...",
   );
-  const packageOptions = trimUnprocessableOptions(optionsWithIcon, [
-    'icon',
-    'appCopyright',
-    'appVersion',
-    'buildVersion',
-    'versionString',
-    'win32metadata',
-  ]);
+  const packageOptions = trimUnprocessableOptions(optionsWithIcon);
   const appPathArray = await electronPackager(packageOptions);
 
   log.info('Finalizing build...');
