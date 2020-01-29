@@ -137,7 +137,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Make exports more idiomatic without default & index.ts crap
 - [x] Get rid of micro-packages easily inlined
 - [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
-- [ ] More verbose & normal logging everywhere
+- [x] More verbose & normal logging everywhere
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Fix icon not showing up on Linux
