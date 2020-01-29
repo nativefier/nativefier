@@ -63,48 +63,51 @@ async function copyIconsIfNecessary(
   });
 }
 
-/**
- * Removes a specific option from an options object if building for Windows
- * while not on Windows and Wine is not installed
- */
-function trimOptionRequiringWine(
+function trimUnprocessableOptions(
   options: electronPackager.Options,
-  optionToRemove: string,
+  optionsToTrim: string[],
 ): electronPackager.Options {
-  const packageOptions = JSON.parse(JSON.stringify(options));
-  if (options.platform === 'win32' && !isWindows()) {
-    if (!hasbin.sync('wine')) {
-      log.warn(
-        `*NOT* packaging option "${optionToRemove}", as couldn't find Wine. Wine is required when packaging a Windows app under on non-Windows platforms`,
-      );
-      packageOptions[optionToRemove] = null;
+  if (options.platform === 'win32' && !isWindows() && !hasbin.sync('wine')) {
+    const optionsPresent = Object.entries(options)
+      .filter(([key, value]) => optionsToTrim.includes(key) && !!value)
+      .map(([key]) => key);
+    log.warn(
+      `*Not* setting [${optionsPresent.join(', ')}], as couldn't find Wine.`,
+      'Wine is required when packaging a Windows app under on non-Windows platforms.',
+    );
+    for (const keyToUnset in optionsPresent) {
+      options[keyToUnset] = null;
     }
   }
-  return packageOptions;
+  return options;
 }
 
-export async function buildMain(inpOptions: any): Promise<string> {
-  const options = await getOptions(inpOptions);
+export async function buildMain(inputOptions: any): Promise<string> {
+  const options = await getOptions(inputOptions);
 
-  log.info('copying');
+  log.info('Preparing Electron app...');
   const tmpDir = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
   const tmpPath = tmpDir.name;
   await buildApp(options.dir, tmpPath, options);
 
-  log.info('icons');
+  log.info('Converting icons...');
   const optionsWithTmpPath = { ...options, dir: tmpPath };
   const optionsWithIcon = await convertIconIfNecessary(optionsWithTmpPath);
 
-  log.info('packaging');
-  let packageOptions = trimOptionRequiringWine(optionsWithIcon, 'icon');
-  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'appCopyright');
-  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'appVersion');
-  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'buildVersion');
-  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'versionString');
-  packageOptions = trimOptionRequiringWine(optionsWithIcon, 'win32metadata');
+  log.info(
+    "Packaging; this might take a while, especially if the requested Electron isn't cached yet...",
+  );
+  const packageOptions = trimUnprocessableOptions(optionsWithIcon, [
+    'icon',
+    'appCopyright',
+    'appVersion',
+    'buildVersion',
+    'versionString',
+    'win32metadata',
+  ]);
   const appPathArray = await electronPackager(packageOptions);
 
-  log.info('finalizing');
+  log.info('Finalizing build...');
   const appPath = getAppPath(appPathArray);
 
   await copyIconsIfNecessary(packageOptions, appPath);
