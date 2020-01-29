@@ -102,24 +102,25 @@ function trimUnprocessableOptions(
 }
 
 export async function buildMain(inputOptions: any): Promise<string> {
+  log.info('Getting options...');
   const options = await getOptions(inputOptions);
 
-  log.info('Preparing Electron app...');
+  log.info('\nPreparing Electron app...');
   const tmpDir = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
   const tmpPath = tmpDir.name;
   await buildApp(options.dir, tmpPath, options);
 
-  log.info('Converting icons...');
+  log.info('\nConverting icons...');
   const optionsWithTmpPath = { ...options, dir: tmpPath };
   const optionsWithIcon = await convertIconIfNecessary(optionsWithTmpPath);
 
   log.info(
-    "Packaging; this might take a while, especially if the requested Electron isn't cached yet...",
+    "\nPackaging; this might take a while, especially if the requested Electron isn't cached yet...",
   );
   const packageOptions = trimUnprocessableOptions(optionsWithIcon);
   const appPathArray = await electronPackager(packageOptions);
 
-  log.info('Finalizing build...');
+  log.info('\nFinalizing build...');
   const appPath = getAppPath(appPathArray);
   await copyIconsIfNecessary(packageOptions, appPath);
 
