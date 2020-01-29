@@ -122,7 +122,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 
 [MIT](LICENSE.md)
 
-## TS TODO
+## TS: Minimum to release beta
 
 - [x] Move cli to TS
 - [x] Move app to TS
@@ -136,20 +136,24 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Cleanup/port old npm tasks/scripts
 - [x] Make exports more idiomatic without default & index.ts crap
 - [x] Get rid of micro-packages easily inlined
-- [ ] Fix icon not showing up in Linux
+- [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [ ] More verbose & normal logging everywhere
-- [ ] More typing and testing of what's passed to electron-packager
-- [ ] Tweak tsconfigs: make tsc strict(er)
-- [ ] Add tests
+- [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
-- [ ] Test on Windows & macOS
-- [ ] Remove last `require()`s
-- [ ] Cleanup pass on cli/app code to make more modern async TS idiomatic
-- [ ] Use new TS build system for faster builds & cleaner output dir structure (output to /lib, not /lib/src)
-- [ ] Move all src to src (/{cli, app})
-- [ ] Review .npmignore and what's packaged to npm
-- [ ] Try to remove @ts-ignore
-- [ ] ESLint cleanup: upgrade, review rules, move away from yml
+- [ ] Fix icon not showing up on Linux
+- [ ] More typing and testing of what's passed to electron-packager
+- [ ] Windows & macOS smoke test
+- [ ] Review .npmignore and published zip. Test installing it.
 - [ ] Address TODOs in code
-- [ ] Error on using electron < 7
+- [ ] Warn on using electron < 7
+
+## TS: Post-beta/launch improvements
+
 - [ ] GitHub Issue+PR templates
+- [ ] Improve typing and remove remaining `@ts-ignore`s
+- [ ] ESLint cleanup: upgrade, review rules, move away from yml
+- [ ] Tweak tsconfigs: make tsc strict(er)
+- [ ] Use new TS project build system
+    - [ ] Move all src to src (/{cli, app})
+    - [ ] Produce cleaner output dir structure (output to /lib, not /lib/src)
+    - [ ] Measure build time improvement

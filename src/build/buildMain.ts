@@ -116,7 +116,7 @@ export async function buildMain(inputOptions: any): Promise<string> {
 
   log.info('Finalizing build...');
   const appPath = getAppPath(appPathArray);
-
   await copyIconsIfNecessary(packageOptions, appPath);
+
   return appPath;
 }
