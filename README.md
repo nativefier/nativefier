@@ -138,11 +138,11 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Get rid of micro-packages easily inlined
 - [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [x] More verbose & normal logging everywhere
+- [ ] Fix icon not showing up on Linux
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
-- [ ] Fix icon not showing up on Linux
-- [ ] More typing and testing of what's passed to electron-packager
 - [ ] Windows & macOS smoke test
+- [ ] More typing and testing of what's passed to electron-packager
 - [ ] Review .npmignore and published zip. Test installing it.
 - [ ] Address TODOs in code
 - [ ] Warn on using electron < 7
