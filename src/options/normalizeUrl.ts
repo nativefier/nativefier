@@ -16,8 +16,8 @@ function appendProtocol(inputUrl: string): string {
   return inputUrl;
 }
 
-export function normalizeUrl(testUrl: string): string {
-  const urlWithProtocol = appendProtocol(testUrl);
+export function normalizeUrl(urlToNormalize: string): string {
+  const urlWithProtocol = appendProtocol(urlToNormalize);
 
   let parsedUrl: URL;
   try {
@@ -25,5 +25,7 @@ export function normalizeUrl(testUrl: string): string {
   } catch (err) {
     throw `Your url "${urlWithProtocol}" is invalid`;
   }
-  return parsedUrl.toString();
+  const normalizedUrl = parsedUrl.toString();
+  log.debug(`Normalized URL ${urlToNormalize} to:`, normalizedUrl);
+  return normalizedUrl;
 }

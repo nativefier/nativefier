@@ -10,6 +10,7 @@ async function getChromeVersionForElectronVersion(
   electronVersion: string,
   url = ELECTRON_VERSIONS_URL,
 ): Promise<string> {
+  log.debug('Grabbing electron<->chrome versions file from', url);
   const response = await axios.get(url, { timeout: 5000 });
   if (response.status !== 200) {
     throw new Error(`Bad request: Status code ${response.status}`);
@@ -24,7 +25,11 @@ async function getChromeVersionForElectronVersion(
       `Electron version '${electronVersion}' not found in retrieved version list!`,
     );
   }
-  return electronVersionToChromeVersion[electronVersion];
+  const chromeVersion = electronVersionToChromeVersion[electronVersion];
+  log.debug(
+    `Associated electron v${electronVersion} to chrome v${chromeVersion}`,
+  );
+  return chromeVersion;
 }
 
 export function getUserAgentString(
@@ -48,6 +53,10 @@ export function getUserAgentString(
         'Error invalid platform specified to getUserAgentString()',
       );
   }
+  log.debug(
+    `Given chrome ${chromeVersion} on ${platform},`,
+    `using user agent: ${userAgent}`,
+  );
   return userAgent;
 }
 
@@ -56,6 +65,9 @@ export async function inferUserAgent(
   platform: string,
   url = ELECTRON_VERSIONS_URL,
 ): Promise<string> {
+  log.debug(
+    `Inferring user agent for electron ${electronVersion} / ${platform}`,
+  );
   try {
     const chromeVersion = await getChromeVersionForElectronVersion(
       electronVersion,

@@ -15,6 +15,7 @@ type IconParams = IconParamsProvided | IconParamsNeedsInfer;
 
 export async function icon(params: IconParams): Promise<string> {
   if ('icon' in params) {
+    log.debug('Got icon from options. Using it, no inferring needed');
     return params.icon;
   }
 

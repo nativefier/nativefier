@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import axios from 'axios';
 import * as hasbin from 'hasbin';
+import * as log from 'loglevel';
 
 type DownloadResult = {
   data: Buffer;
@@ -17,6 +18,7 @@ export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
 export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
+  log.debug(`Downloading ${fileUrl}`);
   return axios
     .get(fileUrl, {
       responseType: 'arraybuffer',
@@ -63,6 +65,10 @@ export function getAllowedIconFormats(platform: string): string[] {
       default:
         throw new Error(`Unknown platform ${platform}`);
     }
+    log.debug(
+      `Allowed icon formats when building for ${platform} (limited on Windows):`,
+      formats,
+    );
     return formats;
   }
 
@@ -97,5 +103,6 @@ export function getAllowedIconFormats(platform: string): string[] {
     default:
       throw new Error(`Unknown platform ${platform}`);
   }
+  log.debug(`Allowed icon formats when building for ${platform}:`, formats);
   return formats;
 }

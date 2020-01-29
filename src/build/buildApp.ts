@@ -69,10 +69,13 @@ function pickElectronAppArgs(options): any {
 
 async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   if (!srcs) {
+    log.debug('No scripts to inject, skipping copy.');
     return new Promise((resolve) => {
       resolve();
     });
   }
+
+  log.debug(`Copying ${srcs.length} resources to inject in app.`);
   const promises = srcs.map(
     (src) =>
       new Promise((resolve, reject) => {
@@ -81,7 +84,7 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
           return;
         }
 
-        let destFileName;
+        let destFileName: string;
         if (path.extname(src) === '.js') {
           destFileName = 'inject.js';
         } else if (path.extname(src) === '.css') {
@@ -91,7 +94,9 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
           return;
         }
 
-        ncp(src, path.join(dest, 'inject', destFileName), (error) => {
+        const destPath = path.join(dest, 'inject', destFileName);
+        log.debug(`Copying ${destPath}`);
+        ncp(src, destPath, (error) => {
           if (error) {
             reject(new Error(`Error copying injection files: ${error}`));
             return;
@@ -128,7 +133,10 @@ function changeAppPackageJsonName(
 ): void {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-  packageJson.name = normalizeAppName(name, url);
+  const normalizedAppName = normalizeAppName(name, url);
+  packageJson.name = normalizedAppName;
+  log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
+
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
 }
 

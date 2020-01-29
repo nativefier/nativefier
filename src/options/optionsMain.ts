@@ -82,6 +82,10 @@ export function getOptions(inputOptions: any): Promise<any> {
 
   if (options.verbose) {
     log.setLevel('trace');
+    log.debug(
+      'Running in verbose mode! This will produce a mountain of logs and',
+      'is recommended only for troubleshooting or if you like Shakespeare.',
+    );
   } else {
     log.setLevel('info');
   }
@@ -100,7 +104,8 @@ export function getOptions(inputOptions: any): Promise<any> {
 
   if (
     options.platform.toLowerCase() === 'osx' ||
-    options.platform.toLowerCase() === 'mac'
+    options.platform.toLowerCase() === 'mac' ||
+    options.platform.toLowerCase() === 'macos'
   ) {
     options.platform = 'darwin';
   }
@@ -122,6 +127,7 @@ export function getOptions(inputOptions: any): Promise<any> {
   }
 
   if (options.globalShortcuts) {
+    log.debug('Will use global shortcuts file at', options.globalShortcuts);
     const globalShortcutsFileContent = fs.readFileSync(options.globalShortcuts);
     options.globalShortcuts = JSON.parse(globalShortcutsFileContent.toString());
   }

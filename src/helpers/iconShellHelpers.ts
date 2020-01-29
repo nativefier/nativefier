@@ -5,6 +5,7 @@ import * as tmp from 'tmp';
 tmp.setGracefulCleanup();
 
 import { isWindows, isOSX } from './helpers';
+import * as log from 'loglevel';
 
 const SCRIPT_PATHS = {
   singleIco: path.join(__dirname, '../../icon-scripts/singleIco'),
@@ -23,26 +24,33 @@ async function iconShellHelper(
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     if (isWindows()) {
-      reject(new Error('OSX or Linux is required'));
+      reject(
+        new Error(
+          'Icon conversion only supported on macOS or Linux.' +
+            'If building for Windows, pass a .ico.' +
+            'If building for macOS/Linux, do it from macOS/Linux',
+        ),
+      );
       return;
     }
 
-    shell.exec(
-      `"${shellScriptPath}" "${icoSource}" "${icoDestination}"`,
-      { silent: true },
-      (exitCode, stdOut, stdError) => {
-        if (exitCode) {
-          // eslint-disable-next-line prefer-promise-reject-errors
-          reject({
-            stdOut,
-            stdError,
-          });
-          return;
-        }
-
-        resolve(icoDestination);
-      },
+    const shellCommand = `"${shellScriptPath}" "${icoSource}" "${icoDestination}"`;
+    log.debug(
+      `Converting icon ${icoSource} to ${icoDestination}.`,
+      `Calling: ${shellCommand}`,
     );
+    shell.exec(shellCommand, { silent: true }, (exitCode, stdOut, stdError) => {
+      if (exitCode) {
+        reject({
+          stdOut,
+          stdError,
+        });
+        return;
+      }
+
+      log.debug(`Conversion succeeded and produced icon at ${icoDestination}`);
+      resolve(icoDestination);
+    });
   });
 }
 

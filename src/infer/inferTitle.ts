@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import * as log from 'loglevel';
 
 const USER_AGENT =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36';
@@ -11,8 +12,12 @@ export async function inferTitle(url: string): Promise<string> {
       'User-Agent': USER_AGENT,
     },
   });
+  log.debug(`Fetched ${Math.floor(data.length / 1024)} kb page at`, url);
   const $ = cheerio.load(data);
-  return $('title')
+  const inferredTitle = $('title')
     .first()
     .text();
+
+  log.debug('Inferred title:', inferredTitle);
+  return inferredTitle;
 }

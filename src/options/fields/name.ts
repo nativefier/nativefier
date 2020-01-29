@@ -12,6 +12,7 @@ type NameParams = {
 
 async function tryToInferName(targetUrl: string): Promise<string> {
   try {
+    log.debug('Inferring name for', targetUrl);
     const pageTitle = await inferTitle(targetUrl);
     return pageTitle || DEFAULT_APP_NAME;
   } catch (error) {
@@ -24,6 +25,7 @@ async function tryToInferName(targetUrl: string): Promise<string> {
 
 export async function name(params: NameParams): Promise<string> {
   if ('name' in params && params.name) {
+    log.debug(`Got name ${params.name} from options. No inferring needed`);
     return sanitizeFilename(params.platform, params.name);
   }
 

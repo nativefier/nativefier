@@ -50,20 +50,25 @@ async function copyIconsIfNecessary(
   options: electronPackager.Options,
   appPath: string,
 ): Promise<void> {
+  log.debug('Copying icons if necessary');
   if (!options.icon) {
+    log.debug('No icon specified in options; aborting');
     return;
   }
 
   if (options.platform === 'darwin' || options.platform === 'mas') {
+    log.debug('No copying necessary on macOS; aborting');
     return;
   }
 
   // windows & linux: put the icon file into the app
-  const destIconPath = path.join(appPath, 'resources/app');
+  const destAppPath = path.join(appPath, 'resources/app');
   const destFileName = `icon${path.extname(options.icon)}`;
+  const destIconPath = path.join(destAppPath, destFileName);
 
+  log.debug(`Copying icon ${options.icon} to`, destIconPath);
   return new Promise((resolve, reject) => {
-    ncp(options.icon, path.join(destIconPath, destFileName), (error) => {
+    ncp(options.icon, destIconPath, (error) => {
       if (error) {
         reject(error);
       }

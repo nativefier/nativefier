@@ -1,4 +1,5 @@
 import * as os from 'os';
+import * as log from 'loglevel';
 
 export function inferPlatform(): string {
   const platform = os.platform();
@@ -9,6 +10,7 @@ export function inferPlatform(): string {
     platform === 'win32' ||
     platform === 'linux'
   ) {
+    log.debug('Inferred platform', platform);
     return platform;
   }
 
@@ -20,5 +22,6 @@ export function inferArch(): string {
   if (arch !== 'ia32' && arch !== 'x64' && arch !== 'arm') {
     throw new Error(`Incompatible architecture ${arch} detected`);
   }
+  log.debug('Inferred arch', arch);
   return arch;
 }

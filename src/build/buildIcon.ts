@@ -30,11 +30,15 @@ export async function convertIconIfNecessary(
   options: electronPackager.Options,
 ): Promise<electronPackager.Options> {
   if (!options.icon) {
+    log.debug('Option "icon" not set, skipping icon conversion.');
     return options;
   }
 
   if (options.platform === 'win32') {
     if (iconIsIco(options.icon)) {
+      log.debug(
+        'Building for Windows and icon is already a .ico, no conversion needed',
+      );
       return options;
     }
 
@@ -49,6 +53,9 @@ export async function convertIconIfNecessary(
 
   if (options.platform === 'linux') {
     if (iconIsPng(options.icon)) {
+      log.debug(
+        'Building for Linux and icon is already a .png, no conversion needed',
+      );
       return options;
     }
 
@@ -62,6 +69,9 @@ export async function convertIconIfNecessary(
   }
 
   if (iconIsIcns(options.icon)) {
+    log.debug(
+      'Building for macOS and icon is already a .icns, no conversion needed',
+    );
     return options;
   }
 

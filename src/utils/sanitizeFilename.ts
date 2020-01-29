@@ -1,3 +1,5 @@
+import * as log from 'loglevel';
+
 import { DEFAULT_APP_NAME } from '../constants';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -15,7 +17,8 @@ export function sanitizeFilename(
 
   // spaces will cause problems with Ubuntu when pinned to the dock
   if (platform === 'linux') {
-    return result.replace(/ /g, '');
+    result = result.replace(/ /g, '');
   }
+  log.debug(`Sanitized filename for ${filenameToSanitize} : ${result}`);
   return result;
 }
