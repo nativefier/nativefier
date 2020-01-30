@@ -74,7 +74,7 @@
     "tmp": "0.x"
   },
   "devDependencies": {
-    "@types/jest": "24.x",
+    "@types/jest": "25.x",
     "@typescript-eslint/eslint-plugin": "2.x",
     "@typescript-eslint/parser": "2.x",
     "eslint": "6.x",
