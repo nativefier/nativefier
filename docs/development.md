@@ -22,13 +22,16 @@ If dependencies are installed and you just want to re-build,
 npm run build
 ```
 
-You can set up a symbolic link so that running `nativefier` invokes your development version including your changes:
+Set up a symbolic link so that running `nativefier` invokes your development version including your changes:
 
 ```bash
 npm link
+which nativefier
+# -> Should return a path, e.g. /home/youruser/.node_modules/lib/node_modules/nativefier
+# If not, be sure your `npm_config_prefix` env var is set and in your `PATH`
 ```
 
-After doing so (and not forgetting to build with `npm run build`), you can run Nativefier with your test parameters:
+After doing so, you can run Nativefier with your test parameters:
 
 ```bash
 nativefier --your-awesome-new-flag
@@ -36,18 +39,16 @@ nativefier --your-awesome-new-flag
 
 ## Tests
 
-```bash
-# To run all tests (unit, end-to-end),
-npm test
+- To run all tests, `npm t`
+- To run only unit tests, `npm run test:unit`
+- To run only integration tests, `npm run test:integration`
+- Logging is suppressed by default in tests, to avoid polluting Jest output.
+  To get debug logs, `npm run test:withlog` or set the `LOGLEVEL` env. var.
 
-# To run only unit tests,
-npm run jest
-
-# To run only end-to-end integration tests,
-npm run test:integration
-```
-
-Or watch the files for changes with:
+- For a good iteration speed, open three terminal panes/tabs and set watchers:
+    1. Run a TSC watcher for the CLI: `npm run compile:watch`
+    2. Run a TSC watcher for the app: `npm run compile:watch:app`
+    3. Run a Jest tests watcher: `npm run test:watch`
 
 ```bash
 npm run test:watch

@@ -36,6 +36,8 @@
     "ci": "npm run lint && npm test && npm run test:integration",
     "clean": "rimraf lib/ app/lib/",
     "clean:full": "rimraf lib/ app/lib/ node_modules/ app/node_modules/",
+    "compile:watch": "tsc -w --noUnusedLocals false",
+    "compile:watch:app": "cd app && tsc -w --noUnusedLocals false",
     "lint:fix": "eslint . --fix",
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint .",
@@ -44,6 +46,7 @@
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:unit": "jest",
     "test:watch": "jest --watch",
+    "test:withlog": "LOGLEVEL=trace npm run test:unit && LOGLEVEL=trace npm run test:integration",
     "test": "npm run test:unit && npm run test:integration"
   },
   "dependencies": {
@@ -83,6 +86,9 @@
     "typescript": "3.x"
   },
   "jest": {
+    "setupFiles": [
+      "./lib/src/jestSetupFiles"
+    ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
       "/node_modules/",
