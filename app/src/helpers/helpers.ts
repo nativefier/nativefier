@@ -6,7 +6,7 @@ import { BrowserWindow } from 'electron';
 import * as log from 'loglevel';
 import wurl from 'wurl';
 
-const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');
+const INJECT_CSS_PATH = path.join(__dirname, '../..', 'inject/inject.css');
 
 export function isOSX(): boolean {
   return os.platform() === 'darwin';
