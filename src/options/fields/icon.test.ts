@@ -9,6 +9,8 @@ jest.mock('loglevel');
 const mockedResult = 'icon path';
 const ICON_PARAMS_PROVIDED = {
   icon: './icon.png',
+  targetUrl: 'https://google.com',
+  platform: 'mac',
 };
 const ICON_PARAMS_NEEDS_INFER = {
   targetUrl: 'https://google.com',

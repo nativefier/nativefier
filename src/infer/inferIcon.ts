@@ -102,7 +102,7 @@ export async function inferIcon(
 
   const iconPath = path.join(tmpDirPath, `/icon${icon.ext}`);
   log.debug(
-    `Writing ${Math.floor(icon.data.length / 1024)} kb icon to ${iconPath}`,
+    `Writing ${(icon.data.length / 1024).toFixed(1)} kb icon to ${iconPath}`,
   );
   await writeFileAsync(iconPath, icon.data);
   return iconPath;

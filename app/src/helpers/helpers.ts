@@ -64,7 +64,7 @@ export function debugLog(browserWindow: BrowserWindow, message: string): void {
 }
 
 export function getAppIcon(): string {
-  return path.join(__dirname, '../', `/icon.${isWindows() ? 'ico' : 'png'}`);
+  return path.join(__dirname, `../../icon.${isWindows() ? 'ico' : 'png'}`);
 }
 
 export function nativeTabsSupported(): boolean {

@@ -2,19 +2,14 @@ import * as log from 'loglevel';
 
 import { inferIcon } from '../../infer/inferIcon';
 
-type IconParamsProvided = {
-  icon: string;
-};
-
-type IconParamsNeedsInfer = {
+type IconParams = {
+  icon?: string;
   targetUrl: string;
   platform: string;
 };
 
-type IconParams = IconParamsProvided | IconParamsNeedsInfer;
-
 export async function icon(params: IconParams): Promise<string> {
-  if ('icon' in params) {
+  if ('icon' in params && params.icon) {
     log.debug('Got icon from options. Using it, no inferring needed');
     return params.icon;
   }

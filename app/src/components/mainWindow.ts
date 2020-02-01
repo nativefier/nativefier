@@ -119,7 +119,6 @@ export function createMainWindow(
     x: options.x,
     y: options.y,
     autoHideMenuBar: !options.showMenuBar,
-    // after webpack path here should reference `resources/app/`
     icon: getAppIcon(),
     // set to undefined and not false because explicitly setting to false will disable full screen
     fullscreen: options.fullScreen || undefined,

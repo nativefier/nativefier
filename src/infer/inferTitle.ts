@@ -12,7 +12,7 @@ export async function inferTitle(url: string): Promise<string> {
       'User-Agent': USER_AGENT,
     },
   });
-  log.debug(`Fetched ${Math.floor(data.length / 1024)} kb page at`, url);
+  log.debug(`Fetched ${(data.length / 1024).toFixed(1)} kb page at`, url);
   const $ = cheerio.load(data);
   const inferredTitle = $('title')
     .first()
