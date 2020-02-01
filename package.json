@@ -2,6 +2,12 @@
   "name": "nativefier",
   "version": "7.7.1",
   "description": "Wrap web apps natively",
+  "license": "MIT",
+  "author": "Goh Jia Hao",
+  "engines": {
+    "node": ">= 8.10.0",
+    "npm": ">= 5.6.0"
+  },
   "keywords": [
     "desktop",
     "electron",
@@ -9,97 +15,85 @@
     "native",
     "wrapper"
   ],
-  "main": "lib/index.js",
-  "scripts": {
-    "dev-up": "npm install && (cd ./app && npm install) && npm run build",
-    "dev-up-win": "npm install & cd app & npm install & cd .. & npm run build",
-    "test": "jest src",
-    "guard": "jest --watch src",
-    "e2e": "jest e2e",
-    "tdd": "gulp tdd",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "ci": "npm run lint && npm test && npm run e2e",
-    "clean": "gulp clean",
-    "build": "gulp build",
-    "watch": "while true ; do gulp watch ; done",
-    "package-placeholder": "npm run build && node lib/cli.js http://www.bennish.net/web-notifications.html ~/Desktop --overwrite --name notification-test --icon ./test-resources/iconSampleGrey.png --inject ./test-resources/test-injection.js --inject ./test-resources/test-injection.css && open ~/Desktop/notification-test-darwin-x64/notification-test.app",
-    "start-placeholder": "npm run build && electron app",
-    "changelog": "./scripts/changelog",
-    "format": "prettier --write '{gulp,src}/**/*.js' 'app/src/**/*.js'"
-  },
+  "main": "lib/src/main.js",
   "bin": {
-    "nativefier": "lib/cli.js"
+    "nativefier": "lib/src/cli.js"
   },
+  "homepage": "https://github.com/jiahaog/nativefier",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jiahaog/nativefier.git"
   },
-  "author": "Goh Jia Hao",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jiahaog/nativefier/issues"
   },
-  "homepage": "https://github.com/jiahaog/nativefier#readme",
+  "scripts": {
+    "build-app-static": "ncp app/src/static/ app/lib/static/",
+    "build-app": "cd app && tsc",
+    "build-cli": "tsc",
+    "build": "npm run clean && npm run build-cli && npm run build-app && npm run build-app-static",
+    "changelog": "./docs/generate-changelog",
+    "ci": "npm run lint && npm test && npm run test:integration",
+    "clean": "rimraf lib/ app/lib/",
+    "clean:full": "rimraf lib/ app/lib/ node_modules/ app/node_modules/",
+    "compile:watch": "tsc -w --noUnusedLocals false",
+    "compile:watch:app": "cd app && tsc -w --noUnusedLocals false",
+    "lint:fix": "eslint . --fix",
+    "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
+    "lint": "eslint . --ext .js,.ts",
+    "list-outdated-deps": "npm out; cd app && npm out; true",
+    "postinstall": "cd app && npm install",
+    "test:integration": "jest --testRegex '.*integration-test.js'",
+    "test:unit": "jest",
+    "test:watch": "jest --watch",
+    "test:withlog": "LOGLEVEL=trace npm run test:unit && LOGLEVEL=trace npm run test:integration",
+    "test": "npm run test:unit && npm run test:integration"
+  },
   "dependencies": {
-    "async": "^2.6.0",
-    "axios": "^0.18.0",
-    "babel-polyfill": "^6.26.0",
-    "cheerio": "^1.0.0-rc.2",
-    "commander": "^2.14.0",
-    "electron-packager": "^12.2.0",
-    "gitcloud": "^0.1.0",
-    "hasbin": "^1.2.3",
-    "lodash": "^4.17.5",
-    "loglevel": "^1.6.1",
-    "ncp": "^2.0.0",
-    "page-icon": "^0.3.0",
-    "progress": "^2.0.0",
-    "sanitize-filename": "^1.6.1",
-    "shelljs": "^0.8.1",
-    "source-map-support": "^0.5.3",
-    "tmp": "0.0.33",
-    "validator": "^10.2.0"
+    "@types/cheerio": "0.x",
+    "@types/electron-packager": "14.x",
+    "@types/lodash": "4.x",
+    "@types/ncp": "2.x",
+    "@types/node": "12.x",
+    "@types/page-icon": "0.x",
+    "@types/shelljs": "0.x",
+    "@types/tmp": "0.x",
+    "axios": "0.x",
+    "cheerio": "^1.0.0-rc.3",
+    "commander": "4.x",
+    "electron-packager": "14.x",
+    "gitcloud": "0.x",
+    "hasbin": "1.x",
+    "lodash": "4.x",
+    "loglevel": "1.x",
+    "ncp": "2.x",
+    "page-icon": "0.x",
+    "sanitize-filename": "1.x",
+    "shelljs": "0.x",
+    "source-map-support": "0.x",
+    "tmp": "0.x"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-jest": "^23.4.0",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "del": "^3.0.0",
-    "eslint": "^5.2.0",
-    "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-prettier": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.1",
-    "gulp-sourcemaps": "^2.6.4",
-    "jest": "^23.4.1",
-    "prettier": "^1.12.1",
-    "require-dir": "^1.0.0",
-    "run-sequence": "^2.2.1",
-    "webpack-stream": "^5.0.0"
+    "@types/jest": "25.x",
+    "@typescript-eslint/eslint-plugin": "2.x",
+    "@typescript-eslint/parser": "2.x",
+    "eslint": "6.x",
+    "eslint-config-prettier": "6.x",
+    "eslint-plugin-prettier": "3.x",
+    "jest": "25.x",
+    "prettier": "1.x",
+    "rimraf": "3.x",
+    "typescript": "3.x"
   },
-  "engines": {
-    "node": ">= 4.0"
-  },
-  "babel": {
-    "plugins": [
-      "transform-object-rest-spread"
+  "jest": {
+    "setupFiles": [
+      "./lib/src/jestSetupFiles"
     ],
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "node": "4.0.0"
-          }
-        }
-      ]
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/app/src.*",
+      "<rootDir>/src.*"
     ]
   }
 }

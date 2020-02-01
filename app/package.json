@@ -3,23 +3,24 @@
   "version": "1.0.0",
   "description": "Placeholder for the nativefier cli to override with a target url",
   "main": "lib/main.js",
-  "dependencies": {
-    "electron-context-menu": "^0.10.0",
-    "electron-dl": "^1.10.0",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-window-state": "^4.1.1",
-    "loglevel": "^1.5.1",
-    "source-map-support": "^0.5.0",
-    "wurl": "^2.5.2"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "author": "Jia Hao",
+  "license": "MIT",
   "keywords": [
     "desktop",
-    "electron"
+    "electron",
+    "placeholder"
   ],
-  "author": "Jia Hao",
-  "license": "MIT"
+  "scripts": {},
+  "dependencies": {
+    "electron-context-menu": "0.x",
+    "electron-dl": "3.x",
+    "electron-squirrel-startup": "1.x",
+    "electron-window-state": "5.x",
+    "loglevel": "1.x",
+    "source-map-support": "0.x",
+    "wurl": "2.x"
+  },
+  "devDependencies": {
+    "electron": "7.x"
+  }
 }

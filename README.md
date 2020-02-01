@@ -5,7 +5,7 @@
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 [![Dependency Status](https://david-dm.org/jiahaog/nativefier.svg)](https://david-dm.org/jiahaog/nativefier)
 
-![Dock](screenshots/dock.png)
+![Dock](dock.png)
 
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
@@ -13,7 +13,7 @@ You want to make a native wrapper for WhatsApp Web (or any web page).
 nativefier web.whatsapp.com
 ```
 
-![Walkthrough](screenshots/walkthrough.gif)
+![Walkthrough](walkthrough.gif)
 
 You're done.
 
@@ -121,3 +121,44 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 ## License
 
 [MIT](LICENSE.md)
+
+## TS: Minimum to release beta
+
+- [x] Move cli to TS
+- [x] Move app to TS
+- [x] Package.json nits: move away from "^A.B.C" to more understandable "A.x
+- [x] Upgrade electron-packager and other deps
+- [x] Fix node_modules badly pruned when copied to app
+- [x] Get rid of Babel / webpack
+- [x] Move from Gulp to simple npm scripts
+- [x] Replace quirky & broken `progress` with basic logging and restore electron-packager logging
+- [x] Replace `async` module + callbacks with real native async/await
+- [x] Cleanup/port old npm tasks/scripts
+- [x] Make exports more idiomatic without default & index.ts crap
+- [x] Get rid of micro-packages easily inlined
+- [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
+- [x] More verbose & normal logging everywhere
+- [x] Disable logging by default in tests & add tasks to enable at any level.
+- [x] Fix icon not showing up on Linux
+- [ ] Add tests & typing
+- [ ] Add coverage report and improve coverage
+- [ ] Windows & macOS smoke test
+- [ ] More typing and testing of what's passed to electron-packager
+- [ ] Review .npmignore and published zip. Test installing it.
+- [ ] Address TODOs in code
+- [ ] Warn on using electron < 7
+
+## TS: Post-beta/launch improvements
+
+- [ ] Check perms to write dest dir, and error nicely if not writable
+- [ ] ncp async wrapper
+- [ ] `test` task: unit & integration tests in parallel, for speed
+- [ ] Maybe replace loglevel.
+- [ ] GitHub: Create PR template, review Issue template
+- [ ] Improve typing and remove remaining `@ts-ignore`s
+- [ ] ESLint cleanup: upgrade, review rules, move away from yml
+- [ ] Tweak tsconfigs: make tsc strict(er)
+- [ ] Use new TS project build system
+    - [ ] Move all src to src (/{cli, app})
+    - [ ] Produce cleaner output dir structure (output to /lib, not /lib/src)
+    - [ ] Measure build time improvement

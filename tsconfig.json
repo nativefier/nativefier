@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+      "allowJs": false,
+      "declaration": false,
+      "incremental": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "outDir": "./lib",
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "target": "es2016"
+  },
+  "include": [
+      "./src/**/*"
+  ]
+}

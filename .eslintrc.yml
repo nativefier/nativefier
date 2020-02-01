@@ -1,15 +1,17 @@
-extends:
-  - airbnb-base
+# https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md
+root: true
+parser: '@typescript-eslint/parser'
+plugins:
+  - '@typescript-eslint'
   - prettier
+extends:
+  - eslint:recommended
+  - prettier
+  - 'plugin:@typescript-eslint/eslint-recommended'
+  - 'plugin:@typescript-eslint/recommended'
 env:
   # TODO: find out how to turn this on only for src/**/*.test.js files
   jest: true
-plugins:
-  - import
-  - prettier
 rules:
-  # TODO: Remove this when we have shifted away from the async package
-  no-shadow: 'warn'
-  # Gulpfiles and tests use dev dependencies
-  import/no-extraneous-dependencies: ['error', { devDependencies: ['gulpfile.babel.js', 'gulp/**/**.js', 'test/**/**.js']}]
   prettier/prettier: "error"
+  '@typescript-eslint/no-explicit-any': 'off'
