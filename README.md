@@ -139,7 +139,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
 - [x] More verbose & normal logging everywhere
 - [x] Disable logging by default in tests & add tasks to enable at any level.
-- [ ] Fix icon not showing up on Linux
+- [x] Fix icon not showing up on Linux
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Windows & macOS smoke test
