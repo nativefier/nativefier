@@ -48,3 +48,6 @@ node_modules
 *.iml
 out
 gen
+
+# Builds when testing npm pack
+nativefier*.tgz

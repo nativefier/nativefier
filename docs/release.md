@@ -22,7 +22,7 @@ This command does 3 things:
 Now we may want to cleanup the changelog:
 
 ```bash
-vim docs/changelog.md
+vim CHANGELOG.md
 
 git commit --amend
 ```
