@@ -145,18 +145,18 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Make electron-packager verbose too when using `--verbose`
 - [x] Warn on using old electron
 - [x] Move to Electron 8
+- [x] https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md
+- [...] Make eslint happy
 - [ ] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Windows & macOS smoke test
-- [ ] Make eslint happy
 - [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Address TODOs in code
 
 ## TS: Post-beta/launch improvements
 
-- [ ] https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md
 - [ ] Check perms to write dest dir, and error nicely if not writable
 - [ ] ncp async wrapper
 - [ ] `test` task: unit & integration tests in parallel, for speed

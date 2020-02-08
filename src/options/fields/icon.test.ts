@@ -52,7 +52,7 @@ describe('when the icon parameter is not passed', () => {
         ICON_PARAMS_NEEDS_INFER.targetUrl,
         ICON_PARAMS_NEEDS_INFER.platform,
       );
-      expect(log.warn).toHaveBeenCalledTimes(1);
+      expect(log.warn).toHaveBeenCalledTimes(1); // eslint-disable-line @typescript-eslint/unbound-method
     });
   });
 });

@@ -74,7 +74,9 @@ if (appArgs.basicAuthPassword) {
 }
 
 // do nothing for setDockBadge if not OSX
-let setDockBadge = (count: number, bounce: boolean) => {};
+let setDockBadge = (count: number, bounce: boolean) => {
+  return;
+};
 
 if (isOSX()) {
   let currentBadgeCount = 0;

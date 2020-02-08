@@ -6,7 +6,7 @@ tmp.setGracefulCleanup();
 
 import { buildMain } from './main';
 
-function checkApp(appPath: string, inputOptions) {
+function checkApp(appPath: string, inputOptions: any): void {
   let relPathToConfig: string;
 
   switch (inputOptions.platform) {

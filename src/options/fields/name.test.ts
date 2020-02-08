@@ -90,6 +90,6 @@ describe('handling inferTitle results', () => {
 
     expect(result).toEqual(DEFAULT_APP_NAME);
     expect(inferTitle).toHaveBeenCalledWith(NAME_PARAMS_NEEDS_INFER.targetUrl);
-    expect(log.warn).toHaveBeenCalledTimes(1);
+    expect(log.warn).toHaveBeenCalledTimes(1); // eslint-disable-line @typescript-eslint/unbound-method
   });
 });

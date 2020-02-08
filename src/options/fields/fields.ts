@@ -1,5 +1,3 @@
-import * as log from 'loglevel';
-
 import { icon } from './icon';
 import { userAgent } from './userAgent';
 import { name } from './name';

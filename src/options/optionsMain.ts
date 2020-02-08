@@ -107,7 +107,7 @@ export function getOptions(inputOptions: any): Promise<any> {
 
   if (inputOptions.electronVersion) {
     const requestedVersion: string = inputOptions.electronVersion;
-    if (!requestedVersion.match(SEMVER_VERSION_NUMBER_REGEX)) {
+    if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
       throw `Invalid Electron version number "${requestedVersion}". Aborting.`;
     }
     const requestedMajorVersion = parseInt(requestedVersion.split('.')[0], 10);

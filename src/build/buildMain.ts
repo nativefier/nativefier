@@ -106,7 +106,7 @@ function trimUnprocessableOptions(
       `*Not* setting [${optionsPresent.join(', ')}], as couldn't find Wine.`,
       'Wine is required when packaging a Windows app under on non-Windows platforms.',
     );
-    for (const keyToUnset in optionsPresent) {
+    for (const keyToUnset of optionsPresent) {
       options[keyToUnset] = null;
     }
   }

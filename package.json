@@ -40,7 +40,7 @@
     "compile:watch:app": "cd app && tsc -w --noUnusedLocals false",
     "lint:fix": "eslint . --fix",
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
-    "lint": "eslint . --ext .js,.ts",
+    "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
     "postinstall": "cd app && npm install",
     "test:integration": "jest --testRegex '.*integration-test.js'",
