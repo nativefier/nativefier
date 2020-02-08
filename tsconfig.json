@@ -9,7 +9,10 @@
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,
-      "target": "es2016"
+      // https://stackoverflow.com/questions/48378495/recommended-typescript-config-for-node-8
+      // and 'dom' to tell tsc it's okay to use the URL object (which is in Node >= 7)
+      "target": "es2017",
+      "lib": ["es2017", "dom"]
   },
   "include": [
       "./src/**/*"

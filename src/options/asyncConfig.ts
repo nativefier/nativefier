@@ -17,7 +17,7 @@ function inferredOptions(oldOptions, fieldResults): any {
 /**
  * Takes the options object and infers new values needing async work
  */
-export async function asyncConfig(options): any {
+export async function asyncConfig(options): Promise<any> {
   log.debug('\nPerforming async options post-processing.');
   const processedOptions = await getProcessedOptions(options);
   return inferredOptions(options, processedOptions);

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
       "allowJs": true,
-      "declaration": true,
+      "declaration": false,
       "esModuleInterop": true,
       "incremental": true,
       "module": "commonjs",
@@ -10,7 +10,8 @@
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,
-      "target": "es2016"
+      "target": "es2017",
+      "lib": ["es2017", "dom"]
   },
   "include": [
       "./src/**/*"
