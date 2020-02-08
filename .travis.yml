@@ -1,7 +1,4 @@
 language: node_js
-addons:
-  code_climate:
-    repo_token: CODE_CLIMATE_TOKEN
 node_js:
 - '13'
 - '12'
@@ -14,8 +11,6 @@ install:
 - npm run build
 script:
 - npm run ci
-after_script:
-- codeclimate-test-reporter < ./coverage/lcov.info
 deploy:
   provider: npm
   skip_cleanup: true

@@ -1,6 +1,4 @@
-import * as helpers from '../helpers/helpers';
-
-const { linkIsInternal } = helpers;
+import { linkIsInternal } from '../helpers/helpers';
 
 export function onNewWindowHelper(
   urlToGo,

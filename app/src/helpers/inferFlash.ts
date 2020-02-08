@@ -6,9 +6,7 @@ import * as log from 'loglevel';
 import { isOSX, isWindows, isLinux } from './helpers';
 
 /**
- * Synchronously find a file or directory
- * @param {string} base path
- * @returns {Array}
+ * Find a file or directory
  */
 function findSync(
   pattern: RegExp,

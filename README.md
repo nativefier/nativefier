@@ -142,24 +142,27 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Fix icon not showing up on Linux
 - [x] Review .npmignore and published zip. Test installing it.
 - [ ] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
-      Find a workaround or revert to webpack.
+      Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Windows & macOS smoke test
-- [ ] More typing and testing of what's passed to electron-packager
-- [ ] Address TODOs in code
+- [ ] More typing and testing of what's passed to electron-packager (inputOptions)
+- [ ] Address TODOs in code, especially repair Squirrel
 - [ ] Warn on using electron < 7
 
 ## TS: Post-beta/launch improvements
 
+- [ ] https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md
 - [ ] Check perms to write dest dir, and error nicely if not writable
 - [ ] ncp async wrapper
 - [ ] `test` task: unit & integration tests in parallel, for speed
 - [ ] Maybe replace loglevel.
+- [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes
 - [ ] GitHub: Create PR template, review Issue template
 - [ ] Improve typing and remove remaining `@ts-ignore`s
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
 - [ ] Tweak tsconfigs: make tsc strict(er)
+- [ ] Enable dependabot
 - [ ] Use new TS project build system
     - [ ] Move all src to src (/{cli, app})
     - [ ] Produce cleaner output dir structure (output to /lib, not /lib/src)
