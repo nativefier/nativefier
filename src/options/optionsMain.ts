@@ -82,6 +82,15 @@ export function getOptions(inputOptions: any): Promise<any> {
 
   if (options.verbose) {
     log.setLevel('trace');
+    try {
+      require('debug').enable('electron-packager');
+    } catch (err) {
+      log.debug(
+        'Failed to enable electron-packager debug output. This should not happen,',
+        'and suggests their internals changed. Please report an issue.',
+      );
+    }
+
     log.debug(
       'Running in verbose mode! This will produce a mountain of logs and',
       'is recommended only for troubleshooting or if you like Shakespeare.',

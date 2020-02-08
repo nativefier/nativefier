@@ -142,6 +142,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Fix icon not showing up on Linux
 - [x] Review .npmignore and published zip. Test installing it.
 - [x] Repair Squirrel
+- [x] Make electron-packager verbose too when using `--verbose`
 - [ ] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [ ] Add tests & typing

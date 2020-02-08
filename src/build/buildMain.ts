@@ -126,7 +126,7 @@ export async function buildMain(inputOptions: any): Promise<string> {
   const optionsWithIcon = await convertIconIfNecessary(optionsWithTmpPath);
 
   log.info(
-    "\nPackaging; this might take a while, especially if the requested Electron isn't cached yet...",
+    "\nPackaging... This will take a few seconds, maybe minutes if the requested Electron isn't cached yet...",
   );
   const packageOptions = trimUnprocessableOptions(optionsWithIcon);
   const appPathArray = await electronPackager({
