@@ -143,6 +143,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Review .npmignore and published zip. Test installing it.
 - [x] Repair Squirrel
 - [x] Make electron-packager verbose too when using `--verbose`
+- [x] Warn on using electron < 7
 - [ ] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [ ] Add tests & typing
@@ -150,7 +151,6 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] Windows & macOS smoke test
 - [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Address TODOs in code
-- [ ] Warn on using electron < 7
 
 ## TS: Post-beta/launch improvements
 

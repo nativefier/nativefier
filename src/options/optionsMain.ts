@@ -3,10 +3,16 @@ import * as fs from 'fs';
 import * as log from 'loglevel';
 
 import * as packageJson from '../../package.json';
-import { ELECTRON_VERSION, PLACEHOLDER_APP_DIR } from '../constants';
+import {
+  ELECTRON_VERSION,
+  PLACEHOLDER_APP_DIR,
+  ELECTRON_MAJOR_VERSION,
+} from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
 import { normalizeUrl } from './normalizeUrl';
+
+const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
 /**
  * Extracts only desired keys from input options and augments it with defaults
@@ -97,6 +103,21 @@ export function getOptions(inputOptions: any): Promise<any> {
     );
   } else {
     log.setLevel('info');
+  }
+
+  if (inputOptions.electronVersion) {
+    const requestedVersion: string = inputOptions.electronVersion;
+    if (!requestedVersion.match(SEMVER_VERSION_NUMBER_REGEX)) {
+      throw `Invalid Electron version number "${requestedVersion}". Aborting.`;
+    }
+    const requestedMajorVersion = parseInt(requestedVersion.split('.')[0], 10);
+    if (requestedMajorVersion < ELECTRON_MAJOR_VERSION) {
+      log.warn(
+        `\nATTENTION: Using **old** Electron version ${requestedVersion} as requested.`,
+        "\nIt's untested, bugs and horror will happen, you're on your own.",
+        `\nSimply abort & re-run without passing the version flag to default to ${ELECTRON_VERSION}`,
+      );
+    }
   }
 
   if (options.flashPluginDir) {
