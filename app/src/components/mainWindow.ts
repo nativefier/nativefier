@@ -156,27 +156,25 @@ export function createMainWindow(
     return undefined;
   };
 
-  const adjustWindowZoom = (window, adjustment) => {
-    window.webContents.getZoomFactor((zoomFactor) => {
-      window.webContents.setZoomFactor(zoomFactor + adjustment);
-    });
+  const adjustWindowZoom = (window: BrowserWindow, adjustment) => {
+    window.webContents.zoomFactor = window.webContents.zoomFactor + adjustment;
   };
 
   const onZoomIn = () => {
-    withFocusedWindow((focusedWindow) =>
+    withFocusedWindow((focusedWindow: BrowserWindow) =>
       adjustWindowZoom(focusedWindow, ZOOM_INTERVAL),
     );
   };
 
   const onZoomOut = () => {
-    withFocusedWindow((focusedWindow) =>
+    withFocusedWindow((focusedWindow: BrowserWindow) =>
       adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL),
     );
   };
 
   const onZoomReset = () => {
-    withFocusedWindow((focusedWindow) => {
-      focusedWindow.webContents.setZoomFactor(options.zoom);
+    withFocusedWindow((focusedWindow: BrowserWindow) => {
+      focusedWindow.webContents.zoomFactor = options.zoom;
     });
   };
 
@@ -266,7 +264,7 @@ export function createMainWindow(
     );
   };
 
-  const sendParamsOnDidFinishLoad = (window) => {
+  const sendParamsOnDidFinishLoad = (window: BrowserWindow) => {
     window.webContents.on('did-finish-load', () => {
       window.webContents.send('params', JSON.stringify(options));
     });
