@@ -4,6 +4,11 @@ import * as path from 'path';
 import axios from 'axios';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
+import * as tmp from 'tmp';
+tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
+
+const now = new Date();
+const TMP_TIME = `${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
 
 type DownloadResult = {
   data: Buffer;
@@ -17,6 +22,19 @@ export function isOSX(): boolean {
 export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
+
+/**
+ * Create a temp directory with a debug-friendly name, and return its path.
+ * Will be automatically deleted on exit.
+ */
+export function getTempDir(prefix: string, mode?: number): string {
+  return tmp.dirSync({
+    mode,
+    unsafeCleanup: true, // recursively remove tmp dir on exit, even if not empty.
+    prefix: `nativefier-${TMP_TIME}-${prefix}-`,
+  }).name;
+}
+
 export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
   log.debug(`Downloading ${fileUrl}`);
   return axios

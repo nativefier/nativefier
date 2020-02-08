@@ -4,9 +4,8 @@ import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 import { ncp } from 'ncp';
-import * as tmp from 'tmp';
 
-import { isWindows } from '../helpers/helpers';
+import { isWindows, getTempDir } from '../helpers/helpers';
 import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
 import { convertIconIfNecessary } from './buildIcon';
@@ -18,6 +17,19 @@ const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'buildVersion',
   'versionString',
   'win32metadata',
+];
+
+// electron-packager's default ignore list is too aggressive, pruning e.g.
+// `node_modules/debug/src/*`. Not sure why, it's not what the doc says.
+// Overriding with a hand-tweaked set of reasonable exclusions.
+// https://github.com/electron/electron-packager/blob/master/docs/api.md#ignore
+const ELECTRON_PACKAGER_IGNORES = [
+  /\.md$/,
+  /\.markdown$/,
+  /\.d\.ts$/,
+  /Makefile$/,
+  /\.yml$/,
+  /\.test\.js$/,
 ];
 
 /**
@@ -106,8 +118,7 @@ export async function buildMain(inputOptions: any): Promise<string> {
   const options = await getOptions(inputOptions);
 
   log.info('\nPreparing Electron app...');
-  const tmpDir = tmp.dirSync({ mode: 0o755, unsafeCleanup: true });
-  const tmpPath = tmpDir.name;
+  const tmpPath = getTempDir('app', 0o755);
   await buildApp(options.dir, tmpPath, options);
 
   log.info('\nConverting icons...');
@@ -118,7 +129,11 @@ export async function buildMain(inputOptions: any): Promise<string> {
     "\nPackaging; this might take a while, especially if the requested Electron isn't cached yet...",
   );
   const packageOptions = trimUnprocessableOptions(optionsWithIcon);
-  const appPathArray = await electronPackager(packageOptions);
+  const appPathArray = await electronPackager({
+    ...packageOptions,
+    quiet: false,
+    ignore: ELECTRON_PACKAGER_IGNORES,
+  });
 
   log.info('\nFinalizing build...');
   const appPath = getAppPath(appPathArray);

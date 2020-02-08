@@ -18,5 +18,3 @@ test('it should call the async config', async () => {
   expect(asyncConfigMock).toHaveBeenCalledWith(expect.objectContaining(params));
   expect(result).toEqual(mockedAsyncConfig);
 });
-
-// TODO add more tests

@@ -9,16 +9,13 @@ import electronDownload from 'electron-dl';
 import { createLoginWindow } from './components/loginWindow';
 import { createMainWindow } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import * as helpers from './helpers/helpers';
+import { isOSX } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/jiahaog/nativefier/pull/744
-// TODO disabled for now, breaks build: Uncaught Exception: Error: Cannot find module '/tmp/app-linux-x64/resources/app/node_modules/electron-squirrel-startup/node_modules/debug/src/index.js'. Please verify that the package.json has a valid "main" entry
-// if (require('electron-squirrel-startup')) {
-//   app.exit();
-// }
-
-const { isOSX } = helpers;
+if (require('electron-squirrel-startup')) {
+  app.exit();
+}
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));

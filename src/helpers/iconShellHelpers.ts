@@ -1,10 +1,8 @@
 import * as path from 'path';
 
 import * as shell from 'shelljs';
-import * as tmp from 'tmp';
-tmp.setGracefulCleanup();
 
-import { isWindows, isOSX } from './helpers';
+import { isWindows, isOSX, getTempDir } from './helpers';
 import * as log from 'loglevel';
 
 const SCRIPT_PATHS = {
@@ -54,16 +52,11 @@ async function iconShellHelper(
   });
 }
 
-function getTmpDirPath(): string {
-  const tempIconDirObj = tmp.dirSync({ unsafeCleanup: true });
-  return tempIconDirObj.name;
-}
-
 export function singleIco(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.singleIco,
     icoSrc,
-    `${getTmpDirPath()}/icon.ico`,
+    `${getTempDir('iconconv')}/icon.ico`,
   );
 }
 
@@ -71,7 +64,7 @@ export async function convertToPng(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToPng,
     icoSrc,
-    `${getTmpDirPath()}/icon.png`,
+    `${getTempDir('iconconv')}/icon.png`,
   );
 }
 
@@ -79,7 +72,7 @@ export async function convertToIco(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToIco,
     icoSrc,
-    `${getTmpDirPath()}/icon.ico`,
+    `${getTempDir('iconconv')}/icon.ico`,
   );
 }
 
@@ -92,6 +85,6 @@ export async function convertToIcns(icoSrc: string): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToIcns,
     icoSrc,
-    `${getTmpDirPath()}/icon.icns`,
+    `${getTempDir('iconconv')}/icon.icns`,
   );
 }

@@ -151,6 +151,7 @@ export async function buildApp(
 ): Promise<void> {
   const appArgs = pickElectronAppArgs(options);
 
+  log.debug(`Copying app from ${src} to ${dest}`);
   return new Promise((resolve, reject) => {
     ncp(src, dest, async (error) => {
       if (error) {

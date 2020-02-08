@@ -4,13 +4,15 @@ import { promisify } from 'util';
 
 import * as gitCloud from 'gitcloud';
 import * as pageIcon from 'page-icon';
-import * as tmp from 'tmp';
 
-import { downloadFile, getAllowedIconFormats } from '../helpers/helpers';
+import {
+  downloadFile,
+  getAllowedIconFormats,
+  getTempDir,
+} from '../helpers/helpers';
 import * as log from 'loglevel';
 
 const writeFileAsync = promisify(writeFile);
-tmp.setGracefulCleanup();
 
 const GITCLOUD_SPACE_DELIMITER = '-';
 const GITCLOUD_URL = 'https://jiahaog.github.io/nativefier-icons/';
@@ -84,7 +86,7 @@ export async function inferIcon(
   platform: string,
 ): Promise<string> {
   log.debug(`Inferring icon for ${targetUrl} on ${platform}`);
-  const tmpDirPath = tmp.dirSync().name;
+  const tmpDirPath = getTempDir('iconinfer');
 
   let icon: { ext: string; data: Buffer } = await inferIconFromStore(
     targetUrl,
