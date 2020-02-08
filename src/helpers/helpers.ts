@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import axios from 'axios';
 import * as hasbin from 'hasbin';
+import { ncp } from 'ncp';
 import * as log from 'loglevel';
 import * as tmp from 'tmp';
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
@@ -33,6 +34,17 @@ export function getTempDir(prefix: string, mode?: number): string {
     unsafeCleanup: true, // recursively remove tmp dir on exit, even if not empty.
     prefix: `nativefier-${TMP_TIME}-${prefix}-`,
   }).name;
+}
+
+export async function copyFileOrDir(sourceFileOrDir: string, dest: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    ncp(sourceFileOrDir, dest, (error: any) => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
+  });
 }
 
 export async function downloadFile(fileUrl: string): Promise<DownloadResult> {

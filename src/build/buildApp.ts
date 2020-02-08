@@ -5,7 +5,8 @@ import { promisify } from 'util';
 
 import { kebabCase } from 'lodash';
 import * as log from 'loglevel';
-import { ncp } from 'ncp';
+
+import { copyFileOrDir } from '../helpers/helpers';
 
 const writeFileAsync = promisify(fs.writeFile);
 
@@ -68,53 +69,30 @@ function pickElectronAppArgs(options): any {
 }
 
 async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
-  if (!srcs) {
-    log.debug('No scripts to inject, skipping copy.');
-    return new Promise((resolve) => {
-      resolve();
-    });
+  if (!srcs || srcs.length === 0) {
+    log.debug('No files to inject, skipping copy.');
+    return;
   }
 
-  log.debug(`Copying ${srcs.length} resources to inject in app.`);
-  const promises = srcs.map(
-    (src) =>
-      new Promise((resolve, reject) => {
-        if (!fs.existsSync(src)) {
-          reject(new Error('Error copying injection files: file not found'));
-          return;
-        }
+  log.debug(`Copying ${srcs.length} files to inject in app.`);
+  for (const src of srcs) {
+    if (!fs.existsSync(src)) {
+      throw new Error('Error copying injection files: file not found');
+    }
 
-        let destFileName: string;
-        if (path.extname(src) === '.js') {
-          destFileName = 'inject.js';
-        } else if (path.extname(src) === '.css') {
-          destFileName = 'inject.css';
-        } else {
-          resolve();
-          return;
-        }
+    let destFileName: string;
+    if (path.extname(src) === '.js') {
+      destFileName = 'inject.js';
+    } else if (path.extname(src) === '.css') {
+      destFileName = 'inject.css';
+    } else {
+      return;
+    }
 
-        const destPath = path.join(dest, 'inject', destFileName);
-        log.debug(`Copying ${destPath}`);
-        ncp(src, destPath, (error) => {
-          if (error) {
-            reject(new Error(`Error copying injection files: ${error}`));
-            return;
-          }
-          resolve();
-        });
-      }),
-  );
-
-  return new Promise((resolve, reject) => {
-    Promise.all(promises)
-      .then(() => {
-        resolve();
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+    const destPath = path.join(dest, 'inject', destFileName);
+    log.debug(`Copying injection file "${src}" to "${destPath}"`);
+    await copyFileOrDir(src, destPath);
+  }
 }
 
 function normalizeAppName(appName: string, url: string): string {
@@ -151,24 +129,21 @@ export async function buildApp(
 ): Promise<void> {
   const appArgs = pickElectronAppArgs(options);
 
-  log.debug(`Copying app from ${src} to ${dest}`);
-  return new Promise((resolve, reject) => {
-    ncp(src, dest, async (error) => {
-      if (error) {
-        reject(`Error copying electron app to temporary directory: ${error}`);
-      }
+  log.debug(`Copying electron app from ${src} to ${dest}`);
+  try {
+    await copyFileOrDir(src, dest);
+  } catch (err) {
+    throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${err}`;
+  }
 
-      const appJsonPath = path.join(dest, '/nativefier.json');
-      log.debug(`Writing app config to ${appJsonPath}`);
-      await writeFileAsync(appJsonPath, JSON.stringify(appArgs));
+  const appJsonPath = path.join(dest, '/nativefier.json');
+  log.debug(`Writing app config to ${appJsonPath}`);
+  await writeFileAsync(appJsonPath, JSON.stringify(appArgs));
 
-      try {
-        await maybeCopyScripts(options.inject, dest);
-      } catch (err) {
-        log.error('Error while copying scripts', err);
-      }
-      changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
-      resolve();
-    });
-  });
+  try {
+    await maybeCopyScripts(options.inject, dest);
+  } catch (err) {
+    log.error('Error copying injection files', err);
+  }
+  changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
 }

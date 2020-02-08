@@ -3,9 +3,8 @@ import * as path from 'path';
 import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
-import { ncp } from 'ncp';
 
-import { isWindows, getTempDir } from '../helpers/helpers';
+import { isWindows, getTempDir, copyFileOrDir } from '../helpers/helpers';
 import { getOptions } from '../options/optionsMain';
 import { buildApp } from './buildApp';
 import { convertIconIfNecessary } from './buildIcon';
@@ -79,14 +78,7 @@ async function copyIconsIfNecessary(
   const destIconPath = path.join(destAppPath, destFileName);
 
   log.debug(`Copying icon ${options.icon} to`, destIconPath);
-  return new Promise((resolve, reject) => {
-    ncp(options.icon, destIconPath, (error) => {
-      if (error) {
-        reject(error);
-      }
-      resolve();
-    });
-  });
+  await copyFileOrDir(options.icon, destIconPath);
 }
 
 function trimUnprocessableOptions(

@@ -146,7 +146,9 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Warn on using old electron
 - [x] Move to Electron 8
 - [x] https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md
-- [...] Make eslint happy
+- [x] Make eslint happy in cli
+- [x] ncp async wrapper
+- [ ] Make eslint happy in app
 - [ ] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [ ] Add tests & typing
@@ -158,7 +160,6 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 ## TS: Post-beta/launch improvements
 
 - [ ] Check perms to write dest dir, and error nicely if not writable
-- [ ] ncp async wrapper
 - [ ] `test` task: unit & integration tests in parallel, for speed
 - [ ] Maybe replace loglevel.
 - [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes
