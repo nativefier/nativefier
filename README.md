@@ -148,9 +148,9 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md
 - [x] Make eslint happy in cli
 - [x] ncp async wrapper
-- [ ] Make eslint happy in app
-- [ ] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
+- [x] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
+- [ ] Make eslint happy in app
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Windows & macOS smoke test
@@ -172,3 +172,4 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
     - [ ] Move all src to src (/{cli, app})
     - [ ] Produce cleaner output dir structure (output to /lib, not /lib/src)
     - [ ] Measure build time improvement
+- [ ] Setup automatic build of pre-release to npm @beta channel on merge
