@@ -42,7 +42,7 @@
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
-    "postinstall": "cd app && npx yarn install --no-lockfile --prefer-offline --no-progress --silent",
+    "postinstall": "cd app && yarn install --no-lockfile --prefer-offline --no-progress --silent",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:unit": "jest",
     "test:watch": "jest --watch",
@@ -71,7 +71,8 @@
     "sanitize-filename": "1.x",
     "shelljs": "0.x",
     "source-map-support": "0.x",
-    "tmp": "0.x"
+    "tmp": "0.x",
+    "yarn": "1.x"
   },
   "devDependencies": {
     "@types/jest": "25.x",
