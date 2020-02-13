@@ -7,64 +7,65 @@ import { kebabCase } from 'lodash';
 import * as log from 'loglevel';
 
 import { copyFileOrDir } from '../helpers/helpers';
+import { AppOptions } from '../options/model';
 
 const writeFileAsync = promisify(fs.writeFile);
 
 /**
  * Only picks certain app args to pass to nativefier.json
  */
-function pickElectronAppArgs(options): any {
+function pickElectronAppArgs(options: AppOptions): any {
   return {
-    name: options.name,
-    targetUrl: options.targetUrl,
-    counter: options.counter,
-    bounce: options.bounce,
-    width: options.width,
-    height: options.height,
-    minWidth: options.minWidth,
-    minHeight: options.minHeight,
-    maxWidth: options.maxWidth,
-    maxHeight: options.maxHeight,
-    x: options.x,
-    y: options.y,
-    showMenuBar: options.showMenuBar,
-    fastQuit: options.fastQuit,
-    userAgent: options.userAgent,
-    nativefierVersion: options.nativefierVersion,
-    ignoreCertificate: options.ignoreCertificate,
-    disableGpu: options.disableGpu,
-    ignoreGpuBlacklist: options.ignoreGpuBlacklist,
-    enableEs3Apis: options.enableEs3Apis,
-    insecure: options.insecure,
-    flashPluginDir: options.flashPluginDir,
-    diskCacheSize: options.diskCacheSize,
-    fullScreen: options.fullScreen,
-    hideWindowFrame: options.hideWindowFrame,
-    maximize: options.maximize,
-    disableContextMenu: options.disableContextMenu,
-    disableDevTools: options.disableDevTools,
-    zoom: options.zoom,
-    internalUrls: options.internalUrls,
-    proxyRules: options.proxyRules,
-    crashReporter: options.crashReporter,
-    singleInstance: options.singleInstance,
-    clearCache: options.clearCache,
-    appCopyright: options.appCopyright,
-    appVersion: options.appVersion,
-    buildVersion: options.buildVersion,
-    win32metadata: options.win32metadata,
-    versionString: options.versionString,
-    processEnvs: options.processEnvs,
-    fileDownloadOptions: options.fileDownloadOptions,
-    tray: options.tray,
-    basicAuthUsername: options.basicAuthUsername,
-    basicAuthPassword: options.basicAuthPassword,
-    alwaysOnTop: options.alwaysOnTop,
-    titleBarStyle: options.titleBarStyle,
-    globalShortcuts: options.globalShortcuts,
-    browserwindowOptions: options.browserwindowOptions,
-    backgroundColor: options.backgroundColor,
-    darwinDarkModeSupport: options.darwinDarkModeSupport,
+    alwaysOnTop: options.nativefier.alwaysOnTop,
+    appCopyright: options.packager.appCopyright,
+    appVersion: options.packager.appVersion,
+    backgroundColor: options.nativefier.backgroundColor,
+    basicAuthPassword: options.nativefier.basicAuthPassword,
+    basicAuthUsername: options.nativefier.basicAuthUsername,
+    bounce: options.nativefier.bounce,
+    browserwindowOptions: options.nativefier.browserwindowOptions,
+    buildVersion: options.packager.buildVersion,
+    clearCache: options.nativefier.clearCache,
+    counter: options.nativefier.counter,
+    crashReporter: options.nativefier.crashReporter,
+    darwinDarkModeSupport: options.packager.darwinDarkModeSupport,
+    disableContextMenu: options.nativefier.disableContextMenu,
+    disableDevTools: options.nativefier.disableDevTools,
+    disableGpu: options.nativefier.disableGpu,
+    diskCacheSize: options.nativefier.diskCacheSize,
+    enableEs3Apis: options.nativefier.enableEs3Apis,
+    fastQuit: options.nativefier.fastQuit,
+    fileDownloadOptions: options.nativefier.fileDownloadOptions,
+    flashPluginDir: options.nativefier.flashPluginDir,
+    fullScreen: options.nativefier.fullScreen,
+    globalShortcuts: options.nativefier.globalShortcuts,
+    height: options.nativefier.height,
+    hideWindowFrame: options.nativefier.hideWindowFrame,
+    ignoreCertificate: options.nativefier.ignoreCertificate,
+    ignoreGpuBlacklist: options.nativefier.ignoreGpuBlacklist,
+    insecure: options.nativefier.insecure,
+    internalUrls: options.nativefier.internalUrls,
+    maxHeight: options.nativefier.maxHeight,
+    maximize: options.nativefier.maximize,
+    maxWidth: options.nativefier.maxWidth,
+    minHeight: options.nativefier.minHeight,
+    minWidth: options.nativefier.minWidth,
+    name: options.packager.name,
+    nativefierVersion: options.nativefier.nativefierVersion,
+    processEnvs: options.nativefier.processEnvs,
+    proxyRules: options.nativefier.proxyRules,
+    showMenuBar: options.nativefier.showMenuBar,
+    singleInstance: options.nativefier.singleInstance,
+    targetUrl: options.packager.targetUrl,
+    titleBarStyle: options.nativefier.titleBarStyle,
+    tray: options.nativefier.tray,
+    userAgent: options.nativefier.userAgent,
+    versionString: options.nativefier.versionString,
+    width: options.nativefier.width,
+    win32metadata: options.packager.win32metadata,
+    x: options.nativefier.x,
+    y: options.nativefier.y,
+    zoom: options.nativefier.zoom,
   };
 }
 
@@ -125,10 +126,8 @@ function changeAppPackageJsonName(
 export async function buildApp(
   src: string,
   dest: string,
-  options: any,
+  options: AppOptions,
 ): Promise<void> {
-  const appArgs = pickElectronAppArgs(options);
-
   log.debug(`Copying electron app from ${src} to ${dest}`);
   try {
     await copyFileOrDir(src, dest);
@@ -138,12 +137,19 @@ export async function buildApp(
 
   const appJsonPath = path.join(dest, '/nativefier.json');
   log.debug(`Writing app config to ${appJsonPath}`);
-  await writeFileAsync(appJsonPath, JSON.stringify(appArgs));
+  await writeFileAsync(
+    appJsonPath,
+    JSON.stringify(pickElectronAppArgs(options)),
+  );
 
   try {
-    await maybeCopyScripts(options.inject, dest);
+    await maybeCopyScripts(options.nativefier.inject, dest);
   } catch (err) {
     log.error('Error copying injection files', err);
   }
-  changeAppPackageJsonName(dest, appArgs.name, appArgs.targetUrl);
+  changeAppPackageJsonName(
+    dest,
+    options.packager.name,
+    options.packager.targetUrl,
+  );
 }

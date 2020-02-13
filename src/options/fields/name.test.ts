@@ -11,13 +11,17 @@ jest.mock('loglevel');
 
 const inferTitleMockedResult = 'mock name';
 const NAME_PARAMS_PROVIDED = {
-  name: 'appname',
-  targetUrl: 'https://google.com',
-  platform: 'linux',
+  packager: {
+    name: 'appname',
+    targetUrl: 'https://google.com',
+    platform: 'linux',
+  },
 };
 const NAME_PARAMS_NEEDS_INFER = {
-  targetUrl: 'https://google.com',
-  platform: 'mac',
+  packager: {
+    targetUrl: 'https://google.com',
+    platform: 'mac',
+  },
 };
 beforeAll(() => {
   (sanitizeFilename as jest.Mock).mockImplementation((_, filename) => filename);
@@ -28,14 +32,14 @@ describe('well formed name parameters', () => {
     const result = await name(NAME_PARAMS_PROVIDED);
 
     expect(inferTitle).toHaveBeenCalledTimes(0);
-    expect(result).toBe(NAME_PARAMS_PROVIDED.name);
+    expect(result).toBe(NAME_PARAMS_PROVIDED.packager.name);
   });
 
   test('it should call sanitize filename', async () => {
     const result = await name(NAME_PARAMS_PROVIDED);
 
     expect(sanitizeFilename).toHaveBeenCalledWith(
-      NAME_PARAMS_PROVIDED.platform,
+      NAME_PARAMS_PROVIDED.packager.platform,
       result,
     );
   });
@@ -46,10 +50,10 @@ describe('bad name parameters', () => {
     (inferTitle as jest.Mock).mockResolvedValue(inferTitleMockedResult);
   });
 
-  const params = { targetUrl: 'some url', platform: 'whatever' };
+  const params = { packager: { targetUrl: 'some url', platform: 'whatever' } };
   test('it should call inferTitle when the name is undefined', async () => {
     await name(params);
-    expect(inferTitle).toHaveBeenCalledWith(params.targetUrl);
+    expect(inferTitle).toHaveBeenCalledWith(params.packager.targetUrl);
   });
 
   test('it should call inferTitle when the name is an empty string', async () => {
@@ -59,12 +63,15 @@ describe('bad name parameters', () => {
     };
 
     await name(testParams);
-    expect(inferTitle).toHaveBeenCalledWith(params.targetUrl);
+    expect(inferTitle).toHaveBeenCalledWith(params.packager.targetUrl);
   });
 
   test('it should call sanitize filename', async () => {
     const result = await name(params);
-    expect(sanitizeFilename).toHaveBeenCalledWith(params.platform, result);
+    expect(sanitizeFilename).toHaveBeenCalledWith(
+      params.packager.platform,
+      result,
+    );
   });
 });
 
@@ -73,7 +80,9 @@ describe('handling inferTitle results', () => {
     const result = await name(NAME_PARAMS_NEEDS_INFER);
 
     expect(result).toEqual(inferTitleMockedResult);
-    expect(inferTitle).toHaveBeenCalledWith(NAME_PARAMS_NEEDS_INFER.targetUrl);
+    expect(inferTitle).toHaveBeenCalledWith(
+      NAME_PARAMS_NEEDS_INFER.packager.targetUrl,
+    );
   });
 
   test('it should return the default app name when the returned pageTitle is falsey', async () => {
@@ -81,7 +90,9 @@ describe('handling inferTitle results', () => {
     const result = await name(NAME_PARAMS_NEEDS_INFER);
 
     expect(result).toEqual(DEFAULT_APP_NAME);
-    expect(inferTitle).toHaveBeenCalledWith(NAME_PARAMS_NEEDS_INFER.targetUrl);
+    expect(inferTitle).toHaveBeenCalledWith(
+      NAME_PARAMS_NEEDS_INFER.packager.targetUrl,
+    );
   });
 
   test('it should return the default app name when inferTitle rejects', async () => {
@@ -89,7 +100,9 @@ describe('handling inferTitle results', () => {
     const result = await name(NAME_PARAMS_NEEDS_INFER);
 
     expect(result).toEqual(DEFAULT_APP_NAME);
-    expect(inferTitle).toHaveBeenCalledWith(NAME_PARAMS_NEEDS_INFER.targetUrl);
+    expect(inferTitle).toHaveBeenCalledWith(
+      NAME_PARAMS_NEEDS_INFER.packager.targetUrl,
+    );
     expect(log.warn).toHaveBeenCalledTimes(1); // eslint-disable-line @typescript-eslint/unbound-method
   });
 });

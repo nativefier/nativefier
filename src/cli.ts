@@ -13,7 +13,7 @@ function collect(val: any, memo: any[]): any[] {
   return memo;
 }
 
-function parseStringAsBoolean(val: string): boolean | string {
+function parseBooleanOrString(val: string): boolean | string {
   switch (val) {
     case 'true':
       return true;
@@ -63,31 +63,36 @@ if (require.main === module) {
     sanitizedArgs.push(arg);
   });
 
+  const positionalOptions = {
+    targetUrl: '',
+    out: '',
+  };
   commander
+    .name('nativefier')
     .version(packageJson.version, '-v, --version')
     .arguments('<targetUrl> [dest]')
-    .action((targetUrl, appDir) => {
-      commander.targetUrl = targetUrl;
-      commander.out = appDir;
+    .action((url, outputDirectory) => {
+      positionalOptions.targetUrl = url;
+      positionalOptions.out = outputDirectory;
     })
     .option('-n, --name <value>', 'app name')
-    .option('-p, --platform <value>', "'osx', 'mas', 'linux' or 'windows'")
+    .option('-p, --platform <value>', "'mac', 'mas', 'linux' or 'windows'")
     .option('-a, --arch <value>', "'ia32' or 'x64' or 'armv7l'")
     .option(
       '--app-version <value>',
-      'The release version of the application.  Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.',
+      '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',
     )
     .option(
       '--build-version <value>',
-      'The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.',
+      '(macOS, windows only) The build version of the app. Maps to `FileVersion` metadata property on Windows, and `CFBundleVersion` on macOS',
     )
     .option(
       '--app-copyright <value>',
-      'The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X',
+      '(macOS, windows only) a human-readable copyright line for the app. Maps to `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on macOS',
     )
     .option(
       '--win32metadata <json-string>',
-      'a JSON string of key/value pairs of application metadata (ProductName, InternalName, FileDescription) to embed into the executable (Windows only).',
+      '(windows only) a JSON string of key/value pairs (ProductName, InternalName, FileDescription) to embed as executable metadata',
       parseJson,
     )
     .option(
@@ -96,19 +101,19 @@ if (require.main === module) {
     )
     .option(
       '--no-overwrite',
-      'do not override output directory if it already exists, defaults to false',
+      'do not override output directory if it already exists; defaults to false',
     )
     .option(
       '-c, --conceal',
-      'packages the source code within your app into an archive, defaults to false, see https://electronjs.org/docs/tutorial/application-packaging',
+      'packages the app source code into an asar archive; defaults to false',
     )
     .option(
       '--counter',
-      'if the target app should use a persistent counter badge in the dock (macOS only), defaults to false',
+      '(macOS only) set a dock count badge, determined by looking for a number in the window title; defaults to false',
     )
     .option(
       '--bounce',
-      'if the the dock icon should bounce when counter increases (macOS only), defaults to false',
+      '(macOS only) make he dock icon bounce when the counter increases; defaults to false',
     )
     .option(
       '-i, --icon <value>',
@@ -116,61 +121,61 @@ if (require.main === module) {
     )
     .option(
       '--width <value>',
-      'set window default width, defaults to 1280px',
+      'set window default width; defaults to 1280px',
       parseInt,
     )
     .option(
       '--height <value>',
-      'set window default height, defaults to 800px',
+      'set window default height; defaults to 800px',
       parseInt,
     )
     .option(
       '--min-width <value>',
-      'set window minimum width, defaults to 0px',
+      'set window minimum width; defaults to 0px',
       parseInt,
     )
     .option(
       '--min-height <value>',
-      'set window minimum height, defaults to 0px',
+      'set window minimum height; defaults to 0px',
       parseInt,
     )
     .option(
       '--max-width <value>',
-      'set window maximum width, default is no limit',
+      'set window maximum width; default is unlimited',
       parseInt,
     )
     .option(
       '--max-height <value>',
-      'set window maximum height, default is no limit',
+      'set window maximum height; default is unlimited',
       parseInt,
     )
     .option('--x <value>', 'set window x location', parseInt)
     .option('--y <value>', 'set window y location', parseInt)
-    .option('-m, --show-menu-bar', 'set menu bar visible, defaults to false')
+    .option('-m, --show-menu-bar', 'set menu bar visible; defaults to false')
     .option(
       '-f, --fast-quit',
-      'quit app after window close (macOS only), defaults to false',
+      '(macOS only) quit app on window close; defaults to false',
     )
-    .option('-u, --user-agent <value>', 'set the user agent string for the app')
+    .option('-u, --user-agent <value>', 'set the app user agent string')
     .option(
       '--honest',
-      'prevent the nativefied app from changing the user agent string to masquerade as a regular chrome browser',
+      'prevent the normal changing of the user agent string to appear as a regular Chrome browser',
     )
-    .option('--ignore-certificate', 'ignore certificate related errors')
+    .option('--ignore-certificate', 'ignore certificate-related errors')
     .option('--disable-gpu', 'disable hardware acceleration')
     .option(
       '--ignore-gpu-blacklist',
-      'allow WebGl apps to work on non supported graphics cards',
+      'force WebGL apps to work on unsupported GPUs',
     )
-    .option('--enable-es3-apis', 'force activation of WebGl 2.0')
+    .option('--enable-es3-apis', 'force activation of WebGL 2.0')
     .option(
       '--insecure',
-      'enable loading of insecure content, defaults to false',
+      'enable loading of insecure content; defaults to false',
     )
-    .option('--flash', 'if flash should be enabled')
+    .option('--flash', 'enables Adobe Flash; defaults to false')
     .option(
       '--flash-path <value>',
-      'path to Chrome flash plugin, find it in `Chrome://plugins`',
+      'path to Chrome flash plugin; find it in `chrome://plugins`',
     )
     .option(
       '--disk-cache-size <value>',
@@ -178,31 +183,31 @@ if (require.main === module) {
     )
     .option(
       '--inject <value>',
-      'path to a CSS/JS file to be injected',
+      'path to a CSS/JS file to be injected. Pass multiple times to inject multiple files.',
       collect,
       [],
     )
-    .option(
-      '--full-screen',
-      'if the app should always be started in full screen',
-    )
-    .option('--maximize', 'if the app should always be started maximized')
+    .option('--full-screen', 'always start the app full screen')
+    .option('--maximize', 'always start the app maximized')
     .option('--hide-window-frame', 'disable window frame and controls')
-    .option('--verbose', 'if verbose logs should be displayed')
-    .option('--disable-context-menu', 'disable the context menu')
-    .option('--disable-dev-tools', 'disable developer tools')
+    .option('--verbose', 'enable verbose/debug/troubleshooting logs')
+    .option('--disable-context-menu', 'disable the context menu (right click)')
+    .option(
+      '--disable-dev-tools',
+      'disable developer tools (Ctrl+Shift+I / F12)',
+    )
     .option(
       '--zoom <value>',
-      'default zoom factor to use when the app is opened, defaults to 1.0',
+      'default zoom factor to use when the app is opened; defaults to 1.0',
       parseFloat,
     )
     .option(
       '--internal-urls <value>',
-      'regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser.  (default: URLs on same second-level domain as app)',
+      'regex of URLs to consider "internal"; all other URLs will be opened in an external browser. Default: URLs on same second-level domain as app',
     )
     .option(
       '--proxy-rules <value>',
-      'proxy rules. See https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback',
+      'proxy rules; see https://www.electronjs.org/docs/api/session#sessetproxyconfig',
     )
     .option(
       '--crash-reporter <value>',
@@ -218,29 +223,29 @@ if (require.main === module) {
     )
     .option(
       '--processEnvs <json-string>',
-      'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.',
+      'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened',
       getProcessEnvs,
     )
     .option(
       '--file-download-options <json-string>',
-      'a JSON string of key/value pairs to be set as file download options.  See https://github.com/sindresorhus/electron-dl for available options.',
+      'a JSON string of key/value pairs to be set as file download options. See https://github.com/sindresorhus/electron-dl for available options.',
       parseJson,
     )
     .option(
       '--tray [start-in-tray]',
-      "Allow app to stay in system tray. If 'start-in-tray' is given as argument, don't show main window on first start",
-      parseStringAsBoolean,
+      "Allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
+      parseBooleanOrString,
     )
     .option('--basic-auth-username <value>', 'basic http(s) auth username')
     .option('--basic-auth-password <value>', 'basic http(s) auth password')
     .option('--always-on-top', 'enable always on top window')
     .option(
       '--title-bar-style <value>',
-      "(macOS only) set title bar style ('hidden', 'hiddenInset').  Consider injecting custom CSS (via --inject) for better integration.",
+      "(macOS only) set title bar style ('hidden', 'hiddenInset'). Consider injecting custom CSS (via --inject) for better integration",
     )
     .option(
       '--global-shortcuts <value>',
-      'JSON file with global shortcut configuration. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
+      'JSON file defining global shortcuts. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
     .option(
       '--browserwindow-options <json-string>',
@@ -249,7 +254,7 @@ if (require.main === module) {
     )
     .option(
       '--background-color <value>',
-      "Sets the background color (for seamless experience while the app is loading). Example value: '#2e2c29'",
+      "sets the app background color, for better integration while the app is loading. Example value: '#2e2c29'",
     )
     .option(
       '--darwin-dark-mode-support',
@@ -261,7 +266,8 @@ if (require.main === module) {
     commander.help();
   }
   checkInternet();
-  buildMain({ ...commander }) // TODO do something more explicit than destructure to get options pojo
+  const options = { ...positionalOptions, ...commander.opts() };
+  buildMain(options)
     .then((appPath) => {
       if (!appPath) {
         log.info(`App *not* built to ${appPath}`);

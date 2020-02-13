@@ -5,9 +5,11 @@ import { inferTitle } from '../../infer/inferTitle';
 import { DEFAULT_APP_NAME } from '../../constants';
 
 type NameParams = {
-  name?: string;
-  targetUrl: string;
-  platform: string;
+  packager: {
+    name?: string;
+    platform?: string;
+    targetUrl: string;
+  };
 };
 
 async function tryToInferName(targetUrl: string): Promise<string> {
@@ -23,12 +25,20 @@ async function tryToInferName(targetUrl: string): Promise<string> {
   }
 }
 
-export async function name(params: NameParams): Promise<string> {
-  if ('name' in params && params.name) {
-    log.debug(`Got name ${params.name} from options. No inferring needed`);
-    return sanitizeFilename(params.platform, params.name);
+export async function name(options: NameParams): Promise<void> {
+  if (options.packager.name) {
+    log.debug(
+      `Got name ${options.packager.name} from options. No inferring needed`,
+    );
+    options.packager.name = sanitizeFilename(
+      options.packager.platform,
+      options.packager.name,
+    );
   }
 
-  const inferredName = await tryToInferName(params.targetUrl);
-  return sanitizeFilename(params.platform, inferredName);
+  const inferredName = await tryToInferName(options.packager.targetUrl);
+  options.packager.name = sanitizeFilename(
+    options.packager.platform,
+    inferredName,
+  );
 }

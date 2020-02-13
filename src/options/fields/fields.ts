@@ -1,30 +1,14 @@
 import { icon } from './icon';
 import { userAgent } from './userAgent';
+import { AppOptions } from '../model';
 import { name } from './name';
 
-const OPTIONS_NEEDING_POSTPROCESSING = [
-  {
-    optionName: 'userAgent',
-    processor: userAgent,
-  },
-  {
-    optionName: 'icon',
-    processor: icon,
-  },
-  {
-    optionName: 'name',
-    processor: name,
-  },
-];
+const OPTION_POSTPROCESSORS = [userAgent, icon, name];
 
-export function getProcessedOptions(options): Promise<any[]> {
-  return Promise.all(
-    OPTIONS_NEEDING_POSTPROCESSING.map(async ({ optionName, processor }) => {
-      const result = await processor(options);
-
-      return {
-        [optionName]: result,
-      };
+export async function processOptions(options: AppOptions): Promise<void> {
+  await Promise.all(
+    OPTION_POSTPROCESSORS.map(async (processorFn) => {
+      await processorFn(options);
     }),
   );
 }

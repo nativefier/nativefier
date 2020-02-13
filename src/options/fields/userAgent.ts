@@ -1,18 +1,22 @@
 import { inferUserAgent } from '../../infer/inferUserAgent';
 
 type UserAgentOpts = {
-  userAgentString?: string;
-  electronVersion?: string;
-  platform?: string;
+  packager: {
+    electronVersion?: string;
+    platform?: string;
+  };
+  nativefier: {
+    userAgent?: string;
+  };
 };
-export async function userAgent({
-  userAgentString,
-  electronVersion,
-  platform,
-}: UserAgentOpts): Promise<string> {
-  if (userAgentString) {
-    return userAgentString;
+
+export async function userAgent(options: UserAgentOpts): Promise<void> {
+  if (options.nativefier.userAgent) {
+    return;
   }
 
-  return inferUserAgent(electronVersion, platform);
+  options.nativefier.userAgent = await inferUserAgent(
+    options.packager.electronVersion,
+    options.packager.platform,
+  );
 }

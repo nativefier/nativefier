@@ -24,8 +24,8 @@ async function iconShellHelper(
     if (isWindows()) {
       reject(
         new Error(
-          'Icon conversion only supported on macOS or Linux.' +
-            'If building for Windows, pass a .ico.' +
+          'Icon conversion only supported on macOS or Linux. ' +
+            'If building for Windows, pass a .ico. ' +
             'If building for macOS/Linux, do it from macOS/Linux',
         ),
       );
@@ -37,6 +37,7 @@ async function iconShellHelper(
       `Converting icon ${icoSource} to ${icoDestination}.`,
       `Calling: ${shellCommand}`,
     );
+    // TODO wrap in async helper and simplify function
     shell.exec(shellCommand, { silent: true }, (exitCode, stdOut, stdError) => {
       if (exitCode) {
         reject({
@@ -78,10 +79,9 @@ export async function convertToIco(icoSrc: string): Promise<string> {
 
 export async function convertToIcns(icoSrc: string): Promise<string> {
   if (!isOSX()) {
-    return new Promise((resolve, reject) =>
-      reject(new Error('macOS is required to convert to a .icns icon')),
-    );
+    throw new Error('macOS is required to convert to a .icns icon');
   }
+
   return iconShellHelper(
     SCRIPT_PATHS.convertToIcns,
     icoSrc,

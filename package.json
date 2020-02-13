@@ -42,7 +42,7 @@
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
-    "postinstall": "cd app && npx yarn install --no-lockfile --prefer-offline --prod --no-progress --silent",
+    "postinstall": "cd app && npx yarn install --no-lockfile --prefer-offline --no-progress --silent",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:unit": "jest",
     "test:watch": "jest --watch",

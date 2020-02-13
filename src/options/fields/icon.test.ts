@@ -8,20 +8,24 @@ jest.mock('loglevel');
 
 const mockedResult = 'icon path';
 const ICON_PARAMS_PROVIDED = {
-  icon: './icon.png',
-  targetUrl: 'https://google.com',
-  platform: 'mac',
+  packager: {
+    icon: './icon.png',
+    targetUrl: 'https://google.com',
+    platform: 'mac',
+  },
 };
 const ICON_PARAMS_NEEDS_INFER = {
-  targetUrl: 'https://google.com',
-  platform: 'mac',
+  packager: {
+    targetUrl: 'https://google.com',
+    platform: 'mac',
+  },
 };
 
 describe('when the icon parameter is passed', () => {
   test('it should return the icon parameter', async () => {
     expect(inferIcon).toHaveBeenCalledTimes(0);
     await expect(icon(ICON_PARAMS_PROVIDED)).resolves.toBe(
-      ICON_PARAMS_PROVIDED.icon,
+      ICON_PARAMS_PROVIDED.packager.icon,
     );
   });
 });
@@ -35,8 +39,8 @@ describe('when the icon parameter is not passed', () => {
 
     expect(result).toBe(mockedResult);
     expect(inferIcon).toHaveBeenCalledWith(
-      ICON_PARAMS_NEEDS_INFER.targetUrl,
-      ICON_PARAMS_NEEDS_INFER.platform,
+      ICON_PARAMS_NEEDS_INFER.packager.targetUrl,
+      ICON_PARAMS_NEEDS_INFER.packager.platform,
     );
   });
 
@@ -49,8 +53,8 @@ describe('when the icon parameter is not passed', () => {
 
       expect(result).toBe(null);
       expect(inferIcon).toHaveBeenCalledWith(
-        ICON_PARAMS_NEEDS_INFER.targetUrl,
-        ICON_PARAMS_NEEDS_INFER.platform,
+        ICON_PARAMS_NEEDS_INFER.packager.targetUrl,
+        ICON_PARAMS_NEEDS_INFER.packager.platform,
       );
       expect(log.warn).toHaveBeenCalledTimes(1); // eslint-disable-line @typescript-eslint/unbound-method
     });

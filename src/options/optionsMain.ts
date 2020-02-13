@@ -10,83 +10,105 @@ import {
 } from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
+import { AppOptions } from './model';
 import { normalizeUrl } from './normalizeUrl';
 
 const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
+// electron-packager's default ignore list is too aggressive, pruning e.g.
+// `node_modules/debug/src/*`. Not sure why, it's not what the doc says.
+// Overriding with a hand-tweaked set of reasonable exclusions.
+// https://github.com/electron/electron-packager/blob/master/docs/api.md#ignore
+// const ELECTRON_PACKAGER_IGNORES = [
+//   /\.md$/,
+//   /\.markdown$/,
+//   /\.d\.ts$/,
+//   /Makefile$/,
+//   /\.yml$/,
+//   /\.test\.js$/,
+// ];
+
 /**
- * Extracts only desired keys from input options and augments it with defaults
+ * Process and validate raw user arguments
  */
-export function getOptions(inputOptions: any): Promise<any> {
-  // TODO type inputOptions and/or options as electronPackager.Options
-  const options: any = {
-    dir: PLACEHOLDER_APP_DIR,
-    name: inputOptions.name,
-    targetUrl: normalizeUrl(inputOptions.targetUrl),
-    platform: inputOptions.platform || inferPlatform(),
-    arch: inputOptions.arch || inferArch(),
-    electronVersion: inputOptions.electronVersion || ELECTRON_VERSION,
-    nativefierVersion: packageJson.version,
-    out: inputOptions.out || process.cwd(),
-    overwrite: inputOptions.overwrite,
-    asar: inputOptions.conceal || false,
-    icon: inputOptions.icon,
-    counter: inputOptions.counter || false,
-    bounce: inputOptions.bounce || false,
-    width: inputOptions.width || 1280,
-    height: inputOptions.height || 800,
-    minWidth: inputOptions.minWidth,
-    minHeight: inputOptions.minHeight,
-    maxWidth: inputOptions.maxWidth,
-    maxHeight: inputOptions.maxHeight,
-    showMenuBar: inputOptions.showMenuBar || false,
-    fastQuit: inputOptions.fastQuit || false,
-    userAgent: inputOptions.userAgent,
-    ignoreCertificate: inputOptions.ignoreCertificate || false,
-    disableGpu: inputOptions.disableGpu || false,
-    ignoreGpuBlacklist: inputOptions.ignoreGpuBlacklist || false,
-    enableEs3Apis: inputOptions.enableEs3Apis || false,
-    insecure: inputOptions.insecure || false,
-    flashPluginDir: inputOptions.flashPath || inputOptions.flash || null,
-    diskCacheSize: inputOptions.diskCacheSize || null,
-    inject: inputOptions.inject || null,
-    ignore: 'src',
-    fullScreen: inputOptions.fullScreen || false,
-    maximize: inputOptions.maximize || false,
-    hideWindowFrame: inputOptions.hideWindowFrame,
-    verbose: inputOptions.verbose,
-    disableContextMenu: inputOptions.disableContextMenu,
-    disableDevTools: inputOptions.disableDevTools,
-    crashReporter: inputOptions.crashReporter,
-    tmpdir: false, // workaround for electron-packager#375
-    zoom: inputOptions.zoom || 1.0,
-    internalUrls: inputOptions.internalUrls || null,
-    proxyRules: inputOptions.proxyRules || null,
-    singleInstance: inputOptions.singleInstance || false,
-    clearCache: inputOptions.clearCache || false,
-    appVersion: inputOptions.appVersion,
-    buildVersion: inputOptions.buildVersion,
-    appCopyright: inputOptions.appCopyright,
-    versionString: inputOptions.versionString,
-    win32metadata: inputOptions.win32metadata || {
-      ProductName: inputOptions.name,
-      InternalName: inputOptions.name,
-      FileDescription: inputOptions.name,
+export async function getOptions(rawOptions: any): Promise<AppOptions> {
+  const options: AppOptions = {
+    packager: {
+      appCopyright: rawOptions.appCopyright,
+      appVersion: rawOptions.appVersion,
+      arch: rawOptions.arch || inferArch(),
+      asar: rawOptions.conceal || false,
+      buildVersion: rawOptions.buildVersion,
+      darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
+      dir: PLACEHOLDER_APP_DIR,
+      electronVersion: rawOptions.electronVersion || ELECTRON_VERSION,
+      icon: rawOptions.icon,
+      name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
+      out: rawOptions.out || process.cwd(),
+      overwrite: rawOptions.overwrite,
+      platform: rawOptions.platform || inferPlatform(),
+      targetUrl: normalizeUrl(rawOptions.targetUrl),
+      tmpdir: false, // workaround for electron-packager#375
+      win32metadata: rawOptions.win32metadata || {
+        ProductName: rawOptions.name,
+        InternalName: rawOptions.name,
+        FileDescription: rawOptions.name,
+      },
+      // Aaaaaaaah so THIS is where ignoring node_modules/debug/src came from :D
+      // TODO test reverting to default, and/or keep using custom list
+      //      ELECTRON_PACKAGER_IGNORES if it makes for a leaner node_modules
+      // ignore: 'src',
     },
-    processEnvs: inputOptions.processEnvs,
-    fileDownloadOptions: inputOptions.fileDownloadOptions,
-    tray: inputOptions.tray || false,
-    basicAuthUsername: inputOptions.basicAuthUsername || null,
-    basicAuthPassword: inputOptions.basicAuthPassword || null,
-    alwaysOnTop: inputOptions.alwaysOnTop || false,
-    titleBarStyle: inputOptions.titleBarStyle || null,
-    globalShortcuts: inputOptions.globalShortcuts || null,
-    browserwindowOptions: inputOptions.browserwindowOptions,
-    backgroundColor: inputOptions.backgroundColor || null,
-    darwinDarkModeSupport: inputOptions.darwinDarkModeSupport || false,
+    nativefier: {
+      alwaysOnTop: rawOptions.alwaysOnTop || false,
+      backgroundColor: rawOptions.backgroundColor || null,
+      basicAuthPassword: rawOptions.basicAuthPassword || null,
+      basicAuthUsername: rawOptions.basicAuthUsername || null,
+      bounce: rawOptions.bounce || false,
+      browserwindowOptions: rawOptions.browserwindowOptions,
+      clearCache: rawOptions.clearCache || false,
+      counter: rawOptions.counter || false,
+      crashReporter: rawOptions.crashReporter,
+      disableContextMenu: rawOptions.disableContextMenu,
+      disableDevTools: rawOptions.disableDevTools,
+      disableGpu: rawOptions.disableGpu || false,
+      diskCacheSize: rawOptions.diskCacheSize || null,
+      enableEs3Apis: rawOptions.enableEs3Apis || false,
+      fastQuit: rawOptions.fastQuit || false,
+      fileDownloadOptions: rawOptions.fileDownloadOptions,
+      flashPluginDir: rawOptions.flashPath || rawOptions.flash || null,
+      fullScreen: rawOptions.fullScreen || false,
+      globalShortcuts: null,
+      hideWindowFrame: rawOptions.hideWindowFrame,
+      ignoreCertificate: rawOptions.ignoreCertificate || false,
+      ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
+      inject: rawOptions.inject || [],
+      insecure: rawOptions.insecure || false,
+      internalUrls: rawOptions.internalUrls || null,
+      maximize: rawOptions.maximize || false,
+      nativefierVersion: packageJson.version,
+      processEnvs: rawOptions.processEnvs,
+      proxyRules: rawOptions.proxyRules || null,
+      showMenuBar: rawOptions.showMenuBar || false,
+      singleInstance: rawOptions.singleInstance || false,
+      titleBarStyle: rawOptions.titleBarStyle || null,
+      tray: rawOptions.tray || false,
+      userAgent: rawOptions.userAgent,
+      verbose: rawOptions.verbose,
+      versionString: rawOptions.versionString,
+      width: rawOptions.width || 1280,
+      height: rawOptions.height || 800,
+      minWidth: rawOptions.minWidth,
+      minHeight: rawOptions.minHeight,
+      maxWidth: rawOptions.maxWidth,
+      maxHeight: rawOptions.maxHeight,
+      x: rawOptions.x,
+      y: rawOptions.y,
+      zoom: rawOptions.zoom || 1.0,
+    },
   };
 
-  if (options.verbose) {
+  if (options.nativefier.verbose) {
     log.setLevel('trace');
     try {
       require('debug').enable('electron-packager');
@@ -105,8 +127,8 @@ export function getOptions(inputOptions: any): Promise<any> {
     log.setLevel('info');
   }
 
-  if (inputOptions.electronVersion) {
-    const requestedVersion: string = inputOptions.electronVersion;
+  if (rawOptions.electronVersion) {
+    const requestedVersion: string = rawOptions.electronVersion;
     if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
       throw `Invalid Electron version number "${requestedVersion}". Aborting.`;
     }
@@ -120,47 +142,41 @@ export function getOptions(inputOptions: any): Promise<any> {
     }
   }
 
-  if (options.flashPluginDir) {
-    options.insecure = true;
+  if (options.nativefier.flashPluginDir) {
+    options.nativefier.insecure = true;
   }
 
-  if (inputOptions.honest) {
-    options.userAgent = null;
+  if (rawOptions.honest) {
+    options.nativefier.userAgent = null;
   }
 
-  if (options.platform.toLowerCase() === 'windows') {
-    options.platform = 'win32';
+  if (options.packager.platform.toLowerCase() === 'windows') {
+    options.packager.platform = 'win32';
   }
 
   if (
-    options.platform.toLowerCase() === 'osx' ||
-    options.platform.toLowerCase() === 'mac' ||
-    options.platform.toLowerCase() === 'macos'
+    ['osx', 'mac', 'macos'].includes(options.packager.platform.toLowerCase())
   ) {
-    options.platform = 'darwin';
+    options.packager.platform = 'darwin';
   }
 
-  if (options.width > options.maxWidth) {
-    options.width = options.maxWidth;
+  if (options.nativefier.width > options.nativefier.maxWidth) {
+    options.nativefier.width = options.nativefier.maxWidth;
   }
 
-  if (options.height > options.maxHeight) {
-    options.height = options.maxHeight;
+  if (options.nativefier.height > options.nativefier.maxHeight) {
+    options.nativefier.height = options.nativefier.maxHeight;
   }
 
-  if (typeof inputOptions.x !== 'undefined') {
-    options.x = inputOptions.x;
+  if (rawOptions.globalShortcuts) {
+    log.debug('Use global shortcuts file at', rawOptions.globalShortcuts);
+    const globalShortcuts = JSON.parse(
+      fs.readFileSync(rawOptions.globalShortcuts).toString(),
+    );
+    options.nativefier.globalShortcuts = globalShortcuts;
   }
 
-  if (typeof inputOptions.y !== 'undefined') {
-    options.y = inputOptions.y;
-  }
+  await asyncConfig(options);
 
-  if (options.globalShortcuts) {
-    log.debug('Will use global shortcuts file at', options.globalShortcuts);
-    const globalShortcutsFileContent = fs.readFileSync(options.globalShortcuts);
-    options.globalShortcuts = JSON.parse(globalShortcutsFileContent.toString());
-  }
-
-  return asyncConfig(options);
+  return options;
 }
