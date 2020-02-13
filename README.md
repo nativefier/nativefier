@@ -150,12 +150,17 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] ncp async wrapper
 - [x] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
+- [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Make eslint happy in app
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Windows & macOS smoke test
-- [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Address TODOs in code
+- [ ] Use new TS project build system
+    - [ ] Move all src to src (/{cli, app})
+    - [ ] Produce cleaner output dir structure (output to /lib, not /lib/src)
+    - [ ] Manually verify `path.join` calls make sense
+    - [ ] Measure build time improvement
 
 ## TS: Post-beta/launch improvements
 
@@ -168,8 +173,4 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [ ] ESLint cleanup: upgrade, review rules, move away from yml
 - [ ] Tweak tsconfigs: make tsc strict(er)
 - [ ] Enable dependabot
-- [ ] Use new TS project build system
-    - [ ] Move all src to src (/{cli, app})
-    - [ ] Produce cleaner output dir structure (output to /lib, not /lib/src)
-    - [ ] Measure build time improvement
 - [ ] Setup automatic build of pre-release to npm @beta channel on merge
