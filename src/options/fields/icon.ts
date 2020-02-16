@@ -10,14 +10,14 @@ type IconParams = {
   };
 };
 
-export async function icon(options: IconParams): Promise<void> {
+export async function icon(options: IconParams): Promise<string> {
   if (options.packager.icon) {
     log.debug('Got icon from options. Using it, no inferring needed');
-    return;
+    return null;
   }
 
   try {
-    options.packager.icon = await inferIcon(
+    return await inferIcon(
       options.packager.targetUrl,
       options.packager.platform,
     );

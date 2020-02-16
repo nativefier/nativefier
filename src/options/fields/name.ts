@@ -25,20 +25,14 @@ async function tryToInferName(targetUrl: string): Promise<string> {
   }
 }
 
-export async function name(options: NameParams): Promise<void> {
+export async function name(options: NameParams): Promise<string> {
   if (options.packager.name) {
     log.debug(
       `Got name ${options.packager.name} from options. No inferring needed`,
     );
-    options.packager.name = sanitizeFilename(
-      options.packager.platform,
-      options.packager.name,
-    );
+    return sanitizeFilename(options.packager.platform, options.packager.name);
   }
 
   const inferredName = await tryToInferName(options.packager.targetUrl);
-  options.packager.name = sanitizeFilename(
-    options.packager.platform,
-    inferredName,
-  );
+  return sanitizeFilename(options.packager.platform, inferredName);
 }

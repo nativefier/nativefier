@@ -15,6 +15,11 @@ test('it should call the async config', async () => {
     targetUrl: 'https://example.com/',
   };
   const result = await getOptions(params);
-  expect(asyncConfigMock).toHaveBeenCalledWith(expect.objectContaining(params));
-  expect(result).toEqual(mockedAsyncConfig);
+  expect(asyncConfigMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      packager: expect.anything(),
+      nativefier: expect.anything(),
+    }),
+  );
+  expect(result.packager.targetUrl).toEqual(params.targetUrl);
 });

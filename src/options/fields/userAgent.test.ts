@@ -10,7 +10,7 @@ test('when a userAgent parameter is passed', async () => {
     packager: {},
     nativefier: { userAgent: 'valid user agent' },
   };
-  await expect(userAgent(params)).resolves.toBe(params.nativefier.userAgent);
+  await expect(userAgent(params)).resolves.toBe(null);
 });
 
 test('no userAgent parameter is passed', async () => {

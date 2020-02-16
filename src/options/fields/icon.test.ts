@@ -24,9 +24,7 @@ const ICON_PARAMS_NEEDS_INFER = {
 describe('when the icon parameter is passed', () => {
   test('it should return the icon parameter', async () => {
     expect(inferIcon).toHaveBeenCalledTimes(0);
-    await expect(icon(ICON_PARAMS_PROVIDED)).resolves.toBe(
-      ICON_PARAMS_PROVIDED.packager.icon,
-    );
+    await expect(icon(ICON_PARAMS_PROVIDED)).resolves.toBe(null);
   });
 });
 

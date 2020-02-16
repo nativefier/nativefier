@@ -10,12 +10,12 @@ type UserAgentOpts = {
   };
 };
 
-export async function userAgent(options: UserAgentOpts): Promise<void> {
+export async function userAgent(options: UserAgentOpts): Promise<string> {
   if (options.nativefier.userAgent) {
-    return;
+    return null;
   }
 
-  options.nativefier.userAgent = await inferUserAgent(
+  return inferUserAgent(
     options.packager.electronVersion,
     options.packager.platform,
   );
