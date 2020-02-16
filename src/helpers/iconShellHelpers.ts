@@ -6,10 +6,11 @@ import { isWindows, isOSX, getTempDir } from './helpers';
 import * as log from 'loglevel';
 
 const SCRIPT_PATHS = {
-  singleIco: path.join(__dirname, '../../icon-scripts/singleIco'),
-  convertToPng: path.join(__dirname, '../../icon-scripts/convertToPng'),
-  convertToIco: path.join(__dirname, '../../icon-scripts/convertToIco'),
-  convertToIcns: path.join(__dirname, '../../icon-scripts/convertToIcns'),
+  // TODO restore to ../.. once TS extra /src folder removed
+  singleIco: path.join(__dirname, '../../../icon-scripts/singleIco'),
+  convertToPng: path.join(__dirname, '../../../icon-scripts/convertToPng'),
+  convertToIco: path.join(__dirname, '../../../icon-scripts/convertToIco'),
+  convertToIcns: path.join(__dirname, '../../../icon-scripts/convertToIcns'),
 };
 
 /**
