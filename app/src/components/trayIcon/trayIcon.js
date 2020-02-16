@@ -39,14 +39,6 @@ function createTrayIcon(inpOptions, mainWindow) {
 
     appIcon.on('click', onClick);
 
-    mainWindow.on('show', () => {
-      appIcon.setHighlightMode('always');
-    });
-
-    mainWindow.on('hide', () => {
-      appIcon.setHighlightMode('never');
-    });
-
     if (options.counter) {
       mainWindow.on('page-title-updated', (e, title) => {
         const counterValue = getCounterValue(title);
