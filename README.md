@@ -1,7 +1,6 @@
 # Nativefier
 
 [![Build Status](https://travis-ci.org/jiahaog/nativefier.svg?branch=development)](https://travis-ci.org/jiahaog/nativefier)
-[![Code Climate](https://codeclimate.com/github/jiahaog/nativefier/badges/gpa.svg)](https://codeclimate.com/github/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 [![Dependency Status](https://david-dm.org/jiahaog/nativefier.svg)](https://david-dm.org/jiahaog/nativefier)
 
@@ -13,7 +12,7 @@ You want to make a native wrapper for WhatsApp Web (or any web page).
 nativefier web.whatsapp.com
 ```
 
-![Walkthrough](walkthrough.gif)
+![Walkthrough animation](walkthrough.gif)
 
 You're done.
 
@@ -21,20 +20,19 @@ You're done.
 
   - [Installation](#installation)
   - [Usage](#usage)
-  - [Optional dependencies](#optional-dependencies)
   - [How it works](#how-it-works)
   - [Development](docs/development.md)
   - [License](#license)
 
 ## Introduction
 
-Nativefier is a command-line tool to easily create a desktop application for any web site with succinct and minimal configuration. Apps are wrapped by [Electron](http://electron.atom.io) in an OS executable (`.app`, `.exe`, etc.) for use on Windows, macOS and Linux.
+Nativefier is a command-line tool to easily create a desktop application for any web site with succinct and minimal configuration. Apps are wrapped by [Electron](https://www.electronjs.org/) in an OS executable (`.app`, `.exe`, etc.) for use on Windows, macOS and Linux.
 
-I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](http://messenger.com) or [Whatsapp Web](http://web.whatsapp.com) ([relevant Hacker News thread](https://news.ycombinator.com/item?id=10930718)).
+I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search through the numerous open tabs when I was using [Facebook Messenger](https://messenger.com) or [Whatsapp Web](https://web.whatsapp.com) ([relevant Hacker News thread](https://news.ycombinator.com/item?id=10930718)).
 
 [Changelog](https://github.com/jiahaog/nativefier/blob/master/CHANGELOG.md). [Developer docs](https://github.com/jiahaog/nativefier/blob/master/docs/development.md).
 
-### Features
+Features:
 
 - Automatically retrieves the correct icon and app name.
 - JavaScript and CSS injection.
@@ -43,11 +41,12 @@ I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser
 
 ## Installation
 
-### Requirements
-
 - macOS 10.9+ / Windows / Linux
-- [Node.js](https://nodejs.org/) `>=6` (4.x may work but is no longer tested, please upgrade)
-- See [optional dependencies](#optional-dependencies) for more.
+- [Node.js](https://nodejs.org/) `>=8`
+- Optional dependencies:
+    - [ImageMagick](http://www.imagemagick.org/) to convert icons. Make sure `convert` and `identify` are in your `$PATH`.
+    - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms. Make sure `wine` is in your `$PATH`.
+    - [Google Chrome](https://www.google.com/chrome/) to support Adobe Flash. See the [API docs](docs/api.md); you must pass the path to its embedded Flash plugin to the `--flash` flag.
 
 ```bash
 npm install nativefier -g
@@ -61,36 +60,17 @@ Creating a native desktop app for [medium.com](http://medium.com):
 nativefier "http://medium.com"
 ```
 
-Nativefier will intelligently attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name "Medium"` as part of the command line options:
+Nativefier will attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name "Medium"` as part of the command line options:
 
 ```bash
 nativefier --name "Some Awesome App" "http://medium.com"
 ```
-Read the [API documentation](docs/api.md) (or `nativefier --help`) for other command line flags and options that can be used to configure the packaged app.
 
-If you would like high resolution icons to be used, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
+Read the [API documentation](docs/api.md) (or `nativefier --help`) for other command-line flags that can be used to configure the packaged app.
+
+If you would like to share good high-resolution icons to be used by default for an app/domain, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
 
 **Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
-
-**Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems when pinning a packaged app to the launcher.
-
-## Optional dependencies
-
-### Icons for Windows apps packaged under non-Windows platforms
-
-You need [Wine](https://www.winehq.org/) installed; make sure that `wine` is in your `$PATH`.
-
-### Icon conversion for macOS
-
-To support conversion of a `.png` or `.ico` into a `.icns` for a packaged macOS app icon (currently only supported on macOS), you need the following dependencies.
-
-* [iconutil](https://developer.apple.com/library/mac/documentation/GraphicsAnimation/Conceptual/HighResolutionOSX/Optimizing/Optimizing.html) (comes with [Xcode](https://developer.apple.com/xcode/)).
-* [imagemagick](http://www.imagemagick.org/script/index.php). Make sure `convert` and `identify` are in your `$PATH`.
-* If the tools are not found, then Nativefier will fall back to the built-in macOS tool `sips` to perform the conversion, which is more limited.
-
-### Flash
-
-[Google Chrome](https://www.google.com/chrome/) is required for flash to be supported; you should pass the path to its embedded Flash plugin to the `--flash` flag. See the [API docs](docs/api.md) for more details.
 
 ## How it works
 

@@ -8,8 +8,8 @@
 
 set -e
 
-type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Convert executable"; exit 1; }
-type identify >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Identify executable"; exit 1; }
+type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick 'convert' executable, please install it and make sure it is in your PATH"; exit 1; }
+type identify >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick 'identify' executable, please install it and make sure it is in your PATH"; exit 1; }
 
 # Parameters
 SOURCE="$1"
