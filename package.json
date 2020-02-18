@@ -47,7 +47,7 @@
     "test:unit": "jest",
     "test:watch": "jest --watch",
     "test:withlog": "LOGLEVEL=trace npm run test:unit && LOGLEVEL=trace npm run test:integration",
-    "test": "npm run test:unit && npm run test:integration"
+    "test": "jest --testRegex '[-.]test\\.js$'"
   },
   "dependencies": {
     "@types/cheerio": "0.x",
@@ -87,6 +87,7 @@
     "typescript": "3.x"
   },
   "jest": {
+    "collectCoverage": true,
     "setupFiles": [
       "./lib/src/jestSetupFiles"
     ],

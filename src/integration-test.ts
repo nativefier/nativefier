@@ -4,7 +4,7 @@ import * as path from 'path';
 import * as tmp from 'tmp';
 tmp.setGracefulCleanup();
 
-import { buildMain } from './main';
+import { buildNativefierApp } from './main';
 
 function checkApp(appPath: string, inputOptions: any): void {
   let relPathToConfig: string;
@@ -54,7 +54,7 @@ describe('Nativefier', () => {
         overwrite: true,
         platform,
       };
-      const appPath = await buildMain(options);
+      const appPath = await buildNativefierApp(options);
       checkApp(appPath, options);
     }
   });
