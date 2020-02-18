@@ -130,6 +130,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] ncp async wrapper
 - [x] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
+- [x] Expose buildMain wrapped in hopefully-backwards-compatible callback-style function as default export
 - [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Make eslint happy in app
 - [ ] Add tests & typing

@@ -123,7 +123,7 @@ function changeAppPackageJsonName(
  * Creates a temporary directory, copies the './app folder' inside,
  * and adds a text file with the app configuration.
  */
-export async function buildApp(
+export async function prepareElectronApp(
   src: string,
   dest: string,
   options: AppOptions,

@@ -6,7 +6,7 @@ import * as log from 'loglevel';
 
 import { isWindows, getTempDir, copyFileOrDir } from '../helpers/helpers';
 import { getOptions } from '../options/optionsMain';
-import { buildApp } from './buildApp';
+import { prepareElectronApp } from './prepareElectronApp';
 import { convertIconIfNecessary } from './buildIcon';
 import { AppOptions } from '../options/model';
 
@@ -97,13 +97,13 @@ function trimUnprocessableOptions(options: AppOptions): void {
   }
 }
 
-export async function buildMain(rawOptions: any): Promise<string> {
+export async function buildNativefierApp(rawOptions: any): Promise<string> {
   log.info('Processing options...');
   const options = await getOptions(rawOptions);
 
   log.info('\nPreparing Electron app...');
   const tmpPath = getTempDir('app', 0o755);
-  await buildApp(options.packager.dir, tmpPath, options);
+  await prepareElectronApp(options.packager.dir, tmpPath, options);
 
   log.info('\nConverting icons...');
   options.packager.dir = tmpPath; // const optionsWithTmpPath = { ...options, dir: tmpPath };

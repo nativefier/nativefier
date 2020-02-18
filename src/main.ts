@@ -1,5 +1,20 @@
 import 'source-map-support/register';
 
-import { buildMain } from './build/buildMain';
+import { buildNativefierApp } from './build/buildNativefierApp';
 
-export { buildMain };
+export { buildNativefierApp };
+
+/**
+ * Only for compatibility with Nativefier <= 7.7.1 !
+ * Use the better, modern async `buildNativefierApp` instead if you can!
+ */
+function buildNativefierAppOldCallbackStyle(
+  options: any,
+  callback: (err: any, result?: any) => void,
+): void {
+  buildNativefierApp(options)
+    .then((result) => callback(null, result))
+    .catch((err) => callback(err));
+}
+
+export default buildNativefierAppOldCallbackStyle;

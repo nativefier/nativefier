@@ -5,7 +5,7 @@ import * as commander from 'commander';
 import * as dns from 'dns';
 import * as log from 'loglevel';
 
-import { buildMain } from './main';
+import { buildNativefierApp } from './main';
 import * as packageJson from '../package.json';
 
 function collect(val: any, memo: any[]): any[] {
@@ -267,7 +267,7 @@ if (require.main === module) {
   }
   checkInternet();
   const options = { ...positionalOptions, ...commander.opts() };
-  buildMain(options)
+  buildNativefierApp(options)
     .then((appPath) => {
       if (!appPath) {
         log.info(`App *not* built to ${appPath}`);
