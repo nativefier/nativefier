@@ -131,6 +131,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [x] Expose buildMain wrapped in hopefully-backwards-compatible callback-style function as default export
+- [x] `test` task: unit & integration tests in parallel, for speed
 - [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Make eslint happy in app
 - [ ] Add tests & typing
@@ -146,7 +147,6 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 ## TS: Post-beta/launch improvements
 
 - [ ] Check perms to write dest dir, and error nicely if not writable
-- [ ] `test` task: unit & integration tests in parallel, for speed
 - [ ] Maybe replace loglevel.
 - [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes
 - [ ] GitHub: Create PR template, review Issue template
