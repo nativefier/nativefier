@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 export const DEFAULT_APP_NAME = 'APP';
-export const ELECTRON_VERSION = '8.0.1';
+export const ELECTRON_VERSION = '8.0.2';
 export const ELECTRON_MAJOR_VERSION = parseInt(
   ELECTRON_VERSION.split('.')[0],
   10,
