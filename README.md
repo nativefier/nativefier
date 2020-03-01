@@ -132,8 +132,8 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
       Find a workaround or revert to `webpack`ing whole app + deps into single file.
 - [x] Expose buildMain wrapped in hopefully-backwards-compatible callback-style function as default export
 - [x] `test` task: unit & integration tests in parallel, for speed
+- [x] Make eslint happy in app
 - [ ] More typing and testing of what's passed to electron-packager (inputOptions)
-- [ ] Make eslint happy in app
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
 - [ ] Windows & macOS smoke test

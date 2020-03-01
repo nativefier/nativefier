@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { BrowserWindow, shell, ipcMain, dialog } from 'electron';
+import { BrowserWindow, shell, ipcMain, dialog, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 
 import {
@@ -19,7 +19,12 @@ import { createMenu } from './menu';
 
 const ZOOM_INTERVAL = 0.1;
 
-function hideWindow(window, event, fastQuit, tray): void {
+function hideWindow(
+  window: BrowserWindow,
+  event: Event,
+  fastQuit: boolean,
+  tray,
+): void {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
     event.preventDefault();
@@ -38,14 +43,6 @@ function injectCss(browserWindow: BrowserWindow): void {
 
   const cssToInject = getCssToInject();
 
-  const injectCss = () => {
-    browserWindow.webContents.insertCSS(cssToInject);
-  };
-  const onHeadersReceived = (details, callback) => {
-    injectCss();
-    callback({ cancel: false, responseHeaders: details.responseHeaders });
-  };
-
   browserWindow.webContents.on('did-finish-load', () => {
     // remove the injection of css the moment the page is loaded
     browserWindow.webContents.session.webRequest.onHeadersReceived(null);
@@ -57,7 +54,10 @@ function injectCss(browserWindow: BrowserWindow): void {
     // will run multiple times, so did-finish-load will remove this handler
     browserWindow.webContents.session.webRequest.onHeadersReceived(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
-      onHeadersReceived,
+      (details, callback) => {
+        browserWindow.webContents.insertCSS(cssToInject);
+        callback({ cancel: false, responseHeaders: details.responseHeaders });
+      },
     );
   });
 }
@@ -148,7 +148,7 @@ export function createMainWindow(
     }
   }
 
-  const withFocusedWindow = (block) => {
+  const withFocusedWindow = (block: (window: BrowserWindow) => void): void => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     if (focusedWindow) {
       return block(focusedWindow);
@@ -156,29 +156,29 @@ export function createMainWindow(
     return undefined;
   };
 
-  const adjustWindowZoom = (window: BrowserWindow, adjustment) => {
+  const adjustWindowZoom = (window: BrowserWindow, adjustment): void => {
     window.webContents.zoomFactor = window.webContents.zoomFactor + adjustment;
   };
 
-  const onZoomIn = () => {
+  const onZoomIn = (): void => {
     withFocusedWindow((focusedWindow: BrowserWindow) =>
       adjustWindowZoom(focusedWindow, ZOOM_INTERVAL),
     );
   };
 
-  const onZoomOut = () => {
+  const onZoomOut = (): void => {
     withFocusedWindow((focusedWindow: BrowserWindow) =>
       adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL),
     );
   };
 
-  const onZoomReset = () => {
+  const onZoomReset = (): void => {
     withFocusedWindow((focusedWindow: BrowserWindow) => {
       focusedWindow.webContents.zoomFactor = options.zoom;
     });
   };
 
-  const clearAppData = async () => {
+  const clearAppData = async (): Promise<void> => {
     const response = await dialog.showMessageBox(mainWindow, {
       type: 'warning',
       buttons: ['Yes', 'Cancel'],
@@ -194,83 +194,29 @@ export function createMainWindow(
     await clearCache(mainWindow);
   };
 
-  const onGoBack = () => {
+  const onGoBack = (): void => {
     withFocusedWindow((focusedWindow) => {
       focusedWindow.webContents.goBack();
     });
   };
 
-  const onGoForward = () => {
+  const onGoForward = (): void => {
     withFocusedWindow((focusedWindow) => {
       focusedWindow.webContents.goForward();
     });
   };
 
-  const getCurrentUrl = () =>
+  const getCurrentUrl = (): void =>
     withFocusedWindow((focusedWindow) => focusedWindow.webContents.getURL());
 
-  const onWillNavigate = (event, urlToGo) => {
+  const onWillNavigate = (event: Event, urlToGo: string): void => {
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       event.preventDefault();
       shell.openExternal(urlToGo);
     }
   };
 
-  let createNewWindow: (url: string) => BrowserWindow;
-
-  const createNewTab = (url, foreground) => {
-    withFocusedWindow((focusedWindow) => {
-      const newTab = createNewWindow(url);
-      focusedWindow.addTabbedWindow(newTab);
-      if (!foreground) {
-        focusedWindow.focus();
-      }
-      return newTab;
-    });
-    return undefined;
-  };
-
-  const createAboutBlankWindow = () => {
-    const window = createNewWindow('about:blank');
-    window.hide();
-    window.webContents.once('did-stop-loading', () => {
-      if (window.webContents.getURL() === 'about:blank') {
-        window.close();
-      } else {
-        window.show();
-      }
-    });
-    return window;
-  };
-
-  const onNewWindow = (event, urlToGo, _, disposition) => {
-    const preventDefault = (newGuest) => {
-      event.preventDefault();
-      if (newGuest) {
-        // eslint-disable-next-line no-param-reassign
-        event.newGuest = newGuest;
-      }
-    };
-    onNewWindowHelper(
-      urlToGo,
-      disposition,
-      options.targetUrl,
-      options.internalUrls,
-      preventDefault,
-      shell.openExternal,
-      createAboutBlankWindow,
-      nativeTabsSupported,
-      createNewTab,
-    );
-  };
-
-  const sendParamsOnDidFinishLoad = (window: BrowserWindow) => {
-    window.webContents.on('did-finish-load', () => {
-      window.webContents.send('params', JSON.stringify(options));
-    });
-  };
-
-  createNewWindow = (url: string) => {
+  const createNewWindow: (url: string) => BrowserWindow = (url: string) => {
     const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
     if (options.userAgent) {
       window.webContents.userAgent = options.userAgent;
@@ -286,6 +232,62 @@ export function createMainWindow(
     window.webContents.on('will-navigate', onWillNavigate);
     window.loadURL(url);
     return window;
+  };
+
+  const createNewTab = (url: string, foreground: boolean): BrowserWindow => {
+    withFocusedWindow((focusedWindow) => {
+      const newTab = createNewWindow(url);
+      focusedWindow.addTabbedWindow(newTab);
+      if (!foreground) {
+        focusedWindow.focus();
+      }
+      return newTab;
+    });
+    return undefined;
+  };
+
+  const createAboutBlankWindow = (): BrowserWindow => {
+    const window = createNewWindow('about:blank');
+    window.hide();
+    window.webContents.once('did-stop-loading', () => {
+      if (window.webContents.getURL() === 'about:blank') {
+        window.close();
+      } else {
+        window.show();
+      }
+    });
+    return window;
+  };
+
+  const onNewWindow = (
+    event: Event & { newGuest?: any },
+    urlToGo: string,
+    frameName: string,
+    disposition,
+  ): void => {
+    const preventDefault = (newGuest: any): void => {
+      event.preventDefault();
+      if (newGuest) {
+        event.newGuest = newGuest;
+      }
+    };
+    onNewWindowHelper(
+      urlToGo,
+      disposition,
+      options.targetUrl,
+      options.internalUrls,
+      preventDefault,
+      shell.openExternal.bind(this),
+      createAboutBlankWindow,
+      nativeTabsSupported,
+      createNewTab,
+    );
+  };
+
+  const sendParamsOnDidFinishLoad = (window: BrowserWindow): void => {
+    window.webContents.on('did-finish-load', () => {
+      window.webContents.send('params', JSON.stringify(options));
+    });
   };
 
   const menuOptions = {

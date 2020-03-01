@@ -1,9 +1,9 @@
 import { linkIsInternal } from '../helpers/helpers';
 
 export function onNewWindowHelper(
-  urlToGo,
+  urlToGo: string,
   disposition,
-  targetUrl,
+  targetUrl: string,
   internalUrls,
   preventDefault,
   openExternal,

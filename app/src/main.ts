@@ -73,20 +73,15 @@ if (appArgs.basicAuthPassword) {
   );
 }
 
-// do nothing for setDockBadge if not OSX
-let setDockBadge = (count: number, bounce: boolean) => {
-  return;
-};
-
-if (isOSX()) {
-  let currentBadgeCount = 0;
-
-  setDockBadge = (count: number, bounce = false) => {
-    app.dock.setBadge(count.toString());
-    if (bounce && count > currentBadgeCount) app.dock.bounce();
-    currentBadgeCount = count;
-  };
-}
+const isRunningMacos = isOSX();
+let currentBadgeCount = 0;
+const setDockBadge = isRunningMacos
+  ? (count: number, bounce = false) => {
+      app.dock.setBadge(count.toString());
+      if (bounce && count > currentBadgeCount) app.dock.bounce();
+      currentBadgeCount = count;
+    }
+  : () => undefined;
 
 app.on('window-all-closed', () => {
   if (!isOSX() || appArgs.fastQuit) {
@@ -146,7 +141,7 @@ if (shouldQuit) {
   });
 
   app.on('ready', () => {
-    mainWindow = createMainWindow(appArgs, app.quit, setDockBadge);
+    mainWindow = createMainWindow(appArgs, app.quit.bind(this), setDockBadge);
     createTrayIcon(appArgs, mainWindow);
 
     // Register global shortcuts
