@@ -37,7 +37,6 @@ async function iconShellHelper(
       `Converting icon ${icoSource} to ${icoDestination}.`,
       `Calling: ${shellCommand}`,
     );
-    // TODO wrap in async helper and simplify function
     shell.exec(shellCommand, { silent: true }, (exitCode, stdOut, stdError) => {
       if (exitCode) {
         reject({

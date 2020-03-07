@@ -6,7 +6,7 @@ import * as log from 'loglevel';
 // baseUrl=src. A static import would prevent that and cause an ugly extra `src` folder in `lib`
 const packageJson = require('../../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 import {
-  ELECTRON_VERSION,
+  DEFAULT_ELECTRON_VERSION,
   PLACEHOLDER_APP_DIR,
   ELECTRON_MAJOR_VERSION,
 } from '../constants';
@@ -43,7 +43,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       buildVersion: rawOptions.buildVersion,
       darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
       dir: PLACEHOLDER_APP_DIR,
-      electronVersion: rawOptions.electronVersion || ELECTRON_VERSION,
+      electronVersion: rawOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
       icon: rawOptions.icon,
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
       out: rawOptions.out || process.cwd(),
@@ -139,7 +139,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       log.warn(
         `\nATTENTION: Using **old** Electron version ${requestedVersion} as requested.`,
         "\nIt's untested, bugs and horror will happen, you're on your own.",
-        `\nSimply abort & re-run without passing the version flag to default to ${ELECTRON_VERSION}`,
+        `\nSimply abort & re-run without passing the version flag to default to ${DEFAULT_ELECTRON_VERSION}`,
       );
     }
   }

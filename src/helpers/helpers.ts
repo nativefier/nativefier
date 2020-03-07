@@ -77,13 +77,13 @@ export function getAllowedIconFormats(platform: string): string[] {
   const icoToIcns = pngToIcns && hasIdentify;
   const icoToPng = hasConvert;
 
-  // todo scripts for the following
+  // Unsupported
   const icnsToPng = false;
   const icnsToIco = false;
 
   const formats = [];
 
-  // TODO shell scripting is not supported on windows, temporary override
+  // Shell scripting is not supported on windows, temporary override
   if (isWindows()) {
     switch (platform) {
       case 'darwin':
