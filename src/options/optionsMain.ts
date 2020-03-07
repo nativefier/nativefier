@@ -17,19 +17,6 @@ import { normalizeUrl } from './normalizeUrl';
 
 const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
-// electron-packager's default ignore list is too aggressive, pruning e.g.
-// `node_modules/debug/src/*`. Not sure why, it's not what the doc says.
-// Overriding with a hand-tweaked set of reasonable exclusions.
-// https://github.com/electron/electron-packager/blob/master/docs/api.md#ignore
-// const ELECTRON_PACKAGER_IGNORES = [
-//   /\.md$/,
-//   /\.markdown$/,
-//   /\.d\.ts$/,
-//   /Makefile$/,
-//   /\.yml$/,
-//   /\.test\.js$/,
-// ];
-
 /**
  * Process and validate raw user arguments
  */
@@ -56,10 +43,6 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
         InternalName: rawOptions.name,
         FileDescription: rawOptions.name,
       },
-      // Aaaaaaaah so THIS is where ignoring node_modules/debug/src came from :D
-      // TODO test reverting to default, and/or keep using custom list
-      //      ELECTRON_PACKAGER_IGNORES if it makes for a leaner node_modules
-      // ignore: 'src',
     },
     nativefier: {
       alwaysOnTop: rawOptions.alwaysOnTop || false,

@@ -137,21 +137,18 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
     - [x] Produce cleaner output dir structure (output to /lib, not /lib/src)
     - [x] Manually verify `path.join` calls make sense
     - [x] Measure build time improvement. → Yes! From 7s to 4s, and a single tsc call building cli & app :)
+- [x] Address TODOs in code
+- [x] More typing and testing of what's passed to electron-packager (inputOptions)
+- [x] ESLint cleanup: upgrade, review rules, move away from yml
+- [x] Add typing
 - [ ] Fix basic http auth, http://www.httpwatch.com/httpgallery/authentication/
-- [ ] More typing and testing of what's passed to electron-packager (inputOptions)
-- [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage
-- [ ] Windows & macOS smoke test
-- [ ] Address TODOs in code
+- [ ] Run manual Windows & macOS smoke test
 
 ## TS: Post-beta/launch improvements
 
-- [ ] Check perms to write dest dir, and error nicely if not writable
-- [ ] Maybe replace loglevel.
-- [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes
+- [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes, including https://github.com/jiahaog/nativefier/issues/916
+- [ ] Tweak tsconfigs: make tsc strict(er), improve typing and remove remaining `@ts-ignore`s
 - [ ] GitHub: Create PR template, review Issue template
-- [ ] Improve typing and remove remaining `@ts-ignore`s
-- [ ] ESLint cleanup: upgrade, review rules, move away from yml
-- [ ] Tweak tsconfigs: make tsc strict(er)
-- [ ] Enable dependabot
+- [ ] GitHub: Enable dependabot
 - [ ] Setup automatic build of pre-release to npm @beta channel on merge
