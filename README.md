@@ -138,7 +138,6 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
     - [x] Manually verify `path.join` calls make sense
     - [x] Measure build time improvement. → Yes! From 7s to 4s, and a single tsc call building cli & app :)
 - [ ] Fix basic http auth, http://www.httpwatch.com/httpgallery/authentication/
-- [ ] Fix proxy, https://github.com/jiahaog/nativefier/issues/907
 - [ ] More typing and testing of what's passed to electron-packager (inputOptions)
 - [ ] Add tests & typing
 - [ ] Add coverage report and improve coverage

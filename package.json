@@ -32,7 +32,7 @@
     "build": "npm run clean && tsc --build . app && npm run build-app-static",
     "build:watch": "tsc --build . app --watch",
     "changelog": "./docs/generate-changelog",
-    "ci": "npm run lint && npm test && npm run test:integration",
+    "ci": "npm run lint && npm test",
     "clean": "rimraf lib/ app/lib/",
     "clean:full": "rimraf lib/ app/lib/ node_modules/ app/node_modules/",
     "lint:fix": "eslint . --fix",

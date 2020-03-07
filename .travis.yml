@@ -20,4 +20,4 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    node: '8'
+    node: '12'
