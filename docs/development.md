@@ -1,6 +1,6 @@
-# Development
+# Development Guide
 
-## Environment Setup
+## Setup
 
 First, clone the project
 
@@ -9,28 +9,19 @@ git clone https://github.com/jiahaog/nativefier.git
 cd nativefier
 ```
 
-Install dependencies and build:
+Install dependencies:
 
 ```bash
 npm install
-npm run build
 ```
 
-If dependencies are installed and you just want to re-build,
+Build nativefier:
 
 ```bash
 npm run build
 ```
 
-To clean the project from built files,
-
-```bash
-npm run build
-# or, if you want to scrap node_modules too,
-npm run build:full
-```
-
-Set up a symbolic link so that running `nativefier` invokes your development version including your changes:
+Set up a symbolic link so that running `nativefier` calls your dev version with your changes:
 
 ```bash
 npm link
@@ -42,7 +33,7 @@ which nativefier
 After doing so, you can run Nativefier with your test parameters:
 
 ```bash
-nativefier --your-awesome-new-flag
+nativefier --your-awesome-new-flag 'https://your-test-site.com'
 ```
 
 ## Tests
@@ -52,7 +43,6 @@ nativefier --your-awesome-new-flag
 - To run only integration tests, `npm run test:integration`
 - Logging is suppressed by default in tests, to avoid polluting Jest output.
   To get debug logs, `npm run test:withlog` or set the `LOGLEVEL` env. var.
-- For a good iteration speed, open three terminal panes/tabs and set watchers:
-    1. Run a TSC watcher for the CLI: `npm run compile:watch`
-    2. Run a TSC watcher for the app: `npm run compile:watch:app`
-    3. Run a Jest tests watcher: `npm run test:watch`
+- For a good live experience, open two terminal panes/tabs running code/tests watchers:
+    2. Run a TSC watcher: `npm run build:watch`
+    3. Run a Jest unit tests watcher: `npm run test:watch`

@@ -6,7 +6,10 @@ import * as dns from 'dns';
 import * as log from 'loglevel';
 
 import { buildNativefierApp } from './main';
-import * as packageJson from '../package.json';
+
+// package.json is `require`d to let tsc strip the `src` folder by determining
+// baseUrl=src. A static import would prevent that and cause an ugly extra "src" folder
+const packageJson = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 function collect(val: any, memo: any[]): any[] {
   memo.push(val);

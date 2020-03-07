@@ -2,7 +2,9 @@ import * as fs from 'fs';
 
 import * as log from 'loglevel';
 
-import * as packageJson from '../../package.json';
+// package.json is `require`d to let tsc strip the `src` folder by determining
+// baseUrl=src. A static import would prevent that and cause an ugly extra `src` folder in `lib`
+const packageJson = require('../../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 import {
   ELECTRON_VERSION,
   PLACEHOLDER_APP_DIR,

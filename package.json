@@ -15,9 +15,9 @@
     "native",
     "wrapper"
   ],
-  "main": "lib/src/main.js",
+  "main": "lib/main.js",
   "bin": {
-    "nativefier": "lib/src/cli.js"
+    "nativefier": "lib/cli.js"
   },
   "homepage": "https://github.com/jiahaog/nativefier",
   "repository": {
@@ -29,15 +29,12 @@
   },
   "scripts": {
     "build-app-static": "ncp app/src/static/ app/lib/static/",
-    "build-app": "cd app && tsc",
-    "build-cli": "tsc",
-    "build": "npm run clean && npm run build-cli && npm run build-app && npm run build-app-static",
+    "build": "npm run clean && tsc --build . app && npm run build-app-static",
+    "build:watch": "tsc --build . app --watch",
     "changelog": "./docs/generate-changelog",
     "ci": "npm run lint && npm test && npm run test:integration",
     "clean": "rimraf lib/ app/lib/",
     "clean:full": "rimraf lib/ app/lib/ node_modules/ app/node_modules/",
-    "compile:watch": "tsc -w --noUnusedLocals false",
-    "compile:watch:app": "cd app && tsc -w --noUnusedLocals false",
     "lint:fix": "eslint . --fix",
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",
@@ -46,7 +43,7 @@
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:unit": "jest",
     "test:watch": "jest --watch",
-    "test:withlog": "LOGLEVEL=trace npm run test:unit && LOGLEVEL=trace npm run test:integration",
+    "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest --testRegex '[-.]test\\.js$'"
   },
   "dependencies": {
@@ -89,7 +86,7 @@
   "jest": {
     "collectCoverage": true,
     "setupFiles": [
-      "./lib/src/jestSetupFiles"
+      "./lib/jestSetupFiles"
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
