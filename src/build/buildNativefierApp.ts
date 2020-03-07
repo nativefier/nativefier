@@ -1,5 +1,6 @@
 import * as path from 'path';
 
+import * as electronGet from '@electron/get';
 import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
@@ -113,6 +114,7 @@ export async function buildNativefierApp(rawOptions: any): Promise<string> {
     "\nPackaging... This will take a few seconds, maybe minutes if the requested Electron isn't cached yet...",
   );
   trimUnprocessableOptions(options);
+  electronGet.initializeProxy(); // https://github.com/electron/get#proxies
   const appPathArray = await electronPackager(options.packager);
 
   log.info('\nFinalizing build...');
