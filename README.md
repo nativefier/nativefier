@@ -141,14 +141,14 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] More typing and testing of what's passed to electron-packager (inputOptions)
 - [x] ESLint cleanup: upgrade, review rules, move away from yml
 - [x] Add typing
-- [ ] Fix basic http auth, http://www.httpwatch.com/httpgallery/authentication/
-- [ ] Add coverage report and improve coverage
+- [x] Fix basic http auth, http://www.httpwatch.com/httpgallery/authentication/
 - [ ] Run manual Windows & macOS smoke test
 
 ## TS: Post-beta/launch improvements
 
 - [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes, including https://github.com/jiahaog/nativefier/issues/916
 - [ ] Tweak tsconfigs: make tsc strict(er), improve typing and remove remaining `@ts-ignore`s
+- [ ] Add coverage report and improve coverage
 - [ ] GitHub: Create PR template, review Issue template
 - [ ] GitHub: Enable dependabot
-- [ ] Setup automatic build of pre-release to npm @beta channel on merge
+- [ ] GitHub/Travis: Setup automatic build of pre-release to npm @beta channel on merge

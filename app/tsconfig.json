@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-      "allowJs": false,
+      "allowJs": true,
       "declaration": false,
       "esModuleInterop": true,
       "incremental": true,

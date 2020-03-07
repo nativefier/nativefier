@@ -13,7 +13,7 @@ import * as path from 'path';
 import { ipcRenderer } from 'electron';
 import * as log from 'loglevel';
 
-const INJECT_JS_PATH = path.join(__dirname, '../inject/inject.js');
+const INJECT_JS_PATH = path.join(__dirname, '..', 'inject/inject.js');
 /**
  * Patches window.Notification to:
  * - set a callback on a new Notification
