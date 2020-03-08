@@ -51,7 +51,7 @@
     "@types/electron-packager": "14.x",
     "@types/lodash": "4.x",
     "@types/ncp": "2.x",
-    "@types/node": "12.x",
+    "@types/node": "8.x",
     "@types/page-icon": "0.x",
     "@types/shelljs": "0.x",
     "@types/tmp": "0.x",
