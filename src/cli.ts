@@ -279,6 +279,6 @@ if (require.main === module) {
       log.info(`App built to ${appPath}`);
     })
     .catch((error) => {
-      log.error('Error during build:', error);
+      log.error('Error during build. Run with --verbose for details.', error);
     });
 }
