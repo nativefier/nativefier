@@ -1,6 +1,6 @@
 # Nativefier
 
-[![Build Status](https://travis-ci.org/jiahaog/nativefier.svg?branch=development)](https://travis-ci.org/jiahaog/nativefier)
+[![Build Status](https://travis-ci.org/jiahaog/nativefier.svg)](https://travis-ci.org/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 [![Dependency Status](https://david-dm.org/jiahaog/nativefier.svg)](https://david-dm.org/jiahaog/nativefier)
 
@@ -36,7 +36,6 @@ Features:
 
 - Automatically retrieves the correct icon and app name.
 - JavaScript and CSS injection.
-- Flash Support (with [`--flash`](docs/api.md#flash) flag).
 - Many more, see the [API docs](docs/api.md) or `nativefier --help`
 
 ## Installation
@@ -46,7 +45,6 @@ Features:
 - Optional dependencies:
     - [ImageMagick](http://www.imagemagick.org/) to convert icons. Make sure `convert` and `identify` are in your `$PATH`.
     - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms. Make sure `wine` is in your `$PATH`.
-    - [Google Chrome](https://www.google.com/chrome/) to support Adobe Flash. See the [API docs](docs/api.md); you must pass the path to its embedded Flash plugin to the `--flash` flag.
 
 ```bash
 npm install nativefier -g
@@ -54,23 +52,23 @@ npm install nativefier -g
 
 ## Usage
 
-Creating a native desktop app for [medium.com](http://medium.com):
+Creating a native desktop app for [medium.com](https://medium.com):
 
 ```bash
-nativefier "http://medium.com"
+nativefier "medium.com"
 ```
 
 Nativefier will attempt to determine the app name, your OS and processor architecture, among other options. If desired, the app name or other options can be overwritten by specifying the `--name "Medium"` as part of the command line options:
 
 ```bash
-nativefier --name "Some Awesome App" "http://medium.com"
+nativefier --name "Some Awesome App" "medium.com"
 ```
 
 Read the [API documentation](docs/api.md) (or `nativefier --help`) for other command-line flags that can be used to configure the packaged app.
 
-If you would like to share good high-resolution icons to be used by default for an app/domain, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
+To have high-resolution icons used by default for an app/domain, please contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
 
-**Windows Users:** Take note that the application menu is automatically hidden by default, you can press `alt` on your keyboard to access it.
+Note that the application menu is hidden by default for a minimal UI. You can press the `alt` keyboard key to access it.
 
 ## How it works
 
@@ -101,54 +99,3 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 ## License
 
 [MIT](LICENSE.md)
-
-## TS: Minimum to release beta
-
-- [x] Move cli to TS
-- [x] Move app to TS
-- [x] Package.json nits: move away from "^A.B.C" to more understandable "A.x
-- [x] Upgrade electron-packager and other deps
-- [x] Fix node_modules badly pruned when copied to app
-- [x] Get rid of Babel / webpack
-- [x] Move from Gulp to simple npm scripts
-- [x] Replace quirky & broken `progress` with basic logging and restore electron-packager logging
-- [x] Replace `async` module + callbacks with real native async/await
-- [x] Cleanup/port old npm tasks/scripts
-- [x] Make exports more idiomatic without default & index.ts crap
-- [x] Get rid of micro-packages easily inlined
-- [x] Cleanup pass on cli/app code to make more modern async TS idiomatic
-- [x] More verbose & normal logging everywhere
-- [x] Disable logging by default in tests & add tasks to enable at any level.
-- [x] Fix icon not showing up on Linux
-- [x] Review .npmignore and published zip. Test installing it.
-- [x] Repair Squirrel
-- [x] Make electron-packager verbose too when using `--verbose`
-- [x] Warn on using old electron
-- [x] Move to Electron 8
-- [x] https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/TYPED_LINTING.md
-- [x] Make eslint happy in cli
-- [x] ncp async wrapper
-- [x] Stopping to webpack `app` template caused https://github.com/npm/cli/issues/757 .
-      Find a workaround or revert to `webpack`ing whole app + deps into single file.
-- [x] Expose buildMain wrapped in hopefully-backwards-compatible callback-style function as default export
-- [x] `test` task: unit & integration tests in parallel, for speed
-- [x] Make eslint happy in app
-- [x] Use new TS project build system
-    - [x] Produce cleaner output dir structure (output to /lib, not /lib/src)
-    - [x] Manually verify `path.join` calls make sense
-    - [x] Measure build time improvement. → Yes! From 7s to 4s, and a single tsc call building cli & app :)
-- [x] Address TODOs in code
-- [x] More typing and testing of what's passed to electron-packager (inputOptions)
-- [x] ESLint cleanup: upgrade, review rules, move away from yml
-- [x] Add typing
-- [x] Fix basic http auth, http://www.httpwatch.com/httpgallery/authentication/
-- [x] Run manual Windows & macOS smoke test
-
-## TS: Post-beta/launch improvements
-
-- [ ] Review https://www.electronjs.org/docs/tutorial/security for mistakes, including https://github.com/jiahaog/nativefier/issues/916
-- [ ] Tweak tsconfigs: make tsc strict(er), improve typing and remove remaining `@ts-ignore`s
-- [ ] Add coverage report and improve coverage
-- [ ] GitHub: Create PR template, review Issue template
-- [ ] GitHub: Enable dependabot
-- [ ] GitHub/Travis: Setup automatic build of pre-release to npm @beta channel on merge
