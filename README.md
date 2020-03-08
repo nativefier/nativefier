@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/jiahaog/nativefier.svg)](https://travis-ci.org/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
-[![Dependency Status](https://david-dm.org/jiahaog/nativefier.svg)](https://david-dm.org/jiahaog/nativefier)
 
 ![Dock](dock.png)
 
