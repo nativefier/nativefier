@@ -36,6 +36,13 @@ After doing so, you can run Nativefier with your test parameters:
 nativefier --your-awesome-new-flag 'https://your-test-site.com'
 ```
 
+## Linting & formatting
+
+Nativefier uses [Prettier](https://prettier.io/), which will shout at you for
+not formatting code exactly like it expects. This guarantees a homogenous style,
+but is painful to do manually. Do yourself a favor and install a
+[Prettier plugin for your editor](https://prettier.io/docs/en/editors.html).
+
 ## Tests
 
 - To run all tests, `npm t`
