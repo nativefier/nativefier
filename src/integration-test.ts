@@ -1,44 +1,41 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as tmp from 'tmp';
-tmp.setGracefulCleanup();
-
+import { getTempDir } from './helpers/helpers';
 import { buildNativefierApp } from './main';
 
-function checkApp(appPath: string, inputOptions: any): void {
-  let relPathToConfig: string;
+function checkApp(appRoot: string, inputOptions: any): void {
+  let relativeAppFolder: string;
 
   switch (inputOptions.platform) {
     case 'darwin':
-      relPathToConfig = path.join(
-        'google-test-app.app',
-        'Contents/Resources/app',
-      );
+      relativeAppFolder = path.join('Google.app', 'Contents/Resources/app');
       break;
     case 'linux':
-      relPathToConfig = 'resources/app';
+      relativeAppFolder = 'resources/app';
       break;
     case 'win32':
-      relPathToConfig = 'resources/app';
+      relativeAppFolder = 'resources/app';
       break;
     default:
       throw new Error('Unknown app platform');
   }
 
-  const nativefierConfigPath = path.join(
-    appPath,
-    relPathToConfig,
-    'nativefier.json',
-  );
-  const nativefierConfig = JSON.parse(
-    fs.readFileSync(nativefierConfigPath).toString(),
-  );
+  const appPath = path.join(appRoot, relativeAppFolder);
 
+  const configPath = path.join(appPath, 'nativefier.json');
+  const nativefierConfig = JSON.parse(fs.readFileSync(configPath).toString());
   expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
-  // app name is not consistent for linux
-  // assert.strictEqual(inputOptions.appName, nativefierConfig.name,
-  // 'Packaged app must have the same name as the input parameters');
+
+  // Test name inferring
+  expect(nativefierConfig.name).toBe('Google');
+
+  // Test icon writing
+  const iconFile =
+    inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
+  const iconPath = path.join(appPath, iconFile);
+  expect(fs.existsSync(iconPath)).toBe(true);
+  expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
 }
 
 describe('Nativefier', () => {
@@ -46,11 +43,10 @@ describe('Nativefier', () => {
 
   test('builds a Nativefier app for several platforms', async () => {
     for (const platform of ['darwin', 'linux']) {
-      const tempDirectory = tmp.dirSync({ unsafeCleanup: true });
+      const tempDirectory = getTempDir('integtest');
       const options = {
-        name: 'google-test-app',
         targetUrl: 'https://google.com/',
-        out: tempDirectory.name,
+        out: tempDirectory,
         overwrite: true,
         platform,
       };
