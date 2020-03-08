@@ -142,7 +142,7 @@ You can also pass nativefier flags, and mount additional volumes to provide loca
 - [x] ESLint cleanup: upgrade, review rules, move away from yml
 - [x] Add typing
 - [x] Fix basic http auth, http://www.httpwatch.com/httpgallery/authentication/
-- [ ] Run manual Windows & macOS smoke test
+- [x] Run manual Windows & macOS smoke test
 
 ## TS: Post-beta/launch improvements
 
