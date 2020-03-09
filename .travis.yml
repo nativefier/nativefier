@@ -1,20 +1,19 @@
 language: node_js
 os:
 - linux
-- windows
 - osx
+- windows
 node_js:
-- '13'
+- '13' # Changing this? Remind to adjust the linter condition below
 - '12'
-- '10'
 - '8'
-before_install:
-- npm install -g npm@latest
 install:
 - npm install
 - npm run build
 script:
-- npm run ci
+# Only run linter once, for faster CI
+- if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "13" ]; then npm run lint; fi
+- npm test
 deploy:
   provider: npm
   skip_cleanup: true
