@@ -5,9 +5,9 @@ labels: bug
 
 ---
 
-Help us help you, please take the time to fill this information 🙂.
+<!-- Help us help you, please take the time to fill this information 🙂.
 An incomprehensible bug report is a useless bug report.
-Incomprehensible / incomplete bug reports will be closed.
+Incomprehensible / incomplete bug reports will be closed. -->
 
 **Describe the bug**
 A clear and concise description of what the bug is.
