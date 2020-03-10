@@ -12,6 +12,9 @@ Incomprehensible / incomplete bug reports will be closed.
 **Describe the bug**
 A clear and concise description of what the bug is.
 
+- [ ] I looked at `nativefier --help` and https://github.com/jiahaog/nativefier/blob/master/docs/api.md , I'm sure I'm not misunderstanding expected behavior.
+- [ ] I searched existing open & closed issues. Yes, my bug is new.
+
 **Steps to reproduce**
 Give the ***full*** nativefier command you ran, with the ***`--verbose` flag***, on a ***public*** site:
 1. Run `nativefier --verbose ...`
@@ -24,7 +27,7 @@ What you expected to happen.
 What happened instead.
 
 **Logs & screenshots**
-Verbose logs and/or screenshots
+Verbose logs, error message, and/or screenshots
 
 **Context**
  - Nativefier: (for example: 7.7.1)
