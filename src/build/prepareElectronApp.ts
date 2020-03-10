@@ -78,7 +78,9 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   log.debug(`Copying ${srcs.length} files to inject in app.`);
   for (const src of srcs) {
     if (!fs.existsSync(src)) {
-      throw new Error('Error copying injection files: file not found');
+      throw new Error(
+        `File ${src} not found. Note that Nativefier expects *local* files, not URLs.`,
+      );
     }
 
     let destFileName: string;
@@ -145,7 +147,7 @@ export async function prepareElectronApp(
   try {
     await maybeCopyScripts(options.nativefier.inject, dest);
   } catch (err) {
-    log.error('Error copying injection files', err);
+    log.error('Error copying injection files.', err);
   }
   changeAppPackageJsonName(
     dest,
