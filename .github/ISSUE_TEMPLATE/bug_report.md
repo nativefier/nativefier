@@ -16,7 +16,7 @@ A clear and concise description of what the bug is.
 - [ ] I searched existing open & closed issues. Yes, my bug is new.
 
 **Steps to reproduce**
-Give the ***full*** nativefier command you ran, with the ***`--verbose` flag***, on a ***public*** site:
+Give your ***full*** nativefier command, with the ***`--verbose` flag***, on a ***public*** site:
 1. Run `nativefier --verbose ...`
 2. ...
 
