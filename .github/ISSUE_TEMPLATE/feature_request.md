@@ -12,6 +12,9 @@ Incomprehensible / incomplete feature request will be closed.
 **Current state and problem statement**
 A clear and concise description of what the problem is. For example: I'm always frustrated when [...]
 
+- [ ] I looked at `nativefier --help` and https://github.com/jiahaog/nativefier/blob/master/docs/api.md , no existing option fits my needs.
+- [ ] I searched existing open & closed issues. Yes, my issue is new.
+
 **Describe the solution you'd like**
 A clear and concise description of what you want to happen.
 
