@@ -10,6 +10,7 @@ const EXPECTED_USERAGENTS = {
 
 describe('Infer User Agent', () => {
   test('Can infer userAgent for all platforms', async () => {
+    jest.setTimeout(10000);
     for (const [arch, archUa] of Object.entries(EXPECTED_USERAGENTS)) {
       const ua = await inferUserAgent(DEFAULT_ELECTRON_VERSION, arch);
       expect(ua).toBe(archUa);

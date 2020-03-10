@@ -39,7 +39,7 @@ function checkApp(appRoot: string, inputOptions: any): void {
 }
 
 describe('Nativefier', () => {
-  jest.setTimeout(240000);
+  jest.setTimeout(300000);
 
   test('builds a Nativefier app for several platforms', async () => {
     for (const platform of ['darwin', 'linux']) {
