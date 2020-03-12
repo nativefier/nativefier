@@ -70,9 +70,7 @@ export function createMenu({
         },
         {
           label: 'Clear App Data',
-          click: () => {
-            clearAppData();
-          },
+          click: clearAppData,
         },
       ],
     },
@@ -82,16 +80,12 @@ export function createMenu({
         {
           label: 'Back',
           accelerator: 'CmdOrCtrl+[',
-          click: () => {
-            goBack();
-          },
+          click: goBack,
         },
         {
           label: 'Forward',
           accelerator: 'CmdOrCtrl+]',
-          click: () => {
-            goForward();
-          },
+          click: goForward,
         },
         {
           label: 'Reload',
@@ -109,7 +103,7 @@ export function createMenu({
           label: 'Toggle Full Screen',
           accelerator: (() => {
             if (process.platform === 'darwin') {
-              return 'Ctrl+Command+F';
+              return 'Ctrl+Cmd+F';
             }
             return 'F11';
           })(),
@@ -121,45 +115,24 @@ export function createMenu({
         },
         {
           label: 'Zoom In',
-          accelerator: (() => {
-            if (process.platform === 'darwin') {
-              return 'Command+=';
-            }
-            return 'Ctrl+=';
-          })(),
-          click: () => {
-            zoomIn();
-          },
+          accelerator: 'CmdOrCtrl+=',
+          click: zoomIn,
         },
         {
           label: 'Zoom Out',
-          accelerator: (() => {
-            if (process.platform === 'darwin') {
-              return 'Command+-';
-            }
-            return 'Ctrl+-';
-          })(),
-          click: () => {
-            zoomOut();
-          },
+          accelerator: 'CmdOrCtrl+-',
+          click: zoomOut,
         },
         {
           label: zoomResetLabel,
-          accelerator: (() => {
-            if (process.platform === 'darwin') {
-              return 'Command+0';
-            }
-            return 'Ctrl+0';
-          })(),
-          click: () => {
-            zoomReset();
-          },
+          accelerator: 'CmdOrCtrl+0',
+          click: zoomReset,
         },
         {
           label: 'Toggle Developer Tools',
           accelerator: (() => {
             if (process.platform === 'darwin') {
-              return 'Alt+Command+I';
+              return 'Alt+Cmd+I';
             }
             return 'Ctrl+Shift+I';
           })(),
@@ -227,12 +200,12 @@ export function createMenu({
         },
         {
           label: 'Hide App',
-          accelerator: 'Command+H',
+          accelerator: 'Cmd+H',
           role: 'hide',
         },
         {
           label: 'Hide Others',
-          accelerator: 'Command+Shift+H',
+          accelerator: 'Cmd+Shift+H',
           role: 'hideothers',
         },
         {
@@ -244,10 +217,8 @@ export function createMenu({
         },
         {
           label: 'Quit',
-          accelerator: 'Command+Q',
-          click: () => {
-            appQuit();
-          },
+          accelerator: 'Cmd+Q',
+          click: appQuit,
         },
       ],
     });
