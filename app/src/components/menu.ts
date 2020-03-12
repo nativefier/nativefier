@@ -1,4 +1,4 @@
-import { Menu, shell, clipboard } from 'electron';
+import { Menu, clipboard, globalShortcut, shell } from 'electron';
 
 export function createMenu({
   nativefierVersion,
@@ -115,17 +115,26 @@ export function createMenu({
         },
         {
           label: 'Zoom In',
-          accelerator: 'CmdOrCtrl+=',
+          accelerator: (() => {
+            globalShortcut.register('CmdOrCtrl+numadd', zoomIn);
+            return 'CmdOrCtrl+=';
+          })(),
           click: zoomIn,
         },
         {
           label: 'Zoom Out',
-          accelerator: 'CmdOrCtrl+-',
+          accelerator: (() => {
+            globalShortcut.register('CmdOrCtrl+numsub', zoomOut);
+            return 'CmdOrCtrl+-';
+          })(),
           click: zoomOut,
         },
         {
           label: zoomResetLabel,
-          accelerator: 'CmdOrCtrl+0',
+          accelerator: (() => {
+            globalShortcut.register('CmdOrCtrl+num0', zoomReset);
+            return 'CmdOrCtrl+0';
+          })(),
           click: zoomReset,
         },
         {
