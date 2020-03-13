@@ -280,6 +280,11 @@ export function createMainWindow(
 
   const sendParamsOnDidFinishLoad = (window: BrowserWindow): void => {
     window.webContents.on('did-finish-load', () => {
+      // Restore pinch-to-zoom, disabled by default in recent Electron.
+      // See https://github.com/jiahaog/nativefier/issues/379#issuecomment-598309817
+      // and https://github.com/electron/electron/pull/12679
+      window.webContents.setVisualZoomLevelLimits(1, 3);
+
       window.webContents.send('params', JSON.stringify(options));
     });
   };
