@@ -79,12 +79,18 @@ export function createMenu({
       submenu: [
         {
           label: 'Back',
-          accelerator: 'CmdOrCtrl+[',
+          accelerator: (() => {
+            globalShortcut.register('Alt+Left', goBack);
+            return 'CmdOrCtrl+[';
+          })(),
           click: goBack,
         },
         {
           label: 'Forward',
-          accelerator: 'CmdOrCtrl+]',
+          accelerator: (() => {
+            globalShortcut.register('Alt+Right', goForward);
+            return 'CmdOrCtrl+]';
+          })(),
           click: goForward,
         },
         {
