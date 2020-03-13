@@ -43,15 +43,9 @@ function injectCss(browserWindow: BrowserWindow): void {
 
   const cssToInject = getCssToInject();
 
-  browserWindow.webContents.on('did-finish-load', () => {
-    // remove the injection of css the moment the page is loaded
-    browserWindow.webContents.session.webRequest.onHeadersReceived(null);
-  });
-
-  // on every page navigation inject the css
   browserWindow.webContents.on('did-navigate', () => {
-    // we have to inject the css in onHeadersReceived so they're early enough
-    // will run multiple times, so did-finish-load will remove this handler
+    // We must inject css early enough; so onHeadersReceived is a good place.
+    // Will run multiple times, see `did-finish-load` below that unsets this handler.
     browserWindow.webContents.session.webRequest.onHeadersReceived(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
       (details, callback) => {
@@ -350,6 +344,15 @@ export function createMainWindow(
 
   mainWindow.webContents.on('new-window', onNewWindow);
   mainWindow.webContents.on('will-navigate', onWillNavigate);
+  mainWindow.webContents.on('did-finish-load', () => {
+    // Restore pinch-to-zoom, disabled by default in recent Electron.
+    // See https://github.com/jiahaog/nativefier/issues/379#issuecomment-598309817
+    // and https://github.com/electron/electron/pull/12679
+    mainWindow.webContents.setVisualZoomLevelLimits(1, 3);
+
+    // Remove potential css injection code set in `did-navigate`) (see injectCss code)
+    mainWindow.webContents.session.webRequest.onHeadersReceived(null);
+  });
 
   if (options.clearCache) {
     clearCache(mainWindow);
