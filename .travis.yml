@@ -4,15 +4,15 @@ os:
 - osx
 - windows
 node_js:
-- '13' # Changing this? Remind to adjust the linter condition below causing linter to run for only one version (for faster CI)
-- '12'
+- '13'
+- '12' # Changing this? Remind to keep linter+deploy conditions below aligned
 - '8'
 install:
 - npm install
 - npm run build
 script:
-# Only run linter once, for faster CI
-- if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "13" ]; then npm run lint; fi
+# Only run linter once, for faster CI. Remind to keep linter+deploy conditions below aligned
+- if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi
 - npm test
 deploy:
   provider: npm
@@ -23,5 +23,5 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    node_js: '12'
+    node_js: '12' # Remind to keep linter+deploy conditions above aligned
     os: linux
