@@ -23,4 +23,5 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    node: '12'
+    node_js: '12'
+    os: linux
