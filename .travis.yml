@@ -4,7 +4,7 @@ os:
 - osx
 - windows
 node_js:
-- '13' # Changing this? Remind to adjust the linter condition below
+- '13' # Changing this? Remind to adjust the linter condition below causing linter to run for only one version (for faster CI)
 - '12'
 - '8'
 install:
