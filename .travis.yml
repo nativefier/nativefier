@@ -14,6 +14,7 @@ script:
 # Only run linter once, for faster CI. Remind to keep linter+deploy conditions below aligned
 - if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi
 - npm test
+# https://docs.travis-ci.com/user/deployment
 deploy:
   provider: npm
   skip_cleanup: true
@@ -24,4 +25,4 @@ deploy:
     tags: true
     repo: jiahaog/nativefier
     node_js: '12' # Remind to keep linter+deploy conditions above aligned
-    os: linux
+    condition: '$TRAVIS_OS_NAME = linux'
