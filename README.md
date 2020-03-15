@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/jiahaog/nativefier.svg)](https://travis-ci.org/jiahaog/nativefier)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
-![Dock](dock.png)
+![Dock](docs/dock.png)
 
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
@@ -11,7 +11,7 @@ You want to make a native wrapper for WhatsApp Web (or any web page).
 nativefier web.whatsapp.com
 ```
 
-![Walkthrough animation](walkthrough.gif)
+![Walkthrough animation](docs/walkthrough.gif)
 
 You're done.
 
