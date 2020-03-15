@@ -1,8 +1,13 @@
 
+8.0.2 / 2020-03-15
+==================
+
+  * CI nitty-gritty, nothing to see here. See 8.0.0 news below.
+
 8.0.1 / 2020-03-15
 ==================
 
-  * CI nitty-gritty, nothing to see here
+  * CI nitty-gritty, nothing to see here. See 8.0.0 news below.
 
 8.0.0 / 2020-03-15
 ==================
