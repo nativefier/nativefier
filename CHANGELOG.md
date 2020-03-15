@@ -1,4 +1,66 @@
 
+8.0.0 / 2020-03-15
+==================
+
+Revamp and move to TypeScript (#898)
+
+## Breaking changes
+
+- Require **Node >= 8.10.0 and npm 5.6.0**
+- Move to **Electron 8.1.1**.
+- That's it. Lots of care went into breaking CLI & programmatic behavior
+  as little as possible. **Please report regressions**.
+- Known issue: build may fail behind a proxy. Get in touch if you use one:
+  https://github.com/jiahaog/nativefier/issues/907#issuecomment-596144768
+
+## Changes summary
+
+Nativefier didn't get much love recently, to the point that it's
+becoming hard to run on recent Node, due to old dependencies.
+Also, some past practices now seem weird, as better expressible
+by modern JS/TS, discouraging contributions including mine.
+
+Addressing this, and one thing leading to another, came a
+bigger-than-expected revamp, aiming at making Nativefier more
+**lean, stable, future-proof, user-friendly and dev-friendly**,
+while **not changing the CLI/programmatic interfaces**. Highlights:
+
+- **Require Node>=8**, as imposed by many of our dependencies. Node 8
+  is twice LTS, and easily available even in conservative Linux distros.
+  No reason not to demand it.
+- **Default to Electron 8**.
+- **Bump** all dependencies to latest version, including electron-packager.
+- **Move to TS**. TS is great. As of today, I see no reason not to use it,
+  and fight interface bugs at runtime rather than at compile time.
+  With that, get rid of everything Babel/Webpack.
+- **Move away from Gulp**. Gulp's selling point is perf via streaming,
+  but for small builds like Nativefier, npm tasks are plenty good
+  and less dependency bloat. Gulp was the driver for this PR: broken
+  on Node 12, and I didn't feel like just upgrading and keeping it.
+- Add tons of **verbose logs** everywhere it makes sense, to have a
+  fine & clear trace of the program flow. This will be helpful to
+  debug user-reported issues, and already helped me fix a few bugs.
+    - With better simple logging, get rid of the quirky and buggy
+      progress bar based on package `progress`. Nice logging (minimal
+      by default, the verbose logging mentioned above is only used
+      when passing `--verbose`) is better and one less dependency.
+- **Dump `async` package**, a relic from old callback-hell early Node.
+  Also dump a few other micro-packages unnecessary now.
+- A first pass of code **cleanup** thanks to modern JS/TS features:
+  fixes, simplifications, jsdoc type annotations to types, etc.
+- **Remove GitHub integrations Hound & CodeClimate**, which are more
+  exotic than good'ol'linters, and whose signal-to-noise ratio is too low.
+- Quality: **Add tests** and add **Windows + macOS CI builds**.
+  Also, add a **manual test script**, helping to quickly verify the
+  hard-to-programatically-test stuff before releases, and limit regressions.
+- **Fix a very small number of existing bugs**. The goal of this PR was
+  *not* to fix bugs, but to get Nativefier in better shape to do so.
+  Bugfixes will come later. Still, these got addressed:
+  - Add common `Alt`+`Left`/`Right` for previous/next navigation.
+  - Improve #379: fix zoom with `Ctrl` + numpad `+`/`-`
+  - Fix pinch-to-zoom (see https://github.com/jiahaog/nativefier/issues/379#issuecomment-598612128 )
+
+
 7.7.1 / 2020-01-23
 ==================
 
