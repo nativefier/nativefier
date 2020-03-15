@@ -1,21 +1,19 @@
 language: node_js
-addons:
-  code_climate:
-    repo_token: CODE_CLIMATE_TOKEN
+os:
+- linux
+- osx
+- windows
 node_js:
-- '11'
-- '10'
+- '13' # Changing this? Remind to adjust the linter condition below causing linter to run for only one version (for faster CI)
+- '12'
 - '8'
-- '7'
-- '6'
-before_install:
-- npm install -g npm@5.8.x
 install:
-- npm run dev-up
+- npm install
+- npm run build
 script:
-- npm run ci
-after_script:
-- codeclimate-test-reporter < ./coverage/lcov.info
+# Only run linter once, for faster CI
+- if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "13" ]; then npm run lint; fi
+- npm test
 deploy:
   provider: npm
   skip_cleanup: true
@@ -25,4 +23,4 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    node: '8'
+    node: '12'

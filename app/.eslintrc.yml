@@ -1,2 +1,0 @@
-settings:
-  import/core-modules: [ electron ]

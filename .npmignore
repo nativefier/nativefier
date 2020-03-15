@@ -1,7 +1,19 @@
 # OSX
-.DS_Store
-
 /*
 !lib/
-!app/lib
-!bin
+!app/lib/
+!icon-scripts
+.DS_Store
+.eslintrc.yml
+src/
+app/src/
+app/node_modules
+*tsconfig.tsbuildinfo
+*package-lock.json
+*tsconfig.json
+*jestSetupFiles*
+*-test.js
+*-test.js.map
+*.test.d.ts
+*.test.js
+*.test.js.map

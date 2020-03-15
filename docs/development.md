@@ -1,6 +1,6 @@
-# Development
+# Development Guide
 
-## Environment Setup
+## Setup
 
 First, clone the project
 
@@ -9,49 +9,59 @@ git clone https://github.com/jiahaog/nativefier.git
 cd nativefier
 ```
 
-Install dependencies and build:
+Install dependencies:
 
 ```bash
-# macOS and Linux
-npm run dev-up
-
-# Windows
-npm run dev-up-win
+npm install
 ```
 
-If dependencies are installed and you just want to re-build,
+Build nativefier:
 
 ```bash
 npm run build
 ```
 
-You can set up a symbolic link so that running `nativefier` invokes your development version including your changes:
+Set up a symbolic link so that running `nativefier` calls your dev version with your changes:
 
 ```bash
 npm link
+which nativefier
+# -> Should return a path, e.g. /home/youruser/.node_modules/lib/node_modules/nativefier
+# If not, be sure your `npm_config_prefix` env var is set and in your `PATH`
 ```
 
-After doing so (and not forgetting to build with `npm run build`), you can run Nativefier with your test parameters:
+After doing so, you can run Nativefier with your test parameters:
 
 ```bash
-nativefier <--your-awesome-new-flag>
+nativefier --your-awesome-new-flag 'https://your-test-site.com'
 ```
 
-Or you can automatically watch the files for changes with:
-
+Then run your nativefier app *through the command line too* (to see logs & errors):
 ```bash
-npm run watch
+# Under Linux
+./your-test-site-linux-x64/your-test-site
+
+# Under Windows
+your-test-site-win32-x64/your-test-site.exe
+
+# Under macOS
+open -a YourTestSite.app
 ```
+
+## Linting & formatting
+
+Nativefier uses [Prettier](https://prettier.io/), which will shout at you for
+not formatting code exactly like it expects. This guarantees a homogenous style,
+but is painful to do manually. Do yourself a favor and install a
+[Prettier plugin for your editor](https://prettier.io/docs/en/editors.html).
 
 ## Tests
 
-```bash
-# To run all tests (unit, end-to-end),
-npm test
-
-# To run only unit tests,
-npm run jest
-
-# To run only end-to-end tests,
-npm run e2e
-```
+- To run all tests, `npm t`
+- To run only unit tests, `npm run test:unit`
+- To run only integration tests, `npm run test:integration`
+- Logging is suppressed by default in tests, to avoid polluting Jest output.
+  To get debug logs, `npm run test:withlog` or set the `LOGLEVEL` env. var.
+- For a good live experience, open two terminal panes/tabs running code/tests watchers:
+    2. Run a TSC watcher: `npm run build:watch`
+    3. Run a Jest unit tests watcher: `npm run test:watch`
