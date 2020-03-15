@@ -36,6 +36,18 @@ After doing so, you can run Nativefier with your test parameters:
 nativefier --your-awesome-new-flag 'https://your-test-site.com'
 ```
 
+Then run your nativefier app *through the command line too* (to see logs & errors):
+```bash
+# Under Linux
+./your-test-site-linux-x64/your-test-site
+
+# Under Windows
+your-test-site-win32-x64/your-test-site.exe
+
+# Under macOS
+open -a YourTestSite.app
+```
+
 ## Linting & formatting
 
 Nativefier uses [Prettier](https://prettier.io/), which will shout at you for
