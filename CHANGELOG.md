@@ -1,4 +1,10 @@
 
+8.0.3 / 2020-03-15
+==================
+
+  * Attempt to fix failing to install due to app yarn install (#923)
+    See https://github.com/jiahaog/nativefier/pull/898#issuecomment-583865045 .
+
 8.0.2 / 2020-03-15
 ==================
 
