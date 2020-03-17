@@ -8,7 +8,7 @@ node_js:
 - '12' # Changing this? Remind to keep linter+deploy conditions below aligned
 - '8'
 install:
-- npm install
+- npm run dev-up
 - npm run build
 script:
 # Only run linter once, for faster CI. Remind to keep linter+deploy conditions below aligned
