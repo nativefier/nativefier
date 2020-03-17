@@ -6,7 +6,7 @@
       "incremental": true,
       "module": "commonjs",
       "moduleResolution": "node",
-      "outDir": "./lib",
+      "outDir": "./dist",
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,

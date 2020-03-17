@@ -28,18 +28,20 @@
     "url": "https://github.com/jiahaog/nativefier/issues"
   },
   "scripts": {
-    "build-app-static": "ncp app/src/static/ app/lib/static/",
-    "build": "npm run clean && tsc --build . app && npm run build-app-static",
+    "build-app": "cd app && webpack",
+    "build-app-static": "ncp app/src/static/ app/lib/static/ && ncp app/dist/preload.js app/lib/preload.js && ncp app/dist/preload.js.map app/lib/preload.js.map",
+    "build": "npm run clean && tsc --build . app && npm run build-app && npm run build-app-static",
     "build:watch": "tsc --build . app --watch",
+    "dev-up": "npm install && cd ./app && npm install && cd ..",
+    "dev-up-win": "npm install & cd app & npm install & cd ..",
     "changelog": "./docs/generate-changelog",
     "ci": "npm run lint && npm test",
-    "clean": "rimraf lib/ app/lib/",
-    "clean:full": "rimraf lib/ app/lib/ node_modules/ app/node_modules/",
+    "clean": "rimraf lib/ app/lib/ app/dist/",
+    "clean:full": "rimraf lib/ app/lib/ app/dist/ node_modules/ app/node_modules/",
     "lint:fix": "eslint . --fix",
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
-    "postinstall": "cd app && echo '***** Installation will take 60s to finish, this is a bug ( https://github.com/jiahaog/nativefier/issues/923 ) that will be addressed in a future release. For now, have a cup of tea. *****' && npm install --no-package-lock --no-audit --silent",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./docs/manual-test",
     "test:unit": "jest",
@@ -81,7 +83,10 @@
     "jest": "25.x",
     "prettier": "1.x",
     "rimraf": "3.x",
-    "typescript": "3.x"
+    "ts-loader": "6.x",
+    "typescript": "3.x",
+    "webpack": "4.x",
+    "webpack-cli": "3.x"
   },
   "jest": {
     "collectCoverage": true,

@@ -95,7 +95,7 @@ export function createMainWindow(
       plugins: true,
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
       webSecurity: !options.insecure,
-      preload: path.join(__dirname, '..', 'preload.js'),
+      preload: path.join(__dirname, 'preload.js'),
       zoomFactor: options.zoom,
     },
   };
@@ -133,7 +133,7 @@ export function createMainWindow(
     options.maximize = undefined;
     try {
       fs.writeFileSync(
-        path.join(__dirname, '../..', 'nativefier.json'),
+        path.join(__dirname, '..', 'nativefier.json'),
         JSON.stringify(options),
       );
     } catch (exception) {

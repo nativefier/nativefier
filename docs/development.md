@@ -9,10 +9,14 @@ git clone https://github.com/jiahaog/nativefier.git
 cd nativefier
 ```
 
-Install dependencies:
+Install dependencies for both the CLI and the Electron app:
 
 ```bash
-npm install
+# Under Linux and macOS:
+npm run dev-up
+
+# Under Windows:
+npm run dev-up-win
 ```
 
 Build nativefier:
@@ -63,5 +67,5 @@ but is painful to do manually. Do yourself a favor and install a
 - Logging is suppressed by default in tests, to avoid polluting Jest output.
   To get debug logs, `npm run test:withlog` or set the `LOGLEVEL` env. var.
 - For a good live experience, open two terminal panes/tabs running code/tests watchers:
-    2. Run a TSC watcher: `npm run build:watch`
-    3. Run a Jest unit tests watcher: `npm run test:watch`
+    1. Run a TSC watcher: `npm run build:watch`
+    2. Run a Jest unit tests watcher: `npm run test:watch`
