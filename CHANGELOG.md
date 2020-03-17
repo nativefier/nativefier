@@ -1,4 +1,10 @@
 
+8.0.4 / 2020-03-16
+==================
+
+  * Fix failing to global-sudo-install due to postinstall script
+    (#923, maybe #924)
+
 8.0.3 / 2020-03-15
 ==================
 
