@@ -86,16 +86,20 @@ export function createMenu({
       {
         label: 'Back',
         accelerator: (() => {
-          globalShortcut.register('Alt+Left', goBack);
-          return 'CmdOrCtrl+[';
+          globalShortcut.register('CmdOrCtrl+[', goBack); // Used in old versions of Nativefier, kept for backwards compat.
+          const backKbShortcut =
+            process.platform === 'darwin' ? 'Cmd+Left' : 'Alt+Left';
+          return backKbShortcut;
         })(),
         click: goBack,
       },
       {
         label: 'Forward',
         accelerator: (() => {
-          globalShortcut.register('Alt+Right', goForward);
-          return 'CmdOrCtrl+]';
+          globalShortcut.register('CmdOrCtrl+]', goForward); // Used in old versions of Nativefier, kept for backwards compat.
+          const forwardKbShortcut =
+            process.platform === 'darwin' ? 'Cmd+Right' : 'Alt+Right';
+          return forwardKbShortcut;
         })(),
         click: goForward,
       },
