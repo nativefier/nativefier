@@ -14,6 +14,7 @@ A clear and concise description of what the bug is.
 
 - [ ] I looked at `nativefier --help` and https://github.com/jiahaog/nativefier/blob/master/docs/api.md
 - [ ] I searched existing open & closed issues. Yes, my bug is new.
+- [ ] I'm using the latest version available at https://github.com/jiahaog/nativefier/releases
 
 **Steps to reproduce**
 Give your ***full*** nativefier command, with the ***`--verbose` flag***, on a ***public*** site:
