@@ -19,7 +19,7 @@ deploy:
   provider: npm
   skip_cleanup: true
   email: jiahaog@gmail.com
-  api_key:
+  api_token:
     secure: al3oL4T5teMYt8GBAN1yx1l5Q25opB2LxYCAl6mbdnuhFBHO47aUnbEa/xJc2B0s6E9S8gJR2pYkg02WBPhr94GU+Pg3Gi/Lu8SqBLbrUzB4PT1ow30aoGIi4qaCvjRSbFuHr1I3gF/OZwcVlibU2C8GHArG2AV+TC2Krpsr6aa4V2qGmJwUMNP+rok2k9YZuUIB5lt8ZONwykYLrDxLOKZiZJ9nCLRBwJLpEUp4+z4k8zE7OTiU8/lFQMUV+WSvZVjjV+d8UCnLGN8LplZGY+VSAoh3JjrTTgXLkoT2EeZ1GFdhToanZnVkcrkT5BgNTEfq3OPB/rkqgCtwCUrOuudJE1uoXauVbYM7EwuahdRFC89Z9VBSHdsSw8Qk4cgSphS+U4+G3/+7oel8zWdHrH+iDj+YWFyB0WeyBvCqiqqzjwTo1Zjw6zzKUQxnmuhBEJ94jktTNV+ixV58VAy+oFecAFB4D8JMIw/ibgoB5ZJJdB8iRmrjhJoUjvUY8S7RpilcieDt0NO0h0y8/Qk0XLy/hgyuohsAsrl/lz4qP/dJVGVO6eSHVSn6tGUbMPymKKY5/s9czQT0fd6zE1ajdefva0YuePsuVVba1OophZM3UtfxPl7mwWiruTlRqwySa287a7ugTIM4wrO4T98zz0aqkYCJoZ9hgdYryrngRvM=
   on:
     tags: true
