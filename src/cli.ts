@@ -6,6 +6,7 @@ import * as dns from 'dns';
 import * as log from 'loglevel';
 
 import { buildNativefierApp } from './main';
+import { isWindows } from './helpers/helpers';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra "src" folder
@@ -29,7 +30,22 @@ function parseBooleanOrString(val: string): boolean | string {
 
 function parseJson(val: string): any {
   if (!val) return {};
-  return JSON.parse(val);
+  try {
+    return JSON.parse(val);
+  } catch (err) {
+    const windowsShellHint = isWindows()
+      ? `\n   In particular, Windows cmd doesn't have single quotes, so you have to use only double-quotes plus escaping: "{\\"someKey\\": \\"someValue\\"}"`
+      : '';
+
+    log.error(
+      `Unable to parse JSON value: ${val}\n` +
+        `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
+        ` - Only double quotes are allowed, single quotes are not.\n` +
+        ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
+        ` - If unsure, validate your JSON using an online service.`,
+    );
+    throw err;
+  }
 }
 
 function getProcessEnvs(val: string): any {
@@ -70,7 +86,7 @@ if (require.main === module) {
     targetUrl: '',
     out: '',
   };
-  commander
+  const args = commander
     .name('nativefier')
     .version(packageJson.version, '-v, --version')
     .arguments('<targetUrl> [dest]')
@@ -262,8 +278,14 @@ if (require.main === module) {
     .option(
       '--darwin-dark-mode-support',
       '(macOS only) enable Dark Mode support on macOS 10.14+',
-    )
-    .parse(sanitizedArgs);
+    );
+
+  try {
+    args.parse(sanitizedArgs);
+  } catch (err) {
+    log.error('Failed to parse command-line arguments. Aborting.');
+    process.exit(1);
+  }
 
   if (!process.argv.slice(2).length) {
     commander.help();
