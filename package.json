@@ -81,7 +81,7 @@
     "eslint-config-prettier": "6.x",
     "eslint-plugin-prettier": "3.x",
     "jest": "25.x",
-    "prettier": "1.x",
+    "prettier": "2.x",
     "rimraf": "3.x",
     "ts-loader": "6.x",
     "typescript": "3.x",

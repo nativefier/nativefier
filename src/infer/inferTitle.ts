@@ -14,9 +14,7 @@ export async function inferTitle(url: string): Promise<string> {
   });
   log.debug(`Fetched ${(data.length / 1024).toFixed(1)} kb page at`, url);
   const $ = cheerio.load(data);
-  const inferredTitle = $('title')
-    .first()
-    .text();
+  const inferredTitle = $('title').first().text();
 
   log.debug('Inferred title:', inferredTitle);
   return inferredTitle;
