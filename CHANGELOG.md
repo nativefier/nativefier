@@ -1,5 +1,5 @@
 
-8.0.5 / 2020-03-27
+8.0.6 / 2020-03-27
 ==================
 
   * App: Fix unintentionally *global*/os-wide keyboard shortcuts (fix #930)
