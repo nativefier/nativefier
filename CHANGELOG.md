@@ -1,4 +1,15 @@
 
+8.0.5 / 2020-03-27
+==================
+
+  * App: Fix unintentionally *global*/os-wide keyboard shortcuts (fix #930)
+  * App: Back & forward: expose standard shortcuts first & handle mac,
+    keep old weird (Ctrl+[ and Ctrl+]) shortcuts for backward compat
+  * App: Properly hide Developer Tools when asked by flag (fix #842)
+  * Log a helpful error when failing to parse JSON arg (fix #928)
+  * Bump default Electron to 8.2.0
+  * Misc GitHub & Travis nits.
+
 8.0.4 / 2020-03-16
 ==================
 
