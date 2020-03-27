@@ -1,10 +1,4 @@
-import {
-  Menu,
-  clipboard,
-  globalShortcut,
-  shell,
-  MenuItemConstructorOptions,
-} from 'electron';
+import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
 
 export function createMenu({
   nativefierVersion,
@@ -86,7 +80,6 @@ export function createMenu({
       {
         label: 'Back',
         accelerator: (() => {
-          globalShortcut.register('CmdOrCtrl+[', goBack); // Used in old versions of Nativefier, kept for backwards compat.
           const backKbShortcut =
             process.platform === 'darwin' ? 'Cmd+Left' : 'Alt+Left';
           return backKbShortcut;
@@ -94,13 +87,26 @@ export function createMenu({
         click: goBack,
       },
       {
+        label: 'BackAdditionalShortcut',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        accelerator: 'CmdOrCtrl+[', // What old versions of Nativefier used, kept for backwards compat
+        click: goBack,
+      },
+      {
         label: 'Forward',
         accelerator: (() => {
-          globalShortcut.register('CmdOrCtrl+]', goForward); // Used in old versions of Nativefier, kept for backwards compat.
           const forwardKbShortcut =
             process.platform === 'darwin' ? 'Cmd+Right' : 'Alt+Right';
           return forwardKbShortcut;
         })(),
+        click: goForward,
+      },
+      {
+        label: 'ForwardAdditionalShortcut',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        accelerator: 'CmdOrCtrl+]', // What old versions of Nativefier used, kept for backwards compat
         click: goForward,
       },
       {
@@ -131,26 +137,38 @@ export function createMenu({
       },
       {
         label: 'Zoom In',
-        accelerator: (() => {
-          globalShortcut.register('CmdOrCtrl+numadd', zoomIn);
-          return 'CmdOrCtrl+=';
-        })(),
+        accelerator: 'CmdOrCtrl+=',
+        click: zoomIn,
+      },
+      {
+        label: 'ZoomInAdditionalShortcut',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        accelerator: 'CmdOrCtrl+numadd',
         click: zoomIn,
       },
       {
         label: 'Zoom Out',
-        accelerator: (() => {
-          globalShortcut.register('CmdOrCtrl+numsub', zoomOut);
-          return 'CmdOrCtrl+-';
-        })(),
+        accelerator: 'CmdOrCtrl+-',
+        click: zoomOut,
+      },
+      {
+        label: 'ZoomOutAdditionalShortcut',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        accelerator: 'CmdOrCtrl+numsub',
         click: zoomOut,
       },
       {
         label: zoomResetLabel,
-        accelerator: (() => {
-          globalShortcut.register('CmdOrCtrl+num0', zoomReset);
-          return 'CmdOrCtrl+0';
-        })(),
+        accelerator: 'CmdOrCtrl+0',
+        click: zoomReset,
+      },
+      {
+        label: 'ZoomResetAdditionalShortcut',
+        visible: false,
+        acceleratorWorksWhenHidden: true,
+        accelerator: 'CmdOrCtrl+num0',
         click: zoomReset,
       },
     ],
