@@ -22,6 +22,7 @@ module.exports = {
   // app by electron-packager. https://webpack.js.org/configuration/externals/
   externals: {
     electron: 'commonjs electron',
+    loglevel: 'commonjs loglevel',
   },
   resolve: {
     extensions: [ '.ts', '.js' ],
