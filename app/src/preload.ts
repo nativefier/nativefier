@@ -11,7 +11,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ipcRenderer } from 'electron';
-import * as log from 'loglevel';
 
 const INJECT_JS_PATH = path.join(__dirname, '..', 'inject/inject.js');
 /**
@@ -58,9 +57,9 @@ setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
 
 ipcRenderer.on('params', (event, message) => {
   const appArgs = JSON.parse(message);
-  log.info('nativefier.json', appArgs);
+  console.info('nativefier.json', appArgs);
 });
 
 ipcRenderer.on('debug', (event, message) => {
-  log.info('debug:', message);
+  console.info('debug:', message);
 });

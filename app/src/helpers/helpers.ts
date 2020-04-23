@@ -3,7 +3,6 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { BrowserWindow } from 'electron';
-import * as log from 'loglevel';
 import wurl from 'wurl';
 
 const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');
@@ -60,7 +59,7 @@ export function debugLog(browserWindow: BrowserWindow, message: string): void {
   setTimeout(() => {
     browserWindow.webContents.send('debug', message);
   }, 3000);
-  log.info(message);
+  console.info(message);
 }
 
 export function getAppIcon(): string {

@@ -16,7 +16,6 @@
     "electron-dl": "3.x",
     "electron-squirrel-startup": "1.x",
     "electron-window-state": "5.x",
-    "loglevel": "1.x",
     "source-map-support": "0.x",
     "wurl": "2.x"
   },
