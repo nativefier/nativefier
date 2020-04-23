@@ -1,4 +1,10 @@
 
+8.0.7 / 2020-04-22
+==================
+
+  * Fix `Unable to load preload script` error at runtime (fix #934)
+  * Bump default Electron to 8.2.3, and bump app/electron-context-menu to 1.x
+
 8.0.6 / 2020-03-27
 ==================
 
