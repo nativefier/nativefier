@@ -24,10 +24,15 @@ const fileDownloadOptions = { ...appArgs.fileDownloadOptions };
 electronDownload(fileDownloadOptions);
 
 if (appArgs.processEnvs) {
-  Object.keys(appArgs.processEnvs).forEach((key) => {
-    /* eslint-env node */
-    process.env[key] = appArgs.processEnvs[key];
-  });
+  // This is compatibility if just a string was passed.
+  if (typeof appArgs.processEnvs === 'string') {
+    process.env.processEnvs = appArgs.processEnvs;
+  } else {
+    Object.keys(appArgs.processEnvs).forEach((key) => {
+      /* eslint-env node */
+      process.env[key] = appArgs.processEnvs[key];
+    });
+  }
 }
 
 let mainWindow;
