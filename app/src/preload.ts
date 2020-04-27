@@ -22,7 +22,7 @@ const INJECT_JS_PATH = path.join(__dirname, '..', 'inject/inject.js');
  */
 function setNotificationCallback(createCallback, clickCallback) {
   const OldNotify = window.Notification;
-  const newNotify = (title, opt) => {
+  const newNotify = function (title, opt) {
     createCallback(title, opt);
     const instance = new OldNotify(title, opt);
     instance.addEventListener('click', clickCallback);

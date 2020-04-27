@@ -52,7 +52,7 @@ function getProcessEnvs(val: string): any {
   if (!val) {
     return {};
   }
-  return { processEnvs: parseJson(val) };
+  return parseJson(val);
 }
 
 function checkInternet(): void {

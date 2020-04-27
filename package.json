@@ -42,6 +42,7 @@
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
+    "prepare": "cd ./app && npm install && cd .. && npm run build",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./docs/manual-test",
     "test:unit": "jest",
