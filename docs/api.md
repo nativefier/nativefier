@@ -23,6 +23,7 @@
       - [Packaging for Linux](#packaging-for-linux)
       - [Packaging for macOS](#packaging-for-macos)
         - [Manually Converting `.icns`](#manually-converting-icns)
+    - [[icon-status]](#icon-status)
     - [[counter]](#counter)
     - [[bounce]](#bounce)
     - [[width]](#width)
@@ -209,6 +210,12 @@ If you have the optional dependencies `iconutil`, Imagemagick `convert`, and Ima
 [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
 To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
+
+#### [icon]
+
+```
+--icon-status <path>
+```
 
 #### [counter]
 
@@ -775,6 +782,7 @@ var options = {
     overwrite: false,
     asar: false, // see conceal
     icon: '~/Desktop/icon.png',
+    iconStatus: '~/Desktop/icon-status.png',
     counter: false,
     bounce: false,
     width: 1280,

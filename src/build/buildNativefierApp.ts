@@ -50,9 +50,9 @@ async function copyIconsIfNecessary(
   options: AppOptions,
   appPath: string,
 ): Promise<void> {
-  log.debug('Copying icons if necessary');
-  if (!options.packager.icon) {
-    log.debug('No icon specified in options; aborting');
+  log.info('Copying icons if necessary');
+  if (!options.packager.icon && !options.nativefier.iconStatus) {
+    log.debug('No icon and icon-status specified in options; aborting');
     return;
   }
 
@@ -66,11 +66,18 @@ async function copyIconsIfNecessary(
 
   // windows & linux: put the icon file into the app
   const destAppPath = path.join(appPath, 'resources/app');
-  const destFileName = `icon${path.extname(options.packager.icon)}`;
-  const destIconPath = path.join(destAppPath, destFileName);
+  const destIconFileName = `icon${path.extname(options.packager.icon)}`;
+  const destIconPath = path.join(destAppPath, destIconFileName);
+  const destIconStatusFileName = `icon-status${path.extname(options.nativefier.iconStatus)}`;
+  const destIconStatusPath = path.join(destAppPath, destIconStatusFileName);
+
+
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
   await copyFileOrDir(options.packager.icon, destIconPath);
+
+  log.debug(`Copying icon-status ${options.nativefier.iconStatus} to`, destIconStatusPath);
+  await copyFileOrDir(options.nativefier.iconStatus, destIconStatusPath);
 }
 
 function trimUnprocessableOptions(options: AppOptions): void {

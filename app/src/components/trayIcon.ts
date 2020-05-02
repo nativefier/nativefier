@@ -1,6 +1,6 @@
 import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
 
-import { getAppIcon, getCounterValue } from '../helpers/helpers';
+import { getAppIcon, getAppIconStatus, getCounterValue } from '../helpers/helpers';
 
 export function createTrayIcon(
   nativefierOptions,
@@ -11,6 +11,8 @@ export function createTrayIcon(
   if (options.tray) {
     const iconPath = getAppIcon();
     const nimage = nativeImage.createFromPath(iconPath);
+    const iconStatusPath = getAppIconStatus();
+    const nimageStatus = nativeImage.createFromPath(iconStatusPath);
     const appIcon = new Tray(nimage);
 
     const onClick = () => {
@@ -33,6 +35,20 @@ export function createTrayIcon(
     ]);
 
     appIcon.on('click', onClick);
+
+    if (options.iconStatus) {
+      mainWindow.on('page-title-updated', (e, title) => {
+        const counterValue = getCounterValue(title);
+        if (counterValue) {
+          appIcon.setImage(nimageStatus);
+        } else {
+          appIcon.setImage(nimage);
+        }
+      });
+      mainWindow.on('focus', () => {
+        appIcon.setImage(nimage);
+      });
+    }
 
     if (options.counter) {
       mainWindow.on('page-title-updated', (e, title) => {

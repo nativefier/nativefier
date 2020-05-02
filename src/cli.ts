@@ -139,6 +139,10 @@ if (require.main === module) {
       'the icon file to use as the icon for the app (should be a .png)',
     )
     .option(
+      '--icon-status <value>',
+      'the icon file to use as the icon status for the app (should be a .png)',
+    )
+    .option(
       '--width <value>',
       'set window default width; defaults to 1280px',
       parseInt,
