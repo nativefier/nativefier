@@ -39,7 +39,7 @@ export function createTrayIcon(
     if (options.iconStatus) {
       mainWindow.on('page-title-updated', (e, title) => {
         const counterValue = getCounterValue(title);
-        if (counterValue) {
+        if (!mainWindow.isFocused() && counterValue) {
           appIcon.setImage(nimageStatus);
         } else {
           appIcon.setImage(nimage);
