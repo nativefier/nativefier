@@ -68,15 +68,18 @@ async function copyIconsIfNecessary(
   const destAppPath = path.join(appPath, 'resources/app');
   const destIconFileName = `icon${path.extname(options.packager.icon)}`;
   const destIconPath = path.join(destAppPath, destIconFileName);
-  const destIconStatusFileName = `icon-status${path.extname(options.nativefier.iconStatus)}`;
+  const destIconStatusFileName = `icon-status${path.extname(
+    options.nativefier.iconStatus,
+  )}`;
   const destIconStatusPath = path.join(destAppPath, destIconStatusFileName);
-
-
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
   await copyFileOrDir(options.packager.icon, destIconPath);
 
-  log.debug(`Copying icon-status ${options.nativefier.iconStatus} to`, destIconStatusPath);
+  log.debug(
+    `Copying icon-status ${options.nativefier.iconStatus} to`,
+    destIconStatusPath,
+  );
   await copyFileOrDir(options.nativefier.iconStatus, destIconStatusPath);
 }
 

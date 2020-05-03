@@ -30,7 +30,9 @@ export async function convertIconIfNecessary(
   options: AppOptions,
 ): Promise<void> {
   if (!options.packager.icon && !options.nativefier.iconStatus) {
-    log.debug('Option "icon" and "iconStatus" not set, skipping icon conversion.');
+    log.debug(
+      'Option "icon" and "iconStatus" not set, skipping icon conversion.',
+    );
     return;
   }
 
@@ -54,7 +56,10 @@ export async function convertIconIfNecessary(
       );
     } else {
       try {
-        const iconPath = await convertToIco(options.nativefier.iconStatus, "icon-status");
+        const iconPath = await convertToIco(
+          options.nativefier.iconStatus,
+          'icon-status',
+        );
         options.nativefier.iconStatus = iconPath;
       } catch (error) {
         log.warn('Failed to convert icon-status to .ico, skipping.', error);
@@ -80,7 +85,10 @@ export async function convertIconIfNecessary(
       );
     } else {
       try {
-        const iconPath = await convertToPng(options.nativefier.iconStatus, "icon-status");
+        const iconPath = await convertToPng(
+          options.nativefier.iconStatus,
+          'icon-status',
+        );
         options.nativefier.iconStatus = iconPath;
       } catch (error) {
         log.warn('Failed to convert icon-status to .png, skipping.', error);
@@ -98,7 +106,7 @@ export async function convertIconIfNecessary(
       } catch (error) {
         log.warn('Failed to convert icon to .icns, skipping.', error);
         options.packager.icon = undefined;
-      }    
+      }
     }
 
     if (iconIsIcns(options.nativefier.iconStatus)) {
@@ -107,16 +115,17 @@ export async function convertIconIfNecessary(
       );
     } else {
       try {
-        const iconPath = await convertToIcns(options.nativefier.iconStatus, "icon-status");
+        const iconPath = await convertToIcns(
+          options.nativefier.iconStatus,
+          'icon-status',
+        );
         options.packager.icon = iconPath;
       } catch (error) {
         log.warn('Failed to convert icon-status to .icns, skipping.', error);
         options.packager.icon = undefined;
-      }    
+      }
     }
   } else {
-    log.warn(
-      'Skipping icon conversion',
-    );
+    log.warn('Skipping icon conversion');
   }
 }

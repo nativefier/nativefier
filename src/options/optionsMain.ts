@@ -90,7 +90,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       x: rawOptions.x,
       y: rawOptions.y,
       zoom: rawOptions.zoom || 1.0,
-      iconStatus: rawOptions.iconStatus || "",
+      iconStatus: rawOptions.iconStatus || '',
     },
   };
 

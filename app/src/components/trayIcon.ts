@@ -1,6 +1,10 @@
 import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
 
-import { getAppIcon, getAppIconStatus, getCounterValue } from '../helpers/helpers';
+import {
+  getAppIcon,
+  getAppIconStatus,
+  getCounterValue,
+} from '../helpers/helpers';
 
 export function createTrayIcon(
   nativefierOptions,

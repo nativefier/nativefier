@@ -52,7 +52,10 @@ async function iconShellHelper(
   });
 }
 
-export function singleIco(icoSrc: string, icoNameDest: string = "icon"): Promise<string> {
+export function singleIco(
+  icoSrc: string,
+  icoNameDest = 'icon',
+): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.singleIco,
     icoSrc,
@@ -60,7 +63,10 @@ export function singleIco(icoSrc: string, icoNameDest: string = "icon"): Promise
   );
 }
 
-export async function convertToPng(icoSrc: string, icoNameDest: string = "icon"): Promise<string> {
+export async function convertToPng(
+  icoSrc: string,
+  icoNameDest = 'icon',
+): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToPng,
     icoSrc,
@@ -68,7 +74,10 @@ export async function convertToPng(icoSrc: string, icoNameDest: string = "icon")
   );
 }
 
-export async function convertToIco(icoSrc: string, icoNameDest: string = "icon"): Promise<string> {
+export async function convertToIco(
+  icoSrc: string,
+  icoNameDest = 'icon',
+): Promise<string> {
   return iconShellHelper(
     SCRIPT_PATHS.convertToIco,
     icoSrc,
@@ -76,7 +85,10 @@ export async function convertToIco(icoSrc: string, icoNameDest: string = "icon")
   );
 }
 
-export async function convertToIcns(icoSrc: string, icoNameDest: string = "icon"): Promise<string> {
+export async function convertToIcns(
+  icoSrc: string,
+  icoNameDest = 'icon',
+): Promise<string> {
   if (!isOSX()) {
     throw new Error('macOS is required to convert to a .icns icon');
   }

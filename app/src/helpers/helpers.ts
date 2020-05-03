@@ -67,7 +67,11 @@ export function getAppIcon(): string {
 }
 
 export function getAppIconStatus(): string {
-  return path.join(__dirname, '..', `icon-status.${isWindows() ? 'ico' : 'png'}`);
+  return path.join(
+    __dirname,
+    '..',
+    `icon-status.${isWindows() ? 'ico' : 'png'}`,
+  );
 }
 
 export function nativeTabsSupported(): boolean {
