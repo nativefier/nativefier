@@ -32,6 +32,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     disableContextMenu: options.nativefier.disableContextMenu,
     disableDevTools: options.nativefier.disableDevTools,
     disableGpu: options.nativefier.disableGpu,
+    disableHttp2: options.nativefier.disableHttp2,
     diskCacheSize: options.nativefier.diskCacheSize,
     enableEs3Apis: options.nativefier.enableEs3Apis,
     fastQuit: options.nativefier.fastQuit,

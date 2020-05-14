@@ -182,6 +182,7 @@ if (require.main === module) {
     )
     .option('--ignore-certificate', 'ignore certificate-related errors')
     .option('--disable-gpu', 'disable hardware acceleration')
+    .option('--disable-http2', 'disable HTTP/2 and SPDY/3.1 protocols')
     .option(
       '--ignore-gpu-blacklist',
       'force WebGL apps to work on unsupported GPUs',

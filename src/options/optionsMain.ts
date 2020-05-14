@@ -57,6 +57,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       disableContextMenu: rawOptions.disableContextMenu,
       disableDevTools: rawOptions.disableDevTools,
       disableGpu: rawOptions.disableGpu || false,
+      disableHttp2: rawOptions.disableHttp2 || false,
       diskCacheSize: rawOptions.diskCacheSize || null,
       enableEs3Apis: rawOptions.enableEs3Apis || false,
       fastQuit: rawOptions.fastQuit || false,

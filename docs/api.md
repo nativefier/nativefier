@@ -39,6 +39,7 @@
     - [[honest]](#honest)
     - [[ignore-certificate]](#ignore-certificate)
     - [[disable-gpu]](#disable-gpu)
+    - [[disable-http2]](#disable-http2)
     - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[insecure]](#insecure)
@@ -343,6 +344,13 @@ Disable hardware acceleration for the packaged application.
 --ignore-gpu-blacklist
 ```
 Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
+
+#### [disable-http2]
+
+```
+--disable-http2
+```
+Disable HTTP/2 and SPDY/3.1 protocols.
 
 #### [enable-es3-apis]
 

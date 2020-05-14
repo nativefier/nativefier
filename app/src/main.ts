@@ -52,6 +52,10 @@ if (appArgs.disableGpu) {
   app.disableHardwareAcceleration();
 }
 
+if (appArgs.disableHttp2) {
+  app.commandLine.appendSwitch('disable-http2');
+}
+
 if (appArgs.ignoreGpuBlacklist) {
   app.commandLine.appendSwitch('ignore-gpu-blacklist');
 }
