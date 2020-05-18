@@ -132,11 +132,11 @@ if (require.main === module) {
     )
     .option(
       '--bounce',
-      '(macOS only) make he dock icon bounce when the counter increases; defaults to false',
+      '(macOS only) make the dock icon bounce when the counter increases; defaults to false',
     )
     .option(
       '-i, --icon <value>',
-      'the icon file to use as the icon for the app (should be a .png)',
+      'the icon file to use as the icon for the app (should be a .png, on macOS can also be an .icns)',
     )
     .option(
       '--width <value>',
