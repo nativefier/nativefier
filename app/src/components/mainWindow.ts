@@ -95,6 +95,7 @@ export function createMainWindow(
       plugins: true,
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
       webSecurity: !options.insecure,
+      sandbox: true,
       preload: path.join(__dirname, 'preload.js'),
       zoomFactor: options.zoom,
     },
