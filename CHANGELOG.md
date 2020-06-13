@@ -1,4 +1,13 @@
 
+9.0.0 / 2020-06-13
+==================
+
+  * **[BREAKING CHANGE] Require Node.js >= 10 and npm >= 6**
+  * **[BREAKING CHANGE] Bump default Electron to 9.0.4**
+  * Bump deps (ts-loader, jest, electron-context-menu)
+  * --help: fix typo, clarify `--icon` helptext (PR #976)
+  * Fix notifications (#88, #956), processEnvs, using as git dep (PR #955)
+
 8.0.7 / 2020-04-22
 ==================
 
