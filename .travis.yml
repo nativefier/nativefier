@@ -4,15 +4,15 @@ os:
 - osx
 - windows
 node_js:
-- '13'
-- '12' # Changing this? Remind to keep linter+deploy conditions below aligned
-- '8'
+- '14' # Changing this? Remind to keep linter+deploy conditions below aligned
+- '12'
+- '10'
 install:
 - npm run dev-up
 - npm run build
 script:
 # Only run linter once, for faster CI. Remind to keep linter+deploy conditions below aligned
-- if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "12" ]; then npm run lint; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ] && [ "$TRAVIS_NODE_VERSION" = "14" ]; then npm run lint; fi
 - npm test
 # https://docs.travis-ci.com/user/deployment
 deploy:
@@ -24,5 +24,5 @@ deploy:
   on:
     tags: true
     repo: jiahaog/nativefier
-    node_js: '12' # Remind to keep linter+deploy conditions above aligned
+    node_js: '14' # Remind to keep linter+deploy conditions above aligned
     condition: '$TRAVIS_OS_NAME = linux'

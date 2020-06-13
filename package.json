@@ -5,8 +5,8 @@
   "license": "MIT",
   "author": "Goh Jia Hao",
   "engines": {
-    "node": ">= 8.10.0",
-    "npm": ">= 5.6.0"
+    "node": ">= 10.0.0",
+    "npm": ">= 6.0.0"
   },
   "keywords": [
     "desktop",
@@ -84,7 +84,7 @@
     "jest": "26.x",
     "prettier": "2.x",
     "rimraf": "3.x",
-    "ts-loader": "6.x",
+    "ts-loader": "7.x",
     "typescript": "3.x",
     "webpack": "4.x",
     "webpack-cli": "3.x"
