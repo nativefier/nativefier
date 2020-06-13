@@ -40,7 +40,8 @@ git commit --amend
 Once we are satisfied,
 
 ```bash
-git push origin master
+git tag vX.Y.Z
+git push --follow-tags origin master
 ```
 
 On [GitHub Releases](https://github.com/jiahaog/nativefier/releases),
