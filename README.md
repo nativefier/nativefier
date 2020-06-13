@@ -40,7 +40,7 @@ Features:
 ## Installation
 
 - macOS 10.9+ / Windows / Linux
-- [Node.js](https://nodejs.org/) `>=8`
+- [Node.js](https://nodejs.org/) `>= 10`
 - Optional dependencies:
     - [ImageMagick](http://www.imagemagick.org/) to convert icons. Make sure `convert` and `identify` are in your `$PATH`.
     - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms. Make sure `wine` is in your `$PATH`.
