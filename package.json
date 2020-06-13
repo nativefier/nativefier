@@ -1,6 +1,6 @@
 {
   "name": "nativefier",
-  "version": "8.0.7",
+  "version": "9.0.0",
   "description": "Wrap web apps natively",
   "license": "MIT",
   "author": "Goh Jia Hao",
@@ -75,13 +75,13 @@
     "tmp": "0.x"
   },
   "devDependencies": {
-    "@types/jest": "25.x",
+    "@types/jest": "26.x",
     "@typescript-eslint/eslint-plugin": "2.x",
     "@typescript-eslint/parser": "2.x",
     "eslint": "6.x",
     "eslint-config-prettier": "6.x",
     "eslint-plugin-prettier": "3.x",
-    "jest": "25.x",
+    "jest": "26.x",
     "prettier": "2.x",
     "rimraf": "3.x",
     "ts-loader": "6.x",

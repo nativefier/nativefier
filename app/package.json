@@ -12,7 +12,7 @@
   ],
   "scripts": {},
   "dependencies": {
-    "electron-context-menu": "1.x",
+    "electron-context-menu": "2.x",
     "electron-dl": "3.x",
     "electron-squirrel-startup": "1.x",
     "electron-window-state": "5.x",
@@ -20,6 +20,6 @@
     "wurl": "2.x"
   },
   "devDependencies": {
-    "electron": "8.x"
+    "electron": "9.x"
   }
 }
