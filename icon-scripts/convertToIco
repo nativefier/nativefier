@@ -8,7 +8,12 @@
 
 set -e
 
-type convert >/dev/null 2>&1 || { echo >&2 "Cannot find required ImageMagick Convert executable"; exit 1; }
+CONVERT=
+
+type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && CONVERT="gm convert"
+type convert &>/dev/null && CONVERT="convert"
+
+[[ -z "$CONVERT" ]] && { echo >&2 "Cannot find required ImageMagick Convert or GraphicsMagick executable"; exit 1; }
 
 SOURCE=$1
 DEST=$2
@@ -31,4 +36,4 @@ if [ "${EXT}" == "ico" ]; then
     exit 0
 fi
 
-convert "${SOURCE}" -resize 256x256 "${DEST}"
+$CONVERT "${SOURCE}" -resize 256x256 "${DEST}"
