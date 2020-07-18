@@ -52,7 +52,6 @@
   },
   "dependencies": {
     "@types/cheerio": "0.x",
-    "@types/electron-packager": "15.x",
     "@types/lodash": "4.x",
     "@types/ncp": "2.x",
     "@types/node": "10.x",
