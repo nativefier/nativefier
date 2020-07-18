@@ -135,13 +135,12 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     options.nativefier.userAgent = null;
   }
 
-  if (options.packager.platform.toLowerCase() === 'windows') {
+  const platform = options.packager.platform.toLowerCase();
+  if (platform === 'windows') {
     options.packager.platform = 'win32';
   }
 
-  if (
-    ['osx', 'mac', 'macos'].includes(options.packager.platform.toLowerCase())
-  ) {
+  if (['osx', 'mac', 'macos'].includes(platform)) {
     options.packager.platform = 'darwin';
   }
 

@@ -2,6 +2,7 @@ import * as electronPackager from 'electron-packager';
 
 export interface ElectronPackagerOptions extends electronPackager.Options {
   targetUrl: string;
+  platform: string;
 }
 
 export interface AppOptions {
