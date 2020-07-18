@@ -1,4 +1,11 @@
 
+9.1.0 / 2020-07-18
+==================
+
+  * Fix 'Image could not be created' app error on run (fix #992)
+  * Bump docker Node image version from 8 to 12 (#996)
+  * Bump default Electron to 9.1.0 and deps (electron-packager, ts-loader)
+
 9.0.0 / 2020-06-13
 ==================
 
