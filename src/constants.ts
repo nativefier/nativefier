@@ -3,8 +3,8 @@ import * as path from 'path';
 export const DEFAULT_APP_NAME = 'APP';
 
 // Update both together
-export const DEFAULT_ELECTRON_VERSION = '9.0.4';
-export const DEFAULT_CHROME_VERSION = '83.0.4103.104';
+export const DEFAULT_ELECTRON_VERSION = '9.1.0';
+export const DEFAULT_CHROME_VERSION = '83.0.4103.122';
 
 export const ELECTRON_MAJOR_VERSION = parseInt(
   DEFAULT_ELECTRON_VERSION.split('.')[0],
