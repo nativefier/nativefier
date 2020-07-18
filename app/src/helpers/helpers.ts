@@ -63,7 +63,19 @@ export function debugLog(browserWindow: BrowserWindow, message: string): void {
 }
 
 export function getAppIcon(): string {
-  return path.join(__dirname, '..', `icon.${isWindows() ? 'ico' : 'png'}`);
+  // Prefer ICO under Windows, see
+  // https://www.electronjs.org/docs/api/browser-window#new-browserwindowoptions
+  // https://www.electronjs.org/docs/api/native-image#supported-formats
+  if (isWindows()) {
+    const ico = path.join(__dirname, '..', 'icon.ico');
+    if (fs.existsSync(ico)) {
+      return ico;
+    }
+  }
+  const png = path.join(__dirname, '..', 'icon.png');
+  if (fs.existsSync(png)) {
+    return png;
+  }
 }
 
 export function nativeTabsSupported(): boolean {
