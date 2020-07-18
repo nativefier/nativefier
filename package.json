@@ -75,9 +75,9 @@
   },
   "devDependencies": {
     "@types/jest": "26.x",
-    "@typescript-eslint/eslint-plugin": "2.x",
-    "@typescript-eslint/parser": "2.x",
-    "eslint": "6.x",
+    "@typescript-eslint/eslint-plugin": "3.x",
+    "@typescript-eslint/parser": "3.x",
+    "eslint": "7.x",
     "eslint-config-prettier": "6.x",
     "eslint-plugin-prettier": "3.x",
     "jest": "26.x",

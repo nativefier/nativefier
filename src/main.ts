@@ -9,7 +9,7 @@ export { buildNativefierApp };
  * Use the better, modern async `buildNativefierApp` instead if you can!
  */
 function buildNativefierAppOldCallbackStyle(
-  options: any,
+  options: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
   callback: (err: any, result?: any) => void,
 ): void {
   buildNativefierApp(options)

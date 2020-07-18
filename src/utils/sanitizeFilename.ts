@@ -9,7 +9,7 @@ export function sanitizeFilename(
   platform: string,
   filenameToSanitize: string,
 ): string {
-  let result = sanitize(filenameToSanitize);
+  let result: string = sanitize(filenameToSanitize);
 
   // remove all non ascii or use default app name
   // eslint-disable-next-line no-control-regex

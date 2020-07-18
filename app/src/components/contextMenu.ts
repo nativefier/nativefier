@@ -9,7 +9,7 @@ export function initContextMenu(createNewWindow, createNewTab): void {
         items.push({
           label: 'Open Link in Default Browser',
           click: () => {
-            shell.openExternal(params.linkURL);
+            shell.openExternal(params.linkURL); // eslint-disable-line @typescript-eslint/no-floating-promises
           },
         });
         items.push({

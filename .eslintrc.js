@@ -16,8 +16,12 @@ module.exports = {
   ],
   rules: {
     'prettier/prettier': 'error',
-    // TODO remove when done killing anys and making tsc strict
+    // TODO remove when done killing `any`s and making tsc strict
+    '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/ban-ts-ignore': 'off',
+    '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-call': 'off',
+    '@typescript-eslint/no-unsafe-member-access': 'off',
+    '@typescript-eslint/no-unsafe-return': 'off',
   },
 };

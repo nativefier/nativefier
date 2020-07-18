@@ -17,9 +17,9 @@ async function tryToInferName(targetUrl: string): Promise<string> {
     log.debug('Inferring name for', targetUrl);
     const pageTitle = await inferTitle(targetUrl);
     return pageTitle || DEFAULT_APP_NAME;
-  } catch (error) {
+  } catch (err) {
     log.warn(
-      `Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${error}`,
+      `Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${(err as Error).toString()}`,
     );
     return DEFAULT_APP_NAME;
   }

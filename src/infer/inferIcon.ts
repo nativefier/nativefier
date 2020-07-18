@@ -39,7 +39,7 @@ function mapIconWithMatchScore(cloudIcons: any[], targetUrl: string): any {
   const normalisedTargetUrl = targetUrl.toLowerCase();
   return cloudIcons.map((item) => {
     const itemWords = item.name.split(GITCLOUD_SPACE_DELIMITER);
-    const score = itemWords.reduce((currentScore, word) => {
+    const score = itemWords.reduce((currentScore: number, word: string) => {
       if (normalisedTargetUrl.includes(word)) {
         return currentScore + 1;
       }
@@ -57,7 +57,7 @@ async function inferIconFromStore(
   log.debug(`Inferring icon from store for ${targetUrl} on ${platform}`);
   const allowedFormats = new Set(getAllowedIconFormats(platform));
 
-  const cloudIcons = await gitCloud(GITCLOUD_URL);
+  const cloudIcons: any[] = await gitCloud(GITCLOUD_URL);
   log.debug(`Got ${cloudIcons.length} icons from gitcloud`);
   const iconWithScores = mapIconWithMatchScore(cloudIcons, targetUrl);
   const maxScore = getMaxMatchScore(iconWithScores);

@@ -49,6 +49,7 @@ function injectCss(browserWindow: BrowserWindow): void {
     browserWindow.webContents.session.webRequest.onHeadersReceived(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
       (details, callback) => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         browserWindow.webContents.insertCSS(cssToInject);
         callback({ cancel: false, responseHeaders: details.responseHeaders });
       },
@@ -63,6 +64,7 @@ async function clearCache(browserWindow: BrowserWindow): Promise<void> {
 }
 
 function setProxyRules(browserWindow: BrowserWindow, proxyRules): void {
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   browserWindow.webContents.session.setProxy({
     proxyRules,
     pacScript: '',
@@ -136,9 +138,11 @@ export function createMainWindow(
         path.join(__dirname, '..', 'nativefier.json'),
         JSON.stringify(options),
       );
-    } catch (exception) {
+    } catch (err) {
       // eslint-disable-next-line no-console
-      console.log(`WARNING: Ignored nativefier.json rewrital (${exception})`);
+      console.log(
+        `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
+      );
     }
   }
 
@@ -150,7 +154,10 @@ export function createMainWindow(
     return undefined;
   };
 
-  const adjustWindowZoom = (window: BrowserWindow, adjustment): void => {
+  const adjustWindowZoom = (
+    window: BrowserWindow,
+    adjustment: number,
+  ): void => {
     window.webContents.zoomFactor = window.webContents.zoomFactor + adjustment;
   };
 
@@ -206,7 +213,7 @@ export function createMainWindow(
   const onWillNavigate = (event: Event, urlToGo: string): void => {
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       event.preventDefault();
-      shell.openExternal(urlToGo);
+      shell.openExternal(urlToGo); // eslint-disable-line @typescript-eslint/no-floating-promises
     }
   };
 
@@ -224,7 +231,7 @@ export function createMainWindow(
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
     window.webContents.on('will-navigate', onWillNavigate);
-    window.loadURL(url);
+    window.loadURL(url); // eslint-disable-line @typescript-eslint/no-floating-promises
     return window;
   };
 
@@ -283,6 +290,7 @@ export function createMainWindow(
       // In children windows too: Restore pinch-to-zoom, disabled by default in recent Electron.
       // See https://github.com/jiahaog/nativefier/issues/379#issuecomment-598612128
       // and https://github.com/electron/electron/pull/12679
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       window.webContents.setVisualZoomLevelLimits(1, 3);
 
       window.webContents.send('params', JSON.stringify(options));
@@ -353,6 +361,7 @@ export function createMainWindow(
     // Restore pinch-to-zoom, disabled by default in recent Electron.
     // See https://github.com/jiahaog/nativefier/issues/379#issuecomment-598309817
     // and https://github.com/electron/electron/pull/12679
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     mainWindow.webContents.setVisualZoomLevelLimits(1, 3);
 
     // Remove potential css injection code set in `did-navigate`) (see injectCss code)
@@ -360,9 +369,11 @@ export function createMainWindow(
   });
 
   if (options.clearCache) {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     clearCache(mainWindow);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   mainWindow.loadURL(options.targetUrl);
 
   // @ts-ignore
@@ -382,6 +393,7 @@ export function createMainWindow(
     hideWindow(mainWindow, event, options.fastQuit, options.tray);
 
     if (options.clearCache) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       clearCache(mainWindow);
     }
   });

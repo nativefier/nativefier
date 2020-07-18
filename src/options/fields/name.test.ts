@@ -24,7 +24,9 @@ const NAME_PARAMS_NEEDS_INFER = {
   },
 };
 beforeAll(() => {
-  (sanitizeFilename as jest.Mock).mockImplementation((_, filename) => filename);
+  (sanitizeFilename as jest.Mock).mockImplementation(
+    (_, filename: string) => filename,
+  );
 });
 
 describe('well formed name parameters', () => {

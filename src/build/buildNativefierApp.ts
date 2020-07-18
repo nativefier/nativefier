@@ -98,6 +98,7 @@ function trimUnprocessableOptions(options: AppOptions): void {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(rawOptions: any): Promise<string> {
   log.info('Processing options...');
   const options = await getOptions(rawOptions);

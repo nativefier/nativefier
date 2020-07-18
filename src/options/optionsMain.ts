@@ -20,6 +20,7 @@ const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 /**
  * Process and validate raw user arguments
  */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function getOptions(rawOptions: any): Promise<AppOptions> {
   const options: AppOptions = {
     packager: {
@@ -96,6 +97,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   if (options.nativefier.verbose) {
     log.setLevel('trace');
     try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       require('debug').enable('electron-packager');
     } catch (err) {
       log.debug(
