@@ -38,10 +38,10 @@ through the numerous open tabs when I was using [Facebook Messenger](https://mes
     - [ImageMagick](http://www.imagemagick.org/) to convert icons.
       Make sure `convert` and `identify` are in your system `$PATH`.
     - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms.
-      Make sure `wine` is in your `$PATH`.
+      Make sure `wine` is in your system `$PATH`.
 
 ```bash
-npm install nativefier -g
+npm install -g nativefier
 ```
 
 ## Usage
@@ -49,26 +49,22 @@ npm install nativefier -g
 To create a native desktop app for [medium.com](https://medium.com),
 simply  `nativefier "medium.com"`
 
-Nativefier will try to determine the app name, your OS and processor architecture,
-among other options. If desired, the app name or other options can be overwritten
-by specifying the `--name "Medium"` as part of the command line options:
-`nativefier --name "Some Awesome App" "medium.com"`
+Nativefier will try to determine the app name, and well as lots of other options.
+If desired, these options can be overwritten. For example, to override the name,
+`nativefier --name 'My Medium App' 'medium.com'`
 
-**Read the [API documentation](docs/api.md) (or `nativefier --help`)**
-for other command-line flags usable to configure the packaged app.
+**Read the [API documentation](docs/api.md) or run `nativefier --help`**
+to learn about other command-line flags usable to configure the packaged app.
 
 To have high-resolution icons used by default for an app/domain, please
 contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
-
-Note that the application menu is hidden by default for a minimal UI.
-You can press the `alt` keyboard key to access it.
 
 ## Development
 
 Help welcome on [bugs](https://github.com/jiahaog/nativefier/issues?q=is%3Aissue+label%3Abug) and
 [feature requests](https://github.com/jiahaog/nativefier/issues?q=is%3Aissue+label%3A%22feature+request%22)!
 
-[Developer / build docs](docs/development.md), [API docs](docs/api.md), 
+[Developer / build docs](docs/development.md), [API documentation](docs/api.md), 
 [Changelog](CHANGELOG.md).
 
 ## License
