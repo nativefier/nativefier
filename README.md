@@ -61,8 +61,8 @@ contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)
 
 ## Development
 
-Help welcome on [bugs](https://github.com/jiahaog/nativefier/issues?q=is%3Aissue+label%3Abug) and
-[feature requests](https://github.com/jiahaog/nativefier/issues?q=is%3Aissue+label%3A%22feature+request%22)!
+Help welcome on [bugs](https://github.com/jiahaog/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
+[feature requests](https://github.com/jiahaog/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request).
 
 [Developer / build docs](docs/development.md), [API documentation](docs/api.md), 
 [Changelog](CHANGELOG.md).
