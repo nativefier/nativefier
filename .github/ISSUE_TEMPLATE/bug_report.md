@@ -9,7 +9,7 @@ labels: bug
 An incomprehensible bug report is a useless bug report.
 
 =========================================================
-INCOMPREHENSIBLE / INCOMPLETE BUG REPORTS WILL BE CLOSED.
+Incomprehensible / incomplete bug reports will be closed.
 =========================================================
 -->
 

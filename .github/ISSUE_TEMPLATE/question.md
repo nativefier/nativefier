@@ -9,7 +9,7 @@ labels: question
 An incomprehensible question is a useless question.
 
 =======================================================
-INCOMPREHENSIBLE / INCOMPLETE QUESTIONS WILL BE CLOSED.
+Incomprehensible / incomplete questions will be closed.
 =======================================================
 -->
 

@@ -9,7 +9,7 @@ labels: feature-request
 An incomprehensible feature request is a useless feature request.
 
 ==============================================================
-INCOMPREHENSIBLE / INCOMPLETE FEATURE REQUESTS WILL BE CLOSED.
+Incomprehensible / incomplete feature requests will be closed.
 ==============================================================
 -->
 
