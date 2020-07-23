@@ -17,6 +17,7 @@ INCOMPREHENSIBLE / INCOMPLETE FEATURE REQUESTS WILL BE CLOSED.
 
 - [ ] I looked at `nativefier --help` and https://github.com/jiahaog/nativefier/blob/master/docs/api.md , no existing option fits my needs.
 - [ ] I searched existing issues, open & closed. Yes, my feature request is new.
+- [ ] I'm using the latest version available at https://github.com/jiahaog/nativefier/releases
 
 
 **Problem statement**
