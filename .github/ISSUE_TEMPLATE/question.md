@@ -27,7 +27,7 @@ Your question, expressed clearly and concisely.
 
 **Steps to reproduce**
 
-If you're have a Nativefier command you're struggling with, paste ***full*** nativefier command and its logs, with the ***`--verbose` flag***, on a ***public*** site:
+If you have a Nativefier command you're struggling with, paste ***full*** nativefier command and its logs, with the ***`--verbose` flag***, on a ***public*** site:
 
 ```
 nativefier --verbose --some-option https://mysite.com
