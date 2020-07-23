@@ -22,7 +22,7 @@ INCOMPREHENSIBLE / INCOMPLETE FEATURE REQUESTS WILL BE CLOSED.
 
 **Problem statement**
 
-A clear and concise description of what the problem is. For example: *I'm always frustrated when [...]*
+A clear and concise description of what the problem is. For example: *Nativefier should [...]. I need it because [...]. Existing options [...] are not exactly what I want, because [...]*
 
 If related to a Nativefier config, provide your ***full*** nativefier command and its logs, with the ***`--verbose` flag***, on a ***public*** site:
 
