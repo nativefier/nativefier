@@ -51,5 +51,4 @@ If applicable,
  - Node.js: (for example: 14.6.0)
  - Npm: (for example: 6.14.7)
  - OS: (for example: Windows 10 build 1809)
- - Is it a regression? If yes, what's the last working / first broken version?
  - Additional context: (for example: "I'm behind a proxy, with configuration X and protocol Y")
