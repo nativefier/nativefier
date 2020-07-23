@@ -27,9 +27,12 @@ Your question, expressed clearly and concisely.
 
 **Steps to reproduce**
 
-Give your ***full*** nativefier command, with the ***`--verbose` flag***, on a ***public*** site:
-1. Run `nativefier --verbose --some-option https://mysite.com`
-2. ...
+If you're have a Nativefier command you're struggling with, paste ***full*** nativefier command and its logs, with the ***`--verbose` flag***, on a ***public*** site:
+
+```
+nativefier --verbose --some-option https://mysite.com
+<paste your verbose build logs, if relevant to your feature request>
+```
 
 
 **Debug info**
