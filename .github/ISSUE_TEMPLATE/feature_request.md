@@ -5,7 +5,7 @@ labels: feature-request
 
 ---
 
-<!-- Help us help you, and take the time to fill this information 🙂.
+<!-- Help us help you, and take the time to fill this template 🙂.
 An incomprehensible feature request is a useless feature request.
 
 ==============================================================

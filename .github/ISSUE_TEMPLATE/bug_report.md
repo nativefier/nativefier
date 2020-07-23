@@ -5,7 +5,7 @@ labels: bug
 
 ---
 
-<!-- Help us help you, and take the time to fill this information 🙂.
+<!-- Help us help you, and take the time to fill this template 🙂.
 An incomprehensible bug report is a useless bug report.
 
 =========================================================
