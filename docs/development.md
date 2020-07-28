@@ -40,7 +40,8 @@ After doing so, you can run Nativefier with your test parameters:
 nativefier --your-awesome-new-flag 'https://your-test-site.com'
 ```
 
-Then run your nativefier app *through the command line too* (to see logs & errors):
+Then run your nativefier app _through the command line too_ (to see logs & errors):
+
 ```bash
 # Under Linux
 ./your-test-site-linux-x64/your-test-site
@@ -66,6 +67,4 @@ but is painful to do manually. Do yourself a favor and install a
 - To run only integration tests, `npm run test:integration`
 - Logging is suppressed by default in tests, to avoid polluting Jest output.
   To get debug logs, `npm run test:withlog` or set the `LOGLEVEL` env. var.
-- For a good live experience, open two terminal panes/tabs running code/tests watchers:
-    1. Run a TSC watcher: `npm run build:watch`
-    2. Run a Jest unit tests watcher: `npm run test:watch`
+- For a good live experience, run both the build and tests in watch mode: `npm run watch`
