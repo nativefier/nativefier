@@ -5,6 +5,7 @@ const internalUrl = 'https://medium.com/topics/technology';
 const externalUrl = 'https://www.wikipedia.org/wiki/Electron';
 const foregroundDisposition = 'foreground-tab';
 const backgroundDisposition = 'background-tab';
+const blockExternal = false;
 
 const nativeTabsSupported = () => true;
 const nativeTabsNotSupported = () => false;
@@ -14,6 +15,8 @@ test('internal urls should not be handled', () => {
   const openExternal = jest.fn();
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     internalUrl,
     undefined,
@@ -24,11 +27,15 @@ test('internal urls should not be handled', () => {
     createAboutBlankWindow,
     nativeTabsNotSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(0);
   expect(createAboutBlankWindow.mock.calls.length).toBe(0);
   expect(createNewTab.mock.calls.length).toBe(0);
   expect(preventDefault.mock.calls.length).toBe(0);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
 });
 
 test('external urls should be opened externally', () => {
@@ -36,6 +43,8 @@ test('external urls should be opened externally', () => {
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
   const preventDefault = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     externalUrl,
     undefined,
@@ -46,11 +55,44 @@ test('external urls should be opened externally', () => {
     createAboutBlankWindow,
     nativeTabsNotSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(1);
   expect(createAboutBlankWindow.mock.calls.length).toBe(0);
   expect(createNewTab.mock.calls.length).toBe(0);
   expect(preventDefault.mock.calls.length).toBe(1);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
+});
+
+test('external urls should be ignored if blockExternal is true', () => {
+  const openExternal = jest.fn();
+  const createAboutBlankWindow = jest.fn();
+  const createNewTab = jest.fn();
+  const preventDefault = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+  const blockExternal = true;
+
+  onNewWindowHelper(
+    externalUrl,
+    undefined,
+    originalUrl,
+    undefined,
+    preventDefault,
+    openExternal,
+    createAboutBlankWindow,
+    nativeTabsNotSupported,
+    createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
+  );
+
+  expect(openExternal.mock.calls.length).toBe(0);
+  expect(createAboutBlankWindow.mock.calls.length).toBe(0);
+  expect(createNewTab.mock.calls.length).toBe(0);
+  expect(preventDefault.mock.calls.length).toBe(1);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(1);
 });
 
 test('tab disposition should be ignored if tabs are not enabled', () => {
@@ -58,6 +100,8 @@ test('tab disposition should be ignored if tabs are not enabled', () => {
   const openExternal = jest.fn();
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     internalUrl,
     foregroundDisposition,
@@ -68,11 +112,15 @@ test('tab disposition should be ignored if tabs are not enabled', () => {
     createAboutBlankWindow,
     nativeTabsNotSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(0);
   expect(createAboutBlankWindow.mock.calls.length).toBe(0);
   expect(createNewTab.mock.calls.length).toBe(0);
   expect(preventDefault.mock.calls.length).toBe(0);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
 });
 
 test('tab disposition should be ignored if url is external', () => {
@@ -80,6 +128,8 @@ test('tab disposition should be ignored if url is external', () => {
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
   const preventDefault = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     externalUrl,
     foregroundDisposition,
@@ -90,11 +140,15 @@ test('tab disposition should be ignored if url is external', () => {
     createAboutBlankWindow,
     nativeTabsSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(1);
   expect(createAboutBlankWindow.mock.calls.length).toBe(0);
   expect(createNewTab.mock.calls.length).toBe(0);
   expect(preventDefault.mock.calls.length).toBe(1);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
 });
 
 test('foreground tabs with internal urls should be opened in the foreground', () => {
@@ -102,6 +156,8 @@ test('foreground tabs with internal urls should be opened in the foreground', ()
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
   const preventDefault = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     internalUrl,
     foregroundDisposition,
@@ -112,12 +168,16 @@ test('foreground tabs with internal urls should be opened in the foreground', ()
     createAboutBlankWindow,
     nativeTabsSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(0);
   expect(createAboutBlankWindow.mock.calls.length).toBe(0);
   expect(createNewTab.mock.calls.length).toBe(1);
   expect(createNewTab.mock.calls[0][1]).toBe(true);
   expect(preventDefault.mock.calls.length).toBe(1);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
 });
 
 test('background tabs with internal urls should be opened in background tabs', () => {
@@ -125,6 +185,8 @@ test('background tabs with internal urls should be opened in background tabs', (
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
   const preventDefault = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     internalUrl,
     backgroundDisposition,
@@ -135,12 +197,16 @@ test('background tabs with internal urls should be opened in background tabs', (
     createAboutBlankWindow,
     nativeTabsSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(0);
   expect(createAboutBlankWindow.mock.calls.length).toBe(0);
   expect(createNewTab.mock.calls.length).toBe(1);
   expect(createNewTab.mock.calls[0][1]).toBe(false);
   expect(preventDefault.mock.calls.length).toBe(1);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
 });
 
 test('about:blank urls should be handled', () => {
@@ -148,6 +214,8 @@ test('about:blank urls should be handled', () => {
   const openExternal = jest.fn();
   const createAboutBlankWindow = jest.fn();
   const createNewTab = jest.fn();
+  const onBlockedExternalUrl = jest.fn();
+
   onNewWindowHelper(
     'about:blank',
     undefined,
@@ -158,9 +226,13 @@ test('about:blank urls should be handled', () => {
     createAboutBlankWindow,
     nativeTabsNotSupported,
     createNewTab,
+    blockExternal,
+    onBlockedExternalUrl,
   );
+
   expect(openExternal.mock.calls.length).toBe(0);
   expect(createAboutBlankWindow.mock.calls.length).toBe(1);
   expect(createNewTab.mock.calls.length).toBe(0);
   expect(preventDefault.mock.calls.length).toBe(1);
+  expect(onBlockedExternalUrl.mock.calls.length).toBe(0);
 });

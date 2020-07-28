@@ -210,10 +210,23 @@ export function createMainWindow(
   const getCurrentUrl = (): void =>
     withFocusedWindow((focusedWindow) => focusedWindow.webContents.getURL());
 
+  const onBlockedExternalUrl = (url: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    dialog.showMessageBox(mainWindow, {
+      message: `Cannot navigate to external URL: ${url}`,
+      type: 'error',
+      title: 'Navigation blocked',
+    });
+  };
+
   const onWillNavigate = (event: Event, urlToGo: string): void => {
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       event.preventDefault();
-      shell.openExternal(urlToGo); // eslint-disable-line @typescript-eslint/no-floating-promises
+      if (options.blockExternalUrls) {
+        onBlockedExternalUrl(urlToGo);
+      } else {
+        shell.openExternal(urlToGo); // eslint-disable-line @typescript-eslint/no-floating-promises
+      }
     }
   };
 
@@ -282,6 +295,8 @@ export function createMainWindow(
       createAboutBlankWindow,
       nativeTabsSupported,
       createNewTab,
+      options.blockExternalUrls,
+      onBlockedExternalUrl,
     );
   };
 
