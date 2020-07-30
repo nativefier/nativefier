@@ -44,6 +44,23 @@ through the numerous open tabs when I was using [Facebook Messenger](https://mes
 npm install -g nativefier
 ```
 
+## Docker Installation
+- Docker (Install it [here](https://docs.docker.com/get-docker/))
+
+To build your first nativefier application using Docker, run
+```bash
+docker run -v $TARGET-PATH:/target snpranav/nativefier https://my-web-app.com/ /target/
+```
+You can also pass nativefier flags, and mount additional volumes to provide local files. For example, to use a icon:
+```bash
+docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target snpranav/nativefier --icon /src/icon.png --name WhatsApp -p linux -a x64 https://my-web-app.com/ /target/
+```
+Docker hub - [https://hub.docker.com/r/snpranav/nativefier](https://hub.docker.com/r/snpranav/nativefier)
+
+Docker image maintained on [https://gitlab.com/snpranav/nativefier/](https://gitlab.com/snpranav/nativefier-docker/).
+
+Docker images will be updated every day automatically using GitLab CI/CD in the Docker image repository. If they are not updated, you can raise an issue on the [Docker image repository](https://gitlab.com/snpranav/nativefier-docker/).
+
 ## Usage
 
 To create a native desktop app for [medium.com](https://medium.com),
