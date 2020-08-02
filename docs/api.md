@@ -386,7 +386,7 @@ nativefier https://google.com --internal-urls ".*?"
 --block-external-urls
 ```
 
-Disable navigation to URLs not considered "internal" (see '--internal-urls'). Instead of opening in an external browser, attempts to navigate to external URLs will be ignored. Default: false
+Forbid navigation to URLs not considered "internal" (see '--internal-urls'). Instead of opening in an external browser, attempts to navigate to external URLs will be blocked, and an error message will be shown. Default: false
 
 Example:
 
