@@ -33,6 +33,7 @@ export interface AppOptions {
     inject: string[];
     insecure: boolean;
     internalUrls: string;
+    blockExternalUrls: boolean;
     maximize: boolean;
     nativefierVersion: string;
     processEnvs: string;

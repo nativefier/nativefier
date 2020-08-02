@@ -10,10 +10,16 @@ export function onNewWindowHelper(
   createAboutBlankWindow,
   nativeTabsSupported,
   createNewTab,
+  blockExternal: boolean,
+  onBlockedExternalUrl: (url: string) => void,
 ): void {
   if (!linkIsInternal(targetUrl, urlToGo, internalUrls)) {
-    openExternal(urlToGo);
     preventDefault();
+    if (blockExternal) {
+      onBlockedExternalUrl(urlToGo);
+    } else {
+      openExternal(urlToGo);
+    }
   } else if (urlToGo === 'about:blank') {
     const newWindow = createAboutBlankWindow();
     preventDefault(newWindow);

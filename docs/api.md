@@ -43,6 +43,7 @@
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[insecure]](#insecure)
     - [[internal-urls]](#internal-urls)
+    - [[block-external-urls]](#block-external-urls)
     - [[proxy-rules]](#proxy-rules)
     - [[flash]](#flash)
     - [[flash-path]](#flash-path)
@@ -379,6 +380,21 @@ Or, if you want to allow all domains for example for external auths,
 nativefier https://google.com --internal-urls ".*?"
 ```
 
+#### [block-external-urls]
+
+```
+--block-external-urls
+```
+
+Forbid navigation to URLs not considered "internal" (see '--internal-urls'). Instead of opening in an external browser, attempts to navigate to external URLs will be blocked, and an error message will be shown. Default: false
+
+Example:
+
+```bash
+nativefier https://google.com --internal-urls ".*?\.google\.*?" --block-external-urls
+```
+
+Blocks navigation to any URLs except Google and its subdomains.
 
 #### [proxy-rules]
 
@@ -785,6 +801,8 @@ var options = {
     ignoreCertificate: false,
     ignoreGpuBlacklist: false,
     enableEs3Apis: false,
+    internalUrls: '.*?', // defaults to URLs on same second-level domain as app
+    blockExternalUrls: false,
     insecure: false,
     honest: false,
     zoom: 1.0,

@@ -71,6 +71,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       inject: rawOptions.inject || [],
       insecure: rawOptions.insecure || false,
       internalUrls: rawOptions.internalUrls || null,
+      blockExternalUrls: rawOptions.blockExternalUrls || false,
       maximize: rawOptions.maximize || false,
       nativefierVersion: packageJson.version,
       processEnvs: rawOptions.processEnvs,
