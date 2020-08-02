@@ -226,7 +226,7 @@ if (require.main === module) {
     )
     .option(
       '--block-external-urls',
-      `disable navigation to URLs not considered "internal" (see '--internal-urls').  Instead of opening in an external browser, attempts to navigate to external URLs will be ignored. Default: false`,
+      `forbid navigation to URLs not considered "internal" (see '--internal-urls').  Instead of opening in an external browser, attempts to navigate to external URLs will be blocked. Default: false`,
     )
     .option(
       '--proxy-rules <value>',
