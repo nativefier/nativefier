@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
       "allowJs": false,
-      "declaration": false,
+      "declaration": true,
       "incremental": true,
       "module": "commonjs",
       "moduleResolution": "node",

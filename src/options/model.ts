@@ -56,3 +56,7 @@ export interface AppOptions {
     zoom: number;
   };
 }
+
+export type NativefierOptions = Partial<
+  AppOptions['packager'] & AppOptions['nativefier']
+>;
