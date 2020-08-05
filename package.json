@@ -49,7 +49,7 @@
     "test:watch": "jest --watch",
     "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest --testRegex '[-.]test\\.js$'",
-    "watch": "concurrently \"npm:*:watch\""
+    "watch": "npx concurrently \"npm:*:watch\""
   },
   "dependencies": {
     "@types/cheerio": "0.x",
