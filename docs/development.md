@@ -67,4 +67,7 @@ but is painful to do manually. Do yourself a favor and install a
 - To run only integration tests, `npm run test:integration`
 - Logging is suppressed by default in tests, to avoid polluting Jest output.
   To get debug logs, `npm run test:withlog` or set the `LOGLEVEL` env. var.
-- For a good live experience, run both the build and tests in watch mode: `npm run watch`
+- For a good live experience, open two terminal panes/tabs running code/tests watchers:
+  1. Run a TSC watcher: `npm run build:watch`
+  2. Run a Jest unit tests watcher: `npm run test:watch`
+- Alternatively, you can run both test processes in the same terminal by running: `npm run watch`
