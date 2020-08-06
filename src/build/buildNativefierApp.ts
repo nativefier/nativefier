@@ -9,7 +9,7 @@ import { isWindows, getTempDir, copyFileOrDir } from '../helpers/helpers';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
 import { convertIconIfNecessary } from './buildIcon';
-import { AppOptions } from '../options/model';
+import { AppOptions, NativefierOptions } from '../options/model';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -99,7 +99,9 @@ function trimUnprocessableOptions(options: AppOptions): void {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function buildNativefierApp(rawOptions: any): Promise<string> {
+export async function buildNativefierApp(
+  rawOptions: NativefierOptions,
+): Promise<string> {
   log.info('Processing options...');
   const options = await getOptions(rawOptions);
 
