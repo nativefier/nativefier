@@ -91,6 +91,8 @@ function trimUnprocessableOptions(options: AppOptions): void {
     log.warn(
       `*Not* setting [${optionsPresent.join(', ')}], as couldn't find Wine.`,
       'Wine is required when packaging a Windows app under on non-Windows platforms.',
+      'Also, note that Windows apps built under non-Windows platforms without Wine *will lack* certain',
+      'features, like a correct icon and process name. Do yourself a favor and install Wine, please.',
     );
     for (const keyToUnset of optionsPresent) {
       options[keyToUnset] = null;
