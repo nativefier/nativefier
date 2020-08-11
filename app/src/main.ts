@@ -3,7 +3,7 @@ import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
 
-import { app, crashReporter, globalShortcut } from 'electron';
+import { app, crashReporter, globalShortcut, BrowserWindow } from 'electron';
 import electronDownload from 'electron-dl';
 
 import { createLoginWindow } from './components/loginWindow';
@@ -35,7 +35,7 @@ if (appArgs.processEnvs) {
   }
 }
 
-let mainWindow;
+let mainWindow: BrowserWindow;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
