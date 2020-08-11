@@ -1,19 +1,3 @@
-# This Dockerfile is designed to be used like the "normal" app.
-# By default, the command `nativefier --help` will be executed.
-# Before you can use the image, you have to build it:
-# 
-#     docker build -t local/nativefier .
-#  
-# After that, you can build your first nativefier app to the local `$TARGET-PATH`.
-# Ensure you have write access to the `$TARGET-PATH`:
-# 
-#     docker run -v $TARGET-PATH:/target local/nativefier https://my-web-app.com/ /target/
-# 
-# You can also pass nativefier flags, and mount additional volumes to provide
-# local files. For example, to use a icon:
-# 
-#     docker run -v $PATH_TO_ICON/:/src -v $TARGET-PATH:/target local/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://my-web-app.com/ /target/
-
 FROM node:12-stretch
 LABEL description="Debian image to build nativefier apps"
 

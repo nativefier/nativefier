@@ -40,9 +40,7 @@ through the numerous open tabs when I was using [Facebook Messenger](https://mes
     - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms.
       Make sure `wine` is in your system `$PATH`.
 
-```bash
-npm install -g nativefier
-```
+Then, install Nativefier globally with  `npm install -g nativefier`
 
 ## Usage
 
@@ -58,6 +56,26 @@ to learn about other command-line flags usable to configure the packaged app.
 
 To have high-resolution icons used by default for an app/domain, please
 contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
+
+## Usage with Docker
+
+Nativefier is also usable from Docker.
+- Pull the latest stable image from Docker Hub: `docker pull jiahaog/nativefier`
+- ... or build the image yourself: `docker build -t local/nativefier .`
+  (in this case, replace `jiahaog/` in the below examples with `local/`)
+
+By default, the command `nativefier --help` will be executed.
+To build e.g. a Gmail nativefier app to a writable local `~/nativefier-apps`,
+
+```bash
+docker run -v ~/nativefier-apps:/target/ jiahaog/nativefier https://mail.google.com/ /target/
+```
+
+You can pass Nativefier flags, and mount volumes to provide local files. For example, to use an icon,
+
+```bash
+docker run -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target jiahaog/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
+```
 
 ## Development
 
