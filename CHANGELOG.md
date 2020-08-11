@@ -1,4 +1,15 @@
 
+9.2.0 / 2020-08-10
+==================
+
+  * Add `--block-external-urls` flag to forbid external navigation attempts (fix #978, PR#1012)
+  * Restore Docker docs in README, now that Docker build-on-release has been fixed (fix #848)
+  * Emit TS type declarations, and type NativefierOptions (PR #1016)
+  * Emit a warning about incorrectly-named "Electron" process when building windows apps under non-Windows and without Wine (fix #1022)
+  * Add unified {build,test} watch mode, using `concurrently` (PR #1011)
+  * Bump default Electron to 9.2.0
+  * Bump eslint to 7.x
+
 9.1.0 / 2020-07-18
 ==================
 
