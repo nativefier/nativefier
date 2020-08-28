@@ -19,7 +19,7 @@ export function inferPlatform(): string {
 
 export function inferArch(): string {
   const arch = os.arch();
-  if (arch !== 'ia32' && arch !== 'x64' && arch !== 'arm') {
+  if (arch !== 'ia32' && arch !== 'x64' && arch !== 'arm' && arch !== 'arm64') {
     throw new Error(`Incompatible architecture ${arch} detected`);
   }
   log.debug('Inferred arch', arch);
