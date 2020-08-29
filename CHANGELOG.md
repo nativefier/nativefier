@@ -1,4 +1,12 @@
 
+10.1.0 / 2020-08-29
+===================
+
+  * **[BREAKING CHANGE] Bump default Electron to 10.1.0 / Chromium 85**
+  * Support `arm64` architecture (PR #1037, fix #804)
+  * On successful build, better explain how to run the app and what to do with it (fix #1029)
+  * Bump to TypeScript 4.x
+
 9.2.0 / 2020-08-10
 ==================
 
