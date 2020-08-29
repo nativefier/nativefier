@@ -85,7 +85,7 @@
     "prettier": "2.x",
     "rimraf": "3.x",
     "ts-loader": "8.x",
-    "typescript": "3.x",
+    "typescript": "4.x",
     "webpack": "4.x",
     "webpack-cli": "3.x"
   },
