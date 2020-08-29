@@ -96,7 +96,7 @@ if (require.main === module) {
     })
     .option('-n, --name <value>', 'app name')
     .option('-p, --platform <value>', "'mac', 'mas', 'linux' or 'windows'")
-    .option('-a, --arch <value>', "'ia32' or 'x64' or 'armv7l'")
+    .option('-a, --arch <value>', "'ia32' or 'x64' or 'arm' or 'arm64'")
     .option(
       '--app-version <value>',
       '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',
