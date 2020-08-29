@@ -135,7 +135,9 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can 
 -a, --arch <value>
 ```
 
-Processor architecture, automatically determined based on the current OS. Can be overwritten by specifying either `ia32`, `x64` or `armv7l`.
+The processor architecture to target when building.
+  - Automatically set to the build-time machine architecture...
+  - ... or can be overridden by specifying one of: `x64`, `arm`, `arm64`, `ia32`.
 
 #### [app-copyright]
 
