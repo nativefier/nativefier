@@ -126,5 +126,18 @@ export async function buildNativefierApp(
   const appPath = getAppPath(appPathArray);
   await copyIconsIfNecessary(options, appPath);
 
+  if (appPath) {
+    let osRunHelp = '';
+    if (options.packager.platform === 'win32') {
+      osRunHelp = `the contained .exe file.`;
+    } else if (options.packager.platform === 'linux') {
+      osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
+    } else if (options.packager.platform === 'darwin') {
+      osRunHelp = `the app bundle.`;
+    }
+    log.info(
+      `App built to ${appPath} , move it wherever it makes sense for you and run ${osRunHelp}`,
+    );
+  }
   return appPath;
 }

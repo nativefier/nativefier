@@ -296,15 +296,7 @@ if (require.main === module) {
   }
   checkInternet();
   const options = { ...positionalOptions, ...commander.opts() };
-  buildNativefierApp(options)
-    .then((appPath) => {
-      if (!appPath) {
-        log.info(`App *not* built to ${appPath}`);
-        return;
-      }
-      log.info(`App built to ${appPath}`);
-    })
-    .catch((error) => {
-      log.error('Error during build. Run with --verbose for details.', error);
-    });
+  buildNativefierApp(options).catch((error) => {
+    log.error('Error during build. Run with --verbose for details.', error);
+  });
 }
