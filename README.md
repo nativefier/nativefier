@@ -68,13 +68,13 @@ By default, the command `nativefier --help` will be executed.
 To build e.g. a Gmail nativefier app to a writable local `~/nativefier-apps`,
 
 ```bash
-docker run -v ~/nativefier-apps:/target/ jiahaog/nativefier https://mail.google.com/ /target/
+docker run --rm -v ~/nativefier-apps:/target/ jiahaog/nativefier https://mail.google.com/ /target/
 ```
 
 You can pass Nativefier flags, and mount volumes to provide local files. For example, to use an icon,
 
 ```bash
-docker run -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target jiahaog/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
+docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target jiahaog/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
 ```
 
 ## Development
