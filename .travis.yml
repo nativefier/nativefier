@@ -9,6 +9,7 @@ node_js:
 - '12'
 - '10'
 install:
+- rm -rf lib/ app/lib/ app/dist/ node_modules/ app/node_modules/
 - npm run dev-up
 - npm run build
 script:
