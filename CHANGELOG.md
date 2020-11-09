@@ -1,4 +1,12 @@
 
+10.1.5 / 2020-11-08
+===================
+
+  * Bump default Electron to 10.1.5 (with Chromium 85.0.4183.121) (#1066)
+  * Readme: suggest docker "-rm" flag to clean up containers after build (#1064)
+  * Deps bumps: webpack, ts-eslint
+  * CI: Add a node.js 15 build
+
 10.1.0 / 2020-08-29
 ===================
 
