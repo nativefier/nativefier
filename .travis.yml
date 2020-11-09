@@ -4,6 +4,7 @@ os:
 - osx
 - windows
 node_js:
+- '15'
 - '14' # Changing this? Remind to keep linter+deploy conditions below aligned
 - '12'
 - '10'
