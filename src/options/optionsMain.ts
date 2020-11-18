@@ -115,6 +115,11 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     log.setLevel('info');
   }
 
+  if (rawOptions.wvvmp) {
+      process.env.ELECTRON_MIRROR = 'https://github.com/castlabs/electron-releases/releases/download/';
+      options.packager.electronVersion = '11.0.0-wvvmp';
+  }
+
   if (rawOptions.electronVersion) {
     const requestedVersion: string = rawOptions.electronVersion;
     if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
