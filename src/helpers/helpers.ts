@@ -45,7 +45,7 @@ export async function copyFileOrDir(
       if (error) {
         reject(error);
       }
-      resolve();
+      resolve(null);
     });
   });
 }
