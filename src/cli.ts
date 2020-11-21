@@ -120,7 +120,7 @@ if (require.main === module) {
     )
     .option(
       '--wvvmp',
-      "use a Widevine-enabled version of Electron (use at your own risk, it's unofficial, provided by CastLabs)",
+      "use a Widevine-enabled version of Electron for DRM playback (use at your own risk, it's unofficial, provided by CastLabs)",
     )
     .option(
       '--no-overwrite',
