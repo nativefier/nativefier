@@ -1,7 +1,6 @@
-import axios from 'axios';
-
 import * as fs from 'fs';
 
+import axios from 'axios';
 import * as log from 'loglevel';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
