@@ -1,4 +1,10 @@
 
+11.0.2 / 2020-11-21
+===================
+
+  * **[BREAKING CHANGE] Bump default Electron to 11.0.2 / Chromium 87**
+  * Support using a Widevine-enabled Electron for DRM playback, see flag `--widevine` (fix #435) (PR #1073)
+
 10.1.5 / 2020-11-08
 ===================
 
