@@ -16,7 +16,7 @@
     - [[app-version]](#app-version)
     - [[build-version]](#build-version)
     - [[electron-version]](#electron-version)
-    - [[wvvmp]](#wvvmp)
+    - [[widevine]](#widevine)
     - [[no-overwrite]](#no-overwrite)
     - [[conceal]](#conceal)
     - [[icon]](#icon)
@@ -172,10 +172,10 @@ The build version of the application. Maps to the `FileVersion` metadata propert
 
 Electron version without the `v`, see https://github.com/atom/electron/releases.
 
-#### [wvvmp]
+#### [widevine]
 
 ```
---wvvmp
+--widevine
 ```
 
 Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.

@@ -119,7 +119,7 @@ if (require.main === module) {
       "electron version to package, without the 'v', see https://github.com/electron/electron/releases",
     )
     .option(
-      '--wvvmp',
+      '--widevine',
       "use a Widevine-enabled version of Electron for DRM playback (use at your own risk, it's unofficial, provided by CastLabs)",
     )
     .option(
