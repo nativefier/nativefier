@@ -178,7 +178,7 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 --wvvmp
 ```
 
-Use a Widevine-enabled version of Electron, see https://github.com/castlabs/electron-releases.
+Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
 #### [no-overwrite]
 
