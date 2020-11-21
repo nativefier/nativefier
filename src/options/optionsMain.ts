@@ -132,21 +132,21 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   }
 
   if (rawOptions.wvvmp) {
-    process.env.ELECTRON_MIRROR =
-      'https://github.com/castlabs/electron-releases/releases/download/';
-    const electronVersion = options.packager.electronVersion;
-    options.packager.electronVersion = `${electronVersion}-wvvmp`;
+    const widevineElectronVersion = `${options.packager.electronVersion}-wvvmp`;
     try {
       await axios.get(
-        `https://github.com/castlabs/electron-releases/releases/tag/v${electronVersion}-wvvmp`,
+        `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,
       );
     } catch (error) {
-      throw `\nERROR: castLabs Electron version "${options.packager.electronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`;
+      throw `\nERROR: castLabs Electron version "${widevineElectronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`;
     }
+
+    options.packager.electronVersion = widevineElectronVersion;
+    process.env.ELECTRON_MIRROR =
+      'https://github.com/castlabs/electron-releases/releases/download/';
     log.warn(
-      `\nATTENTION: Using the **unofficial** Electron for Content Security from castLabs`,
+      `\nATTENTION: Using the **unofficial** Electron from castLabs`,
       "\nIt implements Google's Widevine Content Decryption Module (CDM) for DRM-enabled playback.",
-      `\nBe sure to select a valid version from https://github.com/castlabs/electron-releases/releases !`,
       `\nSimply abort & re-run without passing the wvvmp flag to default to ${DEFAULT_ELECTRON_VERSION}`,
     );
   }
