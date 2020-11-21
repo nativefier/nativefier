@@ -20,6 +20,6 @@
     "wurl": "2.x"
   },
   "devDependencies": {
-    "electron": "10.x"
+    "electron": "11.x"
   }
 }
