@@ -39,7 +39,7 @@ export function getTempDir(prefix: string, mode?: number): string {
 export async function copyFileOrDir(
   sourceFileOrDir: string,
   dest: string,
-): Promise<any> {
+): Promise<void> {
   return new Promise((resolve, reject) => {
     ncp(sourceFileOrDir, dest, (error: any) => {
       if (error) {

@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 
+import axios from 'axios';
 import * as log from 'loglevel';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
@@ -128,6 +129,26 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
         `\nSimply abort & re-run without passing the version flag to default to ${DEFAULT_ELECTRON_VERSION}`,
       );
     }
+  }
+
+  if (rawOptions.widevine) {
+    const widevineElectronVersion = `${options.packager.electronVersion}-wvvmp`;
+    try {
+      await axios.get(
+        `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,
+      );
+    } catch (error) {
+      throw `\nERROR: castLabs Electron version "${widevineElectronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`;
+    }
+
+    options.packager.electronVersion = widevineElectronVersion;
+    process.env.ELECTRON_MIRROR =
+      'https://github.com/castlabs/electron-releases/releases/download/';
+    log.warn(
+      `\nATTENTION: Using the **unofficial** Electron from castLabs`,
+      "\nIt implements Google's Widevine Content Decryption Module (CDM) for DRM-enabled playback.",
+      `\nSimply abort & re-run without passing the widevine flag to default to ${DEFAULT_ELECTRON_VERSION}`,
+    );
   }
 
   if (options.nativefier.flashPluginDir) {
