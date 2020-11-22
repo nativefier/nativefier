@@ -1,0 +1,22 @@
+name: publish
+on:
+  release:
+    types:
+    - created
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      # Setup .npmrc file to publish to npm
+    - uses: actions/setup-node@v1
+      with:
+        # Align the version of Node here with ci.yml.
+        node-version: '14.x'
+        registry-url: 'https://registry.npmjs.org'
+    - run: npm run dev-up
+    - run: npm run build
+    - run: npm test
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,33 @@
+name: ci
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version:
+        - 15.x
+        - 14.x # Changing this? Remind to keep linter conditions below and in publish.yml aligned.
+        - 12.x
+        - 10.x
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm run dev-up
+    - run: npm run build
+      # Only run linter once, for faster CI. Align the verisons of Node here with above and publish.yml.
+    - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '14.x'
+      run: npm run lint
+    - run: npm test
