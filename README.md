@@ -1,6 +1,6 @@
 # Nativefier
 
-[![Build Status](https://github.com/jiahaog/nativefier/workflows/.github/workflows/ci.yml/badge.svg)
+[![Build Status](https://github.com/jiahaog/nativefier/workflows/.github/workflows/ci.yml/badge.svg)](https://github.com/jiahaog/nativefier/actions?query=workflow%3Aci)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
 ![Dock](docs/dock.png)
