@@ -9,6 +9,7 @@ export interface AppOptions {
   packager: ElectronPackagerOptions;
   nativefier: {
     alwaysOnTop: boolean;
+    asar: boolean;
     backgroundColor: string;
     basicAuthPassword: string;
     basicAuthUsername: string;

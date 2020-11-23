@@ -1,7 +1,9 @@
 import * as path from 'path';
 
+import * as asar from 'asar';
 import * as electronGet from '@electron/get';
 import * as electronPackager from 'electron-packager';
+import * as fs from 'fs-extra';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 
@@ -125,6 +127,14 @@ export async function buildNativefierApp(
   log.info('\nFinalizing build...');
   const appPath = getAppPath(appPathArray);
   await copyIconsIfNecessary(options, appPath);
+
+  if (options.nativefier.asar) {
+    console.log(`Creating asar file`);
+    const appDir = path.join(appPath, 'resources/app');
+    const asarPath = path.join(appPath, 'resources/app.asar');
+    await asar.createPackageWithOptions(appDir, asarPath, {});
+    await fs.remove(appDir);
+  }
 
   if (appPath) {
     let osRunHelp = '';

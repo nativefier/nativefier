@@ -28,7 +28,6 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       appCopyright: rawOptions.appCopyright,
       appVersion: rawOptions.appVersion,
       arch: rawOptions.arch || inferArch(),
-      asar: rawOptions.conceal || false,
       buildVersion: rawOptions.buildVersion,
       darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
       dir: PLACEHOLDER_APP_DIR,
@@ -48,6 +47,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     },
     nativefier: {
       alwaysOnTop: rawOptions.alwaysOnTop || false,
+      asar: rawOptions.conceal || false,
       backgroundColor: rawOptions.backgroundColor || null,
       basicAuthPassword: rawOptions.basicAuthPassword || null,
       basicAuthUsername: rawOptions.basicAuthUsername || null,
