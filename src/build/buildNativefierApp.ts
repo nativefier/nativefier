@@ -1,9 +1,7 @@
 import * as path from 'path';
 
-import * as asar from 'asar';
 import * as electronGet from '@electron/get';
 import * as electronPackager from 'electron-packager';
-import * as fs from 'fs-extra';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 
@@ -67,9 +65,8 @@ async function copyIconsIfNecessary(
   }
 
   // windows & linux: put the icon file into the app
-  const destAppPath = path.join(appPath, 'resources/app');
   const destFileName = `icon${path.extname(options.packager.icon)}`;
-  const destIconPath = path.join(destAppPath, destFileName);
+  const destIconPath = path.join(appPath, destFileName);
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
   await copyFileOrDir(options.packager.icon, destIconPath);
@@ -116,6 +113,7 @@ export async function buildNativefierApp(
   log.info('\nConverting icons...');
   options.packager.dir = tmpPath; // const optionsWithTmpPath = { ...options, dir: tmpPath };
   await convertIconIfNecessary(options);
+  await copyIconsIfNecessary(options, tmpPath);
 
   log.info(
     "\nPackaging... This will take a few seconds, maybe minutes if the requested Electron isn't cached yet...",
@@ -126,15 +124,6 @@ export async function buildNativefierApp(
 
   log.info('\nFinalizing build...');
   const appPath = getAppPath(appPathArray);
-  await copyIconsIfNecessary(options, appPath);
-
-  if (options.nativefier.asar) {
-    console.log(`Creating asar file`);
-    const appDir = path.join(appPath, 'resources/app');
-    const asarPath = path.join(appPath, 'resources/app.asar');
-    await asar.createPackageWithOptions(appDir, asarPath, {});
-    await fs.remove(appDir);
-  }
 
   if (appPath) {
     let osRunHelp = '';
