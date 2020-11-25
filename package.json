@@ -65,6 +65,7 @@
     "electron-packager": "15.x",
     "gitcloud": "0.x",
     "hasbin": "1.x",
+    "latest-version": "^5.1.0",
     "lodash": "4.x",
     "loglevel": "1.x",
     "ncp": "2.x",

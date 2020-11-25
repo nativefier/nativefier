@@ -60,6 +60,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       disableDevTools: rawOptions.disableDevTools,
       disableGpu: rawOptions.disableGpu || false,
       diskCacheSize: rawOptions.diskCacheSize || null,
+      disableOldNativefierWarning: rawOptions.disableOldNativefierWarning || false,
       enableEs3Apis: rawOptions.enableEs3Apis || false,
       fastQuit: rawOptions.fastQuit || false,
       fileDownloadOptions: rawOptions.fileDownloadOptions,

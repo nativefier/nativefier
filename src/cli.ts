@@ -284,6 +284,10 @@ if (require.main === module) {
       "sets the app background color, for better integration while the app is loading. Example value: '#2e2c29'",
     )
     .option(
+      '--disable-old-nativefier-warning',
+      'Disables warning when opening an app made with an old version of Nativefier.',
+    )
+    .option(
       '--darwin-dark-mode-support',
       '(macOS only) enable Dark Mode support on macOS 10.14+',
     );

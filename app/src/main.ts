@@ -3,8 +3,16 @@ import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
 
-import { app, crashReporter, globalShortcut, BrowserWindow } from 'electron';
+import {
+  app,
+  crashReporter,
+  globalShortcut,
+  BrowserWindow,
+  dialog,
+} from 'electron';
 import electronDownload from 'electron-dl';
+
+import latestVersion from 'latest-version';
 
 import { createLoginWindow } from './components/loginWindow';
 import { createMainWindow } from './components/mainWindow';
@@ -158,6 +166,18 @@ if (shouldQuit) {
           });
         });
       });
+    }
+    if (!appArgs.disableOldNativefierWarning) {
+      (async () => {
+        if ((await latestVersion('nativefier')) != appArgs.nativefierVersion) {
+          dialog.showMessageBox(null, {
+            type: 'warning',
+            message: 'Old Nativefier Version',
+            detail:
+              'This app was build with an outdated version of Nativefier. Running apps built with old versions of Nativefier/Electron can be insecure. You should rebuild this app with the latest version of Nativefier.',
+          });
+        }
+      })();
     }
   });
 }
