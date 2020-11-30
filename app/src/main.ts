@@ -174,7 +174,7 @@ if (shouldQuit) {
             type: 'warning',
             message: 'Old Nativefier Version',
             detail:
-              'This app was build with an outdated version of Nativefier. Running apps built with old versions of Nativefier/Electron can be insecure. You should rebuild this app with the latest version of Nativefier.',
+              'This app was build a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
           });
         }
       })();
