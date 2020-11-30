@@ -20,7 +20,7 @@ export interface AppOptions {
     disableContextMenu: boolean;
     disableDevTools: boolean;
     disableGpu: boolean;
-    disableOldNativefierWarning: boolean;
+    disableOldNativefierWarningyesiknowitisinsecure: boolean;
     diskCacheSize: number;
     enableEs3Apis: boolean;
     fastQuit: boolean;

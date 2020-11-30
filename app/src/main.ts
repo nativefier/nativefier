@@ -167,7 +167,7 @@ if (shouldQuit) {
         });
       });
     }
-    if (!appArgs.disableOldNativefierWarning) {
+    if (!appArgs.disableOldNativefierWarningyesiknowitisinsecure) {
       (async () => {
         if ((await latestVersion('nativefier')) != appArgs.nativefierVersion) {
           dialog.showMessageBox(null, {
