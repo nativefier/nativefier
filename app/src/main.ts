@@ -12,8 +12,6 @@ import {
 } from 'electron';
 import electronDownload from 'electron-dl';
 
-import latestVersion from 'latest-version';
-
 import { createLoginWindow } from './components/loginWindow';
 import { createMainWindow } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
