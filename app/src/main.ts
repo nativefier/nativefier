@@ -168,16 +168,17 @@ if (shouldQuit) {
       });
     }
     if (!appArgs.disableOldNativefierWarningyesiknowitisinsecure) {
-      (async () => {
-        if ((await latestVersion('nativefier')) != appArgs.nativefierVersion) {
-          dialog.showMessageBox(null, {
-            type: 'warning',
-            message: 'Old Nativefier Version',
-            detail:
-              'This app was build a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
-          });
-        }
-      })();
+      if (
+        Math.floor(new Date().getTime() / 1000) - appArgs.buildDate >
+        5184000
+      ) {
+        void dialog.showMessageBox(null, {
+          type: 'warning',
+          message: 'Old Nativefier Version',
+          detail:
+            'This app was build a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
+        });
+      }
     }
   });
 }

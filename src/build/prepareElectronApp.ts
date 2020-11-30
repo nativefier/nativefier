@@ -68,6 +68,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     x: options.nativefier.x,
     y: options.nativefier.y,
     zoom: options.nativefier.zoom,
+    buildDate: Math.floor(new Date().getTime() / 1000),
   };
 }
 
