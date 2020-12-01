@@ -5,71 +5,72 @@
 - [Table of Contents](#table-of-contents)
 - [Packaging Squirrel-based installers](#packaging-squirrel-based-installers)
 - [Command Line](#command-line)
-    - [Target Url](#target-url)
-    - [[dest]](#dest)
-    - [Help](#help)
-    - [Version](#version)
-    - [[name]](#name)
-    - [[platform]](#platform)
-    - [[arch]](#arch)
-    - [[app-copyright]](#app-copyright)
-    - [[app-version]](#app-version)
-    - [[build-version]](#build-version)
-    - [[electron-version]](#electron-version)
-    - [[widevine]](#widevine)
-    - [[no-overwrite]](#no-overwrite)
-    - [[conceal]](#conceal)
-    - [[icon]](#icon)
-      - [Packaging for Windows](#packaging-for-windows)
-      - [Packaging for Linux](#packaging-for-linux)
-      - [Packaging for macOS](#packaging-for-macos)
-        - [Manually Converting `.icns`](#manually-converting-icns)
-    - [[counter]](#counter)
-    - [[bounce]](#bounce)
-    - [[width]](#width)
-    - [[height]](#height)
-    - [[min-width]](#min-width)
-    - [[min-height]](#min-height)
-    - [[max-width]](#max-width)
-    - [[max-height]](#max-height)
-    - [[x]](#x)
-    - [[y]](#y)
-    - [[show-menu-bar]](#show-menu-bar)
-    - [[fast-quit]](#fast-quit)
-    - [[user-agent]](#user-agent)
-    - [[honest]](#honest)
-    - [[ignore-certificate]](#ignore-certificate)
-    - [[disable-gpu]](#disable-gpu)
-    - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
-    - [[enable-es3-apis]](#enable-es3-apis)
-    - [[insecure]](#insecure)
-    - [[internal-urls]](#internal-urls)
-    - [[block-external-urls]](#block-external-urls)
-    - [[proxy-rules]](#proxy-rules)
-    - [[flash]](#flash)
-    - [[flash-path]](#flash-path)
-    - [[disk-cache-size]](#disk-cache-size)
-    - [[inject]](#inject)
-    - [[full-screen]](#full-screen)
-    - [[maximize]](#maximize)
-    - [[hide-window-frame]](#hide-window-frame)
-    - [[title-bar-style]](#title-bar-style)
-    - [[verbose]](#verbose)
-    - [[disable-context-menu]](#disable-context-menu)
-    - [[disable-dev-tools]](#disable-dev-tools)
-    - [[crash-reporter]](#crash-reporter)
-    - [[zoom]](#zoom)
-    - [[single-instance]](#single-instance)
-    - [[clear-cache]](#clear-cache)
-    - [[tray]](#tray)
-    - [[basic-auth-username]](#basic-auth-username)
-    - [[processEnvs]](#processenvs)
-    - [[file-download-options]](#file-download-options)
-    - [[always-on-top]](#always-on-top)
-    - [[global-shortcuts]](#global-shortcuts)
-    - [[browserwindow-options]](#browserwindow-options)
-    - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
-    - [[background-color]](#background-color)
+  - [Target Url](#target-url)
+  - [[dest]](#dest)
+  - [Help](#help)
+  - [Version](#version)
+  - [[name]](#name)
+  - [[platform]](#platform)
+  - [[arch]](#arch)
+  - [[app-copyright]](#app-copyright)
+  - [[app-version]](#app-version)
+  - [[build-version]](#build-version)
+  - [[electron-version]](#electron-version)
+  - [[widevine]](#widevine)
+  - [[no-overwrite]](#no-overwrite)
+  - [[conceal]](#conceal)
+  - [[icon]](#icon)
+    - [Packaging for Windows](#packaging-for-windows)
+    - [Packaging for Linux](#packaging-for-linux)
+    - [Packaging for macOS](#packaging-for-macos)
+      - [Manually Converting `.icns`](#manually-converting-icns)
+  - [[counter]](#counter)
+  - [[bounce]](#bounce)
+  - [[width]](#width)
+  - [[height]](#height)
+  - [[min-width]](#min-width)
+  - [[min-height]](#min-height)
+  - [[max-width]](#max-width)
+  - [[max-height]](#max-height)
+  - [[x]](#x)
+  - [[y]](#y)
+  - [[show-menu-bar]](#show-menu-bar)
+  - [[fast-quit]](#fast-quit)
+  - [[user-agent]](#user-agent)
+  - [[honest]](#honest)
+  - [[ignore-certificate]](#ignore-certificate)
+  - [[disable-gpu]](#disable-gpu)
+  - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
+  - [[enable-es3-apis]](#enable-es3-apis)
+  - [[insecure]](#insecure)
+  - [[internal-urls]](#internal-urls)
+  - [[block-external-urls]](#block-external-urls)
+  - [[proxy-rules]](#proxy-rules)
+  - [[flash]](#flash)
+  - [[flash-path]](#flash-path)
+  - [[disk-cache-size]](#disk-cache-size)
+  - [[inject]](#inject)
+  - [[full-screen]](#full-screen)
+  - [[maximize]](#maximize)
+  - [[hide-window-frame]](#hide-window-frame)
+  - [[title-bar-style]](#title-bar-style)
+  - [[verbose]](#verbose)
+  - [[disable-context-menu]](#disable-context-menu)
+  - [[disable-dev-tools]](#disable-dev-tools)
+  - [[crash-reporter]](#crash-reporter)
+  - [[zoom]](#zoom)
+  - [[single-instance]](#single-instance)
+  - [[clear-cache]](#clear-cache)
+  - [[tray]](#tray)
+  - [[basic-auth-username]](#basic-auth-username)
+  - [[processEnvs]](#processenvs)
+  - [[file-download-options]](#file-download-options)
+  - [[always-on-top]](#always-on-top)
+  - [[global-shortcuts]](#global-shortcuts)
+  - [[browserwindow-options]](#browserwindow-options)
+  - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
+  - [[background-color]](#background-color)
+  - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
 - [Programmatic API](#programmatic-api)
   - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
     - [[version-string]](#version-string)
@@ -85,6 +86,7 @@ See [PR #744 - Support packaging nativefier applications into Squirrel-based ins
 ```bash
 nativefier [options] <targetUrl> [dest]
 ```
+
 Command line options are listed below.
 
 #### Target Url
@@ -126,6 +128,7 @@ The name of the application, which will affect strings in titles and the icon.
 ```
 -p, --platform <value>
 ```
+
 Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
 
 The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
@@ -137,8 +140,9 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can 
 ```
 
 The processor architecture to target when building.
-  - Automatically set to the build-time machine architecture...
-  - ... or can be overridden by specifying one of: `x64`, `arm`, `arm64`, `ia32`.
+
+- Automatically set to the build-time machine architecture...
+- ... or can be overridden by specifying one of: `x64`, `arm`, `arm64`, `ia32`.
 
 #### [app-copyright]
 
@@ -331,6 +335,7 @@ Set the user agent to run the created app with.
 ```
 --honest
 ```
+
 By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
 
 If this flag is passed, it will not override the user agent.
@@ -340,6 +345,7 @@ If this flag is passed, it will not override the user agent.
 ```
 --ignore-certificate
 ```
+
 Forces the packaged app to ignore certificate errors.
 
 #### [disable-gpu]
@@ -347,6 +353,7 @@ Forces the packaged app to ignore certificate errors.
 ```
 --disable-gpu
 ```
+
 Disable hardware acceleration for the packaged application.
 
 #### [ignore-gpu-blacklist]
@@ -354,6 +361,7 @@ Disable hardware acceleration for the packaged application.
 ```
 --ignore-gpu-blacklist
 ```
+
 Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
 
 #### [enable-es3-apis]
@@ -361,22 +369,23 @@ Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl ap
 ```
 --enable-es3-apis
 ```
-Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
 
+Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
 
 #### [insecure]
 
 ```
 --insecure
 ```
-Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
 
+Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
 
 #### [internal-urls]
 
 ```
 --internal-urls <regex>
 ```
+
 Regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser. Defaults to URLs on same second-level domain as app.
 
 Example:
@@ -444,6 +453,7 @@ You can also specify the path to the Chrome flash plugin directly with this flag
 ```
 --disk-cache-size <value>
 ```
+
 Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 #### [inject]
@@ -470,7 +480,6 @@ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css
 
 Makes the packaged app start in full screen.
 
-
 #### [maximize]
 
 ```
@@ -478,7 +487,6 @@ Makes the packaged app start in full screen.
 ```
 
 Makes the packaged app start maximized.
-
 
 #### [hide-window-frame]
 
@@ -602,7 +610,6 @@ When the optional argument `start-in-tray` is provided, i.e. the application is 
 
 Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
 
-
 #### [processEnvs]
 
 ```
@@ -623,7 +630,7 @@ nativefier <your-geolocation-enabled-website> --processEnvs '{"GOOGLE_API_KEY": 
 --file-download-options <json-string>
 ```
 
-a JSON string of key/value pairs to be set as file download options.  See [electron-dl](https://github.com/sindresorhus/electron-dl) for available options.
+a JSON string of key/value pairs to be set as file download options. See [electron-dl](https://github.com/sindresorhus/electron-dl) for available options.
 
 Example:
 
@@ -649,23 +656,22 @@ Register global shortcuts which will trigger input events like key presses or po
 
 You may define multiple global shortcuts which can trigger a series of input events. It has the following structure:
 
-
 ```js
 [
   {
     // Key is passed as first argument to globalShortcut.register
-    "key": "CommandOrControl+Shift+Z",
+    key: 'CommandOrControl+Shift+Z',
     // The input events exactly match the event config in Electron for contents.sendInputEvent(event)
-    "inputEvents": [
+    inputEvents: [
       {
         // Available event types: mouseDown, mouseUp, mouseEnter, mouseLeave, contextMenu, mouseWheel, mouseMove, keyDown, keyUp or char
-        "type": "keyDown",
+        type: 'keyDown',
         // Further config depends on your event type. See docs at: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
-        "keyCode": "Space"
-      }
-    ]
-  }
-]
+        keyCode: 'Space',
+      },
+    ],
+  },
+];
 ```
 
 **Important note for using modifier keys:**
@@ -674,10 +680,11 @@ If you want to trigger key events which include a modifier (Ctrl, Shift,...), yo
 
 **For more details, please see the Electron documentation:**
 
-* List of available keys: https://github.com/electron/electron/blob/master/docs/api/accelerator.md
-* Details about how to create input event objects: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
+- List of available keys: https://github.com/electron/electron/blob/master/docs/api/accelerator.md
+- Details about how to create input event objects: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
 
 Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to get your play/pause/previous/next media keys working:
+
 ```json
 [
   {
@@ -699,16 +706,12 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
       {
         "type": "keyDown",
         "keyCode": "Left",
-        "modifiers": [
-          "shift"
-        ]
+        "modifiers": ["shift"]
       },
       {
         "type": "keyUp",
         "keyCode": "Left",
-        "modifiers": [
-          "shift"
-        ]
+        "modifiers": ["shift"]
       },
       {
         "type": "keyUp",
@@ -726,16 +729,12 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
       {
         "type": "keyDown",
         "keyCode": "Right",
-        "modifiers": [
-          "shift"
-        ]
+        "modifiers": ["shift"]
       },
       {
         "type": "keyUp",
         "keyCode": "Right",
-        "modifiers": [
-          "shift"
-        ]
+        "modifiers": ["shift"]
       },
       {
         "type": "keyUp",
@@ -793,46 +792,46 @@ var nativefier = require('nativefier').default;
 
 // possible options, defaults unless specified otherwise
 var options = {
-    name: 'Web WhatsApp', // will be inferred if not specified
-    targetUrl: 'http://web.whatsapp.com', // required
-    platform: 'darwin', // defaults to the current system
-    arch: 'x64', // defaults to the current system
-    version: '0.36.4',
-    out: '.',
-    overwrite: false,
-    asar: false, // see conceal
-    icon: '~/Desktop/icon.png',
-    counter: false,
-    bounce: false,
-    width: 1280,
-    height: 800,
-    showMenuBar: false,
-    fastQuit: false,
-    userAgent: 'Mozilla ...', // will infer a default for your current system
-    ignoreCertificate: false,
-    ignoreGpuBlacklist: false,
-    enableEs3Apis: false,
-    internalUrls: '.*?', // defaults to URLs on same second-level domain as app
-    blockExternalUrls: false,
-    insecure: false,
-    honest: false,
-    zoom: 1.0,
-    singleInstance: false,
-    clearCache: false,
-    fileDownloadOptions: {
-      saveAs: true // always show "Save As" dialog
-    },
-    processEnvs: {
-      "GOOGLE_API_KEY": "<your-google-api-key>"
-    }
+  name: 'Web WhatsApp', // will be inferred if not specified
+  targetUrl: 'http://web.whatsapp.com', // required
+  platform: 'darwin', // defaults to the current system
+  arch: 'x64', // defaults to the current system
+  version: '0.36.4',
+  out: '.',
+  overwrite: false,
+  asar: false, // see conceal
+  icon: '~/Desktop/icon.png',
+  counter: false,
+  bounce: false,
+  width: 1280,
+  height: 800,
+  showMenuBar: false,
+  fastQuit: false,
+  userAgent: 'Mozilla ...', // will infer a default for your current system
+  ignoreCertificate: false,
+  ignoreGpuBlacklist: false,
+  enableEs3Apis: false,
+  internalUrls: '.*?', // defaults to URLs on same second-level domain as app
+  blockExternalUrls: false,
+  insecure: false,
+  honest: false,
+  zoom: 1.0,
+  singleInstance: false,
+  clearCache: false,
+  fileDownloadOptions: {
+    saveAs: true, // always show "Save As" dialog
+  },
+  processEnvs: {
+    GOOGLE_API_KEY: '<your-google-api-key>',
+  },
 };
 
-nativefier(options, function(error, appPath) {
-    if (error) {
-        console.error(error);
-        return;
-    }
-    console.log('App has been nativefied to', appPath);
+nativefier(options, function (error, appPath) {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  console.log('App has been nativefied to', appPath);
 });
 ```
 
@@ -840,7 +839,7 @@ nativefier(options, function(error, appPath) {
 
 #### [version-string]
 
-*Object* (**deprecated** as removed in `electron-packager` 9.0.0, please use the
+_Object_ (**deprecated** as removed in `electron-packager` 9.0.0, please use the
 [`win32metadata`](#win32metadata) parameter instead)
 
 #### [win32metadata]
@@ -857,11 +856,18 @@ Example:
 nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "Your Product Name", "InternalName", "Your Internal Name", "FileDescription": "Your File Description"}'
 ```
 
+#### [disable-old-build-warning-yesiknowitisinsecure]
+
+Disables the warning shown when opening a Nativefier app made a long time ago, using an old and probably insecure Electron. Nativefier uses the Chrome browser (through Electron), and remaining on an old version is A. performance sub-optimal and B. dangerous.
+
+However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
+
 ##### Programmatic API
 
-*Object*
+_Object_
 
 Object (also known as a "hash") of application metadata to embed into the executable:
+
 - `CompanyName`
 - `FileDescription`
 - `OriginalFilename`

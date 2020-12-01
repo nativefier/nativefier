@@ -20,6 +20,7 @@ export interface AppOptions {
     disableContextMenu: boolean;
     disableDevTools: boolean;
     disableGpu: boolean;
+    disableOldBuildWarning: boolean;
     diskCacheSize: number;
     enableEs3Apis: boolean;
     fastQuit: boolean;

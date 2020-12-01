@@ -3,7 +3,13 @@ import 'source-map-support/register';
 import fs from 'fs';
 import path from 'path';
 
-import { app, crashReporter, globalShortcut, BrowserWindow } from 'electron';
+import {
+  app,
+  crashReporter,
+  globalShortcut,
+  BrowserWindow,
+  dialog,
+} from 'electron';
 import electronDownload from 'electron-dl';
 
 import { createLoginWindow } from './components/loginWindow';
@@ -19,6 +25,10 @@ if (require('electron-squirrel-startup')) {
 
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
+const OLD_BUILD_WARNING_THRESHOLD_DAYS = 60;
+const OLD_BUILD_WARNING_THRESHOLD_MS =
+  OLD_BUILD_WARNING_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
 
 const fileDownloadOptions = { ...appArgs.fileDownloadOptions };
 electronDownload(fileDownloadOptions);
@@ -157,6 +167,18 @@ if (shouldQuit) {
             mainWindow.webContents.sendInputEvent(inputEvent);
           });
         });
+      });
+    }
+    if (
+      !appArgs.disableOldBuildWarning &&
+      new Date().getTime() - appArgs.buildDate > OLD_BUILD_WARNING_THRESHOLD_MS
+    ) {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      dialog.showMessageBox(null, {
+        type: 'warning',
+        message: 'Old build detected',
+        detail:
+          'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
       });
     }
   });
