@@ -858,7 +858,9 @@ nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "
 
 #### [disable-old-build-warning-yesiknowitisinsecure]
 
-Disables warning when opening an app made with an old version of Nativefier. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it.)
+Disables the warning shown when opening a Nativefier app made a long time ago, using an old and probably insecure Electron. Nativefier uses the Chrome browser (through Electron), and remaining on an old version is A. performance sub-optimal and B. dangerous.
+
+However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
 
 ##### Programmatic API
 
