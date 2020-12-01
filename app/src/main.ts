@@ -26,6 +26,10 @@ if (require('electron-squirrel-startup')) {
 const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
+const OLD_BUILD_WARNING_THRESHOLD_DAYS = 60;
+const OLD_BUILD_WARNING_THRESHOLD_MS =
+  OLD_BUILD_WARNING_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
+
 const fileDownloadOptions = { ...appArgs.fileDownloadOptions };
 electronDownload(fileDownloadOptions);
 
@@ -165,10 +169,10 @@ if (shouldQuit) {
         });
       });
     }
-    if (!appArgs.disableOldNativefierWarningyesiknowitisinsecure) {
+    if (!appArgs.disableOldBuildWarning) {
       if (
-        Math.floor(new Date().getTime() / 1000) - appArgs.buildDate >
-        5184000
+        new Date().getTime() - appArgs.buildDate >
+        OLD_BUILD_WARNING_THRESHOLD_MS
       ) {
         void dialog.showMessageBox(null, {
           type: 'warning',

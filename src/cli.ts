@@ -284,8 +284,8 @@ if (require.main === module) {
       "sets the app background color, for better integration while the app is loading. Example value: '#2e2c29'",
     )
     .option(
-      '--disable-old-nativefier-warning-yesiknowitisinsecure',
-      'Disables warning when opening an app made with an old version of Nativefier. (Insecure)',
+      '--disable-old-build-warning-yesiknowitisinsecure',
+      'Disables warning when opening an app made with an old version of Nativefier. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it.)',
     )
     .option(
       '--darwin-dark-mode-support',

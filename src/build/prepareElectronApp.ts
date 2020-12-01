@@ -64,12 +64,11 @@ function pickElectronAppArgs(options: AppOptions): any {
     versionString: options.nativefier.versionString,
     width: options.nativefier.width,
     win32metadata: options.packager.win32metadata,
-    disableOldNativefieryesiknowitisinsecure:
-      options.nativefier.disableOldNativefierWarningyesiknowitisinsecure,
+    disableOldBuildWarning: options.nativefier.disableOldBuildWarning,
     x: options.nativefier.x,
     y: options.nativefier.y,
     zoom: options.nativefier.zoom,
-    buildDate: Math.floor(new Date().getTime() / 1000),
+    buildDate: new Date().getTime(),
   };
 }
 

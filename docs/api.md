@@ -70,7 +70,7 @@
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
-  - [[disable-old-nativefier-warning-yesiknowitisinsecure]](#disable-old-nativefier-warning-yesiknowitisinsecure)
+  - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
 - [Programmatic API](#programmatic-api)
   - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
     - [[version-string]](#version-string)
@@ -856,9 +856,9 @@ Example:
 nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "Your Product Name", "InternalName", "Your Internal Name", "FileDescription": "Your File Description"}'
 ```
 
-#### [disable-old-nativefier-warning-yesiknowitisinsecure]
+#### [disable-old-build-warning-yesiknowitisinsecure]
 
-Disables warning when opening an app made with an old version of Nativefier. (Insecure)
+Disables warning when opening an app made with an old version of Nativefier. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it.)
 
 ##### Programmatic API
 
