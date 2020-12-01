@@ -169,18 +169,16 @@ if (shouldQuit) {
         });
       });
     }
-    if (!appArgs.disableOldBuildWarning) {
-      if (
-        new Date().getTime() - appArgs.buildDate >
-        OLD_BUILD_WARNING_THRESHOLD_MS
-      ) {
-        void dialog.showMessageBox(null, {
-          type: 'warning',
-          message: 'Old build detected',
-          detail:
-            'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
-        });
-      }
+    if (
+      !appArgs.disableOldBuildWarning &&
+      new Date().getTime() - appArgs.buildDate > OLD_BUILD_WARNING_THRESHOLD_MS
+    ) {
+      void dialog.showMessageBox(null, {
+        type: 'warning',
+        message: 'Old build detected',
+        detail:
+          'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
+      });
     }
   });
 }
