@@ -173,7 +173,8 @@ if (shouldQuit) {
       !appArgs.disableOldBuildWarning &&
       new Date().getTime() - appArgs.buildDate > OLD_BUILD_WARNING_THRESHOLD_MS
     ) {
-      void dialog.showMessageBox(null, {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      dialog.showMessageBox(null, {
         type: 'warning',
         message: 'Old build detected',
         detail:
