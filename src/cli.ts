@@ -68,6 +68,12 @@ function checkInternet(): void {
 if (require.main === module) {
   const sanitizedArgs = [];
   process.argv.forEach((arg) => {
+
+    if (!arg.search(/^-[A-Z]{2,}/i) || (!arg.search(/^--[A-Z]/i) && arg.length == 3)) {
+      log.error(`Invalid argument passed: ${arg} \nAborting`);
+      process.exit(1);
+    }
+
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
 
