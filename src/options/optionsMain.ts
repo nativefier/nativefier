@@ -61,7 +61,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       disableGpu: rawOptions.disableGpu || false,
       diskCacheSize: rawOptions.diskCacheSize || null,
       disableOldBuildWarning:
-        rawOptions.disableOldBuildWarningyesiknowitisinsecure || false,
+        rawOptions.disableOldBuildWarningYesiknowitisinsecure || false,
       enableEs3Apis: rawOptions.enableEs3Apis || false,
       fastQuit: rawOptions.fastQuit || false,
       fileDownloadOptions: rawOptions.fileDownloadOptions,
