@@ -146,6 +146,10 @@ export function createMainWindow(
     }
   }
 
+  if (options.tray === 'start-in-tray') {
+    mainWindow.hide();
+  }
+
   const withFocusedWindow = (block: (window: BrowserWindow) => void): void => {
     const focusedWindow = BrowserWindow.getFocusedWindow();
     if (focusedWindow) {
