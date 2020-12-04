@@ -69,8 +69,7 @@ if (require.main === module) {
   const sanitizedArgs = [];
   process.argv.forEach((arg) => {
     if (
-      !arg.search(/^-[A-Z]{2,}/i) ||
-      (!arg.search(/^--[A-Z]/i) && arg.length == 3)
+      arg.match(/^-[a-z-]{2,}$/i) || arg.match(/^--[a-z]$/i)
     ) {
       log.error(`Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "nativefier --help" for help.\nAborting`);
       process.exit(1);
