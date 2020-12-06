@@ -6,6 +6,7 @@ import * as dns from 'dns';
 import * as log from 'loglevel';
 
 import { buildNativefierApp } from './main';
+import { isArgFormatValid } from './helpers/helpers';
 import { isWindows } from './helpers/helpers';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
@@ -68,6 +69,12 @@ function checkInternet(): void {
 if (require.main === module) {
   const sanitizedArgs = [];
   process.argv.forEach((arg) => {
+    if (isArgFormatValid(arg) === false) {
+      log.error(
+        `Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "nativefier --help" for help.\nAborting`,
+      );
+      process.exit(1);
+    }
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
 
