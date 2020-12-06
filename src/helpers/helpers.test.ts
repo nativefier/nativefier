@@ -1,39 +1,39 @@
 import { isArgFormatValid } from './helpers';
 
-describe('Helpers', () => {
-  test('isArgFormatValid should return true for short arguments', () => {
-    expect(isArgFormatValid('-t')).toEqual(true);
+describe('isArgFormatValid', () => {
+  test('is true for short arguments', () => {
+    expect(isArgFormatValid('-t')).toBe(true);
   });
 
-  test('isArgFormatValid should return false for improperly formatted short arguments', () => {
-    expect(isArgFormatValid('--t')).toEqual(false);
+  test('is false for improperly formatted short arguments', () => {
+    expect(isArgFormatValid('--t')).toBe(false);
   });
 
-  test('isArgFormatValid should return true for long arguments', () => {
-    expect(isArgFormatValid('--test')).toEqual(true);
+  test('is true for long arguments', () => {
+    expect(isArgFormatValid('--test')).toBe(true);
   });
 
-  test('isArgFormatValid should return false for improperly formatted long arguments', () => {
-    expect(isArgFormatValid('---test')).toEqual(false);
+  test('is false for improperly formatted long arguments', () => {
+    expect(isArgFormatValid('---test')).toBe(false);
   });
 
-  test('isArgFormatValid should return false for improperly formatted long arguments', () => {
-    expect(isArgFormatValid('-test')).toEqual(false);
+  test('is false for improperly formatted long arguments', () => {
+    expect(isArgFormatValid('-test')).toBe(false);
   });
 
-  test('isArgFormatValid should return true for extra long arguments', () => {
-    expect(isArgFormatValid('--test-run')).toEqual(true);
+  test('is true for long arguments with dashes', () => {
+    expect(isArgFormatValid('--test-run')).toBe(true);
   });
 
-  test('isArgFormatValid should return false for improperly formatted extra long arguments', () => {
-    expect(isArgFormatValid('--test--run')).toEqual(false);
+  test('is false for improperly formatted long arguments with dashes', () => {
+    expect(isArgFormatValid('--test--run')).toBe(false);
   });
 
-  test('isArgFormatValid should return true excessively long arguments', () => {
-    expect(isArgFormatValid('--test-run-with-many-dashes')).toEqual(true);
+  test('is true for long arguments with many dashes', () => {
+    expect(isArgFormatValid('--test-run-with-many-dashes')).toBe(true);
   });
 
-  test('isArgFormatValid should return false for improperly formatted excessively long arguments', () => {
-    expect(isArgFormatValid('--test--run--with--many--dashes')).toEqual(false);
+  test('is false for improperly formatted excessively long arguments', () => {
+    expect(isArgFormatValid('--test--run--with--many--dashes')).toBe(false);
   });
 });

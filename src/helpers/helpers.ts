@@ -143,6 +143,6 @@ export function getAllowedIconFormats(platform: string): string[] {
 export function isArgFormatValid(arg: string): boolean {
   return (
     /^-[a-z]$/i.exec(arg) !== null ||
-    /^--[a-z]{2,}([-]{1}[a-z]{2,})*$/i.exec(arg) !== null
+    /^--[a-z]{2,}(-[a-z]{2,})*$/i.exec(arg) !== null
   );
 }
