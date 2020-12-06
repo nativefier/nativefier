@@ -6,7 +6,7 @@ import * as dns from 'dns';
 import * as log from 'loglevel';
 
 import { buildNativefierApp } from './main';
-import { isArgFormatValid } from '../app/src/helpers/helpers';
+import { isArgFormatValid } from './helpers/helpers';
 import { isWindows } from './helpers/helpers';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
@@ -75,7 +75,6 @@ if (require.main === module) {
       );
       process.exit(1);
     }
-
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
 

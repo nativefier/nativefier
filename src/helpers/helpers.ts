@@ -139,3 +139,8 @@ export function getAllowedIconFormats(platform: string): string[] {
   log.debug(`Allowed icon formats when building for ${platform}:`, formats);
   return formats;
 }
+
+export function isArgFormatValid(arg: string): boolean {
+  // eslint-disable-next-line
+  return arg.match(/^-[a-z]$/i) || arg.match(/^--[a-z]{2,}(-[a-z]{2,})?$/i) ? true : false;
+}

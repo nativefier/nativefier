@@ -87,8 +87,3 @@ export function getCounterValue(title: string): string {
   const match = itemCountRegex.exec(title);
   return match ? match[1] : undefined;
 }
-
-export function isArgFormatValid(arg: string): boolean {
-  // eslint-disable-next-line
-  return arg.match(/^-[a-z]$/i) || arg.match(/^--[a-z]{2,}(-[a-z]{2,})?$/i) ? true : false;
-}
