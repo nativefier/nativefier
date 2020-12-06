@@ -1,4 +1,34 @@
 
+42.0.0 / 2020-12-06
+===================
+
+This release includes several contributor patches. Thanks @sorhtyre @mattruzzi !
+
+  * **[BREAKING CHANGE] Warn on old Electron/Chrome (fix #556) (PR #1076)**
+    ⚠️ Users packaging kiosk apps running for a long time on internal websites,
+    see https://github.com/jiahaog/nativefier/blob/master/docs/api.md#disable-old-build-warning-yesiknowitisinsecure
+  * Check for improperly-formatted arguments (fix #885) (PR #1080)
+  * Correctly start in tray when both `--maximize` and `--tray start-in-tray` are passed (fix #1015) (PR #1079)
+  * Fix icon path error when passing asar `--conceal` flag (fix #975) (PR #1074)
+  * Migrate from Travis CI to GitHub Actions
+  * Bump default Electron to 11.0.3, bump dep eslint-config-prettier to 7.x
+
+Also, bumping npm version to something far away from current Electron version.
+
+Rationale for the nonsensical major version bump: around Nativefier 8.x,
+versions of Nativefier and Electron aligned, by release schedule coincidence.
+Since Nativefier has little breaking changes, it was great: as Electron
+releases are breaking, Nativefier had no breaking changes, I bumped our
+major version on new major Electron, and everything was good.
+
+Except *now*, as I have a breaking change, which would bump Nativefier to
+12.x, being annoyingly confusing since we'd still default to Electron 11 :-/ .
+
+-> To keep respecting semver and reduce confusion, bumping Nativefier
+   version to something far ahead of Electron versions. No it doesn't
+   matter, version number are meaningless anyway (well, outside of
+   semver, whose respect is precisely the point here).
+
 11.0.2 / 2020-11-21
 ===================
 
