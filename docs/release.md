@@ -22,7 +22,7 @@ While on `master`, with no uncommitted changes,
 
 ```bash
 npm run changelog -- $VERSION
-# For example, npm run changelog -- 7.7.1
+# With no 'v'. For example: npm run changelog -- 7.7.1
 ```
 
 This command does 3 things:
@@ -40,11 +40,12 @@ git commit --amend
 Once we are satisfied,
 
 ```bash
-git tag vX.Y.Z
+git tag -a vX.Y.Z -m 'vX.Y.Z'
 git push --follow-tags origin master
 ```
 
 On [GitHub Releases](https://github.com/jiahaog/nativefier/releases),
-draft and publish a new release with title `Nativefier vX.X.X` (yes, with a `v`).
+draft and publish a new release with title `Nativefier vX.Y.Z` (yes, with a `v`).
 
-The new version will be visible on npm within a few minutes/hours.
+Our CI will react on the new release, and publish it to npm.
+The new version will be visible on npm within a few minutes.
