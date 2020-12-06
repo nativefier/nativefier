@@ -1,4 +1,4 @@
-import { linkIsInternal, getCounterValue } from './helpers';
+import { linkIsInternal, getCounterValue, isArgFormatValid } from './helpers';
 
 const internalUrl = 'https://medium.com/';
 const internalUrlSubPath = 'topic/technology';
@@ -41,4 +41,30 @@ test('getCounterValue should return a string for small counter numbers in the ti
 
 test('getCounterValue should return a string for large counter numbers in the title', () => {
   expect(getCounterValue(largeCounterTitle)).toEqual('8,756');
+});
+
+const shortArg = '--t';
+const longArg = '--test';
+const extraLongArg = '--test-run';
+const invalidShortArg = '--t';
+const invalidLongArg = '-test';
+
+test('isArgFormatValid should return true for short arguments', () => {
+  expect(isArgFormatValid(shortArg)).toEqual(true);
+});
+
+test('isArgFormatValid should return true for long arguments', () => {
+  expect(isArgFormatValid(longArg)).toEqual(true);
+});
+
+test('isArgFormatValid should return true for extra long arguments', () => {
+  expect(isArgFormatValid(extraLongArg)).toEqual(true);
+});
+
+test('isArgFormatValid should return false for improperly formatted short arguments', () => {
+  expect(isArgFormatValid(invalidShortArg)).toEqual(false);
+});
+
+test('isArgFormatValid should return false for improperly formatted long arguments', () => {
+  expect(isArgFormatValid(invalidLongArg)).toEqual(false);
 });
