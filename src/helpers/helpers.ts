@@ -140,9 +140,13 @@ export function getAllowedIconFormats(platform: string): string[] {
   return formats;
 }
 
-export function isArgFormatValid(arg: string): boolean {
+/**
+ * Refuse args like '--n' or '-name', we accept either short '-n' or long '--name'
+ */
+export function isArgFormatInvalid(arg: string): boolean {
   return (
-    /^-[a-z]$/i.exec(arg) !== null ||
-    /^--[a-z]{2,}(-[a-z]{2,})*$/i.exec(arg) !== null
+    arg.startsWith('---') ||
+    /^--[a-z]$/i.exec(arg) !== null ||
+    /^-[a-z]{2,}$/i.exec(arg) !== null
   );
 }
