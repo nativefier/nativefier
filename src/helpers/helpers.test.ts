@@ -9,6 +9,11 @@ describe('isArgFormatInvalid', () => {
     expect(isArgFormatInvalid('--t')).toBe(true);
   });
 
+  test('is false for --x and --y (backwards compat, we should have made these short, oh well)', () => {
+    expect(isArgFormatInvalid('--x')).toBe(false);
+    expect(isArgFormatInvalid('--y')).toBe(false);
+  });
+
   test('is false for correct long args', () => {
     expect(isArgFormatInvalid('--test')).toBe(false);
   });
