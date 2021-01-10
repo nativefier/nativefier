@@ -1,0 +1,43 @@
+name: Docker
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  # TODO: Change variable to your image's name.
+  IMAGE_NAME: image
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  build-and-push:
+      runs-on: ubuntu-latest
+      steps:
+        - 
+          name: Login to GitHub Container Registry
+          uses: docker/login-action@v1 
+          with:
+            registry: ghcr.io
+            username: ${{ github.repository_owner }}
+            password: ${{ secrets.CR_PAT }}
+            
+        -
+          name: Build and push
+          uses: docker/build-push-action@v2
+          with:
+            context: .
+            file: ./Dockerfile
+            platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
+            push: true
+            tags: |
+              ghcr.io/snpranav/nativefier:latest
