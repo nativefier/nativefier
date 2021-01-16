@@ -2,13 +2,13 @@
 
 👋 dear users / contributors! Public service announcement!
 
-Nativefier is maintained by YOU. It's reasonably sane to hack on since
-the 8.x cleanup, it fits the use cases needed by the original author and
-the current maintainer, so _we_ are not doing any active development.
+Nativefier is maintained by YOU. It's reasonably sane to hack on nowadays,
+it fits the use cases needed by the original author and the current maintainer,
+so _we_ are not doing any active development.
 
-But it's not dead! If YOU use it and want to see juicy features & fixes,
-PR welcome! In particular, #902 #831 #706 are three particularly annoying
-issues; help welcome on those (or [any other issue](https://github.com/jiahaog/nativefier/issues) that motivates you 🙂).
+But it's alive! If YOU use it and want to see juicy features & fixes, PR welcome!
+Help welcome in particular on our [pinned issues](https://github.com/jiahaog/nativefier/issues),
+or any issue / feature that motivates you 🙂.
 
 Thanks! Take care.
 
