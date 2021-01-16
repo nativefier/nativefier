@@ -46,7 +46,8 @@ jobs:
 
           # Tag docker image with latest and the commit SHA
           docker tag $IMAGE_NAME $IMAGE_ID:latest
-          docker tag $IMAGE_NAME $IMAGE_ID:GITHUB_SHA
+          docker tag $IMAGE_NAME $IMAGE_ID:$GITHUB_SHA
+          
           # Push the images to the registry
           docker push $IMAGE_ID:latest
-          docker push $IMAGE_ID:GITHUB_SHA
+          docker push $IMAGE_ID:$GITHUB_SHA
