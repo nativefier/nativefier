@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/$GITHUB_REPOSITORY:latest
+          tags: ghcr.io/snpranav/nativefier:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
