@@ -105,7 +105,10 @@ function normalizeAppName(appName: string, url: string): string {
   const hash = crypto.createHash('md5');
   hash.update(url);
   const postFixHash = hash.digest('hex').substring(0, 6);
-  const normalized = appName.toLowerCase().replace(/[\s_]/g, '-');
+  const normalized = appName
+    .toLowerCase()
+    .replace(/[,:.]/g, '')
+    .replace(/[\s_]/g, '-');
   return `${normalized}-nativefier-${postFixHash}`;
 }
 
