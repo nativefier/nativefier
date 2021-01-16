@@ -34,7 +34,9 @@ jobs:
         -
           name: Build and push
           uses: docker/build-push-action@v2
+          id: docker_build
           with:
+            run: ls
             context: .
             tags: ghcr.io/snpranav/nativefier:latest
             push: true
