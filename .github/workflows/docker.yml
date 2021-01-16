@@ -14,23 +14,29 @@ on:
   pull_request:
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  build-and-push:
-      runs-on: ubuntu-latest
-      steps:
-        - 
-          name: Login to GitHub Container Registry
-          uses: docker/login-action@v1 
-          with:
-            registry: ghcr.io
-            username: ${{ github.repository_owner }}
-            password: ${{ secrets.CR_PAT }}
-            
-        -
-          name: Build and push
-          uses: docker/build-push-action@v2
-          id: docker_build
-          with:
-            tags: ghcr.io/snpranav/nativefier
-            push: true
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - 
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      -
+        name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/$GITHUB_REPOSITORY:latest
+      -
+        name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
