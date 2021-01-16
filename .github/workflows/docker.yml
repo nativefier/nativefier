@@ -15,7 +15,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  IMAGE_NAME: image
+  IMAGE_NAME: snpranav/nativefier
 
 jobs:
   # Run tests.
@@ -36,8 +36,8 @@ jobs:
           uses: docker/build-push-action@v2
           with:
             context: .
-            file: ./Dockerfile
             platforms: linux/amd64
+            pull: true
             push: true
             tags: |
               ghcr.io/snpranav/nativefier:latest
