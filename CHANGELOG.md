@@ -1,4 +1,14 @@
 
+42.1.0 / 2021-01-16
+===================
+
+  * Bump default Electron to 11.2.0 (with Chromium 87.0.4280.141)
+  * Maintenance:
+    * A bit more filename & appname sanitization
+    * Get rid of two direct deps: cheerio, lodash
+    * Fix error surfacing in full since recent changes in `page-icon`
+    * Publish TS types, for them to show up in npm
+
 42.0.2 / 2020-12-07
 ===================
 
