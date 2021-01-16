@@ -6,7 +6,8 @@ Nativefier is maintained by YOU. It's reasonably sane to hack on nowadays,
 it fits the use cases needed by the original author and the current maintainer,
 so _we_ are not doing any active development.
 
-But it's alive! If YOU use it and want to see juicy features & fixes, PR welcome!
+But it's alive! It at least follows Electron releases with maintenance patches,
+and if YOU use it and want to see juicy features & fixes, PR welcome!
 Help welcome in particular on our [pinned issues](https://github.com/jiahaog/nativefier/issues),
 or any issue / feature that motivates you 🙂.
 
