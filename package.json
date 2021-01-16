@@ -53,14 +53,12 @@
     "watch": "npx concurrently \"npm:*:watch\""
   },
   "dependencies": {
-    "@types/cheerio": "0.x",
     "@types/ncp": "2.x",
     "@types/node": "10.x",
     "@types/page-icon": "0.x",
     "@types/shelljs": "0.x",
     "@types/tmp": "0.x",
     "axios": "0.x",
-    "cheerio": "^1.0.0-rc.3",
     "commander": "4.x",
     "electron-packager": "15.x",
     "gitcloud": "0.x",
