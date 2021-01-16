@@ -1,5 +1,19 @@
 # Nativefier
 
+👋 dear users / contributors! Public service announcement!
+
+Nativefier is maintained by YOU. It's reasonably sane to hack on since
+the 8.x cleanup, it fits the use cases needed by the original author and
+the current maintainer, so _we_ are not doing any active development.
+
+But it's not dead! If YOU use it and want to see juicy features & fixes,
+PR welcome! In particular, #902 #831 #706 are three particularly annoying
+issues; help welcome on those (or [any other issue](https://github.com/jiahaog/nativefier/issues) that motivates you 🙂).
+
+Thanks! Take care.
+
+---
+
 [![Build Status](https://github.com/jiahaog/nativefier/workflows/ci/badge.svg)](https://github.com/jiahaog/nativefier/actions?query=workflow%3Aci)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
