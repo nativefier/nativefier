@@ -32,7 +32,5 @@ jobs:
           uses: docker/build-push-action@v2
           id: docker_build
           with:
-            context: .
-            file: Dockerfile
             tags: ghcr.io/snpranav/nativefier
             push: true
