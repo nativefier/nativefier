@@ -36,8 +36,5 @@ jobs:
           uses: docker/build-push-action@v2
           with:
             context: .
-            platforms: linux/amd64
-            pull: true
+            tags: ghcr.io/snpranav/nativefier:latest
             push: true
-            tags: |
-              ghcr.io/snpranav/nativefier:latest
