@@ -3,7 +3,6 @@ import * as crypto from 'crypto';
 import * as path from 'path';
 import { promisify } from 'util';
 
-import { kebabCase } from 'lodash';
 import * as log from 'loglevel';
 
 import { copyFileOrDir } from '../helpers/helpers';
@@ -106,7 +105,7 @@ function normalizeAppName(appName: string, url: string): string {
   const hash = crypto.createHash('md5');
   hash.update(url);
   const postFixHash = hash.digest('hex').substring(0, 6);
-  const normalized = kebabCase(appName.toLowerCase());
+  const normalized = appName.toLowerCase().replace(/[\s_]/g, '-');
   return `${normalized}-nativefier-${postFixHash}`;
 }
 

@@ -1,9 +1,21 @@
-import * as _ from 'lodash';
 import axios from 'axios';
 import * as log from 'loglevel';
 import { DEFAULT_CHROME_VERSION } from '../constants';
 
 const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
+
+type ElectronRelease = {
+  version: string;
+  date: string;
+  node: string;
+  v8: string;
+  uv: string;
+  zlib: string;
+  openssl: string;
+  modules: string;
+  chrome: string;
+  files: string[];
+};
 
 async function getChromeVersionForElectronVersion(
   electronVersion: string,
@@ -14,11 +26,11 @@ async function getChromeVersionForElectronVersion(
   if (response.status !== 200) {
     throw new Error(`Bad request: Status code ${response.status}`);
   }
-  const { data } = response;
-  const electronVersionToChromeVersion: _.Dictionary<string> = _.zipObject(
-    data.map((d) => d.version),
-    data.map((d) => d.chrome),
-  );
+  const electronReleases: ElectronRelease[] = response.data;
+  const electronVersionToChromeVersion: { [key: string]: string } = {};
+  for (const release of electronReleases) {
+    electronVersionToChromeVersion[release.version] = release.chrome;
+  }
   if (!(electronVersion in electronVersionToChromeVersion)) {
     throw new Error(
       `Electron version '${electronVersion}' not found in retrieved version list!`,
