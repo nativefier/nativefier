@@ -1,4 +1,10 @@
 
+42.2.0 / 2021-01-18
+===================
+
+  * Revert default Electron back to 11.1.1 (Chrome 87.0.4280.88) (fix #1101)
+    11.2.0 was causing segfaults in macOS.
+
 42.1.0 / 2021-01-16
 ===================
 
