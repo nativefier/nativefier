@@ -36,7 +36,7 @@ jobs:
   docker:
     env:
       IMAGE_ID: ${{ secrets.DOCKERHUB_USERNAME }}/nativefier
-      SHA8: ${GITHUB_SHA::8}   # First 8 characters of COMMIT SHA
+      SHA8: $(echo ${GITHUB_SHA} | cut -c1-8)   # First 8 characters of COMMIT SHA
     
     runs-on: ubuntu-latest
 
@@ -57,9 +57,9 @@ jobs:
       - name: Tag and Push
         run: |
           # Tag docker image with latest and the commit SHA
-          docker tag $IMAGE_ID:latest $IMAGE_ID:$SHA8
+          docker tag $IMAGE_ID:latest $IMAGE_ID:${GITHUB_SHA::8}
           
           # Push the images to the registry
           docker push $IMAGE_ID:latest
-          docker push $IMAGE_ID:$SHA8
+          docker push $IMAGE_ID:${GITHUB_SHA::8}
     
