@@ -53,11 +53,6 @@
     "watch": "npx concurrently \"npm:*:watch\""
   },
   "dependencies": {
-    "@types/ncp": "2.x",
-    "@types/node": "10.x",
-    "@types/page-icon": "0.x",
-    "@types/shelljs": "0.x",
-    "@types/tmp": "0.x",
     "axios": "0.x",
     "commander": "4.x",
     "electron-packager": "15.x",
@@ -72,6 +67,11 @@
     "tmp": "0.x"
   },
   "devDependencies": {
+    "@types/ncp": "2.x",
+    "@types/node": "10.x",
+    "@types/page-icon": "0.x",
+    "@types/shelljs": "0.x",
+    "@types/tmp": "0.x",
     "@types/jest": "26.x",
     "@typescript-eslint/eslint-plugin": "4.x",
     "@typescript-eslint/parser": "4.x",
