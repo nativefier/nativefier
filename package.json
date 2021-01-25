@@ -66,7 +66,7 @@
     "source-map-support": "0.x",
     "tmp": "0.x"
   },
-  "devDependencies": {    
+  "devDependencies": {
     "@types/ncp": "2.x",
     "@types/node": "10.x",
     "@types/page-icon": "0.x",
