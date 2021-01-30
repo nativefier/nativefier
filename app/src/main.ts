@@ -18,7 +18,7 @@ import { createTrayIcon } from './components/trayIcon';
 import { isOSX } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 
-// Entrypoint for Squirrel, a windows update framework. See https://github.com/jiahaog/nativefier/pull/744
+// Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
 if (require('electron-squirrel-startup')) {
   app.exit();
 }

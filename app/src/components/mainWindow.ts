@@ -307,7 +307,7 @@ export function createMainWindow(
   const sendParamsOnDidFinishLoad = (window: BrowserWindow): void => {
     window.webContents.on('did-finish-load', () => {
       // In children windows too: Restore pinch-to-zoom, disabled by default in recent Electron.
-      // See https://github.com/jiahaog/nativefier/issues/379#issuecomment-598612128
+      // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598612128
       // and https://github.com/electron/electron/pull/12679
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       window.webContents.setVisualZoomLevelLimits(1, 3);
@@ -378,7 +378,7 @@ export function createMainWindow(
   mainWindow.webContents.on('will-navigate', onWillNavigate);
   mainWindow.webContents.on('did-finish-load', () => {
     // Restore pinch-to-zoom, disabled by default in recent Electron.
-    // See https://github.com/jiahaog/nativefier/issues/379#issuecomment-598309817
+    // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598309817
     // and https://github.com/electron/electron/pull/12679
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     mainWindow.webContents.setVisualZoomLevelLimits(1, 3);

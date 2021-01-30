@@ -15,9 +15,9 @@ Incomprehensible / incomplete feature requests will be closed.
 
 **Homework**
 
-- [ ] I looked at `nativefier --help` and https://github.com/jiahaog/nativefier/blob/master/docs/api.md , no existing option fits my needs.
+- [ ] I looked at `nativefier --help` and https://github.com/nativefier/nativefier/blob/master/docs/api.md , no existing option fits my needs.
 - [ ] I searched existing issues, open & closed. Yes, my feature request is new.
-- [ ] I'm using the latest version available at https://github.com/jiahaog/nativefier/releases
+- [ ] I'm using the latest version available at https://github.com/nativefier/nativefier/releases
 
 
 **Problem statement**

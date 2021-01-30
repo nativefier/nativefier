@@ -5,7 +5,7 @@
 First, clone the project
 
 ```bash
-git clone https://github.com/jiahaog/nativefier.git
+git clone https://github.com/nativefier/nativefier.git
 cd nativefier
 ```
 

@@ -279,11 +279,11 @@ if (require.main === module) {
     )
     .option(
       '--global-shortcuts <value>',
-      'JSON file defining global shortcuts. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#global-shortcuts',
+      'JSON file defining global shortcuts. See https://github.com/nativefier/nativefier/blob/master/docs/api.md#global-shortcuts',
     )
     .option(
       '--browserwindow-options <json-string>',
-      'a JSON string that will be sent directly into electron BrowserWindow options. See https://github.com/jiahaog/nativefier/blob/master/docs/api.md#browserwindow-options',
+      'a JSON string that will be sent directly into electron BrowserWindow options. See https://github.com/nativefier/nativefier/blob/master/docs/api.md#browserwindow-options',
       parseJson,
     )
     .option(

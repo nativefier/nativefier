@@ -15,7 +15,7 @@ import * as log from 'loglevel';
 const writeFileAsync = promisify(writeFile);
 
 const GITCLOUD_SPACE_DELIMITER = '-';
-const GITCLOUD_URL = 'https://jiahaog.github.io/nativefier-icons/';
+const GITCLOUD_URL = 'https://nativefier.github.io/nativefier-icons/';
 
 function getMaxMatchScore(iconWithScores: any[]): number {
   const score = iconWithScores.reduce((maxScore, currentIcon) => {

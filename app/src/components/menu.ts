@@ -221,14 +221,14 @@ export function createMenu({
         label: `Built with Nativefier v${nativefierVersion}`,
         click: () => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/jiahaog/nativefier');
+          shell.openExternal('https://github.com/nativefier/nativefier');
         },
       },
       {
         label: 'Report an Issue',
         click: () => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/jiahaog/nativefier/issues');
+          shell.openExternal('https://github.com/nativefier/nativefier/issues');
         },
       },
     ],

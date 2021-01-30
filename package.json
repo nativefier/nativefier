@@ -20,13 +20,13 @@
   "bin": {
     "nativefier": "lib/cli.js"
   },
-  "homepage": "https://github.com/jiahaog/nativefier",
+  "homepage": "https://github.com/nativefier/nativefier",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jiahaog/nativefier.git"
+    "url": "git+https://github.com/nativefier/nativefier.git"
   },
   "bugs": {
-    "url": "https://github.com/jiahaog/nativefier/issues"
+    "url": "https://github.com/nativefier/nativefier/issues"
   },
   "scripts": {
     "build-app": "cd app && webpack",
@@ -67,12 +67,12 @@
     "tmp": "0.x"
   },
   "devDependencies": {
+    "@types/jest": "26.x",
     "@types/ncp": "2.x",
     "@types/node": "10.x",
     "@types/page-icon": "0.x",
     "@types/shelljs": "0.x",
     "@types/tmp": "0.x",
-    "@types/jest": "26.x",
     "@typescript-eslint/eslint-plugin": "4.x",
     "@typescript-eslint/parser": "4.x",
     "eslint": "7.x",

@@ -79,7 +79,7 @@
 
 ## Packaging Squirrel-based installers
 
-See [PR #744 - Support packaging nativefier applications into Squirrel-based installers](https://github.com/jiahaog/nativefier/pull/744)
+See [PR #744 - Support packaging nativefier applications into Squirrel-based installers](https://github.com/nativefier/nativefier/pull/744)
 
 ## Command Line
 

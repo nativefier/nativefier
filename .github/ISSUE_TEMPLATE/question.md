@@ -15,9 +15,9 @@ Incomprehensible / incomplete questions will be closed.
 
 **Homework**
 
-- [ ] I looked at `nativefier --help` and https://github.com/jiahaog/nativefier/blob/master/docs/api.md
+- [ ] I looked at `nativefier --help` and https://github.com/nativefier/nativefier/blob/master/docs/api.md
 - [ ] I searched existing issues, open & closed. Yes, my question is new.
-- [ ] I'm using the latest version available at https://github.com/jiahaog/nativefier/releases
+- [ ] I'm using the latest version available at https://github.com/nativefier/nativefier/releases
 
 
 **Your question**

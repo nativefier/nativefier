@@ -32,7 +32,7 @@ This release includes several contributor patches. Thanks @sorhtyre @mattruzzi !
 
   * **[BREAKING CHANGE] Warn on old Electron/Chrome (fix #556) (PR #1076)**
     ⚠️ Users packaging kiosk apps running for a long time on internal websites,
-    see https://github.com/jiahaog/nativefier/blob/master/docs/api.md#disable-old-build-warning-yesiknowitisinsecure
+    see https://github.com/nativefier/nativefier/blob/master/docs/api.md#disable-old-build-warning-yesiknowitisinsecure
   * Check for improperly-formatted arguments (fix #885) (PR #1080)
   * Correctly start in tray when both `--maximize` and `--tray start-in-tray` are passed (fix #1015) (PR #1079)
   * Fix icon path error when passing asar `--conceal` flag (fix #975) (PR #1074)
@@ -131,7 +131,7 @@ Except *now*, as I have a breaking change, which would bump Nativefier to
 ==================
 
   * Attempt to fix failing to install due to app yarn install (#923)
-    See https://github.com/jiahaog/nativefier/pull/898#issuecomment-583865045 .
+    See https://github.com/nativefier/nativefier/pull/898#issuecomment-583865045 .
 
 8.0.2 / 2020-03-15
 ==================
@@ -155,7 +155,7 @@ Revamp and move to TypeScript (#898)
 - That's it. Lots of care went into breaking CLI & programmatic behavior
   as little as possible. **Please report regressions**.
 - Known issue: build may fail behind a proxy. Get in touch if you use one:
-  https://github.com/jiahaog/nativefier/issues/907#issuecomment-596144768
+  https://github.com/nativefier/nativefier/issues/907#issuecomment-596144768
 
 ## Changes summary
 
@@ -202,7 +202,7 @@ while **not changing the CLI/programmatic interfaces**. Highlights:
   Bugfixes will come later. Still, these got addressed:
   - Add common `Alt`+`Left`/`Right` for previous/next navigation.
   - Improve #379: fix zoom with `Ctrl` + numpad `+`/`-`
-  - Fix pinch-to-zoom (see https://github.com/jiahaog/nativefier/issues/379#issuecomment-598612128 )
+  - Fix pinch-to-zoom (see https://github.com/nativefier/nativefier/issues/379#issuecomment-598612128 )
 
 
 7.7.1 / 2020-01-23
@@ -632,7 +632,7 @@ while **not changing the CLI/programmatic interfaces**. Highlights:
   * Make debug script automatically open the packaged app on OSX
   * Remove "About Electron" from app menu, add nativefier version to help, which fixes #18
   * Implement `--pretend` flag to easily simulate user agent strings, fixes #11
-  * Merge branch 'master' of github.com:jiahaog/nativefier
+  * Merge branch 'master' of github.com:nativefier/nativefier
   * Fix bug in error when response is undefined
   * Add helper scripts to debug easily
   * Hide app instead of exiting on OSX to fix #14

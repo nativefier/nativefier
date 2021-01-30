@@ -44,7 +44,7 @@ git tag -a vX.Y.Z -m 'vX.Y.Z'
 git push --follow-tags origin master
 ```
 
-On [GitHub Releases](https://github.com/jiahaog/nativefier/releases),
+On [GitHub Releases](https://github.com/nativefier/nativefier/releases),
 draft and publish a new release with title `Nativefier vX.Y.Z` (yes, with a `v`).
 
 Our CI will react on the new release, and publish it to npm.

@@ -8,14 +8,14 @@ so _we_ are not doing any active development.
 
 But it's alive! It at least follows Electron releases with maintenance patches,
 and if YOU use it and want to see juicy features & fixes, PR welcome!
-Help welcome in particular on our [pinned issues](https://github.com/jiahaog/nativefier/issues),
+Help welcome in particular on our [pinned issues](https://github.com/nativefier/nativefier/issues),
 or any issue / feature that motivates you 🙂.
 
 Thanks! Take care.
 
 ---
 
-[![Build Status](https://github.com/jiahaog/nativefier/workflows/ci/badge.svg)](https://github.com/jiahaog/nativefier/actions?query=workflow%3Aci)
+[![Build Status](https://github.com/nativefier/nativefier/workflows/ci/badge.svg)](https://github.com/nativefier/nativefier/actions?query=workflow%3Aci)
 [![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
 
 ![Dock](docs/dock.png)
@@ -70,32 +70,32 @@ If desired, these options can be overwritten. For example, to override the name,
 to learn about other command-line flags usable to configure the packaged app.
 
 To have high-resolution icons used by default for an app/domain, please
-contribute to the [icon repository](https://github.com/jiahaog/nativefier-icons)!
+contribute to the [icon repository](https://github.com/nativefier/nativefier-icons)!
 
 ## Usage with Docker
 
 Nativefier is also usable from Docker.
-- Pull the latest stable image from Docker Hub: `docker pull jiahaog/nativefier`
+- Pull the latest stable image from Docker Hub: `docker pull nativefier/nativefier`
 - ... or build the image yourself: `docker build -t local/nativefier .`
-  (in this case, replace `jiahaog/` in the below examples with `local/`)
+  (in this case, replace `nativefier/` in the below examples with `local/`)
 
 By default, the command `nativefier --help` will be executed.
 To build e.g. a Gmail nativefier app to a writable local `~/nativefier-apps`,
 
 ```bash
-docker run --rm -v ~/nativefier-apps:/target/ jiahaog/nativefier https://mail.google.com/ /target/
+docker run --rm -v ~/nativefier-apps:/target/ nativefier/nativefier https://mail.google.com/ /target/
 ```
 
 You can pass Nativefier flags, and mount volumes to provide local files. For example, to use an icon,
 
 ```bash
-docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target jiahaog/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
+docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target nativefier/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
 ```
 
 ## Development
 
-Help welcome on [bugs](https://github.com/jiahaog/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
-[feature requests](https://github.com/jiahaog/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request).
+Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
+[feature requests](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request).
 
 [Developer / build docs](docs/development.md), [API documentation](docs/api.md), 
 [Changelog](CHANGELOG.md).

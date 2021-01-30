@@ -2,7 +2,7 @@ FROM node:12-stretch
 LABEL description="Debian image to build nativefier apps"
 
 # Get wine32, not 64, to work around binary incompatibility with rcedit.
-# https://github.com/jiahaog/nativefier/issues/375#issuecomment-304247033
+# https://github.com/nativefier/nativefier/issues/375#issuecomment-304247033
 # Forced us to use Debian rather than Alpine, which doesn't do multiarch.
 RUN dpkg --add-architecture i386
 
@@ -25,9 +25,9 @@ USER 1000
 
 # Run a {lin,mac,win} build: 1. to check installation was sucessful,
 # 2. to cache electron distributables and avoid downloads at runtime.
-RUN nativefier https://github.com/jiahaog/nativefier /tmp/nativefier \
-    && nativefier -p osx https://github.com/jiahaog/nativefier /tmp/nativefier \
-    && nativefier -p windows https://github.com/jiahaog/nativefier /tmp/nativefier \
+RUN nativefier https://github.com/nativefier/nativefier /tmp/nativefier \
+    && nativefier -p osx https://github.com/nativefier/nativefier /tmp/nativefier \
+    && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier \
     && rm -rf /tmp/nativefier
 
 ENTRYPOINT ["nativefier"]
