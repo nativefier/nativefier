@@ -9,13 +9,14 @@ const EXPECTED_USERAGENTS = {
 };
 
 describe('Infer User Agent', () => {
-  test('Can infer userAgent for all platforms', async () => {
-    jest.setTimeout(10000);
-    for (const [arch, archUa] of Object.entries(EXPECTED_USERAGENTS)) {
-      const ua = await inferUserAgent(DEFAULT_ELECTRON_VERSION, arch);
+  // TODO make fast by mocking timeout.
+  for (const [platform, archUa] of Object.entries(EXPECTED_USERAGENTS)) {
+    test(`Can infer userAgent for ${platform}`, async () => {
+      jest.setTimeout(10000);
+      const ua = await inferUserAgent(DEFAULT_ELECTRON_VERSION, platform);
       expect(ua).toBe(archUa);
-    }
-  });
+    });
+  }
 
   // TODO make fast by mocking timeout, and un-skip
   test.skip('Connection error will still get a user agent', async () => {
