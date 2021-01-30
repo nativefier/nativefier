@@ -1,4 +1,11 @@
 
+42.2.1 / 2021-01-30
+===================
+
+  * Move GitHub repository to [`nativefier/nativefier`](https://github.com/nativefier/nativefier)
+  * Temporarily increase timeout for network call in test
+  * Move TS @types from dependencies to devDependencies (PR #1102)
+
 42.2.0 / 2021-01-18
 ===================
 
