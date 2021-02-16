@@ -108,7 +108,7 @@ Prints the usage information.
 #### Version
 
 ```
--V, --version
+-v, --version
 ```
 
 Prints the version of your `nativefier` install.
