@@ -462,14 +462,18 @@ Forces the maximum disk space to be used by the disk cache. Value is given in by
 --inject <value>
 ```
 
-Allows you to inject a javascript or css file. This command can be run multiple times to inject the files.
+Allows you to inject a javascript or css file. This command can be run multiple times to inject the files. This can also be a valid raw Github Gist Url.
 
 _Note:_ The javascript file is loaded _after_ `DOMContentLoaded`, so you can assume the DOM is complete & available.
 
-Example:
+Examples:
 
 ```bash
 nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
+```
+
+```bash
+nativefier http://google.com --inject ./some-js-injection.js --inject https://gist.githubusercontent.com/vviikk/39cb5208694094b1930190c3c90a3255/raw/209a710bdad81a068f70667732511d91992f48bb/smooth-scrolling.js ~/Desktop
 ```
 
 #### [full-screen]
