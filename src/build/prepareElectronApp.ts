@@ -5,7 +5,11 @@ import { promisify } from 'util';
 
 import * as log from 'loglevel';
 
-import { copyFileOrDir } from '../helpers/helpers';
+import {
+  copyFileOrDir,
+  downloadTmpFile,
+  isGistRawUrl,
+} from '../helpers/helpers';
 import { AppOptions } from '../options/model';
 
 const writeFileAsync = promisify(fs.writeFile);
@@ -78,10 +82,18 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   }
 
   log.debug(`Copying ${srcs.length} files to inject in app.`);
-  for (const src of srcs) {
+
+  for (let src of srcs) {
+    if (isGistRawUrl(src)) {
+      const fileDetails = await downloadTmpFile(src);
+      log.debug(`Downloaded gist file to ${fileDetails}`);
+
+      src = fileDetails;
+    }
+
     if (!fs.existsSync(src)) {
       throw new Error(
-        `File ${src} not found. Note that Nativefier expects *local* files, not URLs.`,
+        `File ${src} not found. Note that Nativefier expects *local* files, or raw gist URLs.`,
       );
     }
 

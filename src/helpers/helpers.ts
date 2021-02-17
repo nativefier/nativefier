@@ -1,11 +1,14 @@
 import * as os from 'os';
 import * as path from 'path';
 
+import * as download from 'download';
 import axios from 'axios';
 import * as hasbin from 'hasbin';
 import { ncp } from 'ncp';
 import * as log from 'loglevel';
 import * as tmp from 'tmp';
+import * as fs from 'fs';
+
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
 const now = new Date();
@@ -65,6 +68,14 @@ export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
         ext: path.extname(fileUrl),
       };
     });
+}
+
+export async function downloadTmpFile(fileUrl: string): Promise<string> {
+  const tempGistFile = `${getTempDir('gists')}/${fileUrl.split('/').pop()}`;
+
+  fs.writeFileSync(tempGistFile, await download(fileUrl));
+
+  return tempGistFile;
 }
 
 export function getAllowedIconFormats(platform: string): string[] {
@@ -150,4 +161,17 @@ export function isArgFormatInvalid(arg: string): boolean {
       /^-[a-z]{2,}$/i.exec(arg) !== null) &&
     !['--x', '--y'].includes(arg) // exception for long args --{x,y}
   );
+}
+
+export function isGistRawUrl(string: string): boolean {
+  let url;
+  try {
+    url = new URL(string);
+    if (url.hostname !== 'gist.githubusercontent.com') {
+      throw 'Not a gist url';
+    }
+  } catch (_) {
+    return false;
+  }
+  return true;
 }

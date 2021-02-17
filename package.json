@@ -55,6 +55,7 @@
   "dependencies": {
     "axios": "0.x",
     "commander": "4.x",
+    "download": "^8.0.0",
     "electron-packager": "15.x",
     "gitcloud": "0.x",
     "hasbin": "1.x",

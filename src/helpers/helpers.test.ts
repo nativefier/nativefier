@@ -1,4 +1,4 @@
-import { isArgFormatInvalid } from './helpers';
+import { isArgFormatInvalid, isGistRawUrl } from './helpers';
 
 describe('isArgFormatInvalid', () => {
   test('is false for correct short args', () => {
@@ -32,5 +32,27 @@ describe('isArgFormatInvalid', () => {
 
   test('is false for correct long args with many dashes', () => {
     expect(isArgFormatInvalid('--test-run-with-many-dashes')).toBe(false);
+  });
+
+  test('is true for valid raw gist url', () => {
+    expect(
+      isGistRawUrl(
+        'https://gist.githubusercontent.com/vviikk/39cb5208694094b1930190c3c90a3255/raw/209a710bdad81a068f70667732511d91992f48bb/smooth-scrolling.js',
+      ),
+    ).toBe(true);
+  });
+
+  test('is false for gist url that isnt raw or not gist URL', () => {
+    expect(
+      isGistRawUrl(
+        'https://gist.github.com/vviikk/39cb5208694094b1930190c3c90a3255',
+      ),
+    ).toBe(false);
+
+    expect(
+      isGistRawUrl(
+        'https://someurl.com/gist/github/39cb5208694094b1930190c3c90a3255',
+      ),
+    ).toBe(false);
   });
 });
