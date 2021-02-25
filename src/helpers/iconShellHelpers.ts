@@ -1,6 +1,5 @@
 import * as path from 'path';
-
-import * as shell from 'shelljs';
+import { spawnSync } from 'child_process';
 
 import { isWindows, isOSX, getTempDir } from './helpers';
 import * as log from 'loglevel';
@@ -15,44 +14,39 @@ const SCRIPT_PATHS = {
 /**
  * Executes a shell script with the form "./pathToScript param1 param2"
  */
-async function iconShellHelper(
+function iconShellHelper(
   shellScriptPath: string,
   icoSource: string,
   icoDestination: string,
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    if (isWindows()) {
-      reject(
-        new Error(
-          'Icon conversion only supported on macOS or Linux. ' +
-            'If building for Windows, download/create a .ico and pass it with --icon favicon.ico . ' +
-            'If building for macOS/Linux, do it from macOS/Linux',
-        ),
-      );
-      return;
-    }
-
-    const shellCommand = `"${shellScriptPath}" "${icoSource}" "${icoDestination}"`;
-    log.debug(
-      `Converting icon ${icoSource} to ${icoDestination}.`,
-      `Calling: ${shellCommand}`,
+): string {
+  if (isWindows()) {
+    throw new Error(
+      'Icon conversion only supported on macOS or Linux. ' +
+        'If building for Windows, download/create a .ico and pass it with --icon favicon.ico . ' +
+        'If building for macOS/Linux, do it from macOS/Linux',
     );
-    shell.exec(shellCommand, { silent: true }, (exitCode, stdOut, stdError) => {
-      if (exitCode) {
-        reject({
-          stdOut,
-          stdError,
-        });
-        return;
-      }
+  }
 
-      log.debug(`Conversion succeeded and produced icon at ${icoDestination}`);
-      resolve(icoDestination);
-    });
-  });
+  const shellCommand = `"${shellScriptPath}" "${icoSource}" "${icoDestination}"`;
+  log.debug(
+    `Converting icon ${icoSource} to ${icoDestination}.`,
+    `Calling shell command: ${shellCommand}`,
+  );
+  const { stdout, stderr, status } = spawnSync(
+    shellScriptPath,
+    [icoSource, icoDestination],
+    { timeout: 10000 },
+  );
+  if (status) {
+    throw new Error(
+      `Icon conversion failed with status code ${status}.\nstdout: ${stdout.toString()}\nstderr: ${stderr.toString()}`,
+    );
+  }
+  log.debug(`Conversion succeeded and produced icon at ${icoDestination}`);
+  return icoDestination;
 }
 
-export function singleIco(icoSrc: string): Promise<string> {
+export function singleIco(icoSrc: string): string {
   return iconShellHelper(
     SCRIPT_PATHS.singleIco,
     icoSrc,
@@ -60,7 +54,7 @@ export function singleIco(icoSrc: string): Promise<string> {
   );
 }
 
-export async function convertToPng(icoSrc: string): Promise<string> {
+export function convertToPng(icoSrc: string): string {
   return iconShellHelper(
     SCRIPT_PATHS.convertToPng,
     icoSrc,
@@ -68,7 +62,7 @@ export async function convertToPng(icoSrc: string): Promise<string> {
   );
 }
 
-export async function convertToIco(icoSrc: string): Promise<string> {
+export function convertToIco(icoSrc: string): string {
   return iconShellHelper(
     SCRIPT_PATHS.convertToIco,
     icoSrc,
@@ -76,7 +70,7 @@ export async function convertToIco(icoSrc: string): Promise<string> {
   );
 }
 
-export async function convertToIcns(icoSrc: string): Promise<string> {
+export function convertToIcns(icoSrc: string): string {
   if (!isOSX()) {
     throw new Error('macOS is required to convert to a .icns icon');
   }

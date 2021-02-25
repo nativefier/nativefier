@@ -62,7 +62,6 @@
     "ncp": "^2.0.0",
     "page-icon": "^0.3.4",
     "sanitize-filename": "^1.6.3",
-    "shelljs": "^0.8.4",
     "source-map-support": "^0.5.19",
     "tmp": "^0.2.1"
   },
@@ -71,7 +70,6 @@
     "@types/ncp": "^2.0.4",
     "@types/node": "^10.17.54",
     "@types/page-icon": "^0.3.3",
-    "@types/shelljs": "^0.8.8",
     "@types/tmp": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
