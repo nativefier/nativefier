@@ -26,9 +26,7 @@ function iconIsIcns(iconPath: string): boolean {
  * Will convert a `.png` icon to the appropriate arch format (if necessary),
  * and return adjusted options
  */
-export async function convertIconIfNecessary(
-  options: AppOptions,
-): Promise<void> {
+export function convertIconIfNecessary(options: AppOptions): void {
   if (!options.packager.icon) {
     log.debug('Option "icon" not set, skipping icon conversion.');
     return;
@@ -43,7 +41,7 @@ export async function convertIconIfNecessary(
     }
 
     try {
-      const iconPath = await convertToIco(options.packager.icon);
+      const iconPath = convertToIco(options.packager.icon);
       options.packager.icon = iconPath;
       return;
     } catch (error) {
@@ -61,7 +59,7 @@ export async function convertIconIfNecessary(
     }
 
     try {
-      const iconPath = await convertToPng(options.packager.icon);
+      const iconPath = convertToPng(options.packager.icon);
       options.packager.icon = iconPath;
       return;
     } catch (error) {
@@ -85,7 +83,7 @@ export async function convertIconIfNecessary(
   }
 
   try {
-    const iconPath = await convertToIcns(options.packager.icon);
+    const iconPath = convertToIcns(options.packager.icon);
     options.packager.icon = iconPath;
     return;
   } catch (error) {

@@ -112,7 +112,7 @@ export async function buildNativefierApp(
 
   log.info('\nConverting icons...');
   options.packager.dir = tmpPath; // const optionsWithTmpPath = { ...options, dir: tmpPath };
-  await convertIconIfNecessary(options);
+  convertIconIfNecessary(options);
   await copyIconsIfNecessary(options, tmpPath);
 
   log.info(
