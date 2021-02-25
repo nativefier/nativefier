@@ -20,6 +20,6 @@
     "wurl": "^2.5.4"
   },
   "devDependencies": {
-    "electron": "^11.1.1"
+    "electron": "^11.3.0"
   }
 }
