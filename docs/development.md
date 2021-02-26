@@ -50,7 +50,7 @@ Then run your nativefier app _through the command line too_ (to see logs & error
 your-test-site-win32-x64/your-test-site.exe
 
 # Under macOS
-./YourTestSite/YourTestSite-darwin-x64/YourTestSite.app/Contents/MacOS/YourTestSite --verbose
+./YourTestSite-darwin-x64/YourTestSite.app/Contents/MacOS/YourTestSite --verbose
 ```
 
 ## Linting & formatting
