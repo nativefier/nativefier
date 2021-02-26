@@ -1,4 +1,13 @@
 
+42.3.0 / 2021-02-25
+===================
+
+  * Bump default Electron to 11.3.0 (with Chromium 87.0.4280.141).
+    macOS-segfault-causing icon bug #1101 should remain fixed.
+  * API docs: fix typo in option "-v" (PR #1114)
+  * Get rid of dep `shelljs` and abandoned app dep `wurl`
+  * Bump commander from 4 to 7 and eslint-config-prettier from 7 to 8
+
 42.2.1 / 2021-01-30
 ===================
 
