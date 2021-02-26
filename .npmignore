@@ -19,3 +19,4 @@ app/*
 !app/inject/
 !app/nativefier.json
 !app/package.json
+.vscode/
