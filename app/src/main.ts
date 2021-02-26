@@ -188,7 +188,6 @@ if (shouldQuit) {
           // the user for permission on Mac.
           // For reference:
           // https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback
-          //
           const accessibilityPromptResult = dialog.showMessageBoxSync(null, {
             type: 'question',
             message: 'Accessibility Permissions Needed',
