@@ -72,6 +72,16 @@ function setProxyRules(browserWindow: BrowserWindow, proxyRules): void {
   });
 }
 
+export function saveAppArgs(appArgs, filePath) {
+  try {
+    fs.writeFileSync(filePath, JSON.stringify(appArgs));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
+    );
+  }
+}
 /**
  * @param {{}} nativefierOptions AppArgs from nativefier.json
  * @param {function} onAppQuit
@@ -133,17 +143,7 @@ export function createMainWindow(
   if (options.maximize) {
     mainWindow.maximize();
     options.maximize = undefined;
-    try {
-      fs.writeFileSync(
-        path.join(__dirname, '..', 'nativefier.json'),
-        JSON.stringify(options),
-      );
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
-      );
-    }
+    saveAppArgs(options, path.join(__dirname, '..', 'nativefier.json'));
   }
 
   if (options.tray === 'start-in-tray') {

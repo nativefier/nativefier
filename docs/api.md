@@ -69,6 +69,7 @@
   - [[global-shortcuts]](#global-shortcuts)
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
+  - [[no-accessibility-prompt]](#no-accessibility-prompt)
   - [[background-color]](#background-color)
   - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
 - [Programmatic API](#programmatic-api)
@@ -219,6 +220,8 @@ The icon parameter should be a path to a `.png` file.
 The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
 If you have the optional dependencies `iconutil`, Imagemagick `convert`, and Imagemagick `identify` in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
+
+On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility. If desired, this prompt can be surpressed with the `--no-accessibility-prompt` flag.
 
 ###### Manually Converting `.icns`
 
@@ -766,7 +769,16 @@ nativefier <your-website> --browserwindow-options '{ "webPreferences": { "defaul
 --darwin-dark-mode-support
 ```
 
-Enables Dark Mode support on macOS 10.4+.
+Enables Dark Mode support on macOS 10.14+.
+
+#### [no-accessibility-prompt]
+
+```
+--no-accessibility-prompt
+```
+
+(macOS only) Do not prompt the user for accessibility permissions on macOS 10.14+ if a media key global shortcut is set.
+See [Electron's globalShortcut.register documentation](https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback)
 
 #### [background-color]
 

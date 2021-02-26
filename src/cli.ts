@@ -297,6 +297,10 @@ if (require.main === module) {
     .option(
       '--darwin-dark-mode-support',
       '(macOS only) enable Dark Mode support on macOS 10.14+',
+    )
+    .option(
+      '--no-accessibility-prompt',
+      '(macOS only) Never prompt for accessibility permissions on macOS 10.14+ if a media key global shortcut is set. See https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback',
     );
 
   try {

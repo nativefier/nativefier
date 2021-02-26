@@ -15,6 +15,7 @@ const writeFileAsync = promisify(fs.writeFile);
  */
 function pickElectronAppArgs(options: AppOptions): any {
   return {
+    accessibilityPrompt: options.nativefier.accessibilityPrompt,
     alwaysOnTop: options.nativefier.alwaysOnTop,
     appCopyright: options.packager.appCopyright,
     appVersion: options.packager.appVersion,

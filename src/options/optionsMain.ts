@@ -47,6 +47,10 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       },
     },
     nativefier: {
+      accessibilityPrompt:
+        rawOptions.accessibilityPrompt === undefined
+          ? true
+          : rawOptions.accessibilityPrompt,
       alwaysOnTop: rawOptions.alwaysOnTop || false,
       backgroundColor: rawOptions.backgroundColor || null,
       basicAuthPassword: rawOptions.basicAuthPassword || null,
