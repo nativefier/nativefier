@@ -47,3 +47,5 @@ node_modules
 *.iml
 out
 gen
+
+.vscode
