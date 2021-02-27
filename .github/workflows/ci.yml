@@ -25,8 +25,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm run dev-up
-    - run: npm run build
+    - run: npm install # will also, through `prepare` hook, 1. install ./app, and 2. build
       # Only run linter once, for faster CI. Align the verisons of Node here with above and publish.yml.
     - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '14.x'
       run: npm run lint

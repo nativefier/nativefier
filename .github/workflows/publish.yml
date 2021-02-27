@@ -14,9 +14,10 @@ jobs:
         # Align the version of Node here with ci.yml.
         node-version: '14.x'
         registry-url: 'https://registry.npmjs.org'
-    - run: npm run dev-up
-    - run: npm run build
+    # Will also (through `prepare` hook): 1. install ./app, and 2. build
+    - run: npm install
     - run: npm test
+    - run: npm run lint
     - run: npm publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
