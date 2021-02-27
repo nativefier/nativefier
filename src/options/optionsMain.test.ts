@@ -38,21 +38,3 @@ test('it should set the accessibility prompt option to true by default', async (
   );
   expect(result.nativefier.accessibilityPrompt).toEqual(true);
 });
-
-test('it should set the accessibility prompt option', async () => {
-  const params = {
-    targetUrl: 'https://example.com/',
-    accessibilityPrompt: false,
-  };
-  const result = await getOptions(params);
-  expect(asyncConfigMock).toHaveBeenCalledWith(
-    expect.objectContaining({
-      nativefier: expect.objectContaining({
-        accessibilityPrompt: params.accessibilityPrompt,
-      }),
-    }),
-  );
-  expect(result.nativefier.accessibilityPrompt).toEqual(
-    params.accessibilityPrompt,
-  );
-});
