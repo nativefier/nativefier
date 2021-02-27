@@ -15,7 +15,7 @@ jobs:
         node-version: '14.x'
         registry-url: 'https://registry.npmjs.org'
     # Will also (through `prepare` hook): 1. install ./app, and 2. build
-    - run: npm install
+    - run: npm install --no-fund
     - run: npm test
     - run: npm run lint
     - run: npm publish
