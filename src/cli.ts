@@ -40,10 +40,10 @@ function parseJson(val: string): any {
 
     log.error(
       `Unable to parse JSON value: ${val}\n` +
-        `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
-        ` - Only double quotes are allowed, single quotes are not.\n` +
-        ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
-        ` - If unsure, validate your JSON using an online service.`,
+      `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
+      ` - Only double quotes are allowed, single quotes are not.\n` +
+      ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
+      ` - If unsure, validate your JSON using an online service.`,
     );
     throw err;
   }
@@ -297,10 +297,6 @@ if (require.main === module) {
     .option(
       '--darwin-dark-mode-support',
       '(macOS only) enable Dark Mode support on macOS 10.14+',
-    )
-    .option(
-      '--no-accessibility-prompt',
-      '(macOS only) Never prompt for accessibility permissions on macOS 10.14+ if a media key global shortcut is set. See https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback',
     );
 
   try {
