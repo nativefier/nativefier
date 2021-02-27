@@ -54,11 +54,11 @@
     "axios": "^0.21.1",
     "commander": "^7.1.0",
     "electron-packager": "^15.2.0",
-    "gitcloud": "^0.1.3",
+    "gitcloud": "^0.2.0",
     "hasbin": "^1.2.3",
     "loglevel": "^1.7.1",
     "ncp": "^2.0.0",
-    "page-icon": "^0.3.4",
+    "page-icon": "^0.4.0",
     "sanitize-filename": "^1.6.3",
     "source-map-support": "^0.5.19",
     "tmp": "^0.2.1"
