@@ -14,7 +14,7 @@ import {
 import electronDownload from 'electron-dl';
 
 import { createLoginWindow } from './components/loginWindow';
-import { createMainWindow, saveAppArgs } from './components/mainWindow';
+import { createMainWindow, saveAppArgs, APP_ARGS_FILE_PATH } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
@@ -24,7 +24,6 @@ if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
-const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 const OLD_BUILD_WARNING_THRESHOLD_DAYS = 60;
@@ -93,10 +92,10 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-      app.dock.setBadge(count.toString());
-      if (bounce && count > currentBadgeCount) app.dock.bounce();
-      currentBadgeCount = count;
-    }
+    app.dock.setBadge(count.toString());
+    if (bounce && count > currentBadgeCount) app.dock.bounce();
+    currentBadgeCount = count;
+  }
   : () => undefined;
 
 app.on('window-all-closed', () => {
@@ -205,8 +204,9 @@ if (shouldQuit) {
               break;
             // User cliecked Never Ask Me Again, save that info
             case 2:
-              appArgs.accessibilityPrompt = false;
-              saveAppArgs(appArgs, APP_ARGS_FILE_PATH);
+              const newAppArgs = { ...appArgs };
+              newAppArgs.accessibilityPrompt = false;
+              saveAppArgs(newAppArgs);
               break;
             // User clicked No
             default:
