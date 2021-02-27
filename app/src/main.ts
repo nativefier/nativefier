@@ -179,7 +179,7 @@ if (shouldQuit) {
         ];
         const globalShortcutsKeys = appArgs.globalShortcuts.map((g) => g.key);
         const mediaKeyWasSet =
-          globalShortcutsKeys.filter((g) => mediaKeys.includes(g)).length > 0;
+          globalShortcutsKeys.find((g) => mediaKeys.includes(g));
         if (
           mediaKeyWasSet &&
           !systemPreferences.isTrustedAccessibilityClient(false)
