@@ -73,9 +73,9 @@ function setProxyRules(browserWindow: BrowserWindow, proxyRules): void {
   });
 }
 
-export function saveAppArgs(appArgs) {
+export function saveAppArgs(newAppArgs: any) {
   try {
-    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(appArgs));
+    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs));
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(

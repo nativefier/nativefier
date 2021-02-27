@@ -1,7 +1,6 @@
 import 'source-map-support/register';
 
 import fs from 'fs';
-import path from 'path';
 
 import {
   app,
@@ -14,7 +13,11 @@ import {
 import electronDownload from 'electron-dl';
 
 import { createLoginWindow } from './components/loginWindow';
-import { createMainWindow, saveAppArgs, APP_ARGS_FILE_PATH } from './components/mainWindow';
+import {
+  createMainWindow,
+  saveAppArgs,
+  APP_ARGS_FILE_PATH,
+} from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
@@ -92,10 +95,10 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-    app.dock.setBadge(count.toString());
-    if (bounce && count > currentBadgeCount) app.dock.bounce();
-    currentBadgeCount = count;
-  }
+      app.dock.setBadge(count.toString());
+      if (bounce && count > currentBadgeCount) app.dock.bounce();
+      currentBadgeCount = count;
+    }
   : () => undefined;
 
 app.on('window-all-closed', () => {
@@ -177,8 +180,9 @@ if (shouldQuit) {
           'MediaStop',
         ];
         const globalShortcutsKeys = appArgs.globalShortcuts.map((g) => g.key);
-        const mediaKeyWasSet =
-          globalShortcutsKeys.find((g) => mediaKeys.includes(g));
+        const mediaKeyWasSet = globalShortcutsKeys.find((g) =>
+          mediaKeys.includes(g),
+        );
         if (
           mediaKeyWasSet &&
           !systemPreferences.isTrustedAccessibilityClient(false)
@@ -204,9 +208,8 @@ if (shouldQuit) {
               break;
             // User cliecked Never Ask Me Again, save that info
             case 2:
-              const newAppArgs = { ...appArgs };
-              newAppArgs.accessibilityPrompt = false;
-              saveAppArgs(newAppArgs);
+              appArgs.accessibilityPrompt = false;
+              saveAppArgs(appArgs);
               break;
             // User clicked No
             default:
