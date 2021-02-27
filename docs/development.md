@@ -2,24 +2,21 @@
 
 ## Setup
 
-First, clone the project
+First, clone the project:
 
 ```bash
 git clone https://github.com/nativefier/nativefier.git
 cd nativefier
 ```
 
-Install dependencies for both the CLI and the Electron app:
+Install dependencies (for both the CLI and the Electron app):
 
 ```bash
-# Under Linux and macOS:
-npm run dev-up
-
-# Under Windows:
-npm run dev-up-win
+npm install
 ```
 
-Build nativefier:
+The above `npm install` will build automatically (through the `prepare` hook).
+When you need to re-build Nativefier,
 
 ```bash
 npm run build
