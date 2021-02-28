@@ -17,8 +17,8 @@ make_iconset_imagemagick() {
   mkdir "$iconset"
 
   for size in {16,32,64,128,256,512}; do
-    convert "${file}" -define png:big-depth=16 -define png:color-type=6 -sample "${size}x${size}" "${iconset}/icon_${size}x${size}.png"
-    convert "${file}" -define png:big-depth=16 -define png:color-type=6 -sample "$((size * 2))x$((size * 2))" "${iconset}/icon_${size}x${size}@2x.png"
+    $CONVERT "${file}" -define png:big-depth=16 -define png:color-type=6 -sample "${size}x${size}" "${iconset}/icon_${size}x${size}.png"
+    $CONVERT "${file}" -define png:big-depth=16 -define png:color-type=6 -sample "$((size * 2))x$((size * 2))" "${iconset}/icon_${size}x${size}@2x.png"
   done
 }
 
@@ -50,15 +50,18 @@ fi
 
 HAVE_IMAGEMAGICK=
 HAVE_SIPS=
+HAVE_GRAPHICSMAGICK=
+CONVERT=
 
-type convert &>/dev/null && HAVE_IMAGEMAGICK=true
+type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && HAVE_GRAPHICSMAGICK=true && CONVERT="gm convert"
+type convert &>/dev/null && HAVE_IMAGEMAGICK=true && CONVERT="convert"
 type sips &>/dev/null && HAVE_SIPS=true
 
-if [[ ! -z "$HAVE_IMAGEMAGICK" ]]; then
+if [[ -n "$HAVE_IMAGEMAGICK" || -n "$HAVE_GRAPHICSMAGICK" ]]; then
   PNG_PATH="$(mktemp -d)/icon.png"
   "${BASH_SOURCE%/*}/convertToPng" "${SOURCE}" "${PNG_PATH}"
   make_iconset_imagemagick "${PNG_PATH}" "${DEST}"
-elif [[ ! -z "$HAVE_SIPS" ]]; then
+elif [[ -n "$HAVE_SIPS" ]]; then
   make_iconset_sips "${SOURCE}" "${DEST}"
 else
   echo >&2 "Cannot find convert or sips executables"; exit 1;
