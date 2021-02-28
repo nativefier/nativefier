@@ -218,7 +218,7 @@ The icon parameter should be a path to a `.png` file.
 
 The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
-If you have the optional dependencies `iconutil`, Imagemagick `convert`, and Imagemagick `identify` in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
+If you have the optional dependencies `iconutil`, Imagemagick or GraphicsMagick `convert`, and Imagemagick or GraphicsMagick `identify` in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
 
 ###### Manually Converting `.icns`
 
