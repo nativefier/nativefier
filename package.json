@@ -36,7 +36,7 @@
     "changelog": "./docs/generate-changelog",
     "ci": "npm run lint && npm test",
     "clean": "rimraf lib/ app/lib/ app/dist/",
-    "clean:full": "rimraf lib/ app/lib/ app/dist/ node_modules/ app/node_modules/",
+    "clean:full": "rimraf lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
     "lint:fix": "eslint . --fix",
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",

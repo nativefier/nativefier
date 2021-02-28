@@ -220,6 +220,8 @@ The icon parameter can either be a `.icns` or a `.png` file if the [optional dep
 
 If you have the optional dependencies `iconutil`, Imagemagick `convert`, and Imagemagick `identify` in your `PATH`, Nativefier will automatically convert the `.png` to a `.icns` for you.
 
+On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
+
 ###### Manually Converting `.icns`
 
 [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
@@ -766,7 +768,7 @@ nativefier <your-website> --browserwindow-options '{ "webPreferences": { "defaul
 --darwin-dark-mode-support
 ```
 
-Enables Dark Mode support on macOS 10.4+.
+Enables Dark Mode support on macOS 10.14+.
 
 #### [background-color]
 
