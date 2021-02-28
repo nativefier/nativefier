@@ -69,7 +69,6 @@
   - [[global-shortcuts]](#global-shortcuts)
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
-  - [[no-accessibility-prompt]](#no-accessibility-prompt)
   - [[background-color]](#background-color)
   - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
 - [Programmatic API](#programmatic-api)

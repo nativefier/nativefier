@@ -194,7 +194,7 @@ if (shouldQuit) {
           const accessibilityPromptResult = dialog.showMessageBoxSync(null, {
             type: 'question',
             message: 'Accessibility Permissions Needed',
-            buttons: ['Yes', 'No', 'Never Ask Me Again'],
+            buttons: ['Yes', 'No', 'No and never ask again'],
             defaultId: 0,
             detail:
               `${appArgs.name} would like to use one or more of your keyboard's media keys (start, stop, next track, or previous track) to control it.\n\n` +
