@@ -1,15 +1,14 @@
-import * as path from 'path';
-
 import * as electronGet from '@electron/get';
 import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
-
-import { isWindows, getTempDir, copyFileOrDir } from '../helpers/helpers';
-import { getOptions } from '../options/optionsMain';
-import { prepareElectronApp } from './prepareElectronApp';
-import { convertIconIfNecessary } from './buildIcon';
+import * as path from 'path';
+import { copyFileOrDir, getTempDir, isWindows } from '../helpers/helpers';
 import { AppOptions, NativefierOptions } from '../options/model';
+import { getOptions } from '../options/optionsMain';
+import { convertIconIfNecessary } from './buildIcon';
+import { prepareElectronApp } from './prepareElectronApp';
+import isAdmin = require('is-admin');
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -102,9 +101,26 @@ function trimUnprocessableOptions(options: AppOptions): void {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(
   rawOptions: NativefierOptions,
-): Promise<string> {
+): Promise<string[]> {
   log.info('Processing options...');
   const options = await getOptions(rawOptions);
+
+  if (options.packager.platform === 'darwin' && isWindows()) {
+    // electron-packager has to extract the desired electron package for the target platform.
+    // For a target platform of Mac, this zip file contains symlinks. And on Windows, extracting
+    // files that are symlinks need Admin permissions. So we'll check if the user is an admin, and
+    // fail early if not.
+    // For reference
+    // https://github.com/electron/electron-packager/issues/933
+    // https://github.com/electron/electron-packager/issues/1194
+    // https://github.com/electron/electron/issues/11094
+    const admin = await isAdmin();
+    if (!admin) {
+      throw new Error(
+        'Building an app with a target platform of Mac on a Windows machine requires admin priveleges to perform. Please rerun this command in an admin command prompt.',
+      );
+    }
+  }
 
   log.info('\nPreparing Electron app...');
   const tmpPath = getTempDir('app', 0o755);
@@ -123,9 +139,10 @@ export async function buildNativefierApp(
   const appPathArray = await electronPackager(options.packager);
 
   log.info('\nFinalizing build...');
-  const appPath = getAppPath(appPathArray);
+  const appPaths =
+    options.packager.arch === 'all' ? appPathArray : [getAppPath(appPathArray)];
 
-  if (appPath) {
+  if (appPaths) {
     let osRunHelp = '';
     if (options.packager.platform === 'win32') {
       osRunHelp = `the contained .exe file.`;
@@ -135,8 +152,10 @@ export async function buildNativefierApp(
       osRunHelp = `the app bundle.`;
     }
     log.info(
-      `App built to ${appPath} , move it wherever it makes sense for you and run ${osRunHelp}`,
+      `App(s) built to ${appPaths.join(
+        ', ',
+      )}, move tp wherever it makes sense for you and run ${osRunHelp}`,
     );
   }
-  return appPath;
+  return appPaths;
 }

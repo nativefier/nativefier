@@ -1,10 +1,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
-
 import { getTempDir } from './helpers/helpers';
 import { buildNativefierApp } from './main';
 
-function checkApp(appRoot: string, inputOptions: any): void {
+function checkApp(appRoots: string[], inputOptions: any): void {
   let relativeAppFolder: string;
 
   switch (inputOptions.platform) {
@@ -21,21 +20,30 @@ function checkApp(appRoot: string, inputOptions: any): void {
       throw new Error('Unknown app platform');
   }
 
-  const appPath = path.join(appRoot, relativeAppFolder);
+  const appPaths = appRoots.map((appRoot) =>
+    path.join(appRoot, relativeAppFolder),
+  );
 
-  const configPath = path.join(appPath, 'nativefier.json');
-  const nativefierConfig = JSON.parse(fs.readFileSync(configPath).toString());
-  expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
-
-  // Test name inferring
-  expect(nativefierConfig.name).toBe('Google');
+  const configPaths = appPaths.map((appPath) =>
+    path.join(appPath, 'nativefier.json'),
+  );
+  const nativefierConfigs = configPaths.map((configPath) =>
+    JSON.parse(fs.readFileSync(configPath).toString()),
+  );
+  test.each(nativefierConfigs)('config is valid %p', (nativefierConfig) => {
+    expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
+    // Test name inferring
+    expect(nativefierConfig.name).toBe('Google');
+  });
 
   // Test icon writing
   const iconFile =
     inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
-  const iconPath = path.join(appPath, iconFile);
-  expect(fs.existsSync(iconPath)).toBe(true);
-  expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
+  const iconPaths = appPaths.map((appPath) => path.join(appPath, iconFile));
+  test.each(iconPaths)('icon path is valid %s', (iconPath) => {
+    expect(fs.existsSync(iconPath)).toBe(true);
+    expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
+  });
 }
 
 describe('Nativefier', () => {
@@ -50,8 +58,8 @@ describe('Nativefier', () => {
         overwrite: true,
         platform,
       };
-      const appPath = await buildNativefierApp(options);
-      checkApp(appPath, options);
+      const appPaths = await buildNativefierApp(options);
+      checkApp(appPaths, options);
     }
   });
 });

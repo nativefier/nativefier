@@ -26,9 +26,9 @@ USER 1000
 
 # Run a {lin,mac,win} build: 1. to check installation was sucessful,
 # 2. to cache electron distributables and avoid downloads at runtime.
-RUN nativefier https://github.com/nativefier/nativefier /tmp/nativefier \
-    && nativefier -p osx https://github.com/nativefier/nativefier /tmp/nativefier \
-    && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier \
+RUN nativefier -a all https://github.com/nativefier/nativefier /tmp/nativefier \
+    && nativefier -p osx -a all https://github.com/nativefier/nativefier /tmp/nativefier \
+    && nativefier -p windows -a all https://github.com/nativefier/nativefier /tmp/nativefier \
     && rm -rf /tmp/nativefier
 
 ENTRYPOINT ["nativefier"]

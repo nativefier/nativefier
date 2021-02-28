@@ -1,13 +1,11 @@
 #!/usr/bin/env node
-import 'source-map-support/register';
-
 import * as commander from 'commander';
 import * as dns from 'dns';
 import * as log from 'loglevel';
-
+import 'source-map-support/register';
+import { isArgFormatInvalid, isWindows } from './helpers/helpers';
+import { supportedArchs } from './infer/inferOs';
 import { buildNativefierApp } from './main';
-import { isArgFormatInvalid } from './helpers/helpers';
-import { isWindows } from './helpers/helpers';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra "src" folder
@@ -93,6 +91,7 @@ if (require.main === module) {
     targetUrl: '',
     out: '',
   };
+  const archsMessage = `'${['all'].concat(supportedArchs).join("' or '")}'`;
   const args = commander
     .name('nativefier')
     .version(packageJson.version, '-v, --version')
@@ -103,7 +102,9 @@ if (require.main === module) {
     })
     .option('-n, --name <value>', 'app name')
     .option('-p, --platform <value>', "'mac', 'mas', 'linux' or 'windows'")
-    .option('-a, --arch <value>', "'ia32' or 'x64' or 'arm' or 'arm64'")
+    // Current Electron Packager supported architecture list:
+    // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
+    .option('-a, --arch <value>', archsMessage)
     .option(
       '--app-version <value>',
       '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',
