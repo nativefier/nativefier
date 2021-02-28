@@ -24,4 +24,13 @@ module.exports = {
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/no-unsafe-return': 'off',
   },
+  // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
+  ignorePatterns: [
+    "node_modules/**",
+    "app/node_modules/**",
+    "app/lib/**",
+    "lib/**",
+    "built-tests/**",
+    "coverage/**",
+  ]
 };

@@ -93,5 +93,10 @@
       "<rootDir>/app/src.*",
       "<rootDir>/src.*"
     ]
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "singleQuote": true,
+    "trailingComma": "all"
   }
 }
