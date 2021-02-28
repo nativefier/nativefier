@@ -38,10 +38,10 @@ function parseJson(val: string): any {
 
     log.error(
       `Unable to parse JSON value: ${val}\n` +
-      `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
-      ` - Only double quotes are allowed, single quotes are not.\n` +
-      ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
-      ` - If unsure, validate your JSON using an online service.`,
+        `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
+        ` - Only double quotes are allowed, single quotes are not.\n` +
+        ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
+        ` - If unsure, validate your JSON using an online service.`,
     );
     throw err;
   }
@@ -102,10 +102,16 @@ if (require.main === module) {
     .option('-n, --name <value>', 'app name')
     // Current Electron Packager supported platform list:
     // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
-    .addOption(new commander.Option('-p, --platform <value>').choices(supportedPlatforms))
+    .addOption(
+      new commander.Option('-p, --platform <value>').choices(
+        supportedPlatforms,
+      ),
+    )
     // Current Electron Packager supported architecture list:
     // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
-    .addOption(new commander.Option('-a, --arch <value>').choices(supportedArchs))//.choices(supportedArchs)
+    .addOption(
+      new commander.Option('-a, --arch <value>').choices(supportedArchs),
+    ) //.choices(supportedArchs)
     .option(
       '--app-version <value>',
       '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',
