@@ -1,24 +1,25 @@
-FROM node:12-stretch
+FROM node:12-alpine
 LABEL description="Debian image to build nativefier apps"
 
-# Get wine32, not 64, to work around binary incompatibility with rcedit.
-# https://github.com/nativefier/nativefier/issues/375#issuecomment-304247033
-# Forced us to use Debian rather than Alpine, which doesn't do multiarch.
-RUN dpkg --add-architecture i386
 
 # Install dependencies
-RUN apt-get update \
-    && apt-get --yes install wine32 imagemagick \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apk update \
+    && apk add bash wine imagemagick dos2unix \
+    && rm -rf /var/lib/apk/lists/*
+
+WORKDIR /nativefier
 
 # Add sources
-COPY . /nativefier
+COPY . .
+
+# Fix line endings that may have gotten mangled in Windows
+RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 
 # Build nativefier and link globally
 WORKDIR /nativefier/app
 RUN npm install
 WORKDIR /nativefier
-RUN npm install && npm run build && npm link
+RUN npm install && npm run build && npm t && npm link
 
 # Use 1000 as default user not root
 USER 1000
