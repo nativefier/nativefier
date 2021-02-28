@@ -187,7 +187,7 @@ if (shouldQuit) {
           mediaKeyWasSet &&
           !systemPreferences.isTrustedAccessibilityClient(false)
         ) {
-          // Since we're tryig to set global keyboard shortcuts for media keys, we need to prompt
+          // Since we're trying to set global keyboard shortcuts for media keys, we need to prompt
           // the user for permission on Mac.
           // For reference:
           // https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback
