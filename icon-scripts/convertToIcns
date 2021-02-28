@@ -13,13 +13,15 @@ set -e
 HAVE_IMAGEMAGICK=
 HAVE_ICONUTIL=
 HAVE_SIPS=
+HAVE_GRAPHICSMAGICK=
 
 type convert &>/dev/null && HAVE_IMAGEMAGICK=true
 type iconutil &>/dev/null && HAVE_ICONUTIL=true
 type sips &>/dev/null && HAVE_SIPS=true
+type gm &>/dev/null && gm version | grep GraphicsMagick &>/dev/null && HAVE_GRAPHICSMAGICK=true
 
 [[ -z "$HAVE_ICONUTIL" ]] && { echo >&2 "Cannot find required iconutil executable"; exit 1; }
-[[ -z "$HAVE_IMAGEMAGICK" && -z "$HAVE_SIPS" ]] && { echo >&2 "Cannot find required image converter, please install sips or imagemagick"; exit 1; }
+[[ -z "$HAVE_IMAGEMAGICK" && -z "$HAVE_SIPS" && -z "$HAVE_GRAPHICSMAGICK" ]] && { echo >&2 "Cannot find required image converter, please install sips, imagemagick or graphicsmagick"; exit 1; }
 
 # Parameters
 SOURCE="$1"
@@ -36,7 +38,7 @@ if [ -z "${DEST}" ]; then
 	exit 1
 fi
 
-TEMP_DIR="$(mktemp -d)"
+TEMP_DIR="$(mktemp -d -t nativefier_icons)"
 ICONSET="${TEMP_DIR}/converted.iconset"
 
 function cleanUp() {

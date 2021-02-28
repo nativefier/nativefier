@@ -17,6 +17,7 @@ import { initContextMenu } from './contextMenu';
 import { onNewWindowHelper } from './mainWindowHelpers';
 import { createMenu } from './menu';
 
+export const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const ZOOM_INTERVAL = 0.1;
 
 function hideWindow(
@@ -72,6 +73,16 @@ function setProxyRules(browserWindow: BrowserWindow, proxyRules): void {
   });
 }
 
+export function saveAppArgs(newAppArgs: any) {
+  try {
+    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs));
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(
+      `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
+    );
+  }
+}
 /**
  * @param {{}} nativefierOptions AppArgs from nativefier.json
  * @param {function} onAppQuit
@@ -133,17 +144,7 @@ export function createMainWindow(
   if (options.maximize) {
     mainWindow.maximize();
     options.maximize = undefined;
-    try {
-      fs.writeFileSync(
-        path.join(__dirname, '..', 'nativefier.json'),
-        JSON.stringify(options),
-      );
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.log(
-        `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
-      );
-    }
+    saveAppArgs(options);
   }
 
   if (options.tray === 'start-in-tray') {

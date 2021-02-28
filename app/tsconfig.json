@@ -10,8 +10,10 @@
       "resolveJsonModule": true,
       "skipLibCheck": true,
       "sourceMap": true,
-      "target": "es2017",
-      "lib": ["es2017", "dom"]
+      // https://stackoverflow.com/questions/51716406/typescript-tsconfig-settings-for-node-js-10
+      // and 'dom' to tell tsc it's okay to use the URL object (which is in Node >= 7)
+      "target": "es2018",
+      "lib": ["es2018", "dom"]
   },
   "include": [
       "./src/**/*"

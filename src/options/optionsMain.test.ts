@@ -23,3 +23,18 @@ test('it should call the async config', async () => {
   );
   expect(result.packager.targetUrl).toEqual(params.targetUrl);
 });
+
+test('it should set the accessibility prompt option to true by default', async () => {
+  const params = {
+    targetUrl: 'https://example.com/',
+  };
+  const result = await getOptions(params);
+  expect(asyncConfigMock).toHaveBeenCalledWith(
+    expect.objectContaining({
+      nativefier: expect.objectContaining({
+        accessibilityPrompt: true,
+      }),
+    }),
+  );
+  expect(result.nativefier.accessibilityPrompt).toEqual(true);
+});

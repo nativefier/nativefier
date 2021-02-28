@@ -1,19 +1,23 @@
 import 'source-map-support/register';
 
 import fs from 'fs';
-import path from 'path';
 
 import {
   app,
   crashReporter,
-  globalShortcut,
-  BrowserWindow,
   dialog,
+  globalShortcut,
+  systemPreferences,
+  BrowserWindow,
 } from 'electron';
 import electronDownload from 'electron-dl';
 
 import { createLoginWindow } from './components/loginWindow';
-import { createMainWindow } from './components/mainWindow';
+import {
+  createMainWindow,
+  saveAppArgs,
+  APP_ARGS_FILE_PATH,
+} from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
@@ -23,7 +27,6 @@ if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
-const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 const OLD_BUILD_WARNING_THRESHOLD_DAYS = 60;
@@ -168,6 +171,52 @@ if (shouldQuit) {
           });
         });
       });
+
+      if (isOSX() && appArgs.accessibilityPrompt) {
+        const mediaKeys = [
+          'MediaPlayPause',
+          'MediaNextTrack',
+          'MediaPreviousTrack',
+          'MediaStop',
+        ];
+        const globalShortcutsKeys = appArgs.globalShortcuts.map((g) => g.key);
+        const mediaKeyWasSet = globalShortcutsKeys.find((g) =>
+          mediaKeys.includes(g),
+        );
+        if (
+          mediaKeyWasSet &&
+          !systemPreferences.isTrustedAccessibilityClient(false)
+        ) {
+          // Since we're trying to set global keyboard shortcuts for media keys, we need to prompt
+          // the user for permission on Mac.
+          // For reference:
+          // https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback
+          const accessibilityPromptResult = dialog.showMessageBoxSync(null, {
+            type: 'question',
+            message: 'Accessibility Permissions Needed',
+            buttons: ['Yes', 'No', 'No and never ask again'],
+            defaultId: 0,
+            detail:
+              `${appArgs.name} would like to use one or more of your keyboard's media keys (start, stop, next track, or previous track) to control it.\n\n` +
+              `Would you like Mac OS to ask for your permission to do so?\n\n` +
+              `If so, you will need to restart ${appArgs.name} after granting permissions for these keyboard shortcuts to begin working.`,
+          });
+          switch (accessibilityPromptResult) {
+            // User clicked Yes, prompt for accessibility
+            case 0:
+              systemPreferences.isTrustedAccessibilityClient(true);
+              break;
+            // User cliecked Never Ask Me Again, save that info
+            case 2:
+              appArgs.accessibilityPrompt = false;
+              saveAppArgs(appArgs);
+              break;
+            // User clicked No
+            default:
+              break;
+          }
+        }
+      }
     }
     if (
       !appArgs.disableOldBuildWarning &&

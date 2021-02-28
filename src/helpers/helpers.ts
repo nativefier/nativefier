@@ -68,8 +68,8 @@ export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
 }
 
 export function getAllowedIconFormats(platform: string): string[] {
-  const hasIdentify = hasbin.sync('identify');
-  const hasConvert = hasbin.sync('convert');
+  const hasIdentify = hasbin.sync('identify') || hasbin.sync('gm');
+  const hasConvert = hasbin.sync('convert') || hasbin.sync('gm');
   const hasIconUtil = hasbin.sync('iconutil');
 
   const pngToIcns = hasConvert && hasIconUtil;

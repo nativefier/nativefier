@@ -8,6 +8,7 @@ export interface ElectronPackagerOptions extends electronPackager.Options {
 export interface AppOptions {
   packager: ElectronPackagerOptions;
   nativefier: {
+    accessibilityPrompt: boolean;
     alwaysOnTop: boolean;
     backgroundColor: string;
     basicAuthPassword: string;
