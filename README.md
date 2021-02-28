@@ -50,7 +50,7 @@ through the numerous open tabs when I was using [Facebook Messenger](https://mes
 - macOS 10.9+ / Windows / Linux
 - [Node.js](https://nodejs.org/) `>= 10` and npm `>= 6`
 - Optional dependencies:
-    - [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](graphicsmagick.org) to convert icons.
+    - [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) to convert icons.
       Make sure `convert` and `identify` or `gm` are in your system `$PATH`.
     - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms.
       Make sure `wine` is in your system `$PATH`.
