@@ -30,7 +30,7 @@ function checkApp(appRoots: string[], inputOptions: any): void {
   const nativefierConfigs = configPaths.map((configPath) =>
     JSON.parse(fs.readFileSync(configPath).toString()),
   );
-  test.each(nativefierConfigs)('config is valid %p', (nativefierConfig) => {
+  nativefierConfigs.forEach((nativefierConfig) => {
     expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
     // Test name inferring
     expect(nativefierConfig.name).toBe('Google');
@@ -40,7 +40,7 @@ function checkApp(appRoots: string[], inputOptions: any): void {
   const iconFile =
     inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
   const iconPaths = appPaths.map((appPath) => path.join(appPath, iconFile));
-  test.each(iconPaths)('icon path is valid %s', (iconPath) => {
+  iconPaths.forEach((iconPath) => {
     expect(fs.existsSync(iconPath)).toBe(true);
     expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
   });
