@@ -130,7 +130,14 @@ The name of the application, which will affect strings in titles and the icon.
 -p, --platform <value>
 ```
 
-Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
+- Default: current operating system.
+    - To test your default platform you can run
+      ```
+      node -p "process.platform"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_platform)
+- Can be overwritten by specifying either `all`, `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
+    - If `all` is specified, all supported platforms will be built.
 
 The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
 
@@ -142,8 +149,15 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can 
 
 The processor architecture to target when building.
 
-- Automatically set to the build-time machine architecture...
-- ... or can be overridden by specifying one of: `all`, `ia32`, `x64`, `armv7l`, `arm64`.
+- Default: the architecture of the installed version of node (usually the architecture of the build-time machine).
+    - To test your default architecture you can run
+      ```
+      node -p "process.arch"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_arch)
+    - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or resinstall node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
+- Can be overridden by specifying one of: `all`, `ia32`, `x64`, `armv7l`, `arm64`.
+    - If `all` is specified, all supported architectures will be built.
 
 #### [app-copyright]
 
