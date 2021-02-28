@@ -59,6 +59,9 @@ export function getUserAgentString(
     case 'linux':
       userAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
       break;
+    case 'all':
+      userAgent = `Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36`;
+      break;
     default:
       throw new Error(
         'Error invalid platform specified to getUserAgentString()',

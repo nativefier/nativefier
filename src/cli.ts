@@ -4,7 +4,7 @@ import * as dns from 'dns';
 import * as log from 'loglevel';
 import 'source-map-support/register';
 import { isArgFormatInvalid, isWindows } from './helpers/helpers';
-import { supportedArchs } from './infer/inferOs';
+import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
@@ -38,10 +38,10 @@ function parseJson(val: string): any {
 
     log.error(
       `Unable to parse JSON value: ${val}\n` +
-        `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
-        ` - Only double quotes are allowed, single quotes are not.\n` +
-        ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
-        ` - If unsure, validate your JSON using an online service.`,
+      `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
+      ` - Only double quotes are allowed, single quotes are not.\n` +
+      ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
+      ` - If unsure, validate your JSON using an online service.`,
     );
     throw err;
   }
@@ -91,7 +91,6 @@ if (require.main === module) {
     targetUrl: '',
     out: '',
   };
-  const archsMessage = `'${['all'].concat(supportedArchs).join("' or '")}'`;
   const args = commander
     .name('nativefier')
     .version(packageJson.version, '-v, --version')
@@ -101,10 +100,12 @@ if (require.main === module) {
       positionalOptions.out = outputDirectory;
     })
     .option('-n, --name <value>', 'app name')
-    .option('-p, --platform <value>', "'mac', 'mas', 'linux' or 'windows'")
+    // Current Electron Packager supported platform list:
+    // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
+    .addOption(new commander.Option('-p, --platform <value>').choices(supportedPlatforms))
     // Current Electron Packager supported architecture list:
     // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
-    .option('-a, --arch <value>', archsMessage)
+    .addOption(new commander.Option('-a, --arch <value>').choices(supportedArchs))//.choices(supportedArchs)
     .option(
       '--app-version <value>',
       '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',

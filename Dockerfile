@@ -24,12 +24,10 @@ RUN npm install && npm run build && npm t && npm link
 # Use 1000 as default user not root
 USER 1000
 
-# Run a {lin,mac,win} build: 1. to check installation was sucessful,
-# 2. to cache electron distributables and avoid downloads at runtime.
-RUN nativefier -a all https://github.com/nativefier/nativefier /tmp/nativefier \
-    && nativefier -p osx -a all https://github.com/nativefier/nativefier /tmp/nativefier \
-    && nativefier -p windows -a all https://github.com/nativefier/nativefier /tmp/nativefier \
-    && rm -rf /tmp/nativefier
+# Run a build of all platforms and archs:
+# 1. to check installation was sucessful
+# 2. to cache electron distributables and avoid downloads at runtime
+RUN nativefier -p all -a all https://github.com/nativefier/nativefier /tmp/nativefier
 
 ENTRYPOINT ["nativefier"]
 CMD ["--help"]

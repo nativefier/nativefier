@@ -1,11 +1,11 @@
-import * as os from 'os';
-import * as path from 'path';
-
 import axios from 'axios';
 import * as hasbin from 'hasbin';
-import { ncp } from 'ncp';
 import * as log from 'loglevel';
+import { ncp } from 'ncp';
+import * as os from 'os';
+import * as path from 'path';
 import * as tmp from 'tmp';
+
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
 const now = new Date();
@@ -95,6 +95,11 @@ export function getAllowedIconFormats(platform: string): string[] {
       case 'win32':
         formats.push('.ico');
         break;
+      case 'all':
+        formats.push('.icns');
+        formats.push('.png');
+        formats.push('.ico');
+        break;
       default:
         throw new Error(`Unknown platform ${platform}`);
     }
@@ -132,6 +137,11 @@ export function getAllowedIconFormats(platform: string): string[] {
       if (icnsToIco) {
         formats.push('.icns');
       }
+      break;
+    case 'all':
+      formats.push('.icns');
+      formats.push('.png');
+      formats.push('.ico');
       break;
     default:
       throw new Error(`Unknown platform ${platform}`);

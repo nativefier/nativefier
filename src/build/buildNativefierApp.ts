@@ -153,8 +153,8 @@ export async function buildNativefierApp(
     }
     log.info(
       `App(s) built to ${appPaths.join(
-        ', ',
-      )}, move tp wherever it makes sense for you and run ${osRunHelp}`,
+        ',\n',
+      )}, move to wherever it makes sense for you and run ${osRunHelp}`,
     );
   }
   return appPaths;

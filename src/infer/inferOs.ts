@@ -1,7 +1,13 @@
 import * as log from 'loglevel';
 import * as os from 'os';
 
-export const supportedArchs = ['ia32', 'x64', 'armv7l', 'arm64'];
+// Optionall we'd get this list directly from electron-packager, but it's not
+// accessible in the package without importing its private js files, which felt
+// dirty. So if those change, we'll update these as well.
+// https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
+// https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
+export const supportedArchs = ['all', 'ia32', 'x64', 'armv7l', 'arm64'];
+export const supportedPlatforms = ['all', 'linux', 'mac', 'mas', 'windows'];
 
 export function inferPlatform(): string {
   const platform = os.platform();
