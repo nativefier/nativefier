@@ -156,7 +156,7 @@ export async function buildNativefierApp(
       osRunHelp = `the app bundle.`;
     }
     log.info(
-      `App(s) built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
+      `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
     );
   }
   return appPath;
