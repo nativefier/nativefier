@@ -110,11 +110,6 @@ export function getAllowedIconFormats(platform: string): string[] {
       case 'win32':
         formats.push('.ico');
         break;
-      case 'all':
-        formats.push('.icns');
-        formats.push('.png');
-        formats.push('.ico');
-        break;
       default:
         throw new Error(`Unknown platform ${platform}`);
     }
@@ -152,11 +147,6 @@ export function getAllowedIconFormats(platform: string): string[] {
       if (icnsToIco) {
         formats.push('.icns');
       }
-      break;
-    case 'all':
-      formats.push('.icns');
-      formats.push('.png');
-      formats.push('.ico');
       break;
     default:
       throw new Error(`Unknown platform ${platform}`);

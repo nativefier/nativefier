@@ -107,7 +107,7 @@ function trimUnprocessableOptions(options: AppOptions): void {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(
   rawOptions: NativefierOptions,
-): Promise<string[]> {
+): Promise<string> {
   log.info('Processing options...');
   const options = await getOptions(rawOptions);
 
@@ -144,10 +144,9 @@ export async function buildNativefierApp(
   const appPathArray = await electronPackager(options.packager);
 
   log.info('\nFinalizing build...');
-  const appPaths =
-    options.packager.arch === 'all' ? appPathArray : [getAppPath(appPathArray)];
+  const appPath = getAppPath(appPathArray);
 
-  if (appPaths.length > 0) {
+  if (appPath) {
     let osRunHelp = '';
     if (options.packager.platform === 'win32') {
       osRunHelp = `the contained .exe file.`;
@@ -157,10 +156,8 @@ export async function buildNativefierApp(
       osRunHelp = `the app bundle.`;
     }
     log.info(
-      `App(s) built to ${appPaths.join(
-        ',\n',
-      )}, move to wherever it makes sense for you and run ${osRunHelp}`,
+      `App(s) built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
     );
   }
-  return appPaths;
+  return appPath;
 }
