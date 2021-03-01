@@ -56,7 +56,6 @@
     "electron-packager": "^15.2.0",
     "gitcloud": "^0.2.0",
     "hasbin": "^1.2.3",
-    "is-admin": "^3.0.0",
     "loglevel": "^1.7.1",
     "ncp": "^2.0.0",
     "page-icon": "^0.4.0",

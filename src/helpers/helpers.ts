@@ -6,6 +6,9 @@ import * as os from 'os';
 import * as path from 'path';
 import * as tmp from 'tmp';
 
+// import * as execa from 'execa';
+import * as childProcess from 'child_process';
+
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
 const now = new Date();
@@ -23,6 +26,20 @@ export function isOSX(): boolean {
 export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
+
+export const isWindowsAdmin = async (): Promise<boolean> => {
+  if (process.platform !== 'win32') {
+    return false;
+  }
+
+  try {
+    childProcess.spawn('fltmc'); //execa('fltmc');
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 
 /**
  * Create a temp directory with a debug-friendly name, and return its path.

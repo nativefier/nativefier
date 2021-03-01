@@ -3,12 +3,16 @@ import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 import * as path from 'path';
-import { copyFileOrDir, getTempDir, isWindows } from '../helpers/helpers';
+import {
+  copyFileOrDir,
+  getTempDir,
+  isWindows,
+  isWindowsAdmin,
+} from '../helpers/helpers';
 import { AppOptions, NativefierOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { convertIconIfNecessary } from './buildIcon';
 import { prepareElectronApp } from './prepareElectronApp';
-import isAdmin = require('is-admin');
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -114,8 +118,8 @@ export async function buildNativefierApp(
     // https://github.com/electron/electron-packager/issues/933
     // https://github.com/electron/electron-packager/issues/1194
     // https://github.com/electron/electron/issues/11094
-    const admin = await isAdmin();
-    if (!admin) {
+    const isAdmin = await isWindowsAdmin();
+    if (!isAdmin) {
       throw new Error(
         'Building an app with a target platform of Mac on a Windows machine requires admin priveleges to perform. Please rerun this command in an admin command prompt.',
       );
