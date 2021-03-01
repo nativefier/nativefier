@@ -22,10 +22,12 @@ function checkApp(appRoot: string, inputOptions: any): void {
   }
 
   const appPath = path.join(appRoot, relativeAppFolder);
+
   const configPath = path.join(appPath, 'nativefier.json');
   const nativefierConfig = JSON.parse(fs.readFileSync(configPath).toString());
-
   expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
+
+  // Test name inferring
   expect(nativefierConfig.name).toBe('Google');
 
   // Test icon writing
