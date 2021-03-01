@@ -7,7 +7,15 @@ import * as os from 'os';
 // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
 // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
 export const supportedArchs = ['all', 'ia32', 'x64', 'armv7l', 'arm64'];
-export const supportedPlatforms = ['all', 'linux', 'mac', 'mas', 'windows'];
+export const supportedPlatforms = [
+  'all',
+  'darwin',
+  'linux',
+  'mac',
+  'mas',
+  'osx',
+  'windows',
+];
 
 export function inferPlatform(): string {
   const platform = os.platform();
