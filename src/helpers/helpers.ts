@@ -8,7 +8,6 @@ import * as log from 'loglevel';
 import { ncp } from 'ncp';
 import * as tmp from 'tmp';
 
-
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
 const now = new Date();
@@ -27,7 +26,7 @@ export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
 
-export const isWindowsAdmin = async (): Promise<boolean> => {
+export function isWindowsAdmin(): boolean {
   if (process.platform !== 'win32') {
     return false;
   }
@@ -38,8 +37,7 @@ export const isWindowsAdmin = async (): Promise<boolean> => {
   } catch (error) {
     return false;
   }
-};
-
+}
 
 /**
  * Create a temp directory with a debug-friendly name, and return its path.

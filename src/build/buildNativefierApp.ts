@@ -120,8 +120,7 @@ export async function buildNativefierApp(
     // https://github.com/electron/electron-packager/issues/933
     // https://github.com/electron/electron-packager/issues/1194
     // https://github.com/electron/electron/issues/11094
-    const isAdmin = await isWindowsAdmin();
-    if (!isAdmin) {
+    if (!isWindowsAdmin()) {
       throw new Error(
         'Building an app with a target platform of Mac on a Windows machine requires admin priveleges to perform. Please rerun this command in an admin command prompt.',
       );
