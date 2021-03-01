@@ -1,5 +1,5 @@
 FROM node:12-alpine
-LABEL description="Debian image to build nativefier apps"
+LABEL description="Alpine image to build nativefier apps"
 
 
 # Install dependencies
