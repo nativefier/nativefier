@@ -148,7 +148,7 @@ export async function buildNativefierApp(
   const appPaths =
     options.packager.arch === 'all' ? appPathArray : [getAppPath(appPathArray)];
 
-  if (appPaths) {
+  if (appPaths.length > 0) {
     let osRunHelp = '';
     if (options.packager.platform === 'win32') {
       osRunHelp = `the contained .exe file.`;

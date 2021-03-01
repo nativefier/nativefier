@@ -1,5 +1,5 @@
 FROM node:12-alpine
-LABEL description="Alpine image to build nativefier apps"
+LABEL description="Alpine image to build Nativefier apps"
 
 
 # Install dependencies
@@ -19,7 +19,9 @@ RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 WORKDIR /nativefier/app
 RUN npm install
 WORKDIR /nativefier
-RUN npm install && npm run build && npm t && npm link
+# Install (which will also install in ./app, and build, thanks to our `prepare` npm hook)
+# Also, running tests, to ensure we don't Docker build & publish broken stuff
+RUN npm install && npm test && npm link
 
 # Cleanup test artifacts
 RUN rm -rf /tmp/nativefier*
