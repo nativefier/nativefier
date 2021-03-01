@@ -21,6 +21,9 @@ RUN npm install
 WORKDIR /nativefier
 RUN npm install && npm run build && npm t && npm link
 
+# Cleanup test artifacts
+RUN rm -rf /tmp/nativefier*
+
 # Use 1000 as default user not root
 USER 1000
 
@@ -28,6 +31,11 @@ USER 1000
 # 1. to check installation was sucessful
 # 2. to cache electron distributables and avoid downloads at runtime
 RUN nativefier -p all -a all https://github.com/nativefier/nativefier /tmp/nativefier
+
+RUN echo Generated total cache size: $(du -sh ~/.cache/electron) \
+    && echo Generated total app size: $(du -sh /tmp/nativefier) \
+    && rm -rf /tmp/nativefier \
+    && echo Final image size: $(du -sh / 2>/dev/null)
 
 ENTRYPOINT ["nativefier"]
 CMD ["--help"]
