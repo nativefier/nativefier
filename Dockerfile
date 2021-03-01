@@ -5,7 +5,7 @@ LABEL description="Alpine image to build nativefier apps"
 # Install dependencies
 RUN apk update \
     && apk add bash wine imagemagick dos2unix \
-    && rm -rf /var/lib/apk/lists/*
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /nativefier
 
