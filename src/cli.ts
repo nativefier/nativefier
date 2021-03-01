@@ -103,15 +103,11 @@ if (require.main === module) {
       positionalOptions.out = outputDirectory;
     })
     .option('-n, --name <value>', 'app name')
-    // Current Electron Packager supported platform list:
-    // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
     .addOption(
       new commander.Option('-p, --platform <value>').choices(
         supportedPlatforms,
       ),
     )
-    // Current Electron Packager supported architecture list:
-    // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
     .addOption(
       new commander.Option('-a, --arch <value>').choices(supportedArchs),
     )
