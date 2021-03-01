@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
+
 import { getTempDir } from './helpers/helpers';
 import { buildNativefierApp } from './main';
 

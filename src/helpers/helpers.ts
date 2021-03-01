@@ -1,13 +1,13 @@
+import { spawnSync } from 'child_process';
+import * as os from 'os';
+import * as path from 'path';
+
 import axios from 'axios';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 import { ncp } from 'ncp';
-import * as os from 'os';
-import * as path from 'path';
 import * as tmp from 'tmp';
 
-// import * as execa from 'execa';
-import * as childProcess from 'child_process';
 
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
@@ -33,7 +33,7 @@ export const isWindowsAdmin = async (): Promise<boolean> => {
   }
 
   try {
-    childProcess.spawn('fltmc'); //execa('fltmc');
+    spawnSync('fltmc'); //execa('fltmc');
     return true;
   } catch (error) {
     return false;

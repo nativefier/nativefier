@@ -1,8 +1,11 @@
 #!/usr/bin/env node
-import * as commander from 'commander';
-import * as dns from 'dns';
-import * as log from 'loglevel';
 import 'source-map-support/register';
+
+import * as dns from 'dns';
+
+import * as commander from 'commander';
+import * as log from 'loglevel';
+
 import { isArgFormatInvalid, isWindows } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
@@ -38,10 +41,10 @@ function parseJson(val: string): any {
 
     log.error(
       `Unable to parse JSON value: ${val}\n` +
-        `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
-        ` - Only double quotes are allowed, single quotes are not.\n` +
-        ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
-        ` - If unsure, validate your JSON using an online service.`,
+      `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
+      ` - Only double quotes are allowed, single quotes are not.\n` +
+      ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
+      ` - If unsure, validate your JSON using an online service.`,
     );
     throw err;
   }

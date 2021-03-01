@@ -1,8 +1,10 @@
+import * as path from 'path';
+
 import * as electronGet from '@electron/get';
 import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
-import * as path from 'path';
+
 import {
   copyFileOrDir,
   getTempDir,
