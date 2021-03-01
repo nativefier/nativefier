@@ -1,7 +1,7 @@
 import * as log from 'loglevel';
 import * as os from 'os';
 
-// Optionall we'd get this list directly from electron-packager, but it's not
+// Ideally we'd get this list directly from electron-packager, but it's not
 // accessible in the package without importing its private js files, which felt
 // dirty. So if those change, we'll update these as well.
 // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
