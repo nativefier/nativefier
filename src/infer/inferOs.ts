@@ -1,5 +1,6 @@
-import * as log from 'loglevel';
 import * as os from 'os';
+
+import * as log from 'loglevel';
 
 // Ideally we'd get this list directly from electron-packager, but it's not
 // accessible in the package without importing its private js files, which felt

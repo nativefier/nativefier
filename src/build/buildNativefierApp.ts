@@ -5,6 +5,7 @@ import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 
+import { convertIconIfNecessary } from './buildIcon';
 import {
   copyFileOrDir,
   getTempDir,
@@ -13,7 +14,6 @@ import {
 } from '../helpers/helpers';
 import { AppOptions, NativefierOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
-import { convertIconIfNecessary } from './buildIcon';
 import { prepareElectronApp } from './prepareElectronApp';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
