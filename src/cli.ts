@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 
-import * as commander from 'commander';
 import * as dns from 'dns';
+
+import * as commander from 'commander';
 import * as log from 'loglevel';
 
+import { isArgFormatInvalid, isWindows } from './helpers/helpers';
+import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
-import { isArgFormatInvalid } from './helpers/helpers';
-import { isWindows } from './helpers/helpers';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra "src" folder
@@ -102,8 +103,14 @@ if (require.main === module) {
       positionalOptions.out = outputDirectory;
     })
     .option('-n, --name <value>', 'app name')
-    .option('-p, --platform <value>', "'mac', 'mas', 'linux' or 'windows'")
-    .option('-a, --arch <value>', "'ia32' or 'x64' or 'arm' or 'arm64'")
+    .addOption(
+      new commander.Option('-p, --platform <value>').choices(
+        supportedPlatforms,
+      ),
+    )
+    .addOption(
+      new commander.Option('-a, --arch <value>').choices(supportedArchs),
+    )
     .option(
       '--app-version <value>',
       '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',

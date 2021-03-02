@@ -70,12 +70,12 @@
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
-  - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
 - [Programmatic API](#programmatic-api)
   - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
     - [[version-string]](#version-string)
     - [[win32metadata]](#win32metadata)
-      - [Programmatic API](#programmatic-api)
+      - [Programmatic API](#programmatic-api-1)
+    - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
 
 ## Packaging Squirrel-based installers
 
@@ -129,7 +129,13 @@ The name of the application, which will affect strings in titles and the icon.
 -p, --platform <value>
 ```
 
-Automatically determined based on the current OS. Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
+- Default: current operating system.
+    - To test your default platform you can run
+      ```
+      node -p "process.platform"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_platform)
+- Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
 
 The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
 
@@ -141,8 +147,14 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can 
 
 The processor architecture to target when building.
 
-- Automatically set to the build-time machine architecture...
-- ... or can be overridden by specifying one of: `x64`, `arm`, `arm64`, `ia32`.
+- Default: the architecture of the installed version of node (usually the architecture of the build-time machine).
+    - To test your default architecture you can run
+      ```
+      node -p "process.arch"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_arch)
+    - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or re-install node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
+- Can be overridden by specifying one of: `ia32`, `x64`, `armv7l`, `arm64`.
 
 #### [app-copyright]
 
@@ -858,12 +870,6 @@ Example:
 nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "Your Product Name", "InternalName", "Your Internal Name", "FileDescription": "Your File Description"}'
 ```
 
-#### [disable-old-build-warning-yesiknowitisinsecure]
-
-Disables the warning shown when opening a Nativefier app made a long time ago, using an old and probably insecure Electron. Nativefier uses the Chrome browser (through Electron), and remaining on an old version is A. performance sub-optimal and B. dangerous.
-
-However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
-
 ##### Programmatic API
 
 _Object_
@@ -892,5 +898,11 @@ var options = {
     }
 };
 ```
+
+#### [disable-old-build-warning-yesiknowitisinsecure]
+
+Disables the warning shown when opening a Nativefier app made a long time ago, using an old and probably insecure Electron. Nativefier uses the Chrome browser (through Electron), and remaining on an old version is A. performance sub-optimal and B. dangerous.
+
+However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
 
 More description about the options for `nativefier` can be found at the above [section](#command-line).

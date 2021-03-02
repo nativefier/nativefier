@@ -5,11 +5,16 @@ import * as electronPackager from 'electron-packager';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 
-import { isWindows, getTempDir, copyFileOrDir } from '../helpers/helpers';
+import { convertIconIfNecessary } from './buildIcon';
+import {
+  copyFileOrDir,
+  getTempDir,
+  isWindows,
+  isWindowsAdmin,
+} from '../helpers/helpers';
+import { AppOptions, NativefierOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
-import { convertIconIfNecessary } from './buildIcon';
-import { AppOptions, NativefierOptions } from '../options/model';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -106,6 +111,22 @@ export async function buildNativefierApp(
   log.info('Processing options...');
   const options = await getOptions(rawOptions);
 
+  if (options.packager.platform === 'darwin' && isWindows()) {
+    // electron-packager has to extract the desired electron package for the target platform.
+    // For a target platform of Mac, this zip file contains symlinks. And on Windows, extracting
+    // files that are symlinks need Admin permissions. So we'll check if the user is an admin, and
+    // fail early if not.
+    // For reference
+    // https://github.com/electron/electron-packager/issues/933
+    // https://github.com/electron/electron-packager/issues/1194
+    // https://github.com/electron/electron/issues/11094
+    if (!isWindowsAdmin()) {
+      throw new Error(
+        'Building an app with a target platform of Mac on a Windows machine requires admin priveleges to perform. Please rerun this command in an admin command prompt.',
+      );
+    }
+  }
+
   log.info('\nPreparing Electron app...');
   const tmpPath = getTempDir('app', 0o755);
   await prepareElectronApp(options.packager.dir, tmpPath, options);
@@ -135,7 +156,7 @@ export async function buildNativefierApp(
       osRunHelp = `the app bundle.`;
     }
     log.info(
-      `App built to ${appPath} , move it wherever it makes sense for you and run ${osRunHelp}`,
+      `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
     );
   }
   return appPath;

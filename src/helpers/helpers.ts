@@ -1,11 +1,13 @@
+import { spawnSync } from 'child_process';
 import * as os from 'os';
 import * as path from 'path';
 
 import axios from 'axios';
 import * as hasbin from 'hasbin';
-import { ncp } from 'ncp';
 import * as log from 'loglevel';
+import { ncp } from 'ncp';
 import * as tmp from 'tmp';
+
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
 const now = new Date();
@@ -22,6 +24,16 @@ export function isOSX(): boolean {
 
 export function isWindows(): boolean {
   return os.platform() === 'win32';
+}
+
+export function isWindowsAdmin(): boolean {
+  if (process.platform !== 'win32') {
+    return false;
+  }
+
+  // https://stackoverflow.com/questions/4051883/batch-script-how-to-check-for-admin-rights
+  // https://stackoverflow.com/questions/57009374/check-admin-or-non-admin-users-in-nodejs-or-javascript
+  return spawnSync('fltmc').status === 0;
 }
 
 /**
