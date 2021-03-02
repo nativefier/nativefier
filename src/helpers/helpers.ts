@@ -31,6 +31,8 @@ export function isWindowsAdmin(): boolean {
     return false;
   }
 
+  // https://stackoverflow.com/questions/4051883/batch-script-how-to-check-for-admin-rights
+  // https://stackoverflow.com/questions/57009374/check-admin-or-non-admin-users-in-nodejs-or-javascript
   return spawnSync('fltmc').status === 0;
 }
 
