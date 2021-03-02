@@ -20,7 +20,7 @@ WORKDIR /nativefier/app
 RUN npm install
 WORKDIR /nativefier
 
-# Install (which will also install in ./app, and build, thanks to our `prepare` npm hook)
+# Install (note that we had to manually install in `app` before, as `prepare` won't run as root)
 # Also, running tests, to ensure we don't Docker build & publish broken stuff
 RUN npm install && npm run build && npm test && npm link
 
