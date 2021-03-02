@@ -38,7 +38,7 @@ RUN nativefier https://github.com/nativefier/nativefier /tmp/nativefier \
     && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier
 
 
-RUN echo Generated total cache size: $(du -sh ~/.cache/electron) \
+RUN echo Generated Electron cache size: $(du -sh ~/.cache/electron) \
     && rm -rf /tmp/nativefier \
     && echo Final image size: $(du -sh / 2>/dev/null)
 
