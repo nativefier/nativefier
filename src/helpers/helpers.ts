@@ -31,12 +31,7 @@ export function isWindowsAdmin(): boolean {
     return false;
   }
 
-  try {
-    spawnSync('fltmc'); //execa('fltmc');
-    return true;
-  } catch (error) {
-    return false;
-  }
+  return spawnSync('fltmc').status === 0;
 }
 
 /**
