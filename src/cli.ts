@@ -214,7 +214,7 @@ if (require.main === module) {
     )
     .option(
       '--internal-login-pages',
-      "Force known loging pages (Amazon, Facebook, GitHub, Google, LinkedIn, Microsoft, Okta, Twitter) to be internal urls so they don't have to be individually specified. Default: true",
+      "Force known login pages (Amazon, Facebook, GitHub, Google, LinkedIn, Microsoft, Okta, Twitter) to be internal urls so they don't have to be individually specified. Default: true",
       (value) => parseBoolean(value, true),
     )
     .option(
