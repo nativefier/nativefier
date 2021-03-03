@@ -213,6 +213,11 @@ if (require.main === module) {
       parseFloat,
     )
     .option(
+      '--internal-login-pages',
+      "Force known loging pages (Amazon, Facebook, GitHub, Google, LinkedIn, Microsoft, Okta, Twitter) to be internal urls so they don't have to be individually specified. Default: true",
+      (value) => parseBoolean(value, true),
+    )
+    .option(
       '--internal-urls <value>',
       'regex of URLs to consider "internal"; all other URLs will be opened in an external browser. Default: URLs on same second-level domain as app',
     )

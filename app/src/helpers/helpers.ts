@@ -18,12 +18,32 @@ export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
 
+function isInternalLoginPage(url: string): boolean {
+  const internalLoginPagesArray = [
+    'amazon\\.[a-zA-Z\\.]*/[a-zA-Z\\/]*signin', // Amazon
+    `facebook\\.[a-zA-Z\\.]*\\/login`, // Facebook
+    'github\\.[a-zA-Z\\.]*\\/login', // GitHub
+    'accounts\\.google\\.[a-zA-Z\\.]*', // Google
+    'linkedin\\.[a-zA-Z\\.]*/uas/login', // LinkedIn
+    'login\\.live\\.[a-zA-Z\\.]*', // Microsoft
+    'okta\\.[a-zA-Z\\.]*', // Okta
+    'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
+  ];
+  const regex = RegExp(internalLoginPagesArray.join('|'));
+  return regex.test(url);
+}
+
 export function linkIsInternal(
   currentUrl: string,
   newUrl: string,
+  internalLoginPages: boolean,
   internalUrlRegex: string | RegExp,
 ): boolean {
   if (newUrl === 'about:blank') {
+    return true;
+  }
+
+  if (internalLoginPages && isInternalLoginPage(newUrl)) {
     return true;
   }
 
@@ -50,6 +70,7 @@ export function linkIsInternal(
       currentUrl,
       'To:',
       newUrl,
+      err,
     );
     return false;
   }

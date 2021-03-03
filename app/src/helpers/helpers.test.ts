@@ -10,48 +10,110 @@ const externalUrl = 'https://www.wikipedia.org/wiki/Electron';
 const wildcardRegex = /.*/;
 
 test('the original url should be internal', () => {
-  expect(linkIsInternal(internalUrl, internalUrl, undefined)).toEqual(true);
+  expect(linkIsInternal(internalUrl, internalUrl, false, undefined)).toEqual(
+    true,
+  );
 });
 
 test('sub-paths of the original url should be internal', () => {
   expect(
-    linkIsInternal(internalUrl, internalUrl + internalUrlSubPath, undefined),
+    linkIsInternal(
+      internalUrl,
+      internalUrl + internalUrlSubPath,
+      false,
+      undefined,
+    ),
   ).toEqual(true);
 });
 
 test("'about:blank' should be internal", () => {
-  expect(linkIsInternal(internalUrl, 'about:blank', undefined)).toEqual(true);
+  expect(linkIsInternal(internalUrl, 'about:blank', false, undefined)).toEqual(
+    true,
+  );
 });
 
 test('urls from different sites should not be internal', () => {
-  expect(linkIsInternal(internalUrl, externalUrl, undefined)).toEqual(false);
+  expect(linkIsInternal(internalUrl, externalUrl, false, undefined)).toEqual(
+    false,
+  );
 });
 
 test('all urls should be internal with wildcard regex', () => {
-  expect(linkIsInternal(internalUrl, externalUrl, wildcardRegex)).toEqual(true);
+  expect(
+    linkIsInternal(internalUrl, externalUrl, false, wildcardRegex),
+  ).toEqual(true);
 });
 
 test('a "www." of a domain should be considered internal', () => {
-  expect(linkIsInternal(internalUrl, internalUrlWww, undefined)).toEqual(true);
+  expect(linkIsInternal(internalUrl, internalUrlWww, false, undefined)).toEqual(
+    true,
+  );
 });
 
 test('urls on the same "base domain" should be considered internal', () => {
-  expect(linkIsInternal(internalUrl, sameBaseDomainUrl, undefined)).toEqual(
-    true,
-  );
+  expect(
+    linkIsInternal(internalUrl, sameBaseDomainUrl, false, undefined),
+  ).toEqual(true);
 });
 
 test('urls on the same "base domain" should be considered internal, even with a www', () => {
-  expect(linkIsInternal(internalUrlWww, sameBaseDomainUrl, undefined)).toEqual(
-    true,
-  );
+  expect(
+    linkIsInternal(internalUrlWww, sameBaseDomainUrl, false, undefined),
+  ).toEqual(true);
 });
 
 test('urls on the same "base domain" should be considered internal, long SLD', () => {
   expect(
-    linkIsInternal(internalUrlCoUk, sameBaseDomainUrlCoUk, undefined),
+    linkIsInternal(internalUrlCoUk, sameBaseDomainUrlCoUk, false, undefined),
   ).toEqual(true);
 });
+
+const testLoginPages = [
+  'https://amazon.co.uk/signin',
+  'https://amazon.com/signin',
+  'https://amazon.de/signin',
+  'https://amazon.com/ap/signin',
+  'https://facebook.co.uk/login',
+  'https://facebook.com/login',
+  'https://facebook.de/login',
+  'https://github.co.uk/login',
+  'https://github.com/login',
+  'https://github.de/login',
+  'https://accounts.google.co.uk',
+  'https://accounts.google.com',
+  'https://accounts.google.de',
+  'https://linkedin.co.uk/uas/login',
+  'https://linkedin.com/uas/login',
+  'https://linkedin.de/uas/login',
+  'https://login.live.co.uk',
+  'https://login.live.com',
+  'https://login.live.de',
+  'https://okta.co.uk',
+  'https://okta.com',
+  'https://subdomain.okta.com',
+  'https://okta.de',
+  'https://twitter.co.uk/oauth/authenticate',
+  'https://twitter.com/oauth/authenticate',
+  'https://twitter.de/oauth/authenticate',
+];
+
+test.each(testLoginPages)(
+  '%s login page should be internal if internalLoginPages is enabled',
+  (loginUrl: string) => {
+    expect(linkIsInternal(internalUrl, loginUrl, true, undefined)).toEqual(
+      true,
+    );
+  },
+);
+
+test.each(testLoginPages)(
+  '%s login page should not be internal if internalLoginPages is disabled',
+  (loginUrl: string) => {
+    expect(linkIsInternal(internalUrl, loginUrl, false, undefined)).toEqual(
+      false,
+    );
+  },
+);
 
 const smallCounterTitle = 'Inbox (11) - nobody@example.com - Gmail';
 const largeCounterTitle = 'Inbox (8,756) - nobody@example.com - Gmail';
