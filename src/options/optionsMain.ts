@@ -74,6 +74,11 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
       inject: rawOptions.inject || [],
       insecure: rawOptions.insecure || false,
+      internalLoginPages:
+        rawOptions.internalLoginPages === undefined ||
+        typeof rawOptions.internalLoginPages !== 'boolean'
+          ? true
+          : rawOptions.internalLoginPages,
       internalUrls: rawOptions.internalUrls || null,
       blockExternalUrls: rawOptions.blockExternalUrls || false,
       maximize: rawOptions.maximize || false,
