@@ -1,4 +1,15 @@
 
+42.4.0 / 2021-03-04
+===================
+
+  * macOS: Prompt for accessibility permissions if needed by Global Shortcuts using Media Keys (fix #1120, PR #1121)
+  * Icon conversion: support GraphicsMagick in addition to  ImageMagick (PR #1002)
+  * Docker: fix Windows builds, line endings, switch to Alpine (fix #997, PR #1122)
+  * Fix considering "same domain-ish" URLs as internal (PR #1126)
+    This was a regression introduced in 42.3.0 by dropping `wurl` in 6b266b781.
+    The new behavior is super close to 42.2.1. So, not considering it breaking.
+  * Various maintenance fixes: tooling, deps, CI
+
 42.3.0 / 2021-02-25
 ===================
 
