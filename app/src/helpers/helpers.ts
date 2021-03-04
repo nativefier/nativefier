@@ -33,9 +33,17 @@ export function linkIsInternal(
   }
 
   try {
-    const currentDomain = new URL(currentUrl).hostname;
-    const newDomain = new URL(newUrl).hostname;
-    return currentDomain === newDomain;
+    // Consider as "same domain-ish", without TLD/SLD list:
+    // 1. app.foo.com and foo.com
+    // 2. www.foo.com and foo.com
+    // 3. www.foo.com and app.foo.com
+    const currentDomain = new URL(currentUrl).hostname.replace(/^www\./, '');
+    const newDomain = new URL(newUrl).hostname.replace(/^www./, '');
+    const [longerDomain, shorterDomain] =
+      currentDomain.length > newDomain.length
+        ? [currentDomain, newDomain]
+        : [newDomain, currentDomain];
+    return longerDomain.endsWith(shorterDomain);
   } catch (err) {
     console.warn(
       'Failed to parse domains as determining if link is internal. From:',

@@ -1,6 +1,10 @@
 import { linkIsInternal, getCounterValue } from './helpers';
 
 const internalUrl = 'https://medium.com/';
+const internalUrlWww = 'https://www.medium.com/';
+const sameBaseDomainUrl = 'https://app.medium.com/';
+const internalUrlCoUk = 'https://medium.co.uk/';
+const sameBaseDomainUrlCoUk = 'https://app.medium.co.uk/';
 const internalUrlSubPath = 'topic/technology';
 const externalUrl = 'https://www.wikipedia.org/wiki/Electron';
 const wildcardRegex = /.*/;
@@ -25,6 +29,28 @@ test('urls from different sites should not be internal', () => {
 
 test('all urls should be internal with wildcard regex', () => {
   expect(linkIsInternal(internalUrl, externalUrl, wildcardRegex)).toEqual(true);
+});
+
+test('a "www." of a domain should be considered internal', () => {
+  expect(linkIsInternal(internalUrl, internalUrlWww, undefined)).toEqual(true);
+});
+
+test('urls on the same "base domain" should be considered internal', () => {
+  expect(linkIsInternal(internalUrl, sameBaseDomainUrl, undefined)).toEqual(
+    true,
+  );
+});
+
+test('urls on the same "base domain" should be considered internal, even with a www', () => {
+  expect(linkIsInternal(internalUrlWww, sameBaseDomainUrl, undefined)).toEqual(
+    true,
+  );
+});
+
+test('urls on the same "base domain" should be considered internal, long SLD', () => {
+  expect(
+    linkIsInternal(internalUrlCoUk, sameBaseDomainUrlCoUk, undefined),
+  ).toEqual(true);
 });
 
 const smallCounterTitle = 'Inbox (11) - nobody@example.com - Gmail';
