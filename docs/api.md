@@ -400,7 +400,13 @@ Forces the packaged app to ignore web security errors, such as [Mixed Content](h
 --internal-urls <regex>
 ```
 
-Regular expression of URLs to consider "internal"; all other URLs will be opened in an external browser. Defaults to URLs on same second-level domain as app.
+Regular expression of URLs to consider "internal" while following a hyperlink.
+Internal URLs will open in Nativefier, other URLs will open in your preferred browser.
+
+Defaults to view as "internal" two URLs that share the same base domain,
+once stripped of `www.`. For example, by default,
+- URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
+- URLs from/to `abc.com` and `xyz.com` are considered external.
 
 Example:
 
