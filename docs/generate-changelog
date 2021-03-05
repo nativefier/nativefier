@@ -1,20 +1,24 @@
 #!/usr/bin/env bash
-#
+
 # Updates the changelog and version in the package.json
 # Will also create a commit with these changes locally
-# Run `git commit --amend` after that if you wish to make changes
 #
 # Usage:
-# ./changelog "7.0.0"
+# ./generate-changelog -- "7.0.0"
 #
 # Prerequisites:
 # - On master branch
 # - No uncommitted changes
 #
 # Dependencies:
-# - git-extras https://github.com/tj/git-extras/blob/master/Installation.md
+# - git-extras: https://github.com/tj/git-extras/blob/master/Installation.md
+# - jq: https://stedolan.github.io/jq/download/
 
 set -eo pipefail
+
+echo 'HEY YOU. Did you run the quick pre-release smoke test? ( npm run test:manual )'
+echo 'Press any key to continue, or Ctrl+C to abort'
+read -r
 
 # Checks if we are on the master branch
 BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -35,17 +39,27 @@ if ! [[ $VERSION =~ $SEMVER_REGEX ]]; then
  exit 1
 fi
 
-# Change the version in the package.json
+# 1. Update the version in the package.json
 cat package.json | jq ".version = \"$VERSION\"" > package.json.tmp
+mv package.json.tmp package.json  # workaround for in-place jq editing
 
-# Workaround for inplace jq editing
-mv package.json.tmp package.json
-
-# Unset the editor so that git changelog does not open a editor
-EDITOR=:
+# 2. Compile new commits from CHANGELOG.md, and open it in your EDITOR for cleanup
 git changelog CHANGELOG.md --tag "$VERSION"
 
-# Commit these changes
+# 3. Commit the changes
 git add CHANGELOG.md
 git add package.json
 git commit -m "Update changelog for \`v$VERSION\`"
+
+# 4. Create an annotated tag
+git tag -a "v$VERSION" -m "v$VERSION"
+
+# 5. List remaining work
+echo
+echo 'Please verify commit & tag look fine in Git, then:'
+echo ' 1. Push:  git push --follow-tags origin master'
+echo ' 2. Create a GitHub Release at https://github.com/nativefier/nativefier/releases ,'
+echo "    using created tag v$VERSION and with title \"Nativefier v$VERSION\" (yes, with a \"v\")."
+echo
+echo 'GitHub Action "publish" will react on the new release, and publish it to npm.'
+echo 'The new version will be visible on npm within a few minutes/hours.'

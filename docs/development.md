@@ -68,3 +68,12 @@ but is painful to do manually. Do yourself a favor and install a
   1. Run a TSC watcher: `npm run build:watch`
   2. Run a Jest unit tests watcher: `npm run test:watch`
 - Alternatively, you can run both test processes in the same terminal by running: `npm run watch`
+
+## Release
+
+While on `master`, with no uncommitted changes, run:
+
+```bash
+npm run changelog -- $VERSION
+# With no 'v'. For example: npm run changelog -- 42.5.0
+```
