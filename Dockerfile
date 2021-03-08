@@ -21,11 +21,9 @@ RUN npm install
 WORKDIR /nativefier
 
 # Install (note that we had to manually install in `app` before, as `prepare` won't run as root)
-# Also, running tests, to ensure we don't Docker build & publish broken stuff
-RUN npm install && npm run build && npm test && npm link
+# Also, running tests, to ensure we don't Docker build & publish broken stuff, and cleanup test files
+RUN npm install && npm run build && npm test && npm link && rm -rf /tmp/nativefier*
 
-# Cleanup test artifacts
-RUN rm -rf /tmp/nativefier*
 
 # Use 1000 as default user not root
 USER 1000
@@ -33,13 +31,14 @@ USER 1000
 # Run a {lin,mac,win} build
 # 1. to check installation was sucessful
 # 2. to cache electron distributables and avoid downloads at runtime
+# Also delete generated apps so they don't get added to the Docker layer
 RUN nativefier https://github.com/nativefier/nativefier /tmp/nativefier \
     && nativefier -p osx https://github.com/nativefier/nativefier /tmp/nativefier \
-    && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier
+    && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier \
+    && rm -rf /tmp/nativefier
 
 
 RUN echo Generated Electron cache size: $(du -sh ~/.cache/electron) \
-    && rm -rf /tmp/nativefier \
     && echo Final image size: $(du -sh / 2>/dev/null)
 
 ENTRYPOINT ["nativefier"]
