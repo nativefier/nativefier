@@ -2,7 +2,7 @@ FROM node:12-alpine
 LABEL description="Alpine image to build Nativefier apps"
 
 
-# Install dependencies
+# Install dependencies and cleanup extraneous files
 RUN apk update \
     && apk add bash wine imagemagick dos2unix \
     && rm -rf /var/cache/apk/*
@@ -12,25 +12,29 @@ WORKDIR /nativefier
 # Add sources
 COPY . .
 
+# Give everything to node
+RUN chown -R node:node /nativefier \
+    && chown -R node:node /tmp
+
+# Use node (1000) as default user not root
+USER node
+
 # Fix line endings that may have gotten mangled in Windows
 RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 
-# Build nativefier and link globally
-WORKDIR /nativefier/app
-RUN npm install
-WORKDIR /nativefier
+# Setup a global packages location for "node" user so we can npm link
+RUN mkdir ~/.npm-packages \
+    && npm config set prefix ~/.npm-packages
 
-# Install (note that we had to manually install in `app` before, as `prepare` won't run as root)
-# Also, running tests, to ensure we don't Docker build & publish broken stuff, and cleanup test files
-RUN npm install \
-  && npm run build \
-  && npm test \
-  && npm link \
-  && rm -rf /tmp/nativefier*
+ENV NPM_PACKAGES="/home/node/.npm-packages"
+ENV PATH="$PATH:$NPM_PACKAGES/bin"
+ENV MANPATH="$MANPATH:$NPM_PACKAGES/share/man"
 
-
-# Use 1000 as default user not root
-USER 1000
+# Link (which will install and buld), run tests (to ensure we don't Docker build & publish broken stuff), and cleanup files
+RUN npm link \
+    && npm test \
+    && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \
+    && chmod +x $NPM_PACKAGES/bin/nativefier
 
 # Run a {lin,mac,win} build
 # 1. to check installation was sucessful
