@@ -22,7 +22,11 @@ WORKDIR /nativefier
 
 # Install (note that we had to manually install in `app` before, as `prepare` won't run as root)
 # Also, running tests, to ensure we don't Docker build & publish broken stuff, and cleanup test files
-RUN npm install && npm run build && npm test && npm link && rm -rf /tmp/nativefier*
+RUN npm install \
+  && npm run build \
+  && npm test \
+  && npm link \
+  && rm -rf /tmp/nativefier*
 
 
 # Use 1000 as default user not root
