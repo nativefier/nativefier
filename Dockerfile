@@ -7,30 +7,30 @@ RUN apk update \
     && apk add bash wine imagemagick dos2unix \
     && rm -rf /var/cache/apk/*
 
-WORKDIR /nativefier
-
-# Add sources
-COPY . .
-
-# Give everything to node
-RUN chown -R node:node /nativefier \
-    && chown -R node:node /tmp
 
 # Use node (1000) as default user not root
 USER node
 
-# Fix line endings that may have gotten mangled in Windows
-RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
-
-# Setup a global packages location for "node" user so we can npm link
-RUN mkdir ~/.npm-packages \
-    && npm config set prefix ~/.npm-packages
-
-ENV NPM_PACKAGES="/home/node/.npm-packages"
+ENV NPM_PACKAGES="/home/node/npm-packages"
 ENV PATH="$PATH:$NPM_PACKAGES/bin"
 ENV MANPATH="$MANPATH:$NPM_PACKAGES/share/man"
 
-# Link (which will install and buld), run tests (to ensure we don't Docker build & publish broken stuff), and cleanup files
+# Setup a global packages location for "node" user so we can npm link
+RUN mkdir $NPM_PACKAGES \
+    && npm config set prefix $NPM_PACKAGES
+
+WORKDIR /nativefier
+
+# Add sources with node as the owner so that it has the power it needs to build in /nativefier
+COPY --chown=node:node . .
+
+# Fix line endings that may have gotten mangled in Windows
+RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
+
+# Link (which will install and build)
+# Run tests (to ensure we don't Docker build & publish broken stuff)
+# Cleanup leftover files in this step to not waste Docker layer space
+# Make sure nativefier is executable
 RUN npm link \
     && npm test \
     && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \
@@ -40,6 +40,7 @@ RUN npm link \
 # 1. to check installation was sucessful
 # 2. to cache electron distributables and avoid downloads at runtime
 # Also delete generated apps so they don't get added to the Docker layer
+# !Important! The `rm -rf` command must be in the same `RUN` command (using an `&&`), to not waste Docker layer space
 RUN nativefier https://github.com/nativefier/nativefier /tmp/nativefier \
     && nativefier -p osx https://github.com/nativefier/nativefier /tmp/nativefier \
     && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier \
