@@ -1,3 +1,6 @@
+# git
+.git*
+
 # OSX
 .DS_Store
 
@@ -7,11 +10,12 @@
 lib/*
 app/lib/*
 built-tests
-
-# commit a placeholder to keep the app/lib directory
-!app/lib/.placeholder
-
 dist
+app/dist
+
+# Docs
+docs
+*.md
 
 # Logs
 logs
