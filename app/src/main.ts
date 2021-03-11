@@ -227,7 +227,7 @@ if (shouldQuit) {
         type: 'warning',
         message: 'Old build detected',
         detail:
-          'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it. You should rebuild this app with a recent Electron. Using the latest Nativefier will default to it, or you can pass it manually.',
+          'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.',
       });
     }
   });
