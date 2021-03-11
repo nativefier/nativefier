@@ -433,13 +433,23 @@ once stripped of `www.`. For example, by default,
 - URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
 - URLs from/to `abc.com` and `xyz.com` are considered external.
 
-Example:
+*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
+(e.g. `accounts.google.com` or `login.live.com`) are considered internal.
+This does not replace `internal-urls`, it complements it, and happens *before*
+your `internal-urls` rule is applied. So, if you already set the flag to let such
+auth pages open internally, you don't need to change it but it might be unnecessary.
+
+We think this is desirable behavior and are so far unaware of cases where users
+might not want this. If you disagree, please chime in at
+[PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
+
+Example of `--internal-urls` causing all links to Google to be considered internal:
 
 ```bash
 nativefier https://google.com --internal-urls ".*?\.google\.*?"
 ```
 
-Or, if you want to allow all domains for example for external auths,
+Or, if you never expect Nativefier to open an "external" page in your OS browser,
 
 ```bash
 nativefier https://google.com --internal-urls ".*?"
