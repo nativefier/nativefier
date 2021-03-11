@@ -210,7 +210,7 @@ if (require.main === module) {
     )
     .option(
       '--internal-urls <value>',
-      'regex of URLs to consider "internal"; all other URLs will be opened in an external browser. Default: URLs on same second-level domain as app',
+      'regex of URLs to consider "internal"; all other URLs will be opened in an external browser. Default: URLs sharing the same base domain, once stripped of www.',
     )
     .option(
       '--block-external-urls',

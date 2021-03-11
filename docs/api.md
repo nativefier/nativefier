@@ -841,7 +841,7 @@ var options = {
   ignoreCertificate: false,
   ignoreGpuBlacklist: false,
   enableEs3Apis: false,
-  internalUrls: '.*?', // defaults to URLs on same second-level domain as app
+  internalUrls: '.*?',
   blockExternalUrls: false,
   insecure: false,
   honest: false,
