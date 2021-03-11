@@ -1,4 +1,32 @@
 
+43.0.0 / 2021-03-10
+===================
+
+  * **[BREAKING]** Bump to Electron 12.0.1 with Chrome 89.0.4389.82
+    See https://www.electronjs.org/blog/electron-12-0
+    and https://www.electronjs.org/docs/breaking-changes#planned-breaking-api-changes-120
+
+    Noteworthy to Nativefier users:
+    * As usual, new Chrome, with potential improvements/regressions to websites you use
+    * Removed Flash support. If you still need flash, pass a <12 version to the `-e` flag
+    * Removed support for older x86 CPUs that do not have SSE3
+
+  * **[BREAKING]** Automatically consider known login pages as internal (fix #706) (PR #1124)
+    URLs for known login pages (e.g. `accounts.google.com` or `login.live.com`)
+    are now automatically considered internal, to let you login in your
+    Nativefier app without having to fiddle with `--internal-urls`.
+
+    This does not replace `internal-urls`, it complements it, and happens
+    _before_ your `internal-urls` rule is applied. So, if you already set
+    the flag to let such auth pages open internally, you can change it if
+    you want to clean it up, but it's not unnecessary.
+
+    We think this is desirable behavior and are so far unaware of cases
+    where users might not want this. If you disagree, please chime in at
+    [PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
+
+  * Various maintenance fixes: deps, scripts, slim down Docker size
+
 42.4.0 / 2021-03-04
 ===================
 
