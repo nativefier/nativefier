@@ -33,7 +33,7 @@ RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 # Make sure nativefier is executable
 RUN npm link \
     && npm test \
-    && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \
+    && rm -rf ~/.npm/_cacache ~/.cache/electron \
     && chmod +x $NPM_PACKAGES/bin/nativefier
 
 # Run a {lin,mac,win} build
