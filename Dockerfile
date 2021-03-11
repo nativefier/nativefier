@@ -5,8 +5,8 @@ LABEL description="Alpine image to build Nativefier apps"
 # Install dependencies and cleanup extraneous files
 RUN apk update \
     && apk add bash wine imagemagick dos2unix \
-    && rm -rf /var/cache/apk/*
-
+    && rm -rf /var/cache/apk/* \
+    && mkdir /nativefier && chown node:node /nativefier
 
 # Use node (1000) as default user not root
 USER node
@@ -33,7 +33,7 @@ RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 # Make sure nativefier is executable
 RUN npm link \
     && npm test \
-    && rm -rf ~/.npm/_cacache ~/.cache/electron \
+    && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \
     && chmod +x $NPM_PACKAGES/bin/nativefier
 
 # Run a {lin,mac,win} build
