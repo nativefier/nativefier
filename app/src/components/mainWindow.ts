@@ -439,7 +439,7 @@ export function createMainWindow(
         } else {
           // Why even send the event if you're going to do this? You're just wasting time! ;)
           throw Error(
-            'Received neither a func not a property in the request. Unable to process.',
+            'Received neither a func nor a property in the request. Unable to process.',
           );
         }
 
@@ -451,7 +451,7 @@ export function createMainWindow(
       } catch (error) {
         log.error('session-interaction:error', error, event, request);
         result.error = error;
-        result.value = undefined;
+        result.value = undefined; // Clear out the value in case serializing the value is what got us into this mess in the first place
         event.reply('session-interaction-reply', result);
       }
     },

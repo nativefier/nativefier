@@ -1003,7 +1003,7 @@ If neither a `func` nor a `property` is provided in the event, an error will be 
 
 ### Important Note On funcArgs
 
-PLEASE NOTE: `funcArgs` is ALWAYS an array of arguments to be passed to the function, even if it is just one argument. If `funcArgs` is ommited from a request with a `func` provided, no arguments will be passed.
+PLEASE NOTE: `funcArgs` is ALWAYS an array of arguments to be passed to the function, even if it is just one argument. If `funcArgs` is omitted from a request with a `func` provided, no arguments will be passed.
 
 ### session-interaction-reply
 
