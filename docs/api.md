@@ -46,8 +46,6 @@
   - [[internal-urls]](#internal-urls)
   - [[block-external-urls]](#block-external-urls)
   - [[proxy-rules]](#proxy-rules)
-  - [[flash]](#flash)
-  - [[flash-path]](#flash-path)
   - [[disk-cache-size]](#disk-cache-size)
   - [[inject]](#inject)
   - [[full-screen]](#full-screen)
@@ -70,6 +68,8 @@
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
+  - [Deprecated](#deprecated)
+    - [[flash] and [flash-path]](#flash) (DEPRECATED)
 - [Programmatic API](#programmatic-api)
   - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
     - [[version-string]](#version-string)
@@ -460,24 +460,6 @@ Example:
 nativefier https://google.com --proxy-rules http://127.0.0.1:1080
 ```
 
-#### [flash]
-
-```
---flash
-```
-
-If `--flash` is specified, Nativefier will automatically try to determine the location of your Google Chrome flash binary. Take note that the version of Chrome on your computer should be the same as the version used by the version of Electron for the Nativefied package.
-
-Take note that if this flag is specified, the `--insecure` flag will be added automatically, to prevent the Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/).
-
-#### [flash-path]
-
-```
---flash-path <value>
-```
-
-You can also specify the path to the Chrome flash plugin directly with this flag. The path can be found at [chrome://plugins](chrome://plugins), under `Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag as well.
-
 #### [disk-cache-size]
 
 ```
@@ -806,9 +788,53 @@ Enables Dark Mode support on macOS 10.14+.
 
 See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
 
+### Deprecated
+
+#### [flash]
+
+**DEPRECATED as of 2021-03-10, will be removed at some point**
+
+There's nothing Nativefier can do to stop this treadmill, so here it goes.
+Flash is triply dead upstream: at Adobe, in Chrome, and now in Electron.
+Nativefier 43.0.0 was just released, and defaults to Electron 12, which
+[removes support for Flash](https://www.electronjs.org/blog/electron-12-0#breaking-changes):
+
+> Removed Flash support: Chromium has removed support for Flash, which was also
+> removed in Electron 12. See [Chromium's Flash Roadmap](https://www.chromium.org/flash-roadmap).
+
+Your best bet now is on [Ruffle, "a Flash Player emulator built in Rust"](https://ruffle.rs/).
+It's usable to play `.swf`s, and that's [what Archive.org does](https://blog.archive.org/2020/11/19/flash-animations-live-forever-at-the-internet-archive/).
+It's an emulator, so it's not the real perfect deal, but it already works well
+for many swfs, and will get better with time.
+
+You _might_ still be able to use Nativefier's existing Flash flags while they work,
+by adding a `--electron-version 11.3.0` to your flags, but it's only downhill
+from here and our Flash flags will be removed at some point in the future,
+when maintaining compatibility with old Electrons becomes impossible.
+
+```
+--flash
+```
+
+If `--flash` is specified, Nativefier will automatically try to determine the
+location of your Google Chrome flash binary. Take note that the version of Chrome
+on your computer should be the same as the version used by the version of Electron
+for the Nativefied package.
+
+Note that if this flag is specified, the `--insecure` flag will be added automatically,
+to prevent Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/).
+
+```
+--flash-path <value>
+```
+
+You can also specify the path to the Chrome flash plugin directly with this flag.
+The path can be found at [chrome://plugins](chrome://plugins), under
+`Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag.
+
 ## Programmatic API
 
-You can use the Nativefier programmatic API as well.
+In addition to CLI flags, Nativefier offers a programmatic Node.js API.
 
 ```bash
 # install and save to package.json
@@ -865,7 +891,7 @@ nativefier(options, function (error, appPath) {
 });
 ```
 
-### Addition packaging options for Windows
+### Additional packaging options for Windows
 
 #### [version-string]
 
