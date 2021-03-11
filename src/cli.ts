@@ -9,11 +9,7 @@ import * as log from 'loglevel';
 import { isArgFormatInvalid } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
-import {
-  parseBoolean,
-  parseBooleanOrString,
-  parseJson,
-} from './utils/parseUtils';
+import { parseBooleanOrString, parseJson } from './utils/parseUtils';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra "src" folder
@@ -211,11 +207,6 @@ if (require.main === module) {
       '--zoom <value>',
       'default zoom factor to use when the app is opened; defaults to 1.0',
       parseFloat,
-    )
-    .option(
-      '--internal-login-pages',
-      "Force known login pages (Amazon, Facebook, GitHub, Google, LinkedIn, Microsoft, Okta, Twitter) to be internal urls so they don't have to be individually specified. Default: true",
-      (value) => parseBoolean(value, true),
     )
     .option(
       '--internal-urls <value>',

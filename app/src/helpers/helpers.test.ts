@@ -10,61 +10,46 @@ const externalUrl = 'https://www.wikipedia.org/wiki/Electron';
 const wildcardRegex = /.*/;
 
 test('the original url should be internal', () => {
-  expect(linkIsInternal(internalUrl, internalUrl, false, undefined)).toEqual(
-    true,
-  );
+  expect(linkIsInternal(internalUrl, internalUrl, undefined)).toEqual(true);
 });
 
 test('sub-paths of the original url should be internal', () => {
   expect(
-    linkIsInternal(
-      internalUrl,
-      internalUrl + internalUrlSubPath,
-      false,
-      undefined,
-    ),
+    linkIsInternal(internalUrl, internalUrl + internalUrlSubPath, undefined),
   ).toEqual(true);
 });
 
 test("'about:blank' should be internal", () => {
-  expect(linkIsInternal(internalUrl, 'about:blank', false, undefined)).toEqual(
-    true,
-  );
+  expect(linkIsInternal(internalUrl, 'about:blank', undefined)).toEqual(true);
 });
 
 test('urls from different sites should not be internal', () => {
-  expect(linkIsInternal(internalUrl, externalUrl, false, undefined)).toEqual(
-    false,
-  );
+  expect(linkIsInternal(internalUrl, externalUrl, undefined)).toEqual(false);
 });
 
 test('all urls should be internal with wildcard regex', () => {
-  expect(
-    linkIsInternal(internalUrl, externalUrl, false, wildcardRegex),
-  ).toEqual(true);
+  expect(linkIsInternal(internalUrl, externalUrl, wildcardRegex)).toEqual(true);
 });
 
 test('a "www." of a domain should be considered internal', () => {
-  expect(linkIsInternal(internalUrl, internalUrlWww, false, undefined)).toEqual(
+  expect(linkIsInternal(internalUrl, internalUrlWww, undefined)).toEqual(true);
+});
+
+test('urls on the same "base domain" should be considered internal', () => {
+  expect(linkIsInternal(internalUrl, sameBaseDomainUrl, undefined)).toEqual(
     true,
   );
 });
 
-test('urls on the same "base domain" should be considered internal', () => {
-  expect(
-    linkIsInternal(internalUrl, sameBaseDomainUrl, false, undefined),
-  ).toEqual(true);
-});
-
 test('urls on the same "base domain" should be considered internal, even with a www', () => {
-  expect(
-    linkIsInternal(internalUrlWww, sameBaseDomainUrl, false, undefined),
-  ).toEqual(true);
+  expect(linkIsInternal(internalUrlWww, sameBaseDomainUrl, undefined)).toEqual(
+    true,
+  );
 });
 
 test('urls on the same "base domain" should be considered internal, long SLD', () => {
   expect(
-    linkIsInternal(internalUrlCoUk, sameBaseDomainUrlCoUk, false, undefined),
+    linkIsInternal(internalUrlCoUk, sameBaseDomainUrlCoUk, undefined),
   ).toEqual(true);
 });
 
@@ -98,20 +83,9 @@ const testLoginPages = [
 ];
 
 test.each(testLoginPages)(
-  '%s login page should be internal if internalLoginPages is enabled',
+  '%s login page should be internal',
   (loginUrl: string) => {
-    expect(linkIsInternal(internalUrl, loginUrl, true, undefined)).toEqual(
-      true,
-    );
-  },
-);
-
-test.each(testLoginPages)(
-  '%s login page should not be internal if internalLoginPages is disabled',
-  (loginUrl: string) => {
-    expect(linkIsInternal(internalUrl, loginUrl, false, undefined)).toEqual(
-      false,
-    );
+    expect(linkIsInternal(internalUrl, loginUrl, undefined)).toEqual(true);
   },
 );
 

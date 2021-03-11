@@ -43,7 +43,6 @@
   - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
   - [[enable-es3-apis]](#enable-es3-apis)
   - [[insecure]](#insecure)
-  - [[internal-login-pages]](#internal-login-pages)
   - [[internal-urls]](#internal-urls)
   - [[block-external-urls]](#block-external-urls)
   - [[proxy-rules]](#proxy-rules)
@@ -394,30 +393,6 @@ Passes the enable-es3-apis flag to the Chrome engine, to force the activation of
 ```
 
 Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
-
-#### [internal-login-pages]
-
-```
---internal-login-pages <boolean>
-```
-
-Whether to consider known login providers to be internal, so as to avoid login urls being opened in a browser without being able to login to the application. Default: true
-
-Known login providers:
-- Amazon
-- Facebook
-- GitHub
-- Google
-- LinkedIn
-- Microsoft
-- Okta
-- Twitter
-
-Example:
-
-```bash
-nativefier https://google.com --internal-login-pages false
-```
 
 #### [internal-urls]
 

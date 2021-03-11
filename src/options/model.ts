@@ -34,7 +34,6 @@ export interface AppOptions {
     ignoreGpuBlacklist: boolean;
     inject: string[];
     insecure: boolean;
-    internalLoginPages: boolean;
     internalUrls: string;
     blockExternalUrls: boolean;
     maximize: boolean;

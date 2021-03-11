@@ -225,14 +225,7 @@ export function createMainWindow(
   };
 
   const onWillNavigate = (event: Event, urlToGo: string): void => {
-    if (
-      !linkIsInternal(
-        options.targetUrl,
-        urlToGo,
-        options.internalLoginPages,
-        options.internalUrls,
-      )
-    ) {
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       event.preventDefault();
       if (options.blockExternalUrls) {
         onBlockedExternalUrl(urlToGo);
@@ -301,7 +294,6 @@ export function createMainWindow(
       urlToGo,
       disposition,
       options.targetUrl,
-      options.internalLoginPages,
       options.internalUrls,
       preventDefault,
       shell.openExternal.bind(this),

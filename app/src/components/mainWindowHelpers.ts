@@ -4,7 +4,6 @@ export function onNewWindowHelper(
   urlToGo: string,
   disposition: string,
   targetUrl: string,
-  internalLoginPages: boolean,
   internalUrls: string | RegExp,
   preventDefault,
   openExternal,
@@ -14,7 +13,7 @@ export function onNewWindowHelper(
   blockExternal: boolean,
   onBlockedExternalUrl: (url: string) => void,
 ): void {
-  if (!linkIsInternal(targetUrl, urlToGo, internalLoginPages, internalUrls)) {
+  if (!linkIsInternal(targetUrl, urlToGo, internalUrls)) {
     preventDefault();
     if (blockExternal) {
       onBlockedExternalUrl(urlToGo);

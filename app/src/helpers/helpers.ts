@@ -36,14 +36,13 @@ function isInternalLoginPage(url: string): boolean {
 export function linkIsInternal(
   currentUrl: string,
   newUrl: string,
-  internalLoginPages: boolean,
   internalUrlRegex: string | RegExp,
 ): boolean {
   if (newUrl === 'about:blank') {
     return true;
   }
 
-  if (internalLoginPages && isInternalLoginPage(newUrl)) {
+  if (isInternalLoginPage(newUrl)) {
     return true;
   }
 

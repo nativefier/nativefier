@@ -36,13 +36,6 @@ function checkApp(appRoot: string, inputOptions: any): void {
   const iconPath = path.join(appPath, iconFile);
   expect(fs.existsSync(iconPath)).toBe(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
-
-  // Internal Login Pages enabled by default
-  expect(nativefierConfig.internalLoginPages).toBe(
-    inputOptions.internalLoginPages === undefined
-      ? true
-      : inputOptions.internalLoginPages,
-  );
 }
 
 describe('Nativefier', () => {
@@ -62,17 +55,4 @@ describe('Nativefier', () => {
       checkApp(appPath, options);
     },
   );
-
-  test('can disable internalLoginPages', async () => {
-    const tempDirectory = getTempDir('integtest');
-    const options = {
-      targetUrl: 'https://google.com/',
-      out: tempDirectory,
-      overwrite: true,
-      platform: 'linux',
-      internalLoginPages: false,
-    };
-    const appPath = await buildNativefierApp(options);
-    checkApp(appPath, options);
-  });
 });
