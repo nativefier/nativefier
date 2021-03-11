@@ -44,6 +44,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     ignoreCertificate: options.nativefier.ignoreCertificate,
     ignoreGpuBlacklist: options.nativefier.ignoreGpuBlacklist,
     insecure: options.nativefier.insecure,
+    internalLoginPages: options.nativefier.internalLoginPages,
     internalUrls: options.nativefier.internalUrls,
     blockExternalUrls: options.nativefier.blockExternalUrls,
     maxHeight: options.nativefier.maxHeight,

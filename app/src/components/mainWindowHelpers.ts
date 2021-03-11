@@ -2,9 +2,10 @@ import { linkIsInternal } from '../helpers/helpers';
 
 export function onNewWindowHelper(
   urlToGo: string,
-  disposition,
+  disposition: string,
   targetUrl: string,
-  internalUrls,
+  internalLoginPages: boolean,
+  internalUrls: string | RegExp,
   preventDefault,
   openExternal,
   createAboutBlankWindow,
@@ -13,7 +14,7 @@ export function onNewWindowHelper(
   blockExternal: boolean,
   onBlockedExternalUrl: (url: string) => void,
 ): void {
-  if (!linkIsInternal(targetUrl, urlToGo, internalUrls)) {
+  if (!linkIsInternal(targetUrl, urlToGo, internalLoginPages, internalUrls)) {
     preventDefault();
     if (blockExternal) {
       onBlockedExternalUrl(urlToGo);

@@ -36,13 +36,21 @@ function checkApp(appRoot: string, inputOptions: any): void {
   const iconPath = path.join(appPath, iconFile);
   expect(fs.existsSync(iconPath)).toBe(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
+
+  // Internal Login Pages enabled by default
+  expect(nativefierConfig.internalLoginPages).toBe(
+    inputOptions.internalLoginPages === undefined
+      ? true
+      : inputOptions.internalLoginPages,
+  );
 }
 
 describe('Nativefier', () => {
   jest.setTimeout(300000);
 
-  test('builds a Nativefier app for several platforms', async () => {
-    for (const platform of ['darwin', 'linux']) {
+  test.each(['darwin', 'linux'])(
+    'builds a Nativefier app for platform %s',
+    async (platform) => {
       const tempDirectory = getTempDir('integtest');
       const options = {
         targetUrl: 'https://google.com/',
@@ -52,6 +60,19 @@ describe('Nativefier', () => {
       };
       const appPath = await buildNativefierApp(options);
       checkApp(appPath, options);
-    }
+    },
+  );
+
+  test('can disable internalLoginPages', async () => {
+    const tempDirectory = getTempDir('integtest');
+    const options = {
+      targetUrl: 'https://google.com/',
+      out: tempDirectory,
+      overwrite: true,
+      platform: 'linux',
+      internalLoginPages: false,
+    };
+    const appPath = await buildNativefierApp(options);
+    checkApp(appPath, options);
   });
 });

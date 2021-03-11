@@ -43,6 +43,7 @@
   - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
   - [[enable-es3-apis]](#enable-es3-apis)
   - [[insecure]](#insecure)
+  - [[internal-login-pages]](#internal-login-pages)
   - [[internal-urls]](#internal-urls)
   - [[block-external-urls]](#block-external-urls)
   - [[proxy-rules]](#proxy-rules)
@@ -394,6 +395,30 @@ Passes the enable-es3-apis flag to the Chrome engine, to force the activation of
 
 Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
 
+#### [internal-login-pages]
+
+```
+--internal-login-pages <boolean>
+```
+
+Whether to consider known login providers to be internal, so as to avoid login urls being opened in a browser without being able to login to the application. Default: true
+
+Known login providers:
+- Amazon
+- Facebook
+- GitHub
+- Google
+- LinkedIn
+- Microsoft
+- Okta
+- Twitter
+
+Example:
+
+```bash
+nativefier https://google.com --internal-login-pages false
+```
+
 #### [internal-urls]
 
 ```
@@ -408,13 +433,23 @@ once stripped of `www.`. For example, by default,
 - URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
 - URLs from/to `abc.com` and `xyz.com` are considered external.
 
-Example:
+*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
+(e.g. `accounts.google.com` or `login.live.com`) are considered internal.
+This does not replace `internal-urls`, it complements it, and happens *before*
+your `internal-urls` rule is applied. So, if you already set the flag to let such
+auth pages open internally, you don't need to change it but it might be unnecessary.
+
+We think this is desirable behavior and are so far unaware of cases where users
+might not want this. If you disagree, please chime in at
+[PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
+
+Example of `--internal-urls` causing all links to Google to be considered internal:
 
 ```bash
 nativefier https://google.com --internal-urls ".*?\.google\.*?"
 ```
 
-Or, if you want to allow all domains for example for external auths,
+Or, if you never expect Nativefier to open an "external" page in your OS browser,
 
 ```bash
 nativefier https://google.com --internal-urls ".*?"

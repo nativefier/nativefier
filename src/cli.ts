@@ -6,9 +6,14 @@ import * as dns from 'dns';
 import * as commander from 'commander';
 import * as log from 'loglevel';
 
-import { isArgFormatInvalid, isWindows } from './helpers/helpers';
+import { isArgFormatInvalid } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
+import {
+  parseBoolean,
+  parseBooleanOrString,
+  parseJson,
+} from './utils/parseUtils';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra "src" folder
@@ -17,37 +22,6 @@ const packageJson = require('../package.json'); // eslint-disable-line @typescri
 function collect(val: any, memo: any[]): any[] {
   memo.push(val);
   return memo;
-}
-
-function parseBooleanOrString(val: string): boolean | string {
-  switch (val) {
-    case 'true':
-      return true;
-    case 'false':
-      return false;
-    default:
-      return val;
-  }
-}
-
-function parseJson(val: string): any {
-  if (!val) return {};
-  try {
-    return JSON.parse(val);
-  } catch (err) {
-    const windowsShellHint = isWindows()
-      ? `\n   In particular, Windows cmd doesn't have single quotes, so you have to use only double-quotes plus escaping: "{\\"someKey\\": \\"someValue\\"}"`
-      : '';
-
-    log.error(
-      `Unable to parse JSON value: ${val}\n` +
-        `JSON should look like {"someString": "someValue", "someBoolean": true, "someArray": [1,2,3]}.\n` +
-        ` - Only double quotes are allowed, single quotes are not.\n` +
-        ` - Learn how your shell behaves and escapes characters.${windowsShellHint}\n` +
-        ` - If unsure, validate your JSON using an online service.`,
-    );
-    throw err;
-  }
 }
 
 function getProcessEnvs(val: string): any {
@@ -237,6 +211,11 @@ if (require.main === module) {
       '--zoom <value>',
       'default zoom factor to use when the app is opened; defaults to 1.0',
       parseFloat,
+    )
+    .option(
+      '--internal-login-pages',
+      "Force known login pages (Amazon, Facebook, GitHub, Google, LinkedIn, Microsoft, Okta, Twitter) to be internal urls so they don't have to be individually specified. Default: true",
+      (value) => parseBoolean(value, true),
     )
     .option(
       '--internal-urls <value>',
