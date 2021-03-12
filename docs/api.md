@@ -964,6 +964,8 @@ Sometimes there are Electron features that are exposed via the [Electron `sessio
 To get a `session` property:
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   property: 'availableSpellCheckerLanguages',
 };
@@ -973,6 +975,8 @@ electron.ipcRenderer.send('session-interaction', request);
 To set a `session` property:
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   property: 'spellCheckerEnabled',
   propertyValue: true,
@@ -983,6 +987,8 @@ electron.ipcRenderer.send('session-interaction', request);
 To call a `session` function:
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   func: 'clearCache',
 };
@@ -992,6 +998,8 @@ electron.ipcRenderer.send('session-interaction', request);
 To call a `session` function, with arguments:
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   func: 'setDownloadPath',
   funcArgs: [
@@ -1012,6 +1020,8 @@ PLEASE NOTE: `funcArgs` is ALWAYS an array of arguments to be passed to the func
 The results of the call, if desired, can be accessed one of two ways. Either you can listen for a `session-interaction-reply` event, and access the resulting value like so:
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   property: 'availableSpellCheckerLanguages',
 };
@@ -1027,6 +1037,8 @@ Or the result can be retrieved synchronously, though this is not recommended as 
 > ⚠️ WARNING: Sending a synchronous message will block the whole renderer process until the reply is received, so use this method only as a last resort. It's much better to use the asynchronous version.
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   property: 'availableSpellCheckerLanguages',
 };
@@ -1038,6 +1050,8 @@ console.log(electron.ipcRenderer.sendSync('session-interaction', request).value)
 If desired, an id for the request may be provided to distinguish between event replies:
 
 ```javascript
+const electron = require('electron');
+
 const request = {
   id: 'availableSpellCheckerLanguages',
   property: 'availableSpellCheckerLanguages',
@@ -1070,6 +1084,9 @@ Due to the nature of how these events are transmitted back and forth, session fu
 For example, the following code will return an error instead of the expected value:
 
 ```javascript
+
+const electron = require('electron');
+
 const request = {
   id: 'cookies',
   property: 'cookies',
