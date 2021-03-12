@@ -959,7 +959,9 @@ More description about the options for `nativefier` can be found at the above [s
 
 Sometimes there are Electron features that are exposed via the [Electron session api](https://www.electronjs.org/docs/api/session), that may not be exposed via Nativefier options. These can be accessed with an injected javascript file (via the `--inject` command line argument when building your application). Within that javascript file, it may send an ipcRenderer event of `session-interaction` and listen for a `session-interaction-reply` event to get any result. Session properties and functions can be accessed via this event. This event takes an object as an argument with the desired interaction to be performed.
 
-When requesting a session property:
+**Warning**: using this feature in an `--inject` script means using Electron's `session` API, which is not a standard web API and subject to potential [Breaking Changes](https://www.electronjs.org/docs/breaking-changes) at each major Electron upgrade.
+
+To get a `session` property:
 
 ```javascript
 const request = {
