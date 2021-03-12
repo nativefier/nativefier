@@ -987,7 +987,7 @@ const request = {
 electron.ipcRenderer.send('session-interaction', request);
 ```
 
-When requesting a session function be called with arguments:
+To call a `session` function, with arguments:
 
 ```javascript
 const request = {
