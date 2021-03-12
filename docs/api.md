@@ -968,7 +968,7 @@ const request = {
 electron.ipcRenderer.send('session-interaction', request);
 ```
 
-When setting a session property:
+To set a `session` property:
 
 ```javascript
 const request = {
