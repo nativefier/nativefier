@@ -5,11 +5,12 @@ need to know to get started hacking on Nativefier.
 
 ## Guidelines
 
-1. Before engaging in a huge change, gauge the interest of
-   community & maintainers through a GitHub issue.
-   For big changes, create a [RFC])(https://en.wikipedia.org/wiki/Request_for_Comments) issue to enable a good peer review.
-2. Do your best to avoid adding new Nativefier flags.
-   If a new flag is inevitable for what you want to do, sure,
+1. Before starting work on a huge change, gauge the interest
+   of community & maintainers through a GitHub issue.
+   For big changes, create a [RFC])(https://en.wikipedia.org/wiki/Request_for_Comments)
+   issue to enable a good peer review.
+2. Do your best to avoid adding new Nativefier command-line options.
+   If a new option is inevitable for what you want to do, sure,
    but as much as possible try to see if you change works without.
    Nativefier already has a ton of them, making it hard to use.
 3. Avoid or limit adding npm dependencies.
