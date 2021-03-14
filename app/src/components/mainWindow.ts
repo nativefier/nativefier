@@ -390,6 +390,7 @@ export function createMainWindow(
     mainWindow.show();
   });
 
+  // See API.md / "Accessing The Electron Session"
   ipcMain.on(
     'session-interaction',
     (event, request: SessionInteractionRequest) => {
