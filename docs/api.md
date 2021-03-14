@@ -76,6 +76,12 @@
     - [[win32metadata]](#win32metadata)
       - [Programmatic API](#programmatic-api-1)
     - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
+- [Accessing The Electron Session](#accessing-the-electron-session)
+  - [Important Note On funcArgs](#important-note-on-funcargs)
+  - [session-interaction-reply](#session-interaction-reply)
+  - [Errors](#errors)
+  - [Complex Return Values](#complex-return-values)
+  - [Example](#example)
 
 ## Packaging Squirrel-based installers
 
@@ -948,3 +954,189 @@ Disables the warning shown when opening a Nativefier app made a long time ago, u
 However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
 
 More description about the options for `nativefier` can be found at the above [section](#command-line).
+
+## Accessing The Electron Session
+
+Sometimes there are Electron features that are exposed via the [Electron `session` API](https://www.electronjs.org/docs/api/session), that may not be exposed via Nativefier options. These can be accessed with an injected javascript file (via the `--inject` command line argument when building your application). Within that javascript file, you may send an ipcRenderer `session-interaction` event, and listen for a `session-interaction-reply` event to get any result. Session properties and functions can be accessed via this event. This event takes an object as an argument with the desired interaction to be performed.
+
+**Warning**: using this feature in an `--inject` script means using Electron's `session` API, which is not a standard web API and subject to potential [Breaking Changes](https://www.electronjs.org/docs/breaking-changes) at each major Electron upgrade.
+
+To get a `session` property:
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  property: 'availableSpellCheckerLanguages',
+};
+electron.ipcRenderer.send('session-interaction', request);
+```
+
+To set a `session` property:
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  property: 'spellCheckerEnabled',
+  propertyValue: true,
+};
+electron.ipcRenderer.send('session-interaction', request);
+```
+
+To call a `session` function:
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  func: 'clearCache',
+};
+electron.ipcRenderer.send('session-interaction', request);
+```
+
+To call a `session` function, with arguments:
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  func: 'setDownloadPath',
+  funcArgs: [
+    `/home/user/downloads`,
+  ],
+};
+electron.ipcRenderer.send('session-interaction', request);
+```
+
+If neither a `func` nor a `property` is provided in the event, an error will be returned.
+
+### Important Note On funcArgs
+
+PLEASE NOTE: `funcArgs` is ALWAYS an array of arguments to be passed to the function, even if it is just one argument. If `funcArgs` is omitted from a request with a `func` provided, no arguments will be passed.
+
+### session-interaction-reply
+
+The results of the call, if desired, can be accessed one of two ways. Either you can listen for a `session-interaction-reply` event, and access the resulting value like so:
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  property: 'availableSpellCheckerLanguages',
+};
+electron.ipcRenderer.send('session-interaction', request);
+
+electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+    console.log('session-interaction-reply', event, result.value)
+});
+```
+
+Or the result can be retrieved synchronously, though this is not recommended as it may cause slowdowns and freezes in your apps while the app stops and waits for the result to be returned. Heed this [warning from Electron](https://www.electronjs.org/docs/api/ipc-renderer):
+
+> ⚠️ WARNING: Sending a synchronous message will block the whole renderer process until the reply is received, so use this method only as a last resort. It's much better to use the asynchronous version.
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  property: 'availableSpellCheckerLanguages',
+};
+console.log(electron.ipcRenderer.sendSync('session-interaction', request).value);
+```
+
+### Request IDs
+
+If desired, an id for the request may be provided to distinguish between event replies:
+
+```javascript
+const electron = require('electron');
+
+const request = {
+  id: 'availableSpellCheckerLanguages',
+  property: 'availableSpellCheckerLanguages',
+};
+electron.ipcRenderer.send('session-interaction', request);
+
+electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+    console.log('session-interaction-reply', event, result.id, result.value)
+});
+```
+
+### Errors
+
+If an error occurs while handling the interaction, it will be returned in the `session-interaction-reply` event inside the result:
+
+```javascript
+const electron = require('electron');
+
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
+    console.log('session-interaction-reply', event, result.error)
+});
+
+electron.ipcRenderer.send('session-interaction', { func: 'thisFunctionDoesNotExist' });
+```
+
+### Complex Return Values
+
+Due to the nature of how these events are transmitted back and forth, session functions and properties that return full classes or class instances are not supported.
+
+For example, the following code will return an error instead of the expected value:
+
+```javascript
+
+const electron = require('electron');
+
+const request = {
+  id: 'cookies',
+  property: 'cookies',
+};
+electron.ipcRenderer.send('session-interaction', request);
+
+electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+  console.log('session-interaction-reply', event, result)
+});
+```
+
+### Example
+
+This javascript, when injected as a file via `--inject`, will attempt to call the `isSpellCheckerEnabled` function to make sure the spell checker is enabled, enables it via the `spellCheckerEnabled` property, gets the value of the `availableSpellCheckerLanguages` property, and finally will call `setSpellCheckerLanguages` to set the `fr` language as the preferred spellcheck language if it's supported.
+
+```javascript
+const electron = require('electron');
+
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
+    console.log('session-interaction-reply', event, result);
+    switch (result.id) {
+        case 'isSpellCheckerEnabled':
+            console.log('SpellChecker enabled?', result.value);
+            if (result.value === true) {
+                console.log("Getting supported languages...");
+                electron.ipcRenderer.send('session-interaction', { id: 'availableSpellCheckerLanguages', property: 'availableSpellCheckerLanguages', });
+            } else {
+                console.log("SpellChecker disabled. Enabling...");
+                electron.ipcRenderer.send('session-interaction', { id: 'setSpellCheckerEnabled', property: 'spellCheckerEnabled', propertyValue: true, });
+            }
+            break;
+        case 'setSpellCheckerEnabled':
+            console.log('SpellChecker has now been enabled. Getting supported languages...');
+            electron.ipcRenderer.send('session-interaction', { id: 'availableSpellCheckerLanguages', property: 'availableSpellCheckerLanguages', });
+            break;
+        case 'availableSpellCheckerLanguages':
+            console.log('Avaliable spellChecker languages:', result.value);
+            if (result.value.indexOf('fr') > -1) {
+                electron.ipcRenderer.send('session-interaction', { id: 'setSpellCheckerLanguages', func: 'setSpellCheckerLanguages', funcArgs: [['fr']], });
+            } else {
+                console.log("Not changing spellChecker language. 'fr' is not supported.");
+            }
+            break;
+        case 'setSpellCheckerLanguages':
+            console.log('SpellChecker language was set.');
+            break;
+        default:
+            console.error("Unknown reply id:", result.id);
+    }
+});
+
+electron.ipcRenderer.send('session-interaction', { id: 'isSpellCheckerEnabled', func: 'isSpellCheckerEnabled', });
+```
