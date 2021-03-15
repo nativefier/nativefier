@@ -9,6 +9,7 @@
   - [[dest]](#dest)
   - [Help](#help)
   - [Version](#version)
+  - [[upgrade]](#upgrade)
   - [[name]](#name)
   - [[platform]](#platform)
   - [[arch]](#arch)
@@ -84,8 +85,10 @@ See [PR #744 - Support packaging nativefier applications into Squirrel-based ins
 ## Command Line
 
 ```bash
-nativefier [options] <targetUrl> [dest]
+nativefier [options] [targetUrl] [dest]
 ```
+
+Either a targetUrl to generate a new app from, or the `--upgrade` option to indicate an application upgrade, must be provided.
 
 Command line options are listed below.
 
@@ -112,6 +115,14 @@ Prints the usage information.
 ```
 
 Prints the version of your `nativefier` install.
+
+#### [upgrade]
+
+```
+--upgrade <value>
+```
+
+The path to an application packaged with a previous version of Nativefier, to be upgraded to the latest version of Nativefier. This may be the `.exe` file in Windows, the generated executable in Linux, or the generated `.app` for Mac. This will need to be contained within the full context that it was generated in previously (i.e., on Windows and Linux, the exe file should still be in the folder with the generated resources directory). This option will attempt to extract all existing options from the old app.
 
 #### [name]
 

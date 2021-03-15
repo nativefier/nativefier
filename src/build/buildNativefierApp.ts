@@ -12,6 +12,7 @@ import {
   isWindows,
   isWindowsAdmin,
 } from '../helpers/helpers';
+import { applyOldApp, findUpgradeApp } from '../helpers/upgrade/upgrade';
 import { AppOptions, NativefierOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
@@ -109,6 +110,17 @@ export async function buildNativefierApp(
   rawOptions: NativefierOptions,
 ): Promise<string> {
   log.info('Processing options...');
+  if (rawOptions.upgrade && rawOptions.upgrade !== undefined) {
+    const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
+    if (oldApp !== null) {
+      rawOptions = applyOldApp(rawOptions, oldApp);
+    } else {
+      throw Error(
+        `Could not find an old Nativfier app in "${rawOptions.upgrade.toString()}"`,
+      );
+    }
+  }
+
   const options = await getOptions(rawOptions);
 
   if (options.packager.platform === 'darwin' && isWindows()) {

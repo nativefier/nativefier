@@ -28,7 +28,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       appCopyright: rawOptions.appCopyright,
       appVersion: rawOptions.appVersion,
       arch: rawOptions.arch || inferArch(),
-      asar: rawOptions.conceal || false,
+      asar: rawOptions.asar || rawOptions.conceal || false,
       buildVersion: rawOptions.buildVersion,
       darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
       dir: PLACEHOLDER_APP_DIR,
@@ -38,8 +38,13 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       out: rawOptions.out || process.cwd(),
       overwrite: rawOptions.overwrite,
       platform: rawOptions.platform || inferPlatform(),
-      targetUrl: normalizeUrl(rawOptions.targetUrl),
+      targetUrl:
+        rawOptions.targetUrl === undefined
+          ? '' // We'll plug this in later via upgrade
+          : normalizeUrl(rawOptions.targetUrl),
       tmpdir: false, // workaround for electron-packager#375
+      upgrade: rawOptions.upgrade !== undefined ? true : false,
+      upgradeFrom: rawOptions.upgrade,
       win32metadata: rawOptions.win32metadata || {
         ProductName: rawOptions.name,
         InternalName: rawOptions.name,

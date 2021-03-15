@@ -9,6 +9,7 @@ import * as log from 'loglevel';
 import { isArgFormatInvalid } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
+import { NativefierOptions } from './options/model';
 import { parseBooleanOrString, parseJson } from './utils/parseUtils';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
@@ -67,12 +68,16 @@ if (require.main === module) {
   const args = commander
     .name('nativefier')
     .version(packageJson.version, '-v, --version')
-    .arguments('<targetUrl> [dest]')
+    .arguments('[targetUrl] [dest]')
     .action((url, outputDirectory) => {
       positionalOptions.targetUrl = url;
       positionalOptions.out = outputDirectory;
     })
     .option('-n, --name <value>', 'app name')
+    .option(
+      '--upgrade <value>',
+      'Perform an upgrade of an app created with an older version of Nativefier. Provide the full path of the application executable.',
+    )
     .addOption(
       new commander.Option('-p, --platform <value>').choices(
         supportedPlatforms,
@@ -287,7 +292,18 @@ if (require.main === module) {
     commander.help();
   }
   checkInternet();
-  const options = { ...positionalOptions, ...commander.opts() };
+  const options: NativefierOptions = {
+    ...positionalOptions,
+    ...commander.opts(),
+  };
+
+  if (!options.targetUrl && !options.upgrade) {
+    console.error(
+      'Nativefier must be called with either a targetUrl or the --upgrade option.',
+    );
+    commander.help();
+  }
+
   buildNativefierApp(options).catch((error) => {
     log.error('Error during build. Run with --verbose for details.', error);
   });
