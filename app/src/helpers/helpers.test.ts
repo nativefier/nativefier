@@ -64,6 +64,9 @@ const testLoginPages = [
   'https://github.co.uk/login',
   'https://github.com/login',
   'https://github.de/login',
+  // GitHub 2FA flow with FIDO token
+  'https://github.com/session',
+  'https://github.com/sessions/two-factor/webauth',
   'https://accounts.google.co.uk',
   'https://accounts.google.com',
   'https://accounts.google.de',
