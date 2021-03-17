@@ -103,7 +103,7 @@ const testNonLoginPages = [
 test.each(testNonLoginPages)(
   '%s page should not be internal',
   (url: string) => {
-    expect(linkIsInternal(internalUrl, url, undefined)).toEqual(true);
+    expect(linkIsInternal(internalUrl, url, undefined)).toEqual(false);
   },
 );
 
