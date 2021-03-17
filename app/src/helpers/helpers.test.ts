@@ -92,6 +92,21 @@ test.each(testLoginPages)(
   },
 );
 
+// Ensure that we don't over-match service pages
+const testNonLoginPages = [
+  'https://www.amazon.com/Node-Cookbook-techniques-server-side-development-ebook',
+  'https://github.com/nativefier/nativefier',
+  'https://github.com/org/nativefier',
+  'https://twitter.com/marcoroth_/status/1325938620906287104',
+];
+
+test.each(testNonLoginPages)(
+  '%s page should not be internal',
+  (url: string) => {
+    expect(linkIsInternal(internalUrl, url, undefined)).toEqual(true);
+  },
+);
+
 const smallCounterTitle = 'Inbox (11) - nobody@example.com - Gmail';
 const largeCounterTitle = 'Inbox (8,756) - nobody@example.com - Gmail';
 const noCounterTitle = 'Inbox - nobody@example.com - Gmail';
