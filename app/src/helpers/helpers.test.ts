@@ -64,6 +64,9 @@ const testLoginPages = [
   'https://github.co.uk/login',
   'https://github.com/login',
   'https://github.de/login',
+  // GitHub 2FA flow with FIDO token
+  'https://github.com/session',
+  'https://github.com/sessions/two-factor/webauth',
   'https://accounts.google.co.uk',
   'https://accounts.google.com',
   'https://accounts.google.de',
@@ -86,6 +89,21 @@ test.each(testLoginPages)(
   '%s login page should be internal',
   (loginUrl: string) => {
     expect(linkIsInternal(internalUrl, loginUrl, undefined)).toEqual(true);
+  },
+);
+
+// Ensure that we don't over-match service pages
+const testNonLoginPages = [
+  'https://www.amazon.com/Node-Cookbook-techniques-server-side-development-ebook',
+  'https://github.com/nativefier/nativefier',
+  'https://github.com/org/nativefier',
+  'https://twitter.com/marcoroth_/status/1325938620906287104',
+];
+
+test.each(testNonLoginPages)(
+  '%s page should not be internal',
+  (url: string) => {
+    expect(linkIsInternal(internalUrl, url, undefined)).toEqual(false);
   },
 );
 
