@@ -88,7 +88,9 @@ See [PR #744 - Support packaging nativefier applications into Squirrel-based ins
 nativefier [options] [targetUrl] [dest]
 ```
 
-Either a targetUrl to generate a new app from, or the `--upgrade` option to indicate an application upgrade, must be provided.
+You must provide:
+- Either a `targetUrl` to generate a new app from it.
+- Or option `--upgrade <pathOfAppToUpgrade>` to upgrade an existing app.
 
 Command line options are listed below.
 
@@ -119,10 +121,12 @@ Prints the version of your `nativefier` install.
 #### [upgrade]
 
 ```
---upgrade <value>
+--upgrade <pathToExistingApp>
 ```
 
-The path to an application packaged with a previous version of Nativefier, to be upgraded to the latest version of Nativefier. This may be the `.exe` file in Windows, the generated executable in Linux, or the generated `.app` for Mac. This will need to be contained within the full context that it was generated in previously (i.e., on Windows and Linux, the exe file should still be in the folder with the generated resources directory). This option will attempt to extract all existing options from the old app.
+This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
+
+The provided path must be the "executable" of an application packaged with a previous version of Nativefier, and to be upgraded to the latest version of Nativefier. "Executable" means: the `.exe` file on Windows, the executable on Linux, or the `.app` on macOS. The executable must be living in the original context where it was generated (i.e., on Windows and Linux, the exe file must still be in the folder containing the generated `resources` directory).
 
 #### [name]
 

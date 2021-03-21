@@ -112,13 +112,12 @@ export async function buildNativefierApp(
   log.info('Processing options...');
   if (rawOptions.upgrade && rawOptions.upgrade !== undefined) {
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
-    if (oldApp !== null) {
-      rawOptions = useOldAppOptions(rawOptions, oldApp);
-    } else {
-      throw Error(
+    if (oldApp === null) {
+      throw new Error(
         `Could not find an old Nativfier app in "${rawOptions.upgrade.toString()}"`,
       );
     }
+    rawOptions = useOldAppOptions(rawOptions, oldApp);
   }
 
   const options = await getOptions(rawOptions);
