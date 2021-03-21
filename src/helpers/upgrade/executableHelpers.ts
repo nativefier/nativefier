@@ -78,16 +78,16 @@ export function getOptionsFromExecutable(
 
   const appRoot = path.resolve(path.join(appResourcesDir, '..', '..'));
   const children = fs.readdirSync(appRoot, { withFileTypes: true });
-  const macOS =
+  const looksLikeMacOS =
     children.filter((c) => c.name === 'MacOS' && c.isDirectory()).length > 0;
-  const windows =
+  const looksLikeWindows =
     children.filter((c) => c.name.toLowerCase().endsWith('.exe') && c.isFile())
       .length > 0;
-  const linux =
+  const looksLikeLinux =
     children.filter((c) => c.name.toLowerCase().endsWith('.so') && c.isFile())
       .length > 0;
 
-  if (macOS) {
+  if (looksLikeMacOS) {
     options.platform =
       children.filter((c) => c.name === 'Library' && c.isDirectory()).length > 0
         ? 'mas'
@@ -97,7 +97,7 @@ export function getOptionsFromExecutable(
       'MacOS',
       fs.readdirSync(path.join(appRoot, 'MacOS'))[0],
     );
-  } else if (windows) {
+  } else if (looksLikeWindows) {
     options.platform = 'windows';
     executablePath = path.join(
       appRoot,
@@ -116,7 +116,7 @@ export function getOptionsFromExecutable(
     if (options.appVersion == options.buildVersion) {
       options.buildVersion = undefined;
     }
-  } else if (linux) {
+  } else if (looksLikeLinux) {
     options.platform = 'linux';
     executablePath = path.join(
       appRoot,
