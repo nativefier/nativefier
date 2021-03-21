@@ -12,7 +12,7 @@ import {
   isWindows,
   isWindowsAdmin,
 } from '../helpers/helpers';
-import { applyOldApp, findUpgradeApp } from '../helpers/upgrade/upgrade';
+import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
 import { AppOptions, NativefierOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
@@ -113,7 +113,7 @@ export async function buildNativefierApp(
   if (rawOptions.upgrade && rawOptions.upgrade !== undefined) {
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
     if (oldApp !== null) {
-      rawOptions = applyOldApp(rawOptions, oldApp);
+      rawOptions = useOldAppOptions(rawOptions, oldApp);
     } else {
       throw Error(
         `Could not find an old Nativfier app in "${rawOptions.upgrade.toString()}"`,

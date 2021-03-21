@@ -133,7 +133,7 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
   };
 }
 
-export function applyOldApp(
+export function useOldAppOptions(
   rawOptions: NativefierOptions,
   oldApp: UpgradeAppInfo,
 ): NativefierOptions {
