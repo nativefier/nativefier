@@ -83,6 +83,7 @@ const testLoginPages = [
   'https://twitter.co.uk/oauth/authenticate',
   'https://twitter.com/oauth/authenticate',
   'https://twitter.de/oauth/authenticate',
+  'https://appleid.apple.com/auth/authorize',
 ];
 
 test.each(testLoginPages)(
@@ -98,6 +99,7 @@ const testNonLoginPages = [
   'https://github.com/nativefier/nativefier',
   'https://github.com/org/nativefier',
   'https://twitter.com/marcoroth_/status/1325938620906287104',
+  'https://appleid.apple.com/account',
 ];
 
 test.each(testNonLoginPages)(
