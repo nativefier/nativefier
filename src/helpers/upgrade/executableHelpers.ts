@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
+import * as log from 'loglevel';
+
 import { NativefierOptions } from '../../options/model';
 import { getVersionString } from './rceditGet';
 type ExecutableInfo = {
@@ -88,6 +90,7 @@ export function getOptionsFromExecutable(
       .length > 0;
 
   if (looksLikeMacOS) {
+    log.debug('This looks like a MacOS app...');
     options.platform =
       children.filter((c) => c.name === 'Library' && c.isDirectory()).length > 0
         ? 'mas'
@@ -98,6 +101,7 @@ export function getOptionsFromExecutable(
       fs.readdirSync(path.join(appRoot, 'MacOS'))[0],
     );
   } else if (looksLikeWindows) {
+    log.debug('This looks like a Windows app...');
     options.platform = 'windows';
     executablePath = path.join(
       appRoot,
@@ -108,15 +112,26 @@ export function getOptionsFromExecutable(
     );
     // https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L46-L48
     options.appVersion = getVersionString(executablePath, 'ProductVersion');
+    log.debug(`Extracted app version from executable: ${options.appVersion}`);
+
     //https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L50-L52
     options.buildVersion = getVersionString(executablePath, 'FileVersion');
+
     // https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L54-L56
     options.appCopyright = getVersionString(executablePath, 'LegalCopyright');
+    log.debug(
+      `Extracted app copyright from executable: ${options.appCopyright}`,
+    );
 
     if (options.appVersion == options.buildVersion) {
       options.buildVersion = undefined;
+    } else {
+      log.debug(
+        `Extracted build version from executable: ${options.buildVersion}`,
+      );
     }
   } else if (looksLikeLinux) {
+    log.debug('This looks like a Linux app...');
     options.platform = 'linux';
     executablePath = path.join(
       appRoot,
@@ -124,11 +139,14 @@ export function getOptionsFromExecutable(
     );
   }
 
+  log.debug(`Executable path: ${executablePath}`);
+
   const executableInfo = getExecutableInfo(executablePath, options.platform);
   options.arch = executableInfo.arch;
+  log.debug(`Extracted arch from executable: ${options.arch}`);
 
   if (options.platform === undefined || options.arch == undefined) {
-    throw Error(`Could not determine platform/arch of app in ${appRoot}`);
+    throw Error(`Could not determine platform / arch of app in ${appRoot}`);
   }
 
   return options;

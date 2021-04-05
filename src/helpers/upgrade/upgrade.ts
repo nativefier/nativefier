@@ -15,6 +15,7 @@ export type UpgradeAppInfo = {
 
 function findUpgradeAppResourcesDir(searchDir: string): string | null {
   searchDir = dirExists(searchDir) ? searchDir : path.dirname(searchDir);
+  log.debug(`Searching for nativfier.json in ${searchDir}`);
   const children = fs.readdirSync(searchDir, { withFileTypes: true });
   if (fileExists(path.join(searchDir, 'nativefier.json'))) {
     // Found 'nativefier.json', so this must be it!
@@ -36,15 +37,23 @@ function findUpgradeAppResourcesDir(searchDir: string): string | null {
 }
 
 function getIconPath(appResourcesDir: string): string | undefined {
-  if (fileExists(path.join(appResourcesDir, '..', 'electron.icns'))) {
-    return path.resolve(path.join(appResourcesDir, '..', 'electron.icns'));
+  const icnsPath = path.join(appResourcesDir, '..', 'electron.icns');
+  if (fileExists(icnsPath)) {
+    log.debug(`Found icon at: ${icnsPath}`);
+    return path.resolve(icnsPath);
   }
-  if (fileExists(path.join(appResourcesDir, 'icon.ico'))) {
-    return path.resolve(path.join(appResourcesDir, 'icon.ico'));
+  const icoPath = path.join(appResourcesDir, 'icon.ico');
+  if (fileExists(icoPath)) {
+    log.debug(`Found icon at: ${icoPath}`);
+    return path.resolve(icoPath);
   }
-  if (fileExists(path.join(appResourcesDir, 'icon.png'))) {
-    return path.resolve(path.join(appResourcesDir, 'icon.ong'));
+  const pngPath = path.join(appResourcesDir, 'icon.png');
+  if (fileExists(pngPath)) {
+    log.debug(`Found icon at: ${pngPath}`);
+    return path.resolve(pngPath);
   }
+
+  log.debug('Could not find icon file.');
   return undefined;
 }
 
@@ -60,19 +69,28 @@ function getInfoPListOptions(appResourcesDir: string): NativefierOptions {
 
   // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L230-L232
   const appCopyright = extractString(infoPlistXML, 'NSHumanReadableCopyright');
+  log.debug(`Extracted app copyright from Info.plist: ${appCopyright}`);
 
   // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L214-L216
   // This could also be the buildVersion, but since they end up in the same place, that SHOULDN'T matter
   const bundleVersion = extractString(infoPlistXML, 'CFBundleVersion');
+  log.debug(`Extracted bundle version from Info.plist: ${bundleVersion}`);
   const appVersion =
     bundleVersion === undefined || bundleVersion === '1.0.0' // If it's 1.0.0, that's just the default
       ? undefined
       : bundleVersion;
 
+  log.debug(`Extracted app version from Info.plist: ${appVersion}`);
+
   // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L234-L236
   const darwinDarkModeSupport = extractBoolean(
     infoPlistXML,
     'NSRequiresAquaSystemAppearance',
+  );
+  log.debug(
+    `Extracted Darwin dark mode support from Info.plist: ${
+      darwinDarkModeSupport ? 'Yes' : 'No'
+    }`,
   );
 
   return {
@@ -91,7 +109,7 @@ function getInjectPaths(appResourcesDir: string): string[] | undefined {
     return undefined;
   }
 
-  return fs
+  const injectPaths = fs
     .readdirSync(injectDir, { withFileTypes: true })
     .filter(
       (fd) =>
@@ -100,10 +118,14 @@ function getInjectPaths(appResourcesDir: string): string[] | undefined {
           fd.name.toLowerCase().endsWith('.js')),
     )
     .map((fd) => path.resolve(path.join(injectDir, fd.name)));
+  log.debug(`CSS/JS Inject paths: ${injectPaths.join(', ')}`);
+  return injectPaths;
 }
 
 function isAsar(appResourcesDir: string): boolean {
-  return fileExists(path.join(appResourcesDir, '..', 'electron.asar'));
+  const asar = fileExists(path.join(appResourcesDir, '..', 'electron.asar'));
+  log.debug(`Is this app an ASAR? ${asar ? 'Yes' : 'No'}`);
+  return asar;
 }
 
 export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
@@ -113,9 +135,11 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
   log.debug(`Looking for old options file in ${searchDir}`);
   const appResourcesDir = findUpgradeAppResourcesDir(searchDir);
   if (appResourcesDir === null) {
+    log.debug(`No nativefier.json file found in ${searchDir}`);
     return null;
   }
 
+  log.debug(`Loading ${path.join(appResourcesDir, 'nativefier.json')}`);
   const options: NativefierOptions = JSON.parse(
     fs.readFileSync(path.join(appResourcesDir, 'nativefier.json'), 'utf8'),
   );
