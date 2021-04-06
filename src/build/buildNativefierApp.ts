@@ -13,7 +13,7 @@ import {
   isWindowsAdmin,
 } from '../helpers/helpers';
 import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
-import { AppOptions, NativefierOptions } from '../options/model';
+import { AppOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
 
@@ -106,17 +106,19 @@ function trimUnprocessableOptions(options: AppOptions): void {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function buildNativefierApp(
-  rawOptions: NativefierOptions,
-): Promise<string> {
+export async function buildNativefierApp(rawOptions): Promise<string> {
   log.info('Processing options...');
+  log.debug(rawOptions);
   if (rawOptions.upgrade && rawOptions.upgrade !== undefined) {
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
     if (oldApp === null) {
       throw new Error(
-        `Could not find an old Nativfier app in "${rawOptions.upgrade.toString()}"`,
+        `Could not find an old Nativfier app in "${<string>(
+          rawOptions.upgrade
+        )}"`,
       );
     }
+    log.debug('Found old Nativefier app options', oldApp);
     rawOptions = useOldAppOptions(rawOptions, oldApp);
   }
 

@@ -5,6 +5,7 @@ import * as log from 'loglevel';
 
 import { NativefierOptions } from '../../options/model';
 import { getVersionString } from './rceditGet';
+import { fileExists } from '../fsHelpers';
 type ExecutableInfo = {
   arch?: string;
 };
@@ -65,6 +66,10 @@ function getExecutableInfo(
   executablePath: string,
   platform: string,
 ): ExecutableInfo {
+  if (!fileExists(executablePath)) {
+    return {};
+  }
+
   const exeBytes = getExecutableBytes(executablePath);
   return {
     arch: getExecutableArch(exeBytes, platform),
@@ -73,9 +78,9 @@ function getExecutableInfo(
 
 export function getOptionsFromExecutable(
   appResourcesDir: string,
-  appName: string,
+  priorOptions: NativefierOptions,
 ): NativefierOptions {
-  const options: NativefierOptions = {};
+  const newOptions: NativefierOptions = { ...priorOptions };
   let executablePath: string | undefined = undefined;
 
   const appRoot = path.resolve(path.join(appResourcesDir, '..', '..'));
@@ -91,10 +96,13 @@ export function getOptionsFromExecutable(
 
   if (looksLikeMacOS) {
     log.debug('This looks like a MacOS app...');
-    options.platform =
-      children.filter((c) => c.name === 'Library' && c.isDirectory()).length > 0
-        ? 'mas'
-        : 'darwin';
+    if (newOptions.platform === undefined) {
+      newOptions.platform =
+        children.filter((c) => c.name === 'Library' && c.isDirectory()).length >
+        0
+          ? 'mas'
+          : 'darwin';
+    }
     executablePath = path.join(
       appRoot,
       'MacOS',
@@ -102,52 +110,77 @@ export function getOptionsFromExecutable(
     );
   } else if (looksLikeWindows) {
     log.debug('This looks like a Windows app...');
-    options.platform = 'windows';
+
+    if (newOptions.platform === undefined) {
+      newOptions.platform = 'windows';
+    }
     executablePath = path.join(
       appRoot,
       children.filter(
         (c) =>
-          c.name.toLowerCase() === `${appName.toLowerCase()}.exe` && c.isFile(),
+          c.name.toLowerCase() === `${newOptions.name.toLowerCase()}.exe` &&
+          c.isFile(),
       )[0].name,
     );
-    // https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L46-L48
-    options.appVersion = getVersionString(executablePath, 'ProductVersion');
-    log.debug(`Extracted app version from executable: ${options.appVersion}`);
 
-    //https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L50-L52
-    options.buildVersion = getVersionString(executablePath, 'FileVersion');
-
-    // https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L54-L56
-    options.appCopyright = getVersionString(executablePath, 'LegalCopyright');
-    log.debug(
-      `Extracted app copyright from executable: ${options.appCopyright}`,
-    );
-
-    if (options.appVersion == options.buildVersion) {
-      options.buildVersion = undefined;
-    } else {
+    if (newOptions.appVersion === undefined) {
+      // https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L46-L48
+      newOptions.appVersion = getVersionString(
+        executablePath,
+        'ProductVersion',
+      );
       log.debug(
-        `Extracted build version from executable: ${options.buildVersion}`,
+        `Extracted app version from executable: ${newOptions.appVersion}`,
+      );
+    }
+
+    if (newOptions.buildVersion === undefined) {
+      //https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L50-L52
+      newOptions.buildVersion = getVersionString(executablePath, 'FileVersion');
+
+      if (newOptions.appVersion == newOptions.buildVersion) {
+        newOptions.buildVersion = undefined;
+      } else {
+        log.debug(
+          `Extracted build version from executable: ${newOptions.buildVersion}`,
+        );
+      }
+    }
+
+    if (newOptions.appCopyright === undefined) {
+      // https://github.com/electron/electron-packager/blob/f1c159f4c844d807968078ea504fba40ca7d9c73/src/win32.js#L54-L56
+      newOptions.appCopyright = getVersionString(
+        executablePath,
+        'LegalCopyright',
+      );
+      log.debug(
+        `Extracted app copyright from executable: ${newOptions.appCopyright}`,
       );
     }
   } else if (looksLikeLinux) {
     log.debug('This looks like a Linux app...');
-    options.platform = 'linux';
+    if (newOptions.platform === undefined) {
+      newOptions.platform = 'linux';
+    }
     executablePath = path.join(
       appRoot,
-      children.filter((c) => c.name == appName && c.isFile())[0].name,
+      children.filter((c) => c.name == newOptions.name && c.isFile())[0].name,
     );
   }
 
   log.debug(`Executable path: ${executablePath}`);
 
-  const executableInfo = getExecutableInfo(executablePath, options.platform);
-  options.arch = executableInfo.arch;
-  log.debug(`Extracted arch from executable: ${options.arch}`);
-
-  if (options.platform === undefined || options.arch == undefined) {
+  if (newOptions.arch === undefined) {
+    const executableInfo = getExecutableInfo(
+      executablePath,
+      newOptions.platform,
+    );
+    newOptions.arch = executableInfo.arch;
+    log.debug(`Extracted arch from executable: ${newOptions.arch}`);
+  }
+  if (newOptions.platform === undefined || newOptions.arch == undefined) {
     throw Error(`Could not determine platform / arch of app in ${appRoot}`);
   }
 
-  return options;
+  return newOptions;
 }

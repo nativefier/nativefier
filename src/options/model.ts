@@ -25,6 +25,7 @@ export interface AppOptions {
     disableGpu: boolean;
     disableOldBuildWarning: boolean;
     diskCacheSize: number;
+    electronVersionUsed?: string;
     enableEs3Apis: boolean;
     fastQuit: boolean;
     fileDownloadOptions: any;

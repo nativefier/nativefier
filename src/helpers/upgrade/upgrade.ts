@@ -57,50 +57,63 @@ function getIconPath(appResourcesDir: string): string | undefined {
   return undefined;
 }
 
-function getInfoPListOptions(appResourcesDir: string): NativefierOptions {
+function getInfoPListOptions(
+  appResourcesDir: string,
+  priorOptions: NativefierOptions,
+): NativefierOptions {
   if (!fileExists(path.join(appResourcesDir, '..', '..', 'Info.plist'))) {
     // Not a darwin/mas app, so this is irrelevant
-    return {};
+    return priorOptions;
   }
+
+  const newOptions = { ...priorOptions };
 
   const infoPlistXML: string = fs
     .readFileSync(path.join(appResourcesDir, '..', '..', 'Info.plist'))
     .toString();
 
-  // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L230-L232
-  const appCopyright = extractString(infoPlistXML, 'NSHumanReadableCopyright');
-  log.debug(`Extracted app copyright from Info.plist: ${appCopyright}`);
+  if (newOptions.appCopyright === undefined) {
+    // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L230-L232
+    newOptions.appCopyright = extractString(
+      infoPlistXML,
+      'NSHumanReadableCopyright',
+    );
+    log.debug(
+      `Extracted app copyright from Info.plist: ${newOptions.appCopyright}`,
+    );
+  }
 
-  // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L214-L216
-  // This could also be the buildVersion, but since they end up in the same place, that SHOULDN'T matter
-  const bundleVersion = extractString(infoPlistXML, 'CFBundleVersion');
-  log.debug(`Extracted bundle version from Info.plist: ${bundleVersion}`);
-  const appVersion =
-    bundleVersion === undefined || bundleVersion === '1.0.0' // If it's 1.0.0, that's just the default
-      ? undefined
-      : bundleVersion;
-
-  log.debug(`Extracted app version from Info.plist: ${appVersion}`);
-
-  // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L234-L236
-  const darwinDarkModeSupport = extractBoolean(
-    infoPlistXML,
-    'NSRequiresAquaSystemAppearance',
-  );
-  log.debug(
-    `Extracted Darwin dark mode support from Info.plist: ${
-      darwinDarkModeSupport ? 'Yes' : 'No'
-    }`,
-  );
-
-  return {
-    appCopyright,
-    appVersion,
-    darwinDarkModeSupport:
-      darwinDarkModeSupport === undefined
+  if (newOptions.appVersion === undefined) {
+    // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L214-L216
+    // This could also be the buildVersion, but since they end up in the same place, that SHOULDN'T matter
+    const bundleVersion = extractString(infoPlistXML, 'CFBundleVersion');
+    newOptions.appVersion =
+      bundleVersion === undefined || bundleVersion === '1.0.0' // If it's 1.0.0, that's just the default
         ? undefined
-        : darwinDarkModeSupport === false,
-  };
+        : bundleVersion;
+    (newOptions.darwinDarkModeSupport =
+      newOptions.darwinDarkModeSupport === undefined
+        ? undefined
+        : newOptions.darwinDarkModeSupport === false),
+      log.debug(
+        `Extracted app version from Info.plist: ${newOptions.appVersion}`,
+      );
+  }
+
+  if (newOptions.darwinDarkModeSupport === undefined) {
+    // https://github.com/electron/electron-packager/blob/0d3f84374e9ab3741b171610735ebc6be3e5e75f/src/mac.js#L234-L236
+    newOptions.darwinDarkModeSupport = extractBoolean(
+      infoPlistXML,
+      'NSRequiresAquaSystemAppearance',
+    );
+    log.debug(
+      `Extracted Darwin dark mode support from Info.plist: ${
+        newOptions.darwinDarkModeSupport ? 'Yes' : 'No'
+      }`,
+    );
+  }
+
+  return newOptions;
 }
 
 function getInjectPaths(appResourcesDir: string): string[] | undefined {
@@ -148,9 +161,9 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
     appResourcesDir,
     options: {
       ...options,
-      ...getOptionsFromExecutable(appResourcesDir, options.name),
-      ...getInfoPListOptions(appResourcesDir),
-      asar: isAsar(appResourcesDir),
+      ...getOptionsFromExecutable(appResourcesDir, options),
+      ...getInfoPListOptions(appResourcesDir, options),
+      asar: options.asar !== undefined ? options.asar : isAsar(appResourcesDir),
       icon: getIconPath(appResourcesDir),
       inject: getInjectPaths(appResourcesDir),
     },
@@ -166,5 +179,12 @@ export function useOldAppOptions(
     rawOptions.out = rawOptions.targetUrl;
   }
 
-  return { ...rawOptions, ...oldApp.options };
+  log.debug('rawOptions', rawOptions);
+  log.debug('oldApp', oldApp);
+
+  const combinedOptions = { ...rawOptions, ...oldApp.options };
+
+  log.debug('Combined options', combinedOptions);
+
+  return combinedOptions;
 }
