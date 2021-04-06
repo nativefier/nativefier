@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
 import { getTempDir } from './helpers/helpers';
@@ -18,7 +19,9 @@ function checkApp(appRoot: string, inputOptions: any): void {
       relativeAppFolder = 'resources/app';
       break;
     default:
-      throw new Error('Unknown app platform');
+      throw new Error(
+        `Unknown app platform: ${new String(inputOptions.platform).toString()}`,
+      );
   }
 
   const appPath = path.join(appRoot, relativeAppFolder);
@@ -36,6 +39,12 @@ function checkApp(appRoot: string, inputOptions: any): void {
   const iconPath = path.join(appPath, iconFile);
   expect(fs.existsSync(iconPath)).toBe(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
+
+  if (inputOptions.arch !== undefined) {
+    expect(inputOptions.arch).toBe(nativefierConfig.arch);
+  } else {
+    expect(os.arch()).toBe(nativefierConfig.arch);
+  }
 }
 
 describe('Nativefier', () => {
@@ -53,6 +62,41 @@ describe('Nativefier', () => {
       };
       const appPath = await buildNativefierApp(options);
       checkApp(appPath, options);
+    },
+  );
+});
+
+describe('Nativefier upgrade', () => {
+  jest.setTimeout(300000);
+
+  test.each([
+    { platform: 'darwin', arch: 'arm64' },
+    { platform: 'darwin', arch: 'x64' },
+    { platform: 'linux', arch: 'arm64' },
+    { platform: 'linux', arch: 'armv7l' },
+    { platform: 'linux', arch: 'ia32' },
+    { platform: 'linux', arch: 'x64' },
+  ])(
+    'can upgrade a Nativefier app for platform/arch: %s',
+    async (baseAppOptions) => {
+      const tempDirectory = getTempDir('integtestUpgrade1');
+      const options = {
+        targetUrl: 'https://google.com/',
+        out: tempDirectory,
+        overwrite: true,
+        ...baseAppOptions,
+      };
+      const appPath = await buildNativefierApp(options);
+
+      const tempDirectoryUpgrade = getTempDir('integtestUpgrade2');
+      const upgradeOptions = {
+        upgrade: appPath,
+        out: tempDirectoryUpgrade,
+        overwrite: true,
+      };
+
+      const upgradeAppPath = await buildNativefierApp(upgradeOptions);
+      checkApp(upgradeAppPath, options);
     },
   );
 });
