@@ -107,22 +107,21 @@ function trimUnprocessableOptions(options: AppOptions): void {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(rawOptions): Promise<string> {
-  log.info('Processing options...');
-  log.debug(rawOptions);
   if (rawOptions.upgrade && rawOptions.upgrade !== undefined) {
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
     if (oldApp === null) {
       throw new Error(
-        `Could not find an old Nativfier app in "${<string>(
-          rawOptions.upgrade
-        )}"`,
+        `Could not find an old Nativfier app in "${
+          rawOptions.upgrade as string
+        }"`,
       );
     }
-    log.debug('Found old Nativefier app options', oldApp);
     rawOptions = useOldAppOptions(rawOptions, oldApp);
   }
 
   const options = await getOptions(rawOptions);
+  log.info('\nProcessing options...');
+  log.debug(rawOptions);
 
   if (options.packager.platform === 'darwin' && isWindows()) {
     // electron-packager has to extract the desired electron package for the target platform.
