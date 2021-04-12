@@ -29,6 +29,12 @@ if (require('electron-squirrel-startup')) {
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
+// Nativefier is a browser, and an old browser is an insecure / badly-performant one.
+// Given our builder/app design, we currently don't have an easy way to offer
+// upgrades from the app themselves (like browsers do).
+// As a workaround, we ask for a manual upgrade & re-build if the build is old.
+// The period in days is chosen to be not too small to be exceedingly annoying,
+// but not too large to be exceedingly insecure.
 const OLD_BUILD_WARNING_THRESHOLD_DAYS = 90;
 const OLD_BUILD_WARNING_THRESHOLD_MS =
   OLD_BUILD_WARNING_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
