@@ -29,7 +29,7 @@ if (require('electron-squirrel-startup')) {
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
-const OLD_BUILD_WARNING_THRESHOLD_DAYS = 60;
+const OLD_BUILD_WARNING_THRESHOLD_DAYS = 90;
 const OLD_BUILD_WARNING_THRESHOLD_MS =
   OLD_BUILD_WARNING_THRESHOLD_DAYS * 24 * 60 * 60 * 1000;
 
@@ -222,12 +222,14 @@ if (shouldQuit) {
       !appArgs.disableOldBuildWarning &&
       new Date().getTime() - appArgs.buildDate > OLD_BUILD_WARNING_THRESHOLD_MS
     ) {
+      const oldBuildWarningText =
+        appArgs.oldBuildWarningText ||
+        'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.';
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       dialog.showMessageBox(null, {
         type: 'warning',
         message: 'Old build detected',
-        detail:
-          'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.',
+        detail: oldBuildWarningText,
       });
     }
   });
