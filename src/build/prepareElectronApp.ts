@@ -86,6 +86,13 @@ function pickElectronAppArgs(options: AppOptions): any {
     x: options.nativefier.x,
     y: options.nativefier.y,
     zoom: options.nativefier.zoom,
+    buildDate: new Date().getTime(),
+    // OLD_BUILD_WARNING_TEXT is an undocumented env. var to let *packagers*
+    // tweak the message shown on warning about an old build, to something
+    // more tailored to their audience (who might not even know Nativefier).
+    // See https://github.com/kelyvin/Google-Messages-For-Desktop/issues/34#issuecomment-812731144
+    // and https://github.com/nativefier/nativefier/issues/1131#issuecomment-812646988
+    oldBuildWarningText: process.env.OLD_BUILD_WARNING_TEXT || '',
   };
 }
 

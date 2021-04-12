@@ -19,15 +19,17 @@ export function isWindows(): boolean {
 }
 
 function isInternalLoginPage(url: string): boolean {
+  // Making changes? Remember to update the tests in helpers.test.ts
   const internalLoginPagesArray = [
     'amazon\\.[a-zA-Z\\.]*/[a-zA-Z\\/]*signin', // Amazon
     `facebook\\.[a-zA-Z\\.]*\\/login`, // Facebook
-    'github\\.[a-zA-Z\\.]*\\/login', // GitHub
+    'github\\.[a-zA-Z\\.]*\\/(?:login|session)', // GitHub
     'accounts\\.google\\.[a-zA-Z\\.]*', // Google
     'linkedin\\.[a-zA-Z\\.]*/uas/login', // LinkedIn
     'login\\.live\\.[a-zA-Z\\.]*', // Microsoft
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
+    'appleid\\.apple\\.com/auth/authorize', // Apple
   ];
   const regex = RegExp(internalLoginPagesArray.join('|'));
   return regex.test(url);

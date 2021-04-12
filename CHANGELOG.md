@@ -1,4 +1,13 @@
 
+43.0.1 / 2021-04-11
+===================
+
+  * Add a `session-interaction` event to allow injected js to interact
+    with apps Electron `session` object (PR #1132)
+  * Automatically-internal login pages: add Apple ID (PR #1146), GitHub 2FA (PR #1140)
+  * Bump default Electron from 12.0.1 to 12.0.2 (with Chrome 89.0.4389.90)
+  * Old build detection: bump old build threshold from 60 to 90 days
+
 43.0.0 / 2021-03-10
 ===================
 

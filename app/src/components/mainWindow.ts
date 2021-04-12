@@ -3,6 +3,7 @@ import * as path from 'path';
 
 import { BrowserWindow, shell, ipcMain, dialog, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
+import log from 'loglevel';
 
 import {
   isOSX,
@@ -19,6 +20,20 @@ import { createMenu } from './menu';
 
 export const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const ZOOM_INTERVAL = 0.1;
+
+type SessionInteractionRequest = {
+  id?: string;
+  func?: string;
+  funcArgs?: any[];
+  property?: string;
+  propertyValue?: any;
+};
+
+type SessionInteractionResult = {
+  id?: string;
+  value?: any;
+  error?: Error;
+};
 
 function hideWindow(
   window: BrowserWindow,
@@ -374,6 +389,74 @@ export function createMainWindow(
   ipcMain.on('notification-click', () => {
     mainWindow.show();
   });
+
+  // See API.md / "Accessing The Electron Session"
+  ipcMain.on(
+    'session-interaction',
+    (event, request: SessionInteractionRequest) => {
+      log.debug('session-interaction:event', event);
+      log.debug('session-interaction:request', request);
+
+      const result: SessionInteractionResult = { id: request.id };
+      let awaitingPromise = false;
+      try {
+        if (request.func !== undefined) {
+          // If no funcArgs provided, we'll just use an empty array
+          if (request.funcArgs === undefined || request.funcArgs === null) {
+            request.funcArgs = [];
+          }
+
+          // If funcArgs isn't an array, we'll be nice and make it a single item array
+          if (typeof request.funcArgs[Symbol.iterator] !== 'function') {
+            request.funcArgs = [request.funcArgs];
+          }
+
+          // Call func with funcArgs
+          result.value = mainWindow.webContents.session[request.func](
+            ...request.funcArgs,
+          );
+
+          if (
+            result.value !== undefined &&
+            typeof result.value['then'] === 'function'
+          ) {
+            // This is a promise. We'll resolve it here otherwise it will blow up trying to serialize it in the reply
+            result.value.then((trueResultValue) => {
+              result.value = trueResultValue;
+              log.debug('session-interaction:result', result);
+              event.reply('session-interaction-reply', result);
+            });
+            awaitingPromise = true;
+          }
+        } else if (request.property !== undefined) {
+          if (request.propertyValue !== undefined) {
+            // Set the property
+            mainWindow.webContents.session[request.property] =
+              request.propertyValue;
+          }
+
+          // Get the property value
+          result.value = mainWindow.webContents.session[request.property];
+        } else {
+          // Why even send the event if you're going to do this? You're just wasting time! ;)
+          throw Error(
+            'Received neither a func nor a property in the request. Unable to process.',
+          );
+        }
+
+        // If we are awaiting a promise, that will return the reply instead, else
+        if (!awaitingPromise) {
+          log.debug('session-interaction:result', result);
+          event.reply('session-interaction-reply', result);
+        }
+      } catch (error) {
+        log.error('session-interaction:error', error, event, request);
+        result.error = error;
+        result.value = undefined; // Clear out the value in case serializing the value is what got us into this mess in the first place
+        event.reply('session-interaction-reply', result);
+      }
+    },
+  );
 
   mainWindow.webContents.on('new-window', onNewWindow);
   mainWindow.webContents.on('will-navigate', onWillNavigate);
