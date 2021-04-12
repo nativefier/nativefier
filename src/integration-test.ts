@@ -71,11 +71,14 @@ describe('Nativefier upgrade', () => {
 
   test.each([
     { platform: 'darwin', arch: 'arm64' },
-    { platform: 'darwin', arch: 'x64' },
-    { platform: 'linux', arch: 'arm64' },
-    { platform: 'linux', arch: 'armv7l' },
-    { platform: 'linux', arch: 'ia32' },
     { platform: 'linux', arch: 'x64' },
+    // Exhaustive integration testing here would be neat, but takes too long.
+    // -> For now, only testing a subset of platforms/archs
+    // { platform: 'win32', arch: 'x64' },
+    // { platform: 'darwin', arch: 'x64' },
+    // { platform: 'linux', arch: 'arm64' },
+    // { platform: 'linux', arch: 'armv7l' },
+    // { platform: 'linux', arch: 'ia32' },
   ])(
     'can upgrade a Nativefier app for platform/arch: %s',
     async (baseAppOptions) => {
