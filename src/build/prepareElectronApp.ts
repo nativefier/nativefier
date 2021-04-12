@@ -86,7 +86,6 @@ function pickElectronAppArgs(options: AppOptions): any {
     x: options.nativefier.x,
     y: options.nativefier.y,
     zoom: options.nativefier.zoom,
-    buildDate: new Date().getTime(),
     // OLD_BUILD_WARNING_TEXT is an undocumented env. var to let *packagers*
     // tweak the message shown on warning about an old build, to something
     // more tailored to their audience (who might not even know Nativefier).
