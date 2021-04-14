@@ -1,4 +1,12 @@
 
+43.0.2 / 2021-04-13
+===================
+
+  * Bump default Electron to 12.0.4 with Chrome 89.0.4389.114
+    This includes the recent security fixes.
+    See https://github.com/electron/electron/releases/tag/v12.0.3
+    and https://github.com/electron/electron/releases/tag/v12.0.4
+
 43.0.1 / 2021-04-11
 ===================
 
