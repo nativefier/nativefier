@@ -48,6 +48,7 @@ export interface AppOptions {
     titleBarStyle: string;
     tray: string | boolean;
     userAgent: string;
+    userAgentOverriden: boolean;
     verbose: boolean;
     versionString: string;
     width: number;

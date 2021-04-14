@@ -157,6 +157,8 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
     fs.readFileSync(path.join(appResourcesDir, 'nativefier.json'), 'utf8'),
   );
 
+  options.electronVersion = undefined;
+
   return {
     appResourcesDir,
     options: {
@@ -181,6 +183,13 @@ export function useOldAppOptions(
 
   log.debug('rawOptions', rawOptions);
   log.debug('oldApp', oldApp);
+
+  if (
+    oldApp.options.userAgentOverriden === undefined ||
+    oldApp.options.userAgentOverriden === false
+  ) {
+    oldApp.options.userAgent = undefined;
+  }
 
   const combinedOptions = { ...rawOptions, ...oldApp.options };
 

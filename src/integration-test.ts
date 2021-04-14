@@ -2,10 +2,12 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
+import { DEFAULT_ELECTRON_VERSION } from './constants';
 import { getTempDir } from './helpers/helpers';
+import { inferUserAgent } from './infer/inferUserAgent';
 import { buildNativefierApp } from './main';
 
-function checkApp(appRoot: string, inputOptions: any): void {
+async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
   let relativeAppFolder: string;
 
   switch (inputOptions.platform) {
@@ -40,11 +42,27 @@ function checkApp(appRoot: string, inputOptions: any): void {
   expect(fs.existsSync(iconPath)).toBe(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
 
+  // Test arch
   if (inputOptions.arch !== undefined) {
     expect(inputOptions.arch).toBe(nativefierConfig.arch);
   } else {
     expect(os.arch()).toBe(nativefierConfig.arch);
   }
+
+  // Test electron version
+  expect(nativefierConfig.electronVersionUsed).toBe(
+    inputOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
+  );
+
+  // Test user agent
+  expect(nativefierConfig.userAgent).toBe(
+    inputOptions.userAgent !== undefined
+      ? inputOptions.userAgent
+      : await inferUserAgent(
+          inputOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
+          inputOptions.platform,
+        ),
+  );
 }
 
 describe('Nativefier', () => {
@@ -61,7 +79,7 @@ describe('Nativefier', () => {
         platform,
       };
       const appPath = await buildNativefierApp(options);
-      checkApp(appPath, options);
+      await checkApp(appPath, options);
     },
   );
 });
@@ -70,13 +88,14 @@ describe('Nativefier upgrade', () => {
   jest.setTimeout(300000);
 
   test.each([
-    { platform: 'darwin', arch: 'arm64' },
-    { platform: 'linux', arch: 'x64' },
+    { platform: 'darwin', arch: 'x64' },
+    { platform: 'linux', arch: 'arm64', userAgent: 'FIREFOX' },
     // Exhaustive integration testing here would be neat, but takes too long.
     // -> For now, only testing a subset of platforms/archs
     // { platform: 'win32', arch: 'x64' },
-    // { platform: 'darwin', arch: 'x64' },
-    // { platform: 'linux', arch: 'arm64' },
+    // { platform: 'win32', arch: 'ia32' },
+    // { platform: 'darwin', arch: 'arm64' },
+    // { platform: 'linux', arch: 'x64' },
     // { platform: 'linux', arch: 'armv7l' },
     // { platform: 'linux', arch: 'ia32' },
   ])(
@@ -87,9 +106,11 @@ describe('Nativefier upgrade', () => {
         targetUrl: 'https://google.com/',
         out: tempDirectory,
         overwrite: true,
+        electronVersion: '11.2.3',
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
+      await checkApp(appPath, options);
 
       const tempDirectoryUpgrade = getTempDir('integtestUpgrade2');
       const upgradeOptions = {
@@ -99,7 +120,15 @@ describe('Nativefier upgrade', () => {
       };
 
       const upgradeAppPath = await buildNativefierApp(upgradeOptions);
-      checkApp(upgradeAppPath, options);
+      options.electronVersion = DEFAULT_ELECTRON_VERSION;
+      options.userAgent =
+        baseAppOptions.userAgent !== undefined
+          ? baseAppOptions.userAgent
+          : await inferUserAgent(
+              DEFAULT_ELECTRON_VERSION,
+              baseAppOptions.platform,
+            );
+      await checkApp(upgradeAppPath, options);
     },
   );
 });

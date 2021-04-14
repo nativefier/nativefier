@@ -90,6 +90,8 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       titleBarStyle: rawOptions.titleBarStyle || null,
       tray: rawOptions.tray || false,
       userAgent: rawOptions.userAgent,
+      userAgentOverriden:
+        rawOptions.userAgent !== undefined && rawOptions.userAgent !== null,
       verbose: rawOptions.verbose,
       versionString: rawOptions.versionString,
       width: rawOptions.width || 1280,
