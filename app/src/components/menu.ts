@@ -289,34 +289,41 @@ export function createMenu({
     menuTemplate = [editMenu, viewMenu, windowMenu, helpMenu];
   }
 
-  const bookmarkConfigPath = path.join(__dirname, '..', 'bookmarks.json');
-  if (fs.existsSync(bookmarkConfigPath)) {
-    const bookmarksConfig = JSON.parse(
-      fs.readFileSync(bookmarkConfigPath, 'utf-8'),
-    );
-    const bookmarksMenu: MenuItemConstructorOptions = {
-      label: bookmarksConfig['menuLabel'],
-      submenu: bookmarksConfig['bookmarks'].map((el) => {
-        if (el['type'] === 'link') {
-          let accelerator = null;
-          if ('shortcut' in el) {
-            accelerator = el['shortcut'];
+  try {
+    const bookmarkConfigPath = path.join(__dirname, '..', 'bookmarks.json');
+    if (fs.existsSync(bookmarkConfigPath)) {
+      const bookmarksConfig = JSON.parse(
+        fs.readFileSync(bookmarkConfigPath, 'utf-8'),
+      );
+      const bookmarksMenu: MenuItemConstructorOptions = {
+        label: bookmarksConfig['menuLabel'],
+        submenu: bookmarksConfig['bookmarks'].map((el) => {
+          if (el['type'] === 'link') {
+            let accelerator = null;
+            if ('shortcut' in el) {
+              accelerator = el['shortcut'];
+            }
+            return {
+              label: el['title'],
+              click: () => {
+                gotoUrl(el['url']);
+              },
+              accelerator: accelerator,
+            };
+          } else if (el['type'] === 'separator') {
+            return {
+              type: 'separator',
+            };
           }
-          return {
-            label: el['title'],
-            click: () => {
-              gotoUrl(el['url']);
-            },
-            accelerator: accelerator,
-          };
-        } else if (el['type'] === 'separator') {
-          return {
-            type: 'separator',
-          };
-        }
-      }),
-    };
-    menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
+        }),
+      };
+      menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
+    }
+  } catch (err) {
+    console.warn(
+      'Failed to load & parse bookmarks configuration JSON file.',
+      err,
+    );
   }
 
   const menu = Menu.buildFromTemplate(menuTemplate);
