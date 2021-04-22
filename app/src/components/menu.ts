@@ -1,4 +1,6 @@
 import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
+import * as fs from 'fs';
+import path from 'path';
 
 export function createMenu({
   nativefierVersion,
@@ -10,6 +12,7 @@ export function createMenu({
   goBack,
   goForward,
   getCurrentUrl,
+  gotoUrl,
   clearAppData,
   disableDevTools,
 }): void {
@@ -284,6 +287,36 @@ export function createMenu({
     menuTemplate = [electronMenu, editMenu, viewMenu, windowMenu, helpMenu];
   } else {
     menuTemplate = [editMenu, viewMenu, windowMenu, helpMenu];
+  }
+
+  const bookmarkConfigPath = path.join(__dirname, '..', 'bookmarks.json');
+  if (fs.existsSync(bookmarkConfigPath)) {
+    const bookmarksConfig = JSON.parse(
+      fs.readFileSync(bookmarkConfigPath, 'utf-8'),
+    );
+    const bookmarksMenu: MenuItemConstructorOptions = {
+      label: bookmarksConfig['menuLabel'],
+      submenu: bookmarksConfig['bookmarks'].map((el) => {
+        if (el['type'] === 'link') {
+          let accelerator = null;
+          if ('shortcut' in el) {
+            accelerator = el['shortcut'];
+          }
+          return {
+            label: el['title'],
+            click: () => {
+              gotoUrl(el['url']);
+            },
+            accelerator: accelerator,
+          };
+        } else if (el['type'] === 'separator') {
+          return {
+            type: 'separator',
+          };
+        }
+      }),
+    };
+    menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
   }
 
   const menu = Menu.buildFromTemplate(menuTemplate);

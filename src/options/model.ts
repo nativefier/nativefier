@@ -13,6 +13,7 @@ export interface AppOptions {
     backgroundColor: string;
     basicAuthPassword: string;
     basicAuthUsername: string;
+    bookmarksMenu: string;
     bounce: boolean;
     browserwindowOptions: any;
     clearCache: boolean;

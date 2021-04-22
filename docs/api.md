@@ -68,6 +68,7 @@
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
+  - [[bookmarks-menu]](#bookmarks-menu)
   - [Deprecated](#deprecated)
     - [[flash] and [flash-path]](#flash) (DEPRECATED)
 - [Programmatic API](#programmatic-api)
@@ -793,6 +794,45 @@ Enables Dark Mode support on macOS 10.14+.
 ```
 
 See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
+
+#### [bookmarks-menu]
+
+```
+--bookmarks-menu <string>
+```
+
+Path to a JSON file containing configuration for a predefined bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
+
+Example of such a JSON file:
+
+```json
+{
+    "menuLabel": "Music",
+    "bookmarks": [
+        {
+            "title": "lofi.cafe",
+            "url": "https://lofi.cafe/",
+            "type": "link",
+            "shortcut": "Cmd+1"
+        },
+        {
+            "title": "beats to relax/study to",
+            "url": "https://www.youtube.com/watch?v=5qap5aO4i9A",
+            "type": "link",
+            "shortcut": "Cmd+2"
+        },
+        {
+            "type": "separator"
+        },
+        {
+            "title": "RÜFÜS DU SOL Live from Joshua Tree",
+            "type": "link",
+            "url": "https://www.youtube.com/watch?v=Zy4KtD98S2c"
+        }
+    ]
+}
+
+```
 
 ### Deprecated
 

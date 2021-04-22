@@ -230,6 +230,9 @@ export function createMainWindow(
   const getCurrentUrl = (): void =>
     withFocusedWindow((focusedWindow) => focusedWindow.webContents.getURL());
 
+  const gotoUrl = (url: string): void =>
+    withFocusedWindow((focusedWindow) => void focusedWindow.loadURL(url));
+
   const onBlockedExternalUrl = (url: string) => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     dialog.showMessageBox(mainWindow, {
@@ -342,6 +345,7 @@ export function createMainWindow(
     goBack: onGoBack,
     goForward: onGoForward,
     getCurrentUrl,
+    gotoUrl,
     clearAppData,
     disableDevTools: options.disableDevTools,
   };
