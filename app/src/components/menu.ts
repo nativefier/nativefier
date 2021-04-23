@@ -298,20 +298,20 @@ export function createMenu({
       );
       const bookmarksMenu: MenuItemConstructorOptions = {
         label: bookmarksConfig['menuLabel'],
-        submenu: bookmarksConfig['bookmarks'].map((el) => {
-          if (el['type'] === 'link') {
+        submenu: bookmarksConfig['bookmarks'].map((bookmark) => {
+          if (bookmark['type'] === 'link') {
             let accelerator = null;
-            if ('shortcut' in el) {
-              accelerator = el['shortcut'];
+            if ('shortcut' in bookmark) {
+              accelerator = bookmark['shortcut'];
             }
             return {
-              label: el['title'],
+              label: bookmark['title'],
               click: () => {
-                gotoUrl(el['url']);
+                gotoUrl(bookmark['url']);
               },
               accelerator: accelerator,
             };
-          } else if (el['type'] === 'separator') {
+          } else if (bookmark['type'] === 'separator') {
             return {
               type: 'separator',
             };
