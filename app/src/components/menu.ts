@@ -315,6 +315,16 @@ export function createMenu({
         label: bookmarksMenuConfig.menuLabel,
         submenu: bookmarksMenuConfig.bookmarks.map((bookmark) => {
           if (bookmark.type === 'link') {
+            if (!('title' in bookmark && 'url' in bookmark)) {
+              throw Error(
+                'All links in the bookmarks menu must have a title and url.',
+              );
+            }
+            try {
+              new URL(bookmark.url);
+            } catch (_) {
+              throw Error('Bookmark URL "' + bookmark.url + '"is invalid.');
+            }
             let accelerator = null;
             if ('shortcut' in bookmark) {
               accelerator = bookmark.shortcut;
@@ -330,6 +340,10 @@ export function createMenu({
             return {
               type: 'separator',
             };
+          } else {
+            throw Error(
+              'A bookmarks menu entry has an invalid type; type must be one of "link", "separator".',
+            );
           }
         }),
       };
