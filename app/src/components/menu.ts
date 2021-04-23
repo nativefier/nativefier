@@ -1,6 +1,7 @@
-import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
 import * as fs from 'fs';
 import path from 'path';
+
+import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
 
 export function createMenu({
   nativefierVersion,
