@@ -3,6 +3,21 @@ import path from 'path';
 
 import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
 
+type BookmarksLink = {
+  type: 'link';
+  title: string;
+  url: string;
+  shortcut?: string;
+};
+type BookmarksSeparator = {
+  type: 'separator';
+};
+type BookmarkConfig = BookmarksLink | BookmarksSeparator;
+type BookmarksMenuConfig = {
+  menuLabel: string;
+  bookmarks: BookmarkConfig[];
+};
+
 export function createMenu({
   nativefierVersion,
   appQuit,
@@ -293,25 +308,25 @@ export function createMenu({
   try {
     const bookmarkConfigPath = path.join(__dirname, '..', 'bookmarks.json');
     if (fs.existsSync(bookmarkConfigPath)) {
-      const bookmarksConfig = JSON.parse(
+      const bookmarksMenuConfig: BookmarksMenuConfig = JSON.parse(
         fs.readFileSync(bookmarkConfigPath, 'utf-8'),
       );
       const bookmarksMenu: MenuItemConstructorOptions = {
-        label: bookmarksConfig['menuLabel'],
-        submenu: bookmarksConfig['bookmarks'].map((bookmark) => {
-          if (bookmark['type'] === 'link') {
+        label: bookmarksMenuConfig.menuLabel,
+        submenu: bookmarksMenuConfig.bookmarks.map((bookmark) => {
+          if (bookmark.type === 'link') {
             let accelerator = null;
             if ('shortcut' in bookmark) {
-              accelerator = bookmark['shortcut'];
+              accelerator = bookmark.shortcut;
             }
             return {
-              label: bookmark['title'],
+              label: bookmark.title,
               click: () => {
-                gotoUrl(bookmark['url']);
+                gotoUrl(bookmark.url);
               },
               accelerator: accelerator,
             };
-          } else if (bookmark['type'] === 'separator') {
+          } else if (bookmark.type === 'separator') {
             return {
               type: 'separator',
             };
