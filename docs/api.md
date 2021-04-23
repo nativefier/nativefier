@@ -801,7 +801,11 @@ See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
 --bookmarks-menu <string>
 ```
 
-Path to a JSON file containing configuration for a predefined bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
+Path to a JSON file defining a bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
+
+This menu is a simple list; folders are not supported.
+
+Your `menuLabel` can be bound to a `Alt + letter` shortcut using the letter `&` before the `letter` you want. Be careful to not conflict with the letter of other menus!
 
 Example of such a JSON file:
 
