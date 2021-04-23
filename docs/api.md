@@ -807,6 +807,8 @@ This menu is a simple list; folders are not supported.
 
 Your `menuLabel` can be bound to a `Alt + letter` shortcut using the letter `&` before the `letter` you want. Be careful to not conflict with the letter of other menus!
 
+Keyboard shortcuts can use the modifier keys `Cmd`, `Ctrl`, `CmdOrCtrl`, `Alt`, `Option`, `AltGr`, `Shift`, and `Super`. See [the Electron documentation](https://www.electronjs.org/docs/api/accelerator) for more information.
+
 Example of such a JSON file:
 
 ```json
@@ -817,13 +819,13 @@ Example of such a JSON file:
             "title": "lofi.cafe",
             "url": "https://lofi.cafe/",
             "type": "link",
-            "shortcut": "Cmd+1"
+            "shortcut": "CmdOrCtrl+1"
         },
         {
             "title": "beats to relax/study to",
             "url": "https://www.youtube.com/watch?v=5qap5aO4i9A",
             "type": "link",
-            "shortcut": "Cmd+2"
+            "shortcut": "CmdOrCtrl+2"
         },
         {
             "type": "separator"
