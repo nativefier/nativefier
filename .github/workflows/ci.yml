@@ -13,9 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-        - 16.x
-        - 14.x # Changing this? Remind to keep linter conditions below and in publish.yml aligned.
-        - 12.x
+        - 16.x # Changing this? Remind to keep linter conditions below and in publish.yml aligned.
         - 10.x
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
@@ -28,6 +26,6 @@ jobs:
     # Will also (through `prepare` hook): 1. install ./app, and 2. build
     - run: npm install --no-fund
     # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
-    - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '14.x'
+    - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '16.x'
       run: npm run lint
     - run: npm test
