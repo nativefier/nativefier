@@ -347,6 +347,7 @@ export function createMenu({
           }
         }),
       };
+      // Insert custom bookmarks menu between menus "View" and "Window"
       menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
     }
   } catch (err) {
