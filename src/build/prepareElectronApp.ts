@@ -156,6 +156,15 @@ export async function prepareElectronApp(
     JSON.stringify(pickElectronAppArgs(options)),
   );
 
+  if (options.nativefier.bookmarksMenu) {
+    const bookmarksJsonPath = path.join(dest, '/bookmarks.json');
+    try {
+      await copyFileOrDir(options.nativefier.bookmarksMenu, bookmarksJsonPath);
+    } catch (err) {
+      log.error('Error copying bookmarks menu config file.', err);
+    }
+  }
+
   try {
     await maybeCopyScripts(options.nativefier.inject, dest);
   } catch (err) {

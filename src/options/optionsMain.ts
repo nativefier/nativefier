@@ -52,6 +52,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       backgroundColor: rawOptions.backgroundColor || null,
       basicAuthPassword: rawOptions.basicAuthPassword || null,
       basicAuthUsername: rawOptions.basicAuthUsername || null,
+      bookmarksMenu: rawOptions.bookmarksMenu || null,
       bounce: rawOptions.bounce || false,
       browserwindowOptions: rawOptions.browserwindowOptions,
       clearCache: rawOptions.clearCache || false,
