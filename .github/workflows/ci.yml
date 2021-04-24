@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-        - 15.x
+        - 16.x
         - 14.x # Changing this? Remind to keep linter conditions below and in publish.yml aligned.
         - 12.x
         - 10.x
