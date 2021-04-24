@@ -1,4 +1,22 @@
+import * as fs from 'fs';
+import path from 'path';
+
 import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
+
+type BookmarksLink = {
+  type: 'link';
+  title: string;
+  url: string;
+  shortcut?: string;
+};
+type BookmarksSeparator = {
+  type: 'separator';
+};
+type BookmarkConfig = BookmarksLink | BookmarksSeparator;
+type BookmarksMenuConfig = {
+  menuLabel: string;
+  bookmarks: BookmarkConfig[];
+};
 
 export function createMenu({
   nativefierVersion,
@@ -10,6 +28,7 @@ export function createMenu({
   goBack,
   goForward,
   getCurrentUrl,
+  gotoUrl,
   clearAppData,
   disableDevTools,
 }): void {
@@ -284,6 +303,58 @@ export function createMenu({
     menuTemplate = [electronMenu, editMenu, viewMenu, windowMenu, helpMenu];
   } else {
     menuTemplate = [editMenu, viewMenu, windowMenu, helpMenu];
+  }
+
+  try {
+    const bookmarkConfigPath = path.join(__dirname, '..', 'bookmarks.json');
+    if (fs.existsSync(bookmarkConfigPath)) {
+      const bookmarksMenuConfig: BookmarksMenuConfig = JSON.parse(
+        fs.readFileSync(bookmarkConfigPath, 'utf-8'),
+      );
+      const bookmarksMenu: MenuItemConstructorOptions = {
+        label: bookmarksMenuConfig.menuLabel,
+        submenu: bookmarksMenuConfig.bookmarks.map((bookmark) => {
+          if (bookmark.type === 'link') {
+            if (!('title' in bookmark && 'url' in bookmark)) {
+              throw Error(
+                'All links in the bookmarks menu must have a title and url.',
+              );
+            }
+            try {
+              new URL(bookmark.url);
+            } catch (_) {
+              throw Error('Bookmark URL "' + bookmark.url + '"is invalid.');
+            }
+            let accelerator = null;
+            if ('shortcut' in bookmark) {
+              accelerator = bookmark.shortcut;
+            }
+            return {
+              label: bookmark.title,
+              click: () => {
+                gotoUrl(bookmark.url);
+              },
+              accelerator: accelerator,
+            };
+          } else if (bookmark.type === 'separator') {
+            return {
+              type: 'separator',
+            };
+          } else {
+            throw Error(
+              'A bookmarks menu entry has an invalid type; type must be one of "link", "separator".',
+            );
+          }
+        }),
+      };
+      // Insert custom bookmarks menu between menus "View" and "Window"
+      menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
+    }
+  } catch (err) {
+    console.warn(
+      'Failed to load & parse bookmarks configuration JSON file.',
+      err,
+    );
   }
 
   const menu = Menu.buildFromTemplate(menuTemplate);

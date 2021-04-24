@@ -12,7 +12,7 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         # Align the version of Node here with ci.yml.
-        node-version: '14.x'
+        node-version: '16.x'
         registry-url: 'https://registry.npmjs.org'
     # Will also (through `prepare` hook): 1. install ./app, and 2. build
     - run: npm install --no-fund
