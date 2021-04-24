@@ -813,7 +813,7 @@ Example of such a JSON file:
 
 ```json
 {
-    "menuLabel": "Music",
+    "menuLabel": "&Music",
     "bookmarks": [
         {
             "title": "lofi.cafe",
