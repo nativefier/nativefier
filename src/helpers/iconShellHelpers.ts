@@ -9,6 +9,11 @@ const SCRIPT_PATHS = {
   convertToPng: path.join(__dirname, '../..', 'icon-scripts/convertToPng'),
   convertToIco: path.join(__dirname, '../..', 'icon-scripts/convertToIco'),
   convertToIcns: path.join(__dirname, '../..', 'icon-scripts/convertToIcns'),
+  convertToTrayIcon: path.join(
+    __dirname,
+    '../..',
+    'icon-scripts/convertToTrayIcon',
+  ),
 };
 
 /**
@@ -22,8 +27,8 @@ function iconShellHelper(
   if (isWindows()) {
     throw new Error(
       'Icon conversion only supported on macOS or Linux. ' +
-        'If building for Windows, download/create a .ico and pass it with --icon favicon.ico . ' +
-        'If building for macOS/Linux, do it from macOS/Linux',
+      'If building for Windows, download/create a .ico and pass it with --icon favicon.ico . ' +
+      'If building for macOS/Linux, do it from macOS/Linux',
     );
   }
 
@@ -79,5 +84,17 @@ export function convertToIcns(icoSrc: string): string {
     SCRIPT_PATHS.convertToIcns,
     icoSrc,
     `${getTempDir('iconconv')}/icon.icns`,
+  );
+}
+
+export function convertToTrayIcon(icoSrc: string): string {
+  if (!isOSX()) {
+    throw new Error('macOS is required to convert from a .icns icon');
+  }
+
+  return iconShellHelper(
+    SCRIPT_PATHS.convertToTrayIcon,
+    icoSrc,
+    `${path.dirname(icoSrc)}/icon.png`,
   );
 }
