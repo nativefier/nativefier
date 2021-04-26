@@ -27,8 +27,8 @@ function iconShellHelper(
   if (isWindows()) {
     throw new Error(
       'Icon conversion only supported on macOS or Linux. ' +
-      'If building for Windows, download/create a .ico and pass it with --icon favicon.ico . ' +
-      'If building for macOS/Linux, do it from macOS/Linux',
+        'If building for Windows, download/create a .ico and pass it with --icon favicon.ico . ' +
+        'If building for macOS/Linux, do it from macOS/Linux',
     );
   }
 
