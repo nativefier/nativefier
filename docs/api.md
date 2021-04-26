@@ -65,6 +65,7 @@
   - [[file-download-options]](#file-download-options)
   - [[always-on-top]](#always-on-top)
   - [[global-shortcuts]](#global-shortcuts)
+    - [Global Shortucts on macOS](#global-shortucts-on-macos)
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
@@ -238,8 +239,6 @@ The icon parameter should be a path to a `.png` file.
 The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
 If your `PATH` has our image-conversion dependencies (`iconutil`, and either ImageMagick `convert` + `identify`, or GraphicsMagick `gm`), Nativefier will automatically convert the `.png` to a `.icns` for you.
-
-On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 ###### Manually Converting `.icns`
 
@@ -763,6 +762,10 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
   }
 ]
 ```
+
+#### Global Shortucts on macOS
+
+On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 #### [browserwindow-options]
 
