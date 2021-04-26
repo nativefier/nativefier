@@ -128,6 +128,9 @@ export async function buildNativefierApp(rawOptions): Promise<string> {
       );
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
+    if (rawOptions.out === undefined && rawOptions.overwrite) {
+      rawOptions.out = path.dirname(rawOptions.upgrade);
+    }
   }
   log.debug('rawOptions', rawOptions);
 

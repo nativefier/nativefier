@@ -76,7 +76,7 @@ if (require.main === module) {
     .option('-n, --name <value>', 'app name')
     .option(
       '--upgrade <pathToExistingApp>',
-      'Upgrade an app built by an older Nativefier. You must pass the full path to the existing app executable.',
+      'Upgrade an app built by an older Nativefier. You must pass the full path to the existing app executable (app will be overwritten with upgraded version by default)',
     )
     .addOption(
       new commander.Option('-p, --platform <value>').choices(

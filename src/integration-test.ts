@@ -4,10 +4,21 @@ import * as path from 'path';
 
 import { DEFAULT_ELECTRON_VERSION } from './constants';
 import { getTempDir } from './helpers/helpers';
+import { inferArch } from './infer/inferOs';
 import { inferUserAgent } from './infer/inferUserAgent';
 import { buildNativefierApp } from './main';
 
 async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
+  const arch = (inputOptions.arch as string) || inferArch();
+  if (inputOptions.out !== undefined) {
+    expect(
+      path.join(
+        inputOptions.out,
+        `Google-${inputOptions.platform as string}-${arch}`,
+      ),
+    ).toBe(appRoot);
+  }
+
   let relativeAppFolder: string;
 
   switch (inputOptions.platform) {
@@ -112,10 +123,8 @@ describe('Nativefier upgrade', () => {
       const appPath = await buildNativefierApp(options);
       await checkApp(appPath, options);
 
-      const tempDirectoryUpgrade = getTempDir('integtestUpgrade2');
       const upgradeOptions = {
         upgrade: appPath,
-        out: tempDirectoryUpgrade,
         overwrite: true,
       };
 
