@@ -23,7 +23,7 @@ Thanks! Take care.
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
 ```bash
-nativefier web.whatsapp.com
+nativefier 'web.whatsapp.com'
 ```
 
 ![Walkthrough animation](docs/walkthrough.gif)
