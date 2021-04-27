@@ -94,5 +94,4 @@ export function convertIconIfNecessary(options: AppOptions): void {
     log.warn('Failed to convert icon to .icns, skipping.', error);
     options.packager.icon = undefined;
   }
-  return;
 }

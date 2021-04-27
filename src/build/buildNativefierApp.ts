@@ -68,8 +68,8 @@ async function copyIconsIfNecessary(
     if (options.nativefier.tray) {
       //tray icon needs to be .png
       log.debug('Copying icon for tray application');
-      const trayIconFileName = `icon.png`;
-      const destIconPath = path.join(appPath, trayIconFileName);
+      const trayIconFileName = `tray-icon.png`;
+      const destIconPath = path.join(appPath, 'icon.png');
       await copyFileOrDir(
         `${path.dirname(options.packager.icon)}/${trayIconFileName}`,
         destIconPath,

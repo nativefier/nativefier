@@ -95,6 +95,6 @@ export function convertToTrayIcon(icoSrc: string): string {
   return iconShellHelper(
     SCRIPT_PATHS.convertToTrayIcon,
     icoSrc,
-    `${path.dirname(icoSrc)}/icon.png`,
+    `${path.dirname(icoSrc)}/tray-icon.png`,
   );
 }
