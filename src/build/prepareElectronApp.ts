@@ -84,6 +84,8 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
     return;
   }
 
+  const supportedInjectionExtensions = ['.css', '.js'];
+
   log.debug(`Copying ${srcs.length} files to inject in app.`);
   for (const src of srcs) {
     if (!fs.existsSync(src)) {
@@ -92,15 +94,13 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
       );
     }
 
-    let destFileName: string;
-    if (path.extname(src) === '.js') {
-      destFileName = 'inject.js';
-    } else if (path.extname(src) === '.css') {
-      destFileName = 'inject.css';
-    } else {
-      return;
+    if (supportedInjectionExtensions.indexOf(path.extname(src)) < 0) {
+      console.log(`Skipping unsupported injection file: ${src}`);
+      continue;
     }
 
+    const postFixHash = generatePostFixHash(src);
+    const destFileName = `inject-${postFixHash}.${path.extname(src)}`;
     const destPath = path.join(dest, 'inject', destFileName);
     log.debug(`Copying injection file "${src}" to "${destPath}"`);
     await copyFileOrDir(src, destPath);
@@ -108,15 +108,21 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
 }
 
 function normalizeAppName(appName: string, url: string): string {
-  // use a simple 3 byte random string to prevent collision
-  const hash = crypto.createHash('md5');
-  hash.update(url);
-  const postFixHash = hash.digest('hex').substring(0, 6);
+  // use a simple random string to prevent collision
+  const postFixHash = generatePostFixHash(url);
   const normalized = appName
     .toLowerCase()
     .replace(/[,:.]/g, '')
     .replace(/[\s_]/g, '-');
   return `${normalized}-nativefier-${postFixHash}`;
+}
+
+function generatePostFixHash(seed: string, length = 6): string {
+  const hash = crypto.createHash('md5');
+  // Add a random salt to help avoid collisions
+  const salt = Math.random().toString();
+  hash.update(seed + salt);
+  return hash.digest('hex').substring(0, length);
 }
 
 function changeAppPackageJsonName(
