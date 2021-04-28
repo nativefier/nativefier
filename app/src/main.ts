@@ -11,7 +11,7 @@ import {
   BrowserWindow,
 } from 'electron';
 import electronDownload from 'electron-dl';
-import * as log from 'loglevel'
+import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
