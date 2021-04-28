@@ -203,6 +203,8 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 
 Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
+For certain Widevine required sites (such as HBO Max), an EVS signed version of the generated app will be needed for the generated app to work. For more information on signing your generated app with EVS see https://github.com/castlabs/electron-releases/wiki/EVS.
+
 #### [no-overwrite]
 
 ```
