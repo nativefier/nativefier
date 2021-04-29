@@ -1,9 +1,11 @@
 import * as electronPackager from 'electron-packager';
 
 export interface ElectronPackagerOptions extends electronPackager.Options {
-  targetUrl: string;
-  platform: string;
   portable: boolean;
+  platform: string;
+  targetUrl: string;
+  upgrade: boolean;
+  upgradeFrom?: string;
 }
 
 export interface AppOptions {
@@ -25,6 +27,7 @@ export interface AppOptions {
     disableGpu: boolean;
     disableOldBuildWarning: boolean;
     diskCacheSize: number;
+    electronVersionUsed?: string;
     enableEs3Apis: boolean;
     fastQuit: boolean;
     fileDownloadOptions: any;
@@ -47,9 +50,11 @@ export interface AppOptions {
     titleBarStyle: string;
     tray: string | boolean;
     userAgent: string;
+    userAgentOverriden: boolean;
     verbose: boolean;
     versionString: string;
     width: number;
+    widevine: boolean;
     height: number;
     minWidth: number;
     minHeight: number;

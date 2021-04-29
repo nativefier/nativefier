@@ -9,6 +9,7 @@
   - [[dest]](#dest)
   - [Help](#help)
   - [Version](#version)
+  - [[upgrade]](#upgrade)
   - [[name]](#name)
   - [[platform]](#platform)
   - [[arch]](#arch)
@@ -66,6 +67,7 @@
   - [[file-download-options]](#file-download-options)
   - [[always-on-top]](#always-on-top)
   - [[global-shortcuts]](#global-shortcuts)
+    - [Global Shortucts on macOS](#global-shortucts-on-macos)
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
@@ -92,8 +94,12 @@ See [PR #744 - Support packaging nativefier applications into Squirrel-based ins
 ## Command Line
 
 ```bash
-nativefier [options] <targetUrl> [dest]
+nativefier [options] [targetUrl] [dest]
 ```
+
+You must provide:
+- Either a `targetUrl` to generate a new app from it.
+- Or option `--upgrade <pathOfAppToUpgrade>` to upgrade an existing app.
 
 Command line options are listed below.
 
@@ -120,6 +126,22 @@ Prints the usage information.
 ```
 
 Prints the version of your `nativefier` install.
+
+#### [upgrade]
+
+```
+--upgrade <pathToExistingApp>
+```
+
+*NEW IN 43.1.0*
+
+This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
+
+**IMPORTANT NOTE**
+
+**This action is an in-place upgrade, and will REPLACE the current application. In case this feature does not work as intended or as the user may wish, it is advised to make a backup of the app to be upgraded before using, or specify an alternate directory as you would when creating a new file.**
+
+The provided path must be the "executable" of an application packaged with a previous version of Nativefier, and to be upgraded to the latest version of Nativefier. "Executable" means: the `.exe` file on Windows, the executable on Linux, or the `.app` on macOS. The executable must be living in the original context where it was generated (i.e., on Windows and Linux, the exe file must still be in the folder containing the generated `resources` directory).
 
 #### [name]
 
@@ -204,6 +226,19 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 
 Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
+Note: some sites using Widevine (like Udemy or HBO Max) may still refuse to load videos, and require EVS-signing your Nativefier app to work. Try signing your app using CastLabs tools. See https://github.com/castlabs/electron-releases/wiki/EVS and [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
+
+```bash
+# Install CastLabs tools:
+pip install --upgrade castlabs-evs
+
+# Sign up:
+python3 -m castlabs_evs.account signup
+
+# Sign your app
+python -m castlabs_evs.vmp sign-pkg Udemy-win32-x64
+```
+
 #### [no-overwrite]
 
 ```
@@ -239,8 +274,6 @@ The icon parameter should be a path to a `.png` file.
 The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
 If your `PATH` has our image-conversion dependencies (`iconutil`, and either ImageMagick `convert` + `identify`, or GraphicsMagick `gm`), Nativefier will automatically convert the `.png` to a `.icns` for you.
-
-On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 ###### Manually Converting `.icns`
 
@@ -642,6 +675,8 @@ Application will stay as an icon in the system tray. Prevents application from b
 
 When the optional argument `start-in-tray` is provided, i.e. the application is started using `--tray start-in-tray`, the main window will not be shown on first start.
 
+Limitation: when creating a macOS app using option `--tray`, from a non-macOS build machine, the tray icon (in the menu bar) will be invisible.
+
 #### [basic-auth-username]
 
 ```
@@ -784,6 +819,10 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
   }
 ]
 ```
+
+#### Global Shortucts on macOS
+
+On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 #### [browserwindow-options]
 

@@ -28,7 +28,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       appCopyright: rawOptions.appCopyright,
       appVersion: rawOptions.appVersion,
       arch: rawOptions.arch || inferArch(),
-      asar: rawOptions.conceal || false,
+      asar: rawOptions.asar || rawOptions.conceal || false,
       buildVersion: rawOptions.buildVersion,
       darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
       dir: PLACEHOLDER_APP_DIR,
@@ -39,8 +39,13 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       overwrite: rawOptions.overwrite,
       platform: rawOptions.platform || inferPlatform(),
       portable: rawOptions.portable || false,
-      targetUrl: normalizeUrl(rawOptions.targetUrl),
+      targetUrl:
+        rawOptions.targetUrl === undefined
+          ? '' // We'll plug this in later via upgrade
+          : normalizeUrl(rawOptions.targetUrl),
       tmpdir: false, // workaround for electron-packager#375
+      upgrade: rawOptions.upgrade !== undefined ? true : false,
+      upgradeFrom: rawOptions.upgrade,
       win32metadata: rawOptions.win32metadata || {
         ProductName: rawOptions.name,
         InternalName: rawOptions.name,
@@ -87,6 +92,8 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       titleBarStyle: rawOptions.titleBarStyle || null,
       tray: rawOptions.tray || false,
       userAgent: rawOptions.userAgent,
+      userAgentOverriden:
+        rawOptions.userAgent !== undefined && rawOptions.userAgent !== null,
       verbose: rawOptions.verbose,
       versionString: rawOptions.versionString,
       width: rawOptions.width || 1280,
@@ -95,6 +102,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       minHeight: rawOptions.minHeight,
       maxWidth: rawOptions.maxWidth,
       maxHeight: rawOptions.maxHeight,
+      widevine: rawOptions.widevine || false,
       x: rawOptions.x,
       y: rawOptions.y,
       zoom: rawOptions.zoom || 1.0,
@@ -152,7 +160,11 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     log.warn(
       `\nATTENTION: Using the **unofficial** Electron from castLabs`,
       "\nIt implements Google's Widevine Content Decryption Module (CDM) for DRM-enabled playback.",
-      `\nSimply abort & re-run without passing the widevine flag to default to ${DEFAULT_ELECTRON_VERSION}`,
+      `\nSimply abort & re-run without passing the widevine flag to default to ${
+        rawOptions.electronVersion !== undefined
+          ? (rawOptions.electronVersion as string)
+          : DEFAULT_ELECTRON_VERSION
+      }`,
     );
   }
 

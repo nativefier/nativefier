@@ -1,7 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { BrowserWindow, shell, ipcMain, dialog, Event } from 'electron';
+import {
+  BrowserWindow,
+  shell,
+  ipcMain,
+  dialog,
+  Event,
+  WebContents,
+} from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import log from 'loglevel';
 
@@ -253,6 +260,28 @@ export function createMainWindow(
     }
   };
 
+  const onWillPreventUnload = (event: Event): void => {
+    log.debug('onWillPreventUnload', event);
+    const eventAny = event as any;
+    if (eventAny.sender === undefined) {
+      return;
+    }
+    const webContents: WebContents = eventAny.sender;
+    const browserWindow = BrowserWindow.fromWebContents(webContents);
+    const choice = dialog.showMessageBoxSync(browserWindow, {
+      type: 'question',
+      buttons: ['Proceed', 'Stay'],
+      message:
+        'You may have unsaved changes, are you sure you want to proceed?',
+      title: 'Changes you made may not be saved.',
+      defaultId: 0,
+      cancelId: 1,
+    });
+    if (choice === 0) {
+      event.preventDefault();
+    }
+  };
+
   const createNewWindow: (url: string) => BrowserWindow = (url: string) => {
     const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
     if (options.userAgent) {
@@ -267,6 +296,7 @@ export function createMainWindow(
     sendParamsOnDidFinishLoad(window);
     window.webContents.on('new-window', onNewWindow);
     window.webContents.on('will-navigate', onWillNavigate);
+    window.webContents.on('will-prevent-unload', onWillPreventUnload);
     window.loadURL(url); // eslint-disable-line @typescript-eslint/no-floating-promises
     return window;
   };
@@ -464,6 +494,7 @@ export function createMainWindow(
 
   mainWindow.webContents.on('new-window', onNewWindow);
   mainWindow.webContents.on('will-navigate', onWillNavigate);
+  mainWindow.webContents.on('will-prevent-unload', onWillPreventUnload);
   mainWindow.webContents.on('did-finish-load', () => {
     // Restore pinch-to-zoom, disabled by default in recent Electron.
     // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598309817

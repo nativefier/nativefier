@@ -41,6 +41,21 @@ if (appArgs.portable) {
   app.setPath('userData', path.join(__dirname, '..', 'appData'));
 }
 
+// Take in a URL on the command line as an override
+if (process.argv.length > 1) {
+  const maybeUrl = process.argv[1];
+  try {
+    new URL(maybeUrl);
+    appArgs.targetUrl = maybeUrl;
+    console.info('Loading override URL passed as argument:', maybeUrl);
+  } catch (err) {
+    console.error(
+      'Not loading override URL passed as argument, because failed to parse:',
+      maybeUrl,
+    );
+  }
+}
+
 // Nativefier is a browser, and an old browser is an insecure / badly-performant one.
 // Given our builder/app design, we currently don't have an easy way to offer
 // upgrades from the app themselves (like browsers do).
@@ -113,13 +128,14 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-    app.dock.setBadge(count.toString());
-    if (bounce && count > currentBadgeCount) app.dock.bounce();
-    currentBadgeCount = count;
-  }
+      app.dock.setBadge(count.toString());
+      if (bounce && count > currentBadgeCount) app.dock.bounce();
+      currentBadgeCount = count;
+    }
   : () => undefined;
 
 app.on('window-all-closed', () => {
+  log.debug('windows-all-closed');
   if (!isOSX() || appArgs.fastQuit) {
     app.quit();
   }
@@ -135,6 +151,7 @@ app.on('activate', (event, hasVisibleWindows) => {
 });
 
 app.on('before-quit', () => {
+  log.debug('before-quit');
   // not fired when the close button on the window is clicked
   if (isOSX()) {
     // need to force a quit as a workaround here to simulate the osx app hiding behaviour
@@ -144,6 +161,14 @@ app.on('before-quit', () => {
     // might cause issues in the future as before-quit and will-quit events are not called
     app.exit(0);
   }
+});
+
+app.on('will-quit', (event) => {
+  log.debug('will-quit', event);
+});
+
+app.on('quit', (event, exitCode) => {
+  log.debug('quit', event, exitCode);
 });
 
 if (appArgs.crashReporter) {
@@ -176,83 +201,107 @@ if (shouldQuit) {
     }
   });
 
-  app.on('ready', () => {
-    mainWindow = createMainWindow(appArgs, app.quit.bind(this), setDockBadge);
-    createTrayIcon(appArgs, mainWindow);
+  if (appArgs.widevine !== undefined) {
+    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
+    app.on('widevine-ready', (version, lastVersion) => {
+      console.log('widevine-ready', version, lastVersion);
+      onReady();
+    });
 
-    // Register global shortcuts
-    if (appArgs.globalShortcuts) {
-      appArgs.globalShortcuts.forEach((shortcut) => {
-        globalShortcut.register(shortcut.key, () => {
-          shortcut.inputEvents.forEach((inputEvent) => {
-            mainWindow.webContents.sendInputEvent(inputEvent);
-          });
+    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
+    app.on('widevine-update-pending', (currentVersion, pendingVersion) => {
+      console.log(
+        `Widevine ${currentVersion} is ready to be upgraded to ${pendingVersion}`,
+      );
+    });
+
+    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
+    app.on('widevine-error', (error) => {
+      console.error('WIDEVINE ERROR: ', error);
+    });
+  } else {
+    app.on('ready', () => {
+      console.log('ready');
+      onReady();
+    });
+  }
+}
+
+function onReady(): void {
+  mainWindow = createMainWindow(appArgs, app.quit.bind(this), setDockBadge);
+  createTrayIcon(appArgs, mainWindow);
+
+  // Register global shortcuts
+  if (appArgs.globalShortcuts) {
+    appArgs.globalShortcuts.forEach((shortcut) => {
+      globalShortcut.register(shortcut.key, () => {
+        shortcut.inputEvents.forEach((inputEvent) => {
+          mainWindow.webContents.sendInputEvent(inputEvent);
         });
       });
+    });
 
-      if (isOSX() && appArgs.accessibilityPrompt) {
-        const mediaKeys = [
-          'MediaPlayPause',
-          'MediaNextTrack',
-          'MediaPreviousTrack',
-          'MediaStop',
-        ];
-        const globalShortcutsKeys = appArgs.globalShortcuts.map((g) => g.key);
-        const mediaKeyWasSet = globalShortcutsKeys.find((g) =>
-          mediaKeys.includes(g),
-        );
-        if (
-          mediaKeyWasSet &&
-          !systemPreferences.isTrustedAccessibilityClient(false)
-        ) {
-          // Since we're trying to set global keyboard shortcuts for media keys, we need to prompt
-          // the user for permission on Mac.
-          // For reference:
-          // https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback
-          const accessibilityPromptResult = dialog.showMessageBoxSync(null, {
-            type: 'question',
-            message: 'Accessibility Permissions Needed',
-            buttons: ['Yes', 'No', 'No and never ask again'],
-            defaultId: 0,
-            detail:
-              `${appArgs.name} would like to use one or more of your keyboard's media keys (start, stop, next track, or previous track) to control it.\n\n` +
-              `Would you like Mac OS to ask for your permission to do so?\n\n` +
-              `If so, you will need to restart ${appArgs.name} after granting permissions for these keyboard shortcuts to begin working.`,
-          });
-          switch (accessibilityPromptResult) {
-            // User clicked Yes, prompt for accessibility
-            case 0:
-              systemPreferences.isTrustedAccessibilityClient(true);
-              break;
-            // User cliecked Never Ask Me Again, save that info
-            case 2:
-              appArgs.accessibilityPrompt = false;
-              saveAppArgs(appArgs);
-              break;
-            // User clicked No
-            default:
-              break;
-          }
+    if (isOSX() && appArgs.accessibilityPrompt) {
+      const mediaKeys = [
+        'MediaPlayPause',
+        'MediaNextTrack',
+        'MediaPreviousTrack',
+        'MediaStop',
+      ];
+      const globalShortcutsKeys = appArgs.globalShortcuts.map((g) => g.key);
+      const mediaKeyWasSet = globalShortcutsKeys.find((g) =>
+        mediaKeys.includes(g),
+      );
+      if (
+        mediaKeyWasSet &&
+        !systemPreferences.isTrustedAccessibilityClient(false)
+      ) {
+        // Since we're trying to set global keyboard shortcuts for media keys, we need to prompt
+        // the user for permission on Mac.
+        // For reference:
+        // https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback
+        const accessibilityPromptResult = dialog.showMessageBoxSync(null, {
+          type: 'question',
+          message: 'Accessibility Permissions Needed',
+          buttons: ['Yes', 'No', 'No and never ask again'],
+          defaultId: 0,
+          detail:
+            `${appArgs.name} would like to use one or more of your keyboard's media keys (start, stop, next track, or previous track) to control it.\n\n` +
+            `Would you like Mac OS to ask for your permission to do so?\n\n` +
+            `If so, you will need to restart ${appArgs.name} after granting permissions for these keyboard shortcuts to begin working.`,
+        });
+        switch (accessibilityPromptResult) {
+          // User clicked Yes, prompt for accessibility
+          case 0:
+            systemPreferences.isTrustedAccessibilityClient(true);
+            break;
+          // User cliecked Never Ask Me Again, save that info
+          case 2:
+            appArgs.accessibilityPrompt = false;
+            saveAppArgs(appArgs);
+            break;
+          // User clicked No
+          default:
+            break;
         }
       }
     }
-    if (
-      !appArgs.disableOldBuildWarning &&
-      new Date().getTime() - appArgs.buildDate > OLD_BUILD_WARNING_THRESHOLD_MS
-    ) {
-      const oldBuildWarningText =
-        appArgs.oldBuildWarningText ||
-        'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.';
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      dialog.showMessageBox(null, {
-        type: 'warning',
-        message: 'Old build detected',
-        detail: oldBuildWarningText,
-      });
-    }
-  });
+  }
+  if (
+    !appArgs.disableOldBuildWarning &&
+    new Date().getTime() - appArgs.buildDate > OLD_BUILD_WARNING_THRESHOLD_MS
+  ) {
+    const oldBuildWarningText =
+      appArgs.oldBuildWarningText ||
+      'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.';
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    dialog.showMessageBox(null, {
+      type: 'warning',
+      message: 'Old build detected',
+      detail: oldBuildWarningText,
+    });
+  }
 }
-
 app.on('new-window-for-tab', () => {
   mainWindow.emit('new-tab');
 });

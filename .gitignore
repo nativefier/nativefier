@@ -43,6 +43,8 @@ build/Release
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+# Python virtual environment in case it's created for the Castlabs code signing tool
+venv
 
 # IntelliJ project files
 .idea
