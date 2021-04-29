@@ -117,10 +117,10 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-    app.dock.setBadge(count.toString());
-    if (bounce && count > currentBadgeCount) app.dock.bounce();
-    currentBadgeCount = count;
-  }
+      app.dock.setBadge(count.toString());
+      if (bounce && count > currentBadgeCount) app.dock.bounce();
+      currentBadgeCount = count;
+    }
   : () => undefined;
 
 app.on('window-all-closed', () => {
@@ -194,7 +194,7 @@ if (shouldQuit) {
     // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
     app.on('widevine-ready', (version, lastVersion) => {
       console.log('widevine-ready', version, lastVersion);
-      ready();
+      onReady();
     });
 
     // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
@@ -211,12 +211,12 @@ if (shouldQuit) {
   } else {
     app.on('ready', () => {
       console.log('ready');
-      ready();
+      onReady();
     });
   }
 }
 
-function ready(): void {
+function onReady(): void {
   mainWindow = createMainWindow(appArgs, app.quit.bind(this), setDockBadge);
   createTrayIcon(appArgs, mainWindow);
 
