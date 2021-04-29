@@ -35,7 +35,7 @@ if (process.argv.length > 1) {
   try {
     new URL(maybeUrl);
     appArgs.targetUrl = maybeUrl;
-    console.info('Taking override URL passed as argument:', maybeUrl);
+    console.info('Loading override URL passed as argument:', maybeUrl);
   } catch (err) {
     console.error(
       'Not loading override URL passed as argument, because failed to parse:',
