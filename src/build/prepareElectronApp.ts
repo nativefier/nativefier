@@ -53,6 +53,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     minWidth: options.nativefier.minWidth,
     name: options.packager.name,
     nativefierVersion: options.nativefier.nativefierVersion,
+    portable: options.packager.portable,
     processEnvs: options.nativefier.processEnvs,
     proxyRules: options.nativefier.proxyRules,
     showMenuBar: options.nativefier.showMenuBar,

@@ -38,6 +38,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       out: rawOptions.out || process.cwd(),
       overwrite: rawOptions.overwrite,
       platform: rawOptions.platform || inferPlatform(),
+      portable: rawOptions.portable || false,
       targetUrl: normalizeUrl(rawOptions.targetUrl),
       tmpdir: false, // workaround for electron-packager#375
       win32metadata: rawOptions.win32metadata || {

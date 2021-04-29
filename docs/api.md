@@ -26,6 +26,7 @@
       - [Manually Converting `.icns`](#manually-converting-icns)
   - [[counter]](#counter)
   - [[bounce]](#bounce)
+  - [[portable]](#portable)
   - [[width]](#width)
   - [[height]](#height)
   - [[min-width]](#min-width)
@@ -262,6 +263,26 @@ Use a counter that persists even with window focus for the application badge for
 ```
 
 (macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
+
+#### [portable]
+
+```
+--portable
+```
+
+Allow the application data to be stored locally with the app to enable portability.
+
+**IMPORTANT SECURITY NOTICE**
+
+When creating a portable application, all data accumulated after creating the application including login information, will be saved in the application folder. If this application is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENITALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
+
+Best practice when using this flag:
+
+1. Create your application with this flag
+2. Test it
+3. Delete your application and containing folder
+4. Recreate it in the same way you did in step 1
+5. Distribute the app without opening it
 
 #### [width]
 

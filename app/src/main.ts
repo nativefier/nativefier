@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 
 import fs from 'fs';
+import * as path from 'path';
 
 import {
   app,
@@ -11,6 +12,7 @@ import {
   BrowserWindow,
 } from 'electron';
 import electronDownload from 'electron-dl';
+import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
@@ -28,6 +30,16 @@ if (require('electron-squirrel-startup')) {
 }
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
+// Do this relatively early so that we can start storid appData with the app
+if (appArgs.portable) {
+  log.debug(
+    'Setting appData and userData to ',
+    path.resolve(path.join(__dirname, '..', 'appData')),
+  );
+  app.setPath('appData', path.join(__dirname, '..', 'appData'));
+  app.setPath('userData', path.join(__dirname, '..', 'appData'));
+}
 
 // Nativefier is a browser, and an old browser is an insecure / badly-performant one.
 // Given our builder/app design, we currently don't have an easy way to offer
@@ -101,10 +113,10 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-      app.dock.setBadge(count.toString());
-      if (bounce && count > currentBadgeCount) app.dock.bounce();
-      currentBadgeCount = count;
-    }
+    app.dock.setBadge(count.toString());
+    if (bounce && count > currentBadgeCount) app.dock.bounce();
+    currentBadgeCount = count;
+  }
   : () => undefined;
 
 app.on('window-all-closed', () => {

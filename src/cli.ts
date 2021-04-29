@@ -127,6 +127,10 @@ if (require.main === module) {
       'the icon file to use as the icon for the app (should be a .png, on macOS can also be an .icns)',
     )
     .option(
+      '--portable',
+      'Allow the app data to be stored with the app to for portability. WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/#portable for risks',
+    )
+    .option(
       '--width <value>',
       'set window default width; defaults to 1280px',
       parseInt,
