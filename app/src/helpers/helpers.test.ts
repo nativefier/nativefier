@@ -69,6 +69,8 @@ const testLoginPages = [
   'https://github.com/sessions/two-factor/webauth',
   'https://accounts.google.co.uk',
   'https://accounts.google.com',
+  'https://mail.google.com/accounts/SetOSID',
+  'https://mail.google.co.uk/accounts/SetOSID',
   'https://accounts.google.de',
   'https://linkedin.co.uk/uas/login',
   'https://linkedin.com/uas/login',
@@ -100,6 +102,7 @@ const testNonLoginPages = [
   'https://github.com/org/nativefier',
   'https://twitter.com/marcoroth_/status/1325938620906287104',
   'https://appleid.apple.com/account',
+  'https://mail.google.com/',
 ];
 
 test.each(testNonLoginPages)(
