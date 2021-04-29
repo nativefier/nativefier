@@ -31,7 +31,17 @@ const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
-  appArgs.targetUrl = process.argv[1];
+  const maybeUrl = process.argv[1];
+  try {
+    new URL(maybeUrl);
+    appArgs.targetUrl = maybeUrl;
+    console.info('Taking override URL passed as argument:', maybeUrl);
+  } catch (err) {
+    console.error(
+      'Not loading override URL passed as argument, because failed to parse:',
+      maybeUrl,
+    );
+  }
 }
 
 // Nativefier is a browser, and an old browser is an insecure / badly-performant one.
