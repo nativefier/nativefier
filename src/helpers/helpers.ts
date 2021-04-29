@@ -1,4 +1,5 @@
 import { spawnSync } from 'child_process';
+import * as crypto from 'crypto';
 import * as os from 'os';
 import * as path from 'path';
 
@@ -162,4 +163,11 @@ export function isArgFormatInvalid(arg: string): boolean {
       /^-[a-z]{2,}$/i.exec(arg) !== null) &&
     !['--x', '--y'].includes(arg) // exception for long args --{x,y}
   );
+}
+
+export function generateRandomSuffix(length = 6): string {
+  const hash = crypto.createHash('md5');
+  // Add a random salt to help avoid collisions
+  hash.update(crypto.randomBytes(256));
+  return hash.digest('hex').substring(0, length);
 }

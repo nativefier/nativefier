@@ -1,11 +1,10 @@
 import * as fs from 'fs';
-import * as crypto from 'crypto';
 import * as path from 'path';
 import { promisify } from 'util';
 
 import * as log from 'loglevel';
 
-import { copyFileOrDir } from '../helpers/helpers';
+import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
 import { AppOptions } from '../options/model';
 
 const writeFileAsync = promisify(fs.writeFile);
@@ -118,7 +117,7 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
       continue;
     }
 
-    const postFixHash = generatePostFixHash(src);
+    const postFixHash = generateRandomSuffix();
     const destFileName = `inject-${postFixHash}.${path.extname(src)}`;
     const destPath = path.join(dest, 'inject', destFileName);
     log.debug(`Copying injection file "${src}" to "${destPath}"`);
@@ -126,9 +125,9 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   }
 }
 
-function normalizeAppName(appName: string, url: string): string {
+function normalizeAppName(appName: string): string {
   // use a simple random string to prevent collision
-  const postFixHash = generatePostFixHash(url);
+  const postFixHash = generateRandomSuffix();
   const normalized = appName
     .toLowerCase()
     .replace(/[,:.]/g, '')
@@ -136,22 +135,10 @@ function normalizeAppName(appName: string, url: string): string {
   return `${normalized}-nativefier-${postFixHash}`;
 }
 
-function generatePostFixHash(seed: string, length = 6): string {
-  const hash = crypto.createHash('md5');
-  // Add a random salt to help avoid collisions
-  const salt = Math.random().toString();
-  hash.update(seed + salt);
-  return hash.digest('hex').substring(0, length);
-}
-
-function changeAppPackageJsonName(
-  appPath: string,
-  name: string,
-  url: string,
-): void {
+function changeAppPackageJsonName(appPath: string, name: string): void {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-  const normalizedAppName = normalizeAppName(name, url);
+  const normalizedAppName = normalizeAppName(name);
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
@@ -195,9 +182,5 @@ export async function prepareElectronApp(
   } catch (err) {
     log.error('Error copying injection files.', err);
   }
-  changeAppPackageJsonName(
-    dest,
-    options.packager.name,
-    options.packager.targetUrl,
-  );
+  changeAppPackageJsonName(dest, options.packager.name);
 }
