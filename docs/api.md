@@ -65,6 +65,7 @@
   - [[file-download-options]](#file-download-options)
   - [[always-on-top]](#always-on-top)
   - [[global-shortcuts]](#global-shortcuts)
+    - [Global Shortucts on macOS](#global-shortucts-on-macos)
   - [[browserwindow-options]](#browserwindow-options)
   - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
   - [[background-color]](#background-color)
@@ -203,7 +204,18 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 
 Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
-For certain Widevine required sites (such as HBO Max), an EVS signed version of the generated app will be needed for the generated app to work. For more information on signing your generated app with EVS see https://github.com/castlabs/electron-releases/wiki/EVS.
+Note: some sites using Widevine (like Udemy or HBO Max) may still refuse to load videos, and require EVS-signing your Nativefier app to work. Try signing your app using CastLabs tools. See https://github.com/castlabs/electron-releases/wiki/EVS and [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
+
+```bash
+# Install CastLabs tools:
+pip install --upgrade castlabs-evs
+
+# Sign up:
+python3 -m castlabs_evs.account signup
+
+# Sign your app
+python -m castlabs_evs.vmp sign-pkg Udemy-win32-x64
+```
 
 #### [no-overwrite]
 
@@ -240,8 +252,6 @@ The icon parameter should be a path to a `.png` file.
 The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
 If your `PATH` has our image-conversion dependencies (`iconutil`, and either ImageMagick `convert` + `identify`, or GraphicsMagick `gm`), Nativefier will automatically convert the `.png` to a `.icns` for you.
-
-On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 ###### Manually Converting `.icns`
 
@@ -623,6 +633,8 @@ Application will stay as an icon in the system tray. Prevents application from b
 
 When the optional argument `start-in-tray` is provided, i.e. the application is started using `--tray start-in-tray`, the main window will not be shown on first start.
 
+Limitation: when creating a macOS app using option `--tray`, from a non-macOS build machine, the tray icon (in the menu bar) will be invisible.
+
 #### [basic-auth-username]
 
 ```
@@ -765,6 +777,10 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
   }
 ]
 ```
+
+#### Global Shortucts on macOS
+
+On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 #### [browserwindow-options]
 

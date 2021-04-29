@@ -7,6 +7,7 @@ import {
   convertToPng,
   convertToIco,
   convertToIcns,
+  convertToTrayIcon,
 } from '../helpers/iconShellHelpers';
 import { AppOptions } from '../options/model';
 
@@ -72,7 +73,6 @@ export function convertIconIfNecessary(options: AppOptions): void {
     log.debug(
       'Building for macOS and icon is already a .icns, no conversion needed',
     );
-    return;
   }
 
   if (!isOSX()) {
@@ -83,12 +83,15 @@ export function convertIconIfNecessary(options: AppOptions): void {
   }
 
   try {
-    const iconPath = convertToIcns(options.packager.icon);
-    options.packager.icon = iconPath;
-    return;
+    if (!iconIsIcns(options.packager.icon)) {
+      const iconPath = convertToIcns(options.packager.icon);
+      options.packager.icon = iconPath;
+    }
+    if (options.nativefier.tray) {
+      convertToTrayIcon(options.packager.icon);
+    }
   } catch (error) {
     log.warn('Failed to convert icon to .icns, skipping.', error);
     options.packager.icon = undefined;
-    return;
   }
 }

@@ -9,6 +9,11 @@ const SCRIPT_PATHS = {
   convertToPng: path.join(__dirname, '../..', 'icon-scripts/convertToPng'),
   convertToIco: path.join(__dirname, '../..', 'icon-scripts/convertToIco'),
   convertToIcns: path.join(__dirname, '../..', 'icon-scripts/convertToIcns'),
+  convertToTrayIcon: path.join(
+    __dirname,
+    '../..',
+    'icon-scripts/convertToTrayIcon',
+  ),
 };
 
 /**
@@ -79,5 +84,17 @@ export function convertToIcns(icoSrc: string): string {
     SCRIPT_PATHS.convertToIcns,
     icoSrc,
     `${getTempDir('iconconv')}/icon.icns`,
+  );
+}
+
+export function convertToTrayIcon(icoSrc: string): string {
+  if (!isOSX()) {
+    throw new Error('macOS is required to convert from a .icns icon');
+  }
+
+  return iconShellHelper(
+    SCRIPT_PATHS.convertToTrayIcon,
+    icoSrc,
+    `${path.dirname(icoSrc)}/tray-icon.png`,
   );
 }
