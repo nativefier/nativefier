@@ -620,7 +620,7 @@ Application will stay as an icon in the system tray. Prevents application from b
 
 When the optional argument `start-in-tray` is provided, i.e. the application is started using `--tray start-in-tray`, the main window will not be shown on first start.
 
-Note: When creating a macOS application with the --tray option on a non macOS host machine, the tray icon will not be visible in the menu bar.
+Limitation: when creating a macOS app using option `--tray`, from a non-macOS build machine, the tray icon (in the menu bar) will be invisible.
 
 #### [basic-auth-username]
 
