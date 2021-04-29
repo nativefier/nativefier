@@ -65,7 +65,18 @@ async function copyIconsIfNecessary(
     options.packager.platform === 'darwin' ||
     options.packager.platform === 'mas'
   ) {
-    log.debug('No copying necessary on macOS; aborting');
+    if (options.nativefier.tray) {
+      //tray icon needs to be .png
+      log.debug('Copying icon for tray application');
+      const trayIconFileName = `tray-icon.png`;
+      const destIconPath = path.join(appPath, 'icon.png');
+      await copyFileOrDir(
+        `${path.dirname(options.packager.icon)}/${trayIconFileName}`,
+        destIconPath,
+      );
+    } else {
+      log.debug('No copying necessary on macOS; aborting');
+    }
     return;
   }
 
