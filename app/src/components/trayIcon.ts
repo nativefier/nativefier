@@ -1,6 +1,6 @@
 import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
 
-import { getAppIcon, getCounterValue } from '../helpers/helpers';
+import { getAppIcon, getCounterValue, isOSX } from '../helpers/helpers';
 
 export function createTrayIcon(
   nativefierOptions,
@@ -11,7 +11,16 @@ export function createTrayIcon(
   if (options.tray) {
     const iconPath = getAppIcon();
     const nimage = nativeImage.createFromPath(iconPath);
-    const appIcon = new Tray(nimage);
+    const appIcon = new Tray(nativeImage.createEmpty());
+
+    if (isOSX()) {
+      //sets the icon to the height of the tray.
+      appIcon.setImage(
+        nimage.resize({ height: appIcon.getBounds().height - 2 }),
+      );
+    } else {
+      appIcon.setImage(nimage);
+    }
 
     const onClick = () => {
       if (mainWindow.isVisible()) {
