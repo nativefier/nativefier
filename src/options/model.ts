@@ -53,6 +53,7 @@ export interface AppOptions {
     verbose: boolean;
     versionString: string;
     width: number;
+    widevine: boolean;
     height: number;
     minWidth: number;
     minHeight: number;

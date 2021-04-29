@@ -83,6 +83,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     userAgentOverriden: options.nativefier.userAgentOverriden,
     versionString: options.nativefier.versionString,
     width: options.nativefier.width,
+    widevine: options.nativefier.widevine,
     win32metadata: options.packager.win32metadata,
     x: options.nativefier.x,
     y: options.nativefier.y,

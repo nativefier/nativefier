@@ -101,6 +101,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       minHeight: rawOptions.minHeight,
       maxWidth: rawOptions.maxWidth,
       maxHeight: rawOptions.maxHeight,
+      widevine: rawOptions.widevine || false,
       x: rawOptions.x,
       y: rawOptions.y,
       zoom: rawOptions.zoom || 1.0,
@@ -158,7 +159,11 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     log.warn(
       `\nATTENTION: Using the **unofficial** Electron from castLabs`,
       "\nIt implements Google's Widevine Content Decryption Module (CDM) for DRM-enabled playback.",
-      `\nSimply abort & re-run without passing the widevine flag to default to ${DEFAULT_ELECTRON_VERSION}`,
+      `\nSimply abort & re-run without passing the widevine flag to default to ${
+        rawOptions.electronVersion !== undefined
+          ? (rawOptions.electronVersion as string)
+          : DEFAULT_ELECTRON_VERSION
+      }`,
     );
   }
 
