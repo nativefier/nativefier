@@ -117,10 +117,10 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-      app.dock.setBadge(count.toString());
-      if (bounce && count > currentBadgeCount) app.dock.bounce();
-      currentBadgeCount = count;
-    }
+    app.dock.setBadge(count.toString());
+    if (bounce && count > currentBadgeCount) app.dock.bounce();
+    currentBadgeCount = count;
+  }
   : () => undefined;
 
 app.on('window-all-closed', () => {
@@ -191,20 +191,20 @@ if (shouldQuit) {
   });
 
   if (appArgs.widevine !== undefined) {
-    // @ts-ignore
+    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
     app.on('widevine-ready', (version, lastVersion) => {
       console.log('widevine-ready', version, lastVersion);
       ready();
     });
 
-    // @ts-ignore
+    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
     app.on('widevine-update-pending', (currentVersion, pendingVersion) => {
       console.log(
         `Widevine ${currentVersion} is ready to be upgraded to ${pendingVersion}`,
       );
     });
 
-    // @ts-ignore
+    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
     app.on('widevine-error', (error) => {
       console.error('WIDEVINE ERROR: ', error);
     });
