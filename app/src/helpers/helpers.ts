@@ -25,6 +25,7 @@ function isInternalLoginPage(url: string): boolean {
     `facebook\\.[a-zA-Z\\.]*\\/login`, // Facebook
     'github\\.[a-zA-Z\\.]*\\/(?:login|session)', // GitHub
     'accounts\\.google\\.[a-zA-Z\\.]*', // Google
+    'mail\\.google\\.[a-zA-Z\\.]*\\/accounts/SetOSID', // Google
     'linkedin\\.[a-zA-Z\\.]*/uas/login', // LinkedIn
     'login\\.live\\.[a-zA-Z\\.]*', // Microsoft
     'okta\\.[a-zA-Z\\.]*', // Okta
