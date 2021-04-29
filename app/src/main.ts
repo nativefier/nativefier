@@ -11,6 +11,7 @@ import {
   BrowserWindow,
 } from 'electron';
 import electronDownload from 'electron-dl';
+import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
@@ -123,6 +124,7 @@ const setDockBadge = isRunningMacos
   : () => undefined;
 
 app.on('window-all-closed', () => {
+  log.debug('windows-all-closed');
   if (!isOSX() || appArgs.fastQuit) {
     app.quit();
   }
@@ -138,6 +140,7 @@ app.on('activate', (event, hasVisibleWindows) => {
 });
 
 app.on('before-quit', () => {
+  log.debug('before-quit');
   // not fired when the close button on the window is clicked
   if (isOSX()) {
     // need to force a quit as a workaround here to simulate the osx app hiding behaviour
@@ -147,6 +150,14 @@ app.on('before-quit', () => {
     // might cause issues in the future as before-quit and will-quit events are not called
     app.exit(0);
   }
+});
+
+app.on('will-quit', (event) => {
+  log.debug('will-quit', event);
+});
+
+app.on('quit', (event, exitCode) => {
+  log.debug('quit', event, exitCode);
 });
 
 if (appArgs.crashReporter) {
