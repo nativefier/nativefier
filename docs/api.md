@@ -225,7 +225,7 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 
 Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
-Note: some sites (like Udemy or HBO Max) using Widevine may still refuse to load videos. Try signing your app using CastLabs tools. See [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
+Note: some sites using Widevine (like Udemy or HBO Max) may still refuse to load videos, and require EVS-signing your Nativefier app to work. Try signing your app using CastLabs tools. See https://github.com/castlabs/electron-releases/wiki/EVS and [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
 
 ```bash
 # Install CastLabs tools:
@@ -234,7 +234,7 @@ pip install --upgrade castlabs-evs
 # Sign up:
 python3 -m castlabs_evs.account signup
 
-# Signed the generated app
+# Sign your app
 python -m castlabs_evs.vmp sign-pkg Udemy-win32-x64
 ```
 
