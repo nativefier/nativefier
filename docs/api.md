@@ -303,7 +303,7 @@ Use a counter that persists even with window focus for the application badge for
 --portable
 ```
 
-Allow the application data to be stored locally with the app to enable portability.
+Make your app store its user data (cookies, cache, etc) inside the app folder, making it "portable" in the sense popularized by [PortableApps.com](https://portableapps.com/): you can carry it around e.g. on a USB key, and it will work the same with your data.
 
 **IMPORTANT SECURITY NOTICE**
 
