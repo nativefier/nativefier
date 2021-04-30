@@ -37,7 +37,7 @@
     "ci": "npm run lint && npm test",
     "clean": "rimraf lib/ app/lib/ app/dist/",
     "clean:full": "rimraf lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
-    "lint:fix": "eslint . --fix",
+    "lint:fix": "eslint . --ext .ts --fix",
     "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
