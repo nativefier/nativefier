@@ -126,7 +126,7 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
 }
 
 function normalizeAppName(appName: string): string {
-  // use a simple random string to prevent collision
+  // use a simple random string to prevent collisions
   const postFixHash = generateRandomSuffix();
   const normalized = appName
     .toLowerCase()
