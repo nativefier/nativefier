@@ -121,10 +121,10 @@ const isRunningMacos = isOSX();
 let currentBadgeCount = 0;
 const setDockBadge = isRunningMacos
   ? (count: number, bounce = false) => {
-    app.dock.setBadge(count.toString());
-    if (bounce && count > currentBadgeCount) app.dock.bounce();
-    currentBadgeCount = count;
-  }
+      app.dock.setBadge(count.toString());
+      if (bounce && count > currentBadgeCount) app.dock.bounce();
+      currentBadgeCount = count;
+    }
   : () => undefined;
 
 app.on('window-all-closed', () => {
