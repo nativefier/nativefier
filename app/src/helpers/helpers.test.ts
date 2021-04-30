@@ -4,6 +4,7 @@ const internalUrl = 'https://medium.com/';
 const internalUrlWww = 'https://www.medium.com/';
 const sameBaseDomainUrl = 'https://app.medium.com/';
 const internalUrlCoUk = 'https://medium.co.uk/';
+const differentBaseDomainUrlCoUk = 'https://other.domain.co.uk/';
 const sameBaseDomainUrlCoUk = 'https://app.medium.co.uk/';
 const sameBaseDomainUrlTidalListen = 'https://listen.tidal.com/';
 const sameBaseDomainUrlTidalLogin = 'https://login.tidal.com/';
@@ -63,6 +64,12 @@ test('urls on the same "base domain" should be considered internal, long SLD', (
   expect(
     linkIsInternal(internalUrlCoUk, sameBaseDomainUrlCoUk, undefined),
   ).toEqual(true);
+});
+
+test('urls on the a different "base domain" are considered NOT internal, long SLD', () => {
+  expect(
+    linkIsInternal(internalUrlCoUk, differentBaseDomainUrlCoUk, undefined),
+  ).toEqual(false);
 });
 
 const testLoginPages = [
