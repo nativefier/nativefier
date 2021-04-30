@@ -133,7 +133,7 @@ if (require.main === module) {
     )
     .option(
       '--portable',
-      'Allow the app data to be stored with the app to for portability. WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/#portable for risks',
+      'Make the app store its user data in the app folder. WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable for security risks',
     )
     .option(
       '--width <value>',
