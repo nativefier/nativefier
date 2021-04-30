@@ -309,7 +309,7 @@ Make your app store its user data (cookies, cache, etc) inside the app folder, m
 
 When creating a portable app, all data accumulated after running the app (including login information, cache, cookies), will be saved in the app folder. If this app is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENTIALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
 
-Best practice when using this flag:
+→ Best practice to *distribute apps* using this flag:
 
 1. Create your application with this flag
 2. Test it
