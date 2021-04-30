@@ -15,6 +15,7 @@ export interface AppOptions {
     backgroundColor: string;
     basicAuthPassword: string;
     basicAuthUsername: string;
+    blockExternalUrls: boolean;
     bookmarksMenu: string;
     bounce: boolean;
     browserwindowOptions: any;
@@ -39,7 +40,7 @@ export interface AppOptions {
     inject: string[];
     insecure: boolean;
     internalUrls: string;
-    blockExternalUrls: boolean;
+    lang?: string;
     maximize: boolean;
     nativefierVersion: string;
     processEnvs: string;

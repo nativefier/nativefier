@@ -58,6 +58,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     internalUrls: options.nativefier.internalUrls,
     isUpgrade: options.packager.upgrade,
     junk: options.packager.junk,
+    lang: options.nativefier.lang,
     maximize: options.nativefier.maximize,
     maxHeight: options.nativefier.maxHeight,
     maxWidth: options.nativefier.maxWidth,

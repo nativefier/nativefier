@@ -38,6 +38,7 @@
   - [[show-menu-bar]](#show-menu-bar)
   - [[fast-quit]](#fast-quit)
   - [[user-agent]](#user-agent)
+  - [[lang]](#lang)
   - [[honest]](#honest)
   - [[ignore-certificate]](#ignore-certificate)
   - [[disable-gpu]](#disable-gpu)
@@ -383,6 +384,14 @@ Specifies if the menu bar should be shown.
 ```
 
 Set the user agent to run the created app with.
+
+#### [lang]
+
+```
+--lang <value>
+```
+
+Set the language or locale to render the web site as (e.g., "fr", "en-US", "es", etc.)
 
 #### [honest]
 

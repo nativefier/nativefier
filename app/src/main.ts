@@ -30,6 +30,8 @@ if (require('electron-squirrel-startup')) {
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
+log.debug('appArgs', appArgs);
+
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
   const maybeUrl = process.argv[1];
@@ -113,9 +115,20 @@ if (appArgs.basicAuthPassword) {
   );
 }
 
-const isRunningMacos = isOSX();
+if (appArgs.lang) {
+  const langParts = (appArgs.lang as string).split(',');
+  // Convert locales to languages, because for some reason locales don't work. Stupid Chromium
+  const langPartsParsed = Array.from(
+    // Convert to set to dedupe in case something like "en-GB,en-US" was passed
+    new Set(langParts.map((l) => l.split('-')[0])),
+  );
+  const langFlag = langPartsParsed.join(',');
+  log.debug('Setting --lang flag to', langFlag);
+  app.commandLine.appendSwitch('--lang', langFlag);
+}
+
 let currentBadgeCount = 0;
-const setDockBadge = isRunningMacos
+const setDockBadge = isOSX()
   ? (count: number, bounce = false) => {
       app.dock.setBadge(count.toString());
       if (bounce && count > currentBadgeCount) app.dock.bounce();
