@@ -190,22 +190,25 @@ if (shouldQuit) {
     }
   });
 
-  if (appArgs.widevine !== undefined) {
-    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
-    app.on('widevine-ready', (version, lastVersion) => {
+  if (appArgs.widevine) {
+    // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+    app.on('widevine-ready', (version: string, lastVersion: string) => {
       console.log('widevine-ready', version, lastVersion);
       onReady();
     });
 
-    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
-    app.on('widevine-update-pending', (currentVersion, pendingVersion) => {
-      console.log(
-        `Widevine ${currentVersion} is ready to be upgraded to ${pendingVersion}`,
-      );
-    });
+    app.on(
+      // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+      'widevine-update-pending',
+      (currentVersion: string, pendingVersion: string) => {
+        console.log(
+          `Widevine ${currentVersion} is ready to be upgraded to ${pendingVersion}`,
+        );
+      },
+    );
 
-    // @ts-ignore This event only appear on the widevine version of electron, which we'd see at runtime
-    app.on('widevine-error', (error) => {
+    // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+    app.on('widevine-error', (error: any) => {
       console.error('WIDEVINE ERROR: ', error);
     });
   } else {
