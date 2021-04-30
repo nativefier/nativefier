@@ -91,7 +91,7 @@ Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aop
 
 ## Troubleshooting
 
-Before submitting question or bug report, please ensure you have read through these common issues and see if you can resolve the problem on your own. If you still encounter issues after trying these steps, or you don't see something similar to your issue listed, please submit a [bug report](https://github.com/nativefier/nativefier/issues/new?assignees=&labels=bug&template=bug_report.md).
+Before submitting a question or bug report, please ensure you have read through these common issues and see if you can resolve the problem on your own. If you still encounter issues after trying these steps, or you don't see something similar to your issue listed, please submit a [bug report](https://github.com/nativefier/nativefier/issues/new?assignees=&labels=bug&template=bug_report.md).
 
 ### I am trying to use Nativefier to build an app for a site that tells me I have an old/unsupported browser.
 
