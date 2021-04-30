@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import log from 'loglevel';
 import * as path from 'path';
 
 import { isOSX, isWindows, isLinux } from './helpers';
@@ -82,6 +83,6 @@ export function inferFlashPath() {
     return findFlashOnLinux();
   }
 
-  console.warn('Unable to determine OS to infer flash player');
+  log.warn('Unable to determine OS to infer flash player');
   return null;
 }

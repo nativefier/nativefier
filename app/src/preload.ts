@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ipcRenderer } from 'electron';
+import * as log from 'loglevel';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
 
@@ -52,11 +53,11 @@ function injectScripts() {
       )
       .map((jsFileStat) => path.join('..', 'inject', jsFileStat.name));
     for (const jsFile of jsFiles) {
-      console.log(`Injecting JS file: ${jsFile}`);
+      log.debug('Injecting JS file', jsFile);
       require(jsFile);
     }
   } catch (error) {
-    console.warn('Error encoutered injecting JS files', error);
+    log.error('Error encoutered injecting JS files', error);
   }
 }
 
@@ -70,10 +71,11 @@ function notifyNotificationClick() {
 setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
 
 ipcRenderer.on('params', (event, message) => {
+  log.debug('ipcRenderer.params', { event, message });
   const appArgs = JSON.parse(message);
-  console.info('nativefier.json', appArgs);
+  log.info('nativefier.json', appArgs);
 });
 
 ipcRenderer.on('debug', (event, message) => {
-  console.info('debug:', message);
+  log.debug('ipcRenderer.debug', { event, message });
 });

@@ -113,7 +113,7 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
     }
 
     if (supportedInjectionExtensions.indexOf(path.extname(src)) < 0) {
-      console.log(`Skipping unsupported injection file: ${src}`);
+      log.warn('Skipping unsupported injection file', src);
       continue;
     }
 

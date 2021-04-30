@@ -67,6 +67,7 @@ function injectCss(browserWindow: BrowserWindow): void {
   const cssToInject = getCssToInject();
 
   browserWindow.webContents.on('did-navigate', () => {
+    log.debug('browserWindow.webContents.did-navigate');
     // We must inject css early enough; so onHeadersReceived is a good place.
     // Will run multiple times, see `did-finish-load` below that unsets this handler.
     browserWindow.webContents.session.webRequest.onHeadersReceived(
@@ -100,7 +101,7 @@ export function saveAppArgs(newAppArgs: any) {
     fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs));
   } catch (err) {
     // eslint-disable-next-line no-console
-    console.log(
+    log.warn(
       `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
     );
   }
@@ -189,18 +190,21 @@ export function createMainWindow(
   };
 
   const onZoomIn = (): void => {
+    log.debug('onZoomIn');
     withFocusedWindow((focusedWindow: BrowserWindow) =>
       adjustWindowZoom(focusedWindow, ZOOM_INTERVAL),
     );
   };
 
   const onZoomOut = (): void => {
+    log.debug('onZoomOut');
     withFocusedWindow((focusedWindow: BrowserWindow) =>
       adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL),
     );
   };
 
   const onZoomReset = (): void => {
+    log.debug('onZoomReset');
     withFocusedWindow((focusedWindow: BrowserWindow) => {
       focusedWindow.webContents.zoomFactor = options.zoom;
     });
@@ -223,12 +227,14 @@ export function createMainWindow(
   };
 
   const onGoBack = (): void => {
+    log.debug('onGoBack');
     withFocusedWindow((focusedWindow) => {
       focusedWindow.webContents.goBack();
     });
   };
 
   const onGoForward = (): void => {
+    log.debug('onGoForward');
     withFocusedWindow((focusedWindow) => {
       focusedWindow.webContents.goForward();
     });
@@ -241,6 +247,7 @@ export function createMainWindow(
     withFocusedWindow((focusedWindow) => void focusedWindow.loadURL(url));
 
   const onBlockedExternalUrl = (url: string) => {
+    log.debug('onBlockedExternalUrl', url);
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     dialog.showMessageBox(mainWindow, {
       message: `Cannot navigate to external URL: ${url}`,
@@ -250,6 +257,7 @@ export function createMainWindow(
   };
 
   const onWillNavigate = (event: Event, urlToGo: string): void => {
+    log.debug('onWillNavigate', { event, urlToGo });
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       event.preventDefault();
       if (options.blockExternalUrls) {
@@ -302,6 +310,7 @@ export function createMainWindow(
   };
 
   const createNewTab = (url: string, foreground: boolean): BrowserWindow => {
+    log.debug('createNewTab', { url, foreground });
     withFocusedWindow((focusedWindow) => {
       const newTab = createNewWindow(url);
       focusedWindow.addTabbedWindow(newTab);
@@ -332,6 +341,7 @@ export function createMainWindow(
     frameName: string,
     disposition,
   ): void => {
+    log.debug('onNewWindow', { event, urlToGo, frameName, disposition });
     const preventDefault = (newGuest: any): void => {
       event.preventDefault();
       if (newGuest) {
@@ -355,6 +365,7 @@ export function createMainWindow(
 
   const sendParamsOnDidFinishLoad = (window: BrowserWindow): void => {
     window.webContents.on('did-finish-load', () => {
+      log.debug('sendParamsOnDidFinishLoad.window.webContents.did-finish-load');
       // In children windows too: Restore pinch-to-zoom, disabled by default in recent Electron.
       // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598612128
       // and https://github.com/electron/electron/pull/12679
@@ -400,7 +411,8 @@ export function createMainWindow(
   sendParamsOnDidFinishLoad(mainWindow);
 
   if (options.counter) {
-    mainWindow.on('page-title-updated', (e, title) => {
+    mainWindow.on('page-title-updated', (event, title) => {
+      log.debug('mainWindow.page-title-updated', { event, title });
       const counterValue = getCounterValue(title);
       if (counterValue) {
         setDockBadge(counterValue, options.bounce);
@@ -410,17 +422,20 @@ export function createMainWindow(
     });
   } else {
     ipcMain.on('notification', () => {
+      log.debug('ipcMain.notification');
       if (!isOSX() || mainWindow.isFocused()) {
         return;
       }
       setDockBadge('•', options.bounce);
     });
     mainWindow.on('focus', () => {
+      log.debug('mainWindow.focus');
       setDockBadge('');
     });
   }
 
   ipcMain.on('notification-click', () => {
+    log.debug('ipcMain.notification-click');
     mainWindow.show();
   });
 
@@ -428,8 +443,7 @@ export function createMainWindow(
   ipcMain.on(
     'session-interaction',
     (event, request: SessionInteractionRequest) => {
-      log.debug('session-interaction:event', event);
-      log.debug('session-interaction:request', request);
+      log.debug('ipcMain.session-interaction', { event, request });
 
       const result: SessionInteractionResult = { id: request.id };
       let awaitingPromise = false;
@@ -457,7 +471,7 @@ export function createMainWindow(
             // This is a promise. We'll resolve it here otherwise it will blow up trying to serialize it in the reply
             result.value.then((trueResultValue) => {
               result.value = trueResultValue;
-              log.debug('session-interaction:result', result);
+              log.debug('ipcMain.session-interaction:result', result);
               event.reply('session-interaction-reply', result);
             });
             awaitingPromise = true;
@@ -496,6 +510,7 @@ export function createMainWindow(
   mainWindow.webContents.on('will-navigate', onWillNavigate);
   mainWindow.webContents.on('will-prevent-unload', onWillPreventUnload);
   mainWindow.webContents.on('did-finish-load', () => {
+    log.debug('mainWindow.webContents.did-finish-load');
     // Restore pinch-to-zoom, disabled by default in recent Electron.
     // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598309817
     // and https://github.com/electron/electron/pull/12679
@@ -518,6 +533,7 @@ export function createMainWindow(
   mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
 
   mainWindow.on('close', (event) => {
+    log.debug('mainWindow.close', event);
     if (mainWindow.isFullScreen()) {
       if (nativeTabsSupported()) {
         mainWindow.moveTabToNewWindow();
