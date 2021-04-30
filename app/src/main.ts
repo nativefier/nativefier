@@ -34,7 +34,7 @@ const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 // Do this relatively early so that we can start storing appData with the app
 if (appArgs.portable) {
   log.debug(
-    'Setting appData and userData to ',
+    'App was built as portable; setting appData and userData to the app folder: ',
     path.resolve(path.join(__dirname, '..', 'appData')),
   );
   app.setPath('appData', path.join(__dirname, '..', 'appData'));
