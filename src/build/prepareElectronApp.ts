@@ -1,11 +1,10 @@
 import * as fs from 'fs';
-import * as crypto from 'crypto';
 import * as path from 'path';
 import { promisify } from 'util';
 
 import * as log from 'loglevel';
 
-import { copyFileOrDir } from '../helpers/helpers';
+import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
 import { AppOptions } from '../options/model';
 
 const writeFileAsync = promisify(fs.writeFile);
@@ -103,6 +102,8 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
     return;
   }
 
+  const supportedInjectionExtensions = ['.css', '.js'];
+
   log.debug(`Copying ${srcs.length} files to inject in app.`);
   for (const src of srcs) {
     if (!fs.existsSync(src)) {
@@ -111,26 +112,22 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
       );
     }
 
-    let destFileName: string;
-    if (path.extname(src) === '.js') {
-      destFileName = 'inject.js';
-    } else if (path.extname(src) === '.css') {
-      destFileName = 'inject.css';
-    } else {
-      return;
+    if (supportedInjectionExtensions.indexOf(path.extname(src)) < 0) {
+      console.log(`Skipping unsupported injection file: ${src}`);
+      continue;
     }
 
+    const postFixHash = generateRandomSuffix();
+    const destFileName = `inject-${postFixHash}.${path.extname(src)}`;
     const destPath = path.join(dest, 'inject', destFileName);
     log.debug(`Copying injection file "${src}" to "${destPath}"`);
     await copyFileOrDir(src, destPath);
   }
 }
 
-function normalizeAppName(appName: string, url: string): string {
-  // use a simple 3 byte random string to prevent collision
-  const hash = crypto.createHash('md5');
-  hash.update(url);
-  const postFixHash = hash.digest('hex').substring(0, 6);
+function normalizeAppName(appName: string): string {
+  // use a simple random string to prevent collisions
+  const postFixHash = generateRandomSuffix();
   const normalized = appName
     .toLowerCase()
     .replace(/[,:.]/g, '')
@@ -138,14 +135,10 @@ function normalizeAppName(appName: string, url: string): string {
   return `${normalized}-nativefier-${postFixHash}`;
 }
 
-function changeAppPackageJsonName(
-  appPath: string,
-  name: string,
-  url: string,
-): void {
+function changeAppPackageJsonName(appPath: string, name: string): void {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-  const normalizedAppName = normalizeAppName(name, url);
+  const normalizedAppName = normalizeAppName(name);
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
@@ -189,9 +182,5 @@ export async function prepareElectronApp(
   } catch (err) {
     log.error('Error copying injection files.', err);
   }
-  changeAppPackageJsonName(
-    dest,
-    options.packager.name,
-    options.packager.targetUrl,
-  );
+  changeAppPackageJsonName(dest, options.packager.name);
 }

@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import { BrowserWindow } from 'electron';
 
-const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');
+export const INJECT_DIR = path.join(__dirname, '..', 'inject');
 
 export function isOSX(): boolean {
   return os.platform() === 'darwin';
@@ -80,17 +80,29 @@ export function linkIsInternal(
 
 export function shouldInjectCss(): boolean {
   try {
-    fs.accessSync(INJECT_CSS_PATH);
-    return true;
+    return fs.existsSync(INJECT_DIR);
   } catch (e) {
     return false;
   }
 }
 
 export function getCssToInject(): string {
-  return fs.readFileSync(INJECT_CSS_PATH).toString();
+  let cssToInject = '';
+  const cssFiles = fs
+    .readdirSync(INJECT_DIR, { withFileTypes: true })
+    .filter(
+      (injectFile) => injectFile.isFile() && injectFile.name.endsWith('.css'),
+    )
+    .map((cssFileStat) =>
+      path.resolve(path.join(INJECT_DIR, cssFileStat.name)),
+    );
+  for (const cssFile of cssFiles) {
+    console.log(`Injecting CSS file: ${cssFile}`);
+    const cssFileData = fs.readFileSync(cssFile);
+    cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
+  }
+  return cssToInject;
 }
-
 /**
  * Helper to print debug messages from the main process in the browser window
  */

@@ -1,4 +1,4 @@
-import { isArgFormatInvalid } from './helpers';
+import { isArgFormatInvalid, generateRandomSuffix } from './helpers';
 
 describe('isArgFormatInvalid', () => {
   test('is false for correct short args', () => {
@@ -32,5 +32,27 @@ describe('isArgFormatInvalid', () => {
 
   test('is false for correct long args with many dashes', () => {
     expect(isArgFormatInvalid('--test-run-with-many-dashes')).toBe(false);
+  });
+});
+
+describe('generateRandomSuffix', () => {
+  test('is not empty', () => {
+    expect(generateRandomSuffix()).not.toBe('');
+  });
+
+  test('is not null', () => {
+    expect(generateRandomSuffix()).not.toBeNull();
+  });
+
+  test('is not undefined', () => {
+    expect(generateRandomSuffix()).toBeDefined();
+  });
+
+  test('is different per call', () => {
+    expect(generateRandomSuffix()).not.toBe(generateRandomSuffix());
+  });
+
+  test('respects the length param', () => {
+    expect(generateRandomSuffix(10).length).toBe(10);
   });
 });

@@ -12,7 +12,8 @@ import * as path from 'path';
 
 import { ipcRenderer } from 'electron';
 
-const INJECT_JS_PATH = path.join(__dirname, '..', 'inject/inject.js');
+export const INJECT_DIR = path.join(__dirname, '..', 'inject');
+
 /**
  * Patches window.Notification to:
  * - set a callback on a new Notification
@@ -38,12 +39,25 @@ function setNotificationCallback(createCallback, clickCallback) {
 }
 
 function injectScripts() {
-  const needToInject = fs.existsSync(INJECT_JS_PATH);
+  const needToInject = fs.existsSync(INJECT_DIR);
   if (!needToInject) {
     return;
   }
   // Dynamically require scripts
-  require(INJECT_JS_PATH);
+  try {
+    const jsFiles = fs
+      .readdirSync(INJECT_DIR, { withFileTypes: true })
+      .filter(
+        (injectFile) => injectFile.isFile() && injectFile.name.endsWith('.js'),
+      )
+      .map((jsFileStat) => path.join('..', 'inject', jsFileStat.name));
+    for (const jsFile of jsFiles) {
+      console.log(`Injecting JS file: ${jsFile}`);
+      require(jsFile);
+    }
+  } catch (error) {
+    console.warn('Error encoutered injecting JS files', error);
+  }
 }
 
 function notifyNotificationCreate(title, opt) {
