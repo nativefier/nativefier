@@ -31,7 +31,7 @@ if (require('electron-squirrel-startup')) {
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
-// Do this relatively early so that we can start storid appData with the app
+// Do this relatively early so that we can start storing appData with the app
 if (appArgs.portable) {
   log.debug(
     'Setting appData and userData to ',
