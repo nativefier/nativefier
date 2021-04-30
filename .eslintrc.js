@@ -15,6 +15,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
   ],
   rules: {
+    'no-console': 'error',
     'prettier/prettier': 'error',
     // TODO remove when done killing `any`s and making tsc strict
     '@typescript-eslint/ban-ts-comment': 'off',
