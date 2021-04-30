@@ -307,7 +307,7 @@ Allow the application data to be stored locally with the app to enable portabili
 
 **IMPORTANT SECURITY NOTICE**
 
-When creating a portable application, all data accumulated after creating the application including login information, will be saved in the application folder. If this application is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENITALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
+When creating a portable app, all data accumulated after running the app (including login information, cache, cookies), will be saved in the app folder. If this app is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENTIALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
 
 Best practice when using this flag:
 
