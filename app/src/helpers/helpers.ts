@@ -59,8 +59,15 @@ export function linkIsInternal(
     // 1. app.foo.com and foo.com
     // 2. www.foo.com and foo.com
     // 3. www.foo.com and app.foo.com
-    const currentDomain = new URL(currentUrl).hostname.replace(/^www\./, '');
-    const newDomain = new URL(newUrl).hostname.replace(/^www./, '');
+
+    // Only use the tld and the main domain for domain-ish test
+    // Enables domain-ish equality for blog.foo.com and shop.foo.com
+    // Also makes the endWith check basically obsolete, === could be used.
+    const currentDomain = new URL(currentUrl).hostname
+      .split('.')
+      .slice(-2)
+      .join('.');
+    const newDomain = new URL(newUrl).hostname.split('.').slice(-2).join('.');
     const [longerDomain, shorterDomain] =
       currentDomain.length > newDomain.length
         ? [currentDomain, newDomain]
