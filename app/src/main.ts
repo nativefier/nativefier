@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 
 import fs from 'fs';
+import * as path from 'path';
 
 import {
   app,
@@ -33,6 +34,17 @@ if (process.argv.indexOf('--verbose') > -1) {
 }
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
+log.debug('appArgs', appArgs);
+// Do this relatively early so that we can start storing appData with the app
+if (appArgs.portable) {
+  log.debug(
+    'App was built as portable; setting appData and userData to the app folder: ',
+    path.resolve(path.join(__dirname, '..', 'appData')),
+  );
+  app.setPath('appData', path.join(__dirname, '..', 'appData'));
+  app.setPath('userData', path.join(__dirname, '..', 'appData'));
+}
 
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
@@ -118,9 +130,20 @@ if (appArgs.basicAuthPassword) {
   );
 }
 
-const isRunningMacos = isOSX();
+if (appArgs.lang) {
+  const langParts = (appArgs.lang as string).split(',');
+  // Convert locales to languages, because for some reason locales don't work. Stupid Chromium
+  const langPartsParsed = Array.from(
+    // Convert to set to dedupe in case something like "en-GB,en-US" was passed
+    new Set(langParts.map((l) => l.split('-')[0])),
+  );
+  const langFlag = langPartsParsed.join(',');
+  log.debug('Setting --lang flag to', langFlag);
+  app.commandLine.appendSwitch('--lang', langFlag);
+}
+
 let currentBadgeCount = 0;
-const setDockBadge = isRunningMacos
+const setDockBadge = isOSX()
   ? (count: number, bounce = false) => {
       app.dock.setBadge(count.toString());
       if (bounce && count > currentBadgeCount) app.dock.bounce();

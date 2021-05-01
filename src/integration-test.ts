@@ -74,6 +74,9 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
           inputOptions.platform,
         ),
   );
+
+  // Test lang
+  expect(nativefierConfig.lang).toBe(inputOptions.lang);
 }
 
 describe('Nativefier', () => {
@@ -88,6 +91,7 @@ describe('Nativefier', () => {
         out: tempDirectory,
         overwrite: true,
         platform,
+        lang: 'en-US',
       };
       const appPath = await buildNativefierApp(options);
       await checkApp(appPath, options);

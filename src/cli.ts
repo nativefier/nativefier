@@ -132,6 +132,10 @@ if (require.main === module) {
       'the icon file to use as the icon for the app (should be a .png, on macOS can also be an .icns)',
     )
     .option(
+      '--portable',
+      'Make the app store its user data in the app folder. WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable for security risks',
+    )
+    .option(
       '--width <value>',
       'set window default width; defaults to 1280px',
       parseInt,
@@ -169,6 +173,10 @@ if (require.main === module) {
       '(macOS only) quit app on window close; defaults to false',
     )
     .option('-u, --user-agent <value>', 'set the app user agent string')
+    .option(
+      '--lang <value>',
+      'set the language or locale to render the web site as (e.g., "fr", "en-US", "es", etc.)',
+    )
     .option(
       '--honest',
       'prevent the normal changing of the user agent string to appear as a regular Chrome browser',
