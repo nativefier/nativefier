@@ -41,7 +41,7 @@ printf "\n***** Test checklist *****
 
 printf "\n***** Running app *****\n"
 if [ "$(uname -s)" = "Darwin" ]; then
-  open -a 'app-darwin-x64/app.app'
+  open -a "$tmp_dir/app-darwin-x64/app.app"
 else
   "$tmp_dir/app-linux-x64/app"
 fi
