@@ -1,3 +1,34 @@
+43.1.0 / 2021-05-01
+===================
+
+This is a chunky release! Warm thanks to all the contributors that helped shape it,
+with a special shoutout to @TheCleric for a mountain of awesome work.
+
+Features! (nothing breaking)
+
+  * Add a [`--upgrade`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#upgrade) option to easily upgrade an existing app (fix #1131) (PR #1138)
+  * Support defining a custom [`--bookmarks-menu`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu) (fix #1065) (PR #1155)
+  * Support setting apps [`--lang`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#lang)uage (fix #175) (PR #1173)
+  * Support creating self-contained "[`--portable`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable)" apps writing their app data to the app folder (fix #376) (PR #1168)
+  * Support opening URLs passed as arg to Nativefied apps (fix #405) (PR #1154)
+  
+Bugfixes!
+
+  * App: fix child windows not inheriting mainWindow properties (including userAgent), breaking some Google login pages (#1174)
+  * Fix `--inject`ing multiple css/js files (fix #458) (#1162)
+  * Fix `--widevine` by properly listening to `widevine-...` events (fix #1153) (PR #1164)
+  * Prompt to confirm when page is attempting to prevent unload (#1163)
+  * macOS: Fix crash when using `--tray` (fix #527) (PR #1156)
+  * macOS: Fix invisible icon (fix #942, fix #668) (PR #1156)
+  * Auto-internal login pages: add a missing Google login page (#1167)
+
+Maintenance!
+
+  * Bump to [Electron 12.0.6](https://github.com/electron/electron/releases/tag/v12.0.6) with Chrome 89.0.4389.128 and security fixes
+  * Docs: add troubleshooting section for common issues (#1169), document signing `--widevine` apps like HBO Max & Udemy (#1147), misc fixes
+  * App: replace console.xyz calls with loglevel.xyz, with a level controlled by app argv `--verbose` (#1172)
+  * Auto-internal login pages: add test to ensure we don't regress on cases of SLDs
+  * CI: run in node 16, drop node 15. Run less node versions for faster CI; oldest supported / latest is enough
 
 43.0.2 / 2021-04-13
 ===================
