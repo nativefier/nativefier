@@ -67,6 +67,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     nativefierVersion: options.nativefier.nativefierVersion,
     osxNotarize: options.packager.osxNotarize,
     osxSign: options.packager.osxSign,
+    portable: options.packager.portable,
     processEnvs: options.nativefier.processEnvs,
     protocols: options.packager.protocols,
     proxyRules: options.nativefier.proxyRules,

@@ -38,6 +38,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       out: rawOptions.out || process.cwd(),
       overwrite: rawOptions.overwrite,
       platform: rawOptions.platform || inferPlatform(),
+      portable: rawOptions.portable || false,
       targetUrl:
         rawOptions.targetUrl === undefined
           ? '' // We'll plug this in later via upgrade
@@ -192,8 +193,19 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     options.nativefier.height = options.nativefier.maxHeight;
   }
 
+  if (options.packager.portable) {
+    log.info(
+      'Building app as portable.',
+      'SECURITY WARNING: all data accumulated in the app folder after running it',
+      '(including login information, cache, cookies) will be saved',
+      'in the app folder. If this app is then shared with others,',
+      'THEY WILL HAVE THAT ACCUMULATED DATA, POTENTIALLY INCLUDING ACCESS',
+      'TO ANY ACCOUNTS YOU LOGGED INTO.',
+    );
+  }
+
   if (rawOptions.globalShortcuts) {
-    log.debug('Use global shortcuts file at', rawOptions.globalShortcuts);
+    log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
     const globalShortcuts = JSON.parse(
       fs.readFileSync(rawOptions.globalShortcuts).toString(),
     );

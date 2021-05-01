@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 
 import fs from 'fs';
+import * as path from 'path';
 
 import {
   app,
@@ -29,6 +30,16 @@ if (require('electron-squirrel-startup')) {
 }
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+
+// Do this relatively early so that we can start storing appData with the app
+if (appArgs.portable) {
+  log.debug(
+    'App was built as portable; setting appData and userData to the app folder: ',
+    path.resolve(path.join(__dirname, '..', 'appData')),
+  );
+  app.setPath('appData', path.join(__dirname, '..', 'appData'));
+  app.setPath('userData', path.join(__dirname, '..', 'appData'));
+}
 
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
