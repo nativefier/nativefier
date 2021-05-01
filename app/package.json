@@ -16,6 +16,7 @@
     "electron-dl": "^3.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
+    "loglevel": "^1.7.1",
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {

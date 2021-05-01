@@ -310,7 +310,7 @@ if (require.main === module) {
   };
 
   if (!options.targetUrl && !options.upgrade) {
-    console.error(
+    log.error(
       'Nativefier must be called with either a targetUrl or the --upgrade option.',
     );
     commander.help();

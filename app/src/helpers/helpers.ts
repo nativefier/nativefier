@@ -3,6 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { BrowserWindow } from 'electron';
+import * as log from 'loglevel';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
 
@@ -67,7 +68,7 @@ export function linkIsInternal(
         : [newDomain, currentDomain];
     return longerDomain.endsWith(shorterDomain);
   } catch (err) {
-    console.warn(
+    log.error(
       'Failed to parse domains as determining if link is internal. From:',
       currentUrl,
       'To:',
@@ -97,7 +98,7 @@ export function getCssToInject(): string {
       path.resolve(path.join(INJECT_DIR, cssFileStat.name)),
     );
   for (const cssFile of cssFiles) {
-    console.log(`Injecting CSS file: ${cssFile}`);
+    log.debug('Injecting CSS file', cssFile);
     const cssFileData = fs.readFileSync(cssFile);
     cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
   }
@@ -111,7 +112,7 @@ export function debugLog(browserWindow: BrowserWindow, message: string): void {
   setTimeout(() => {
     browserWindow.webContents.send('debug', message);
   }, 3000);
-  console.info(message);
+  log.info(message);
 }
 
 export function getAppIcon(): string {

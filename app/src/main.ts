@@ -29,6 +29,10 @@ if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
+if (process.argv.indexOf('--verbose') > -1) {
+  log.setLevel('DEBUG');
+}
+
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 log.debug('appArgs', appArgs);
@@ -48,9 +52,9 @@ if (process.argv.length > 1) {
   try {
     new URL(maybeUrl);
     appArgs.targetUrl = maybeUrl;
-    console.info('Loading override URL passed as argument:', maybeUrl);
+    log.info('Loading override URL passed as argument:', maybeUrl);
   } catch (err) {
-    console.error(
+    log.error(
       'Not loading override URL passed as argument, because failed to parse:',
       maybeUrl,
     );
@@ -147,13 +151,14 @@ const setDockBadge = isOSX()
   : () => undefined;
 
 app.on('window-all-closed', () => {
-  log.debug('windows-all-closed');
+  log.debug('app.window-all-closed');
   if (!isOSX() || appArgs.fastQuit) {
     app.quit();
   }
 });
 
 app.on('activate', (event, hasVisibleWindows) => {
+  log.debug('app.activate', { event, hasVisibleWindows });
   if (isOSX()) {
     // this is called when the dock is clicked
     if (!hasVisibleWindows) {
@@ -163,7 +168,7 @@ app.on('activate', (event, hasVisibleWindows) => {
 });
 
 app.on('before-quit', () => {
-  log.debug('before-quit');
+  log.debug('app.before-quit');
   // not fired when the close button on the window is clicked
   if (isOSX()) {
     // need to force a quit as a workaround here to simulate the osx app hiding behaviour
@@ -176,15 +181,16 @@ app.on('before-quit', () => {
 });
 
 app.on('will-quit', (event) => {
-  log.debug('will-quit', event);
+  log.debug('app.will-quit', event);
 });
 
 app.on('quit', (event, exitCode) => {
-  log.debug('quit', event, exitCode);
+  log.debug('app.quit', { event, exitCode });
 });
 
 if (appArgs.crashReporter) {
   app.on('will-finish-launching', () => {
+    log.debug('app.will-finish-launching');
     crashReporter.start({
       companyName: appArgs.companyName || '',
       productName: appArgs.name,
@@ -200,6 +206,7 @@ if (shouldQuit) {
   app.quit();
 } else {
   app.on('second-instance', () => {
+    log.debug('app.second-instance');
     if (mainWindow) {
       if (!mainWindow.isVisible()) {
         // try
@@ -216,7 +223,7 @@ if (shouldQuit) {
   if (appArgs.widevine) {
     // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
     app.on('widevine-ready', (version: string, lastVersion: string) => {
-      console.log('widevine-ready', version, lastVersion);
+      log.debug('app.widevine-ready', { version, lastVersion });
       onReady();
     });
 
@@ -224,19 +231,20 @@ if (shouldQuit) {
       // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
       'widevine-update-pending',
       (currentVersion: string, pendingVersion: string) => {
-        console.log(
-          `Widevine ${currentVersion} is ready to be upgraded to ${pendingVersion}`,
-        );
+        log.debug('app.widevine-update-pending', {
+          currentVersion,
+          pendingVersion,
+        });
       },
     );
 
     // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
     app.on('widevine-error', (error: any) => {
-      console.error('WIDEVINE ERROR: ', error);
+      log.error('app.widevine-error', error);
     });
   } else {
     app.on('ready', () => {
-      console.log('ready');
+      log.debug('ready');
       onReady();
     });
   }
@@ -318,10 +326,12 @@ function onReady(): void {
   }
 }
 app.on('new-window-for-tab', () => {
+  log.debug('app.new-window-for-tab');
   mainWindow.emit('new-tab');
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
+  log.debug('app.login', { event, request });
   // for http authentication
   event.preventDefault();
 

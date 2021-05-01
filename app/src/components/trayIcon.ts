@@ -1,4 +1,5 @@
 import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
+import log from 'loglevel';
 
 import { getAppIcon, getCounterValue, isOSX } from '../helpers/helpers';
 
@@ -23,6 +24,7 @@ export function createTrayIcon(
     }
 
     const onClick = () => {
+      log.debug('onClick');
       if (mainWindow.isVisible()) {
         mainWindow.hide();
       } else {
@@ -44,7 +46,8 @@ export function createTrayIcon(
     appIcon.on('click', onClick);
 
     if (options.counter) {
-      mainWindow.on('page-title-updated', (e, title) => {
+      mainWindow.on('page-title-updated', (event, title) => {
+        log.debug('mainWindow.page-title-updated', { event, title });
         const counterValue = getCounterValue(title);
         if (counterValue) {
           appIcon.setToolTip(`(${counterValue})  ${options.name}`);
@@ -54,6 +57,7 @@ export function createTrayIcon(
       });
     } else {
       ipcMain.on('notification', () => {
+        log.debug('ipcMain.notification');
         if (mainWindow.isFocused()) {
           return;
         }
@@ -61,6 +65,7 @@ export function createTrayIcon(
       });
 
       mainWindow.on('focus', () => {
+        log.debug('mainWindow.focus');
         appIcon.setToolTip(options.name);
       });
     }

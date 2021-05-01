@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import path from 'path';
 
 import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
+import * as log from 'loglevel';
 
 type BookmarksLink = {
   type: 'link';
@@ -351,10 +352,7 @@ export function createMenu({
       menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
     }
   } catch (err) {
-    console.warn(
-      'Failed to load & parse bookmarks configuration JSON file.',
-      err,
-    );
+    log.error('Failed to load & parse bookmarks configuration JSON file.', err);
   }
 
   const menu = Menu.buildFromTemplate(menuTemplate);
