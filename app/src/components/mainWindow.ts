@@ -106,6 +106,12 @@ export function saveAppArgs(newAppArgs: any) {
     );
   }
 }
+
+export type createWindowResult = {
+  window: BrowserWindow;
+  setupWindow: (window: BrowserWindow) => void;
+};
+
 /**
  * @param {{}} nativefierOptions AppArgs from nativefier.json
  * @param {function} onAppQuit
@@ -115,7 +121,7 @@ export function createMainWindow(
   nativefierOptions,
   onAppQuit,
   setDockBadge,
-): BrowserWindow {
+): createWindowResult {
   const options = { ...nativefierOptions };
   const mainWindowState = windowStateKeeper({
     defaultWidth: options.width || 1280,
@@ -292,6 +298,12 @@ export function createMainWindow(
 
   const createNewWindow: (url: string) => BrowserWindow = (url: string) => {
     const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
+    setupWindow(window);
+    window.loadURL(url); // eslint-disable-line @typescript-eslint/no-floating-promises
+    return window;
+  };
+
+  function setupWindow(window: BrowserWindow): void {
     if (options.userAgent) {
       window.webContents.userAgent = options.userAgent;
     }
@@ -305,9 +317,7 @@ export function createMainWindow(
     window.webContents.on('new-window', onNewWindow);
     window.webContents.on('will-navigate', onWillNavigate);
     window.webContents.on('will-prevent-unload', onWillPreventUnload);
-    window.loadURL(url); // eslint-disable-line @typescript-eslint/no-floating-promises
-    return window;
-  };
+  }
 
   const createNewTab = (url: string, foreground: boolean): BrowserWindow => {
     log.debug('createNewTab', { url, foreground });
@@ -552,5 +562,5 @@ export function createMainWindow(
     }
   });
 
-  return mainWindow;
+  return { window: mainWindow, setupWindow };
 }
