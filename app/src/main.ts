@@ -87,6 +87,7 @@ if (appArgs.processEnvs) {
 }
 
 let mainWindow: BrowserWindow;
+let setupWindow: (BrowserWindow) => void;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
@@ -251,7 +252,14 @@ if (shouldQuit) {
 }
 
 function onReady(): void {
-  mainWindow = createMainWindow(appArgs, app.quit.bind(this), setDockBadge);
+  const createWindowResult = createMainWindow(
+    appArgs,
+    app.quit.bind(this),
+    setDockBadge,
+  );
+  log.debug('onReady', createWindowResult);
+  mainWindow = createWindowResult.window;
+  setupWindow = createWindowResult.setupWindow;
   createTrayIcon(appArgs, mainWindow);
 
   // Register global shortcuts
@@ -343,4 +351,36 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   } else {
     createLoginWindow(callback);
   }
+});
+
+app.on(
+  'accessibility-support-changed',
+  (event: Event, accessibilitySupportEnabled: boolean) => {
+    log.debug('app.accessibility-support-changed', {
+      event,
+      accessibilitySupportEnabled,
+    });
+  },
+);
+
+app.on(
+  'activity-was-continued',
+  (event: Event, type: string, userInfo: any) => {
+    log.debug('app.activity-was-continued', { event, type, userInfo });
+  },
+);
+
+app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
+  log.debug('app.browser-window-blur', { event, window });
+});
+
+app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
+  log.debug('app.browser-window-created', { event, window });
+  if (setupWindow !== undefined) {
+    setupWindow(window);
+  }
+});
+
+app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
+  log.debug('app.browser-window-focus', { event, window });
 });
