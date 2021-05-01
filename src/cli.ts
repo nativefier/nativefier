@@ -174,6 +174,10 @@ if (require.main === module) {
     )
     .option('-u, --user-agent <value>', 'set the app user agent string')
     .option(
+      '--lang <value>',
+      'set the language or locale to render the web site as (e.g., "fr", "en-US", "es", etc.)',
+    )
+    .option(
       '--honest',
       'prevent the normal changing of the user agent string to appear as a regular Chrome browser',
     )
