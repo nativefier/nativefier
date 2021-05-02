@@ -16,7 +16,8 @@
     "electron-dl": "^3.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
-    "source-map-support": "^0.5.19"
+    "source-map-support": "^0.5.19",
+    "tldts": "latest"
   },
   "devDependencies": {
     "electron": "^12.0.1"
