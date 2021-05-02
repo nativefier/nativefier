@@ -51,7 +51,9 @@ export function linkIsInternal(
 
   if (internalUrlRegex) {
     const regex = RegExp(internalUrlRegex);
-    return regex.test(newUrl);
+    if (regex.test(newUrl)) {
+      return true;
+    }
   }
 
   try {
@@ -62,17 +64,7 @@ export function linkIsInternal(
 
     // Only use the tld and the main domain for domain-ish test
     // Enables domain-ish equality for blog.foo.com and shop.foo.com
-    // Also makes the endWith check basically obsolete, === could be used.
-    const currentDomain = new URL(currentUrl).hostname
-      .split('.')
-      .slice(-2)
-      .join('.');
-    const newDomain = new URL(newUrl).hostname.split('.').slice(-2).join('.');
-    const [longerDomain, shorterDomain] =
-      currentDomain.length > newDomain.length
-        ? [currentDomain, newDomain]
-        : [newDomain, currentDomain];
-    return longerDomain.endsWith(shorterDomain);
+    return domainify(currentUrl) === domainify(newUrl);
   } catch (err) {
     console.warn(
       'Failed to parse domains as determining if link is internal. From:',
@@ -83,6 +75,21 @@ export function linkIsInternal(
     );
     return false;
   }
+}
+
+function domainify(url: string): string {
+  // So here's what we're doing here:
+  // Get the hostname from the url
+  const hostname = new URL(url).hostname;
+  // Drop the first section if the domain
+  const domain = hostname.split('.').slice(1).join('.');
+  // Check the length, if it's too short, the hostname was probably the domain
+  // Or if the domain doesn't have a . in it we went too far
+  if (domain.length < 6 || domain.split('.').length === 0) {
+    return hostname;
+  }
+  // This SHOULD be the domain, but nothing is 100% guaranteed
+  return domain;
 }
 
 export function shouldInjectCss(): boolean {
