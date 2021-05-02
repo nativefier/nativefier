@@ -11,9 +11,12 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ipcRenderer } from 'electron';
-import * as log from 'loglevel';
+// import * as log from 'loglevel';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
+
+// Since the browser doesn't have access to node_modules for loglevel
+const log = console;
 
 /**
  * Patches window.Notification to:
