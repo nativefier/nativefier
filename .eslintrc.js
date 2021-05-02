@@ -16,7 +16,11 @@ module.exports = {
   ],
   rules: {
     'no-console': 'error',
-    'prettier/prettier': 'error',
+    'prettier/prettier': [
+      'error', {
+        'endOfLine': 'auto'
+      }
+    ],
     // TODO remove when done killing `any`s and making tsc strict
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
