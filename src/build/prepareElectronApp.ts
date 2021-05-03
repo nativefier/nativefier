@@ -128,8 +128,8 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   }
 }
 /**
- * Use a simple 3-character hash to prevent collisions. The hash is deterministic-by-url,
- * so that an upgrade (same URL) of an existing app keeps using the same appData folder.
+ * Use a basic 3-character hash to prevent collisions. The hash is deterministic url & name,
+ * so that an upgrade (same URL) of an app keeps using the same appData folder.
  * Warning! Changing this normalizing & hashing will change the way appNames are generated,
  *          changing appData folder, and users will get logged out of their apps after an upgrade.
  */
