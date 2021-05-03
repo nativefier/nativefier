@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
@@ -126,10 +127,14 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
     await copyFileOrDir(src, destPath);
   }
 }
-
-function normalizeAppName(appName: string): string {
-  // use a simple random string to prevent collisions
-  const postFixHash = generateRandomSuffix();
+/**
+ * Use a simple 3-character hash to prevent collisions. The hash is deterministic-by-url,
+ * so that an upgrade (same URL) of an existing app keeps using the same appData folder.
+ */
+function normalizeAppName(appName: string, url: string): string {
+  const hash = crypto.createHash('md5');
+  hash.update(url);
+  const postFixHash = hash.digest('hex').substring(0, 6);
   const normalized = appName
     .toLowerCase()
     .replace(/[,:.]/g, '')
@@ -137,10 +142,14 @@ function normalizeAppName(appName: string): string {
   return `${normalized}-nativefier-${postFixHash}`;
 }
 
-function changeAppPackageJsonName(appPath: string, name: string): void {
+function changeAppPackageJsonName(
+  appPath: string,
+  name: string,
+  url: string,
+): void {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-  const normalizedAppName = normalizeAppName(name);
+  const normalizedAppName = normalizeAppName(name, url);
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
@@ -184,5 +193,9 @@ export async function prepareElectronApp(
   } catch (err) {
     log.error('Error copying injection files.', err);
   }
-  changeAppPackageJsonName(dest, options.packager.name);
+  changeAppPackageJsonName(
+    dest,
+    options.packager.name,
+    options.packager.targetUrl,
+  );
 }
