@@ -57,6 +57,10 @@ to learn about other command-line flags usable to configure the packaged app.
 To have high-resolution icons used by default for an app/domain, please
 contribute to the [icon repository](https://github.com/nativefier/nativefier-icons)!
 
+### Build Commands Library
+
+For a list of build commands contributed by the nativefier community take a look at the [CATALOG.md file](CATALOG.md)
+
 ## Usage with Docker
 
 Nativefier is also usable from Docker.
