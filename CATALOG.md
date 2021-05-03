@@ -12,7 +12,6 @@ Below you'll find a list of build commands contributed by the Nativefier communi
 
 ## Outlook Web
 
-### Windows Command
 ```
 nativefier https://outlook.office.com/mail 
 --internal-urls ".*?(outlook.live.com|outlook.office365.com|outlook.office.com).*?" 
@@ -26,7 +25,6 @@ nativefier https://outlook.office.com/mail
 
 ## Udemy
 
-### Windows Command
 ```
 nativefier https://www.udemy.com/  
 --internal-urls ".*?udemy.*?" 
