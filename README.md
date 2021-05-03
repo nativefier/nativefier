@@ -57,6 +57,10 @@ to learn about other command-line flags usable to configure the packaged app.
 To have high-resolution icons used by default for an app/domain, please
 contribute to the [icon repository](https://github.com/nativefier/nativefier-icons)!
 
+### Build Commands Catalog
+
+For a list of build commands contributed by the nativefier community take a look at the [CATALOG.md file](CATALOG.md)
+
 ## Usage with Docker
 
 Nativefier is also usable from Docker.
@@ -92,6 +96,8 @@ Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aop
 ## Troubleshooting
 
 Before submitting a question or bug report, please ensure you have read through these common issues and see if you can resolve the problem on your own. If you still encounter issues after trying these steps, or you don't see something similar to your issue listed, please submit a [bug report](https://github.com/nativefier/nativefier/issues/new?assignees=&labels=bug&template=bug_report.md).
+
+Take a look a the [Build Command Catalog](CATALOG.md) as a working command for your application may already exist there.
 
 ### I am trying to use Nativefier to build an app for a site that tells me I have an old/unsupported browser.
 
