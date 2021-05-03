@@ -1,0 +1,42 @@
+# Build Commands Library
+
+Below you'll find a list of build commands contributed from the nativefier community.
+
+If you'd like to add to this catalog, please keep the following in mind:
+
+Library commands should be the strict necessary to make an app work. So, for example,
+
+- Yes to have `--widevine` in Udemy. Yes to `--internal-urls` and `--browserwindow-options` for Outlook Web. Yes to a name and icon for both...
+- ... but let's not have all the other flags that are a matter of personal preference (e.g. `--disable-dev-tools` or `--disk-cache-size`).
+
+* * *
+
+## Outlook Web
+
+### Windows Command
+```
+nativefier https://outlook.office.com/mail 
+--name OutlookWA 
+--internal-urls ".*?(outlook.live.com|outlook.office365.com|outlook.office.com|login.microsoftonline.com).*?" 
+--file-download-options "{\"saveAs\": true}" 
+--browserwindow-options "{ \"webPreferences\": { \"webviewTag\": true, \"nodeIntegration\": true, \"nodeIntegrationInSubFrames\": true, \"nativeWindowOpen\": true } }"
+```
+
+### Notes
+
+`--browserwindow-options` -- This is needed in order to allow the window to pop out when creating/editing an email.
+
+## Udemy
+
+### Windows Command
+```
+nativefier https://www.udemy.com/ 
+--name Udemy 
+--internal-urls ".*?udemy.*?" 
+--file-download-options "{\"saveAs\": true}" 
+--widevine
+```
+
+### Notes
+
+Most videos will work, but to be sure everything works you are better off using the `--widevine` version AND signing the app afterwards. See this post: [#1147 (comment)](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362)
