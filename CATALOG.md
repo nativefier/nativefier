@@ -1,4 +1,4 @@
-# Build Commands Library
+# Build Commands Catalog
 
 Below you'll find a list of build commands contributed by the Nativefier community. They are here as examples, and to help you nativefy "complicated" apps that ask a bit of elbow grease to work.
 
