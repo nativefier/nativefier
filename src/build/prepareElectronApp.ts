@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { promisify } from 'util';
@@ -127,9 +128,16 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
   }
 }
 
-function normalizeAppName(appName: string): string {
-  // use a simple random string to prevent collisions
-  const postFixHash = generateRandomSuffix();
+/**
+ * Use a basic 6-character hash to prevent collisions. The hash is deterministic url & name,
+ * so that an upgrade (same URL) of an app keeps using the same appData folder.
+ * Warning! Changing this normalizing & hashing will change the way appNames are generated,
+ *          changing appData folder, and users will get logged out of their apps after an upgrade.
+ */
+export function normalizeAppName(appName: string, url: string): string {
+  const hash = crypto.createHash('md5');
+  hash.update(url);
+  const postFixHash = hash.digest('hex').substring(0, 6);
   const normalized = appName
     .toLowerCase()
     .replace(/[,:.]/g, '')
@@ -137,10 +145,14 @@ function normalizeAppName(appName: string): string {
   return `${normalized}-nativefier-${postFixHash}`;
 }
 
-function changeAppPackageJsonName(appPath: string, name: string): void {
+function changeAppPackageJsonName(
+  appPath: string,
+  name: string,
+  url: string,
+): void {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
-  const normalizedAppName = normalizeAppName(name);
+  const normalizedAppName = normalizeAppName(name, url);
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
@@ -184,5 +196,9 @@ export async function prepareElectronApp(
   } catch (err) {
     log.error('Error copying injection files.', err);
   }
-  changeAppPackageJsonName(dest, options.packager.name);
+  changeAppPackageJsonName(
+    dest,
+    options.packager.name,
+    options.packager.targetUrl,
+  );
 }
