@@ -3,7 +3,6 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { BrowserWindow } from 'electron';
-import { getDomain } from 'tldts';
 
 const INJECT_CSS_PATH = path.join(__dirname, '..', 'inject/inject.css');
 
@@ -33,7 +32,7 @@ function isInternalLoginPage(url: string): boolean {
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
   ];
-  const regex = new RegExp(internalLoginPagesArray.join('|'));
+  const regex = RegExp(internalLoginPagesArray.join('|'));
   return regex.test(url);
 }
 
@@ -51,22 +50,46 @@ export function linkIsInternal(
   }
 
   if (internalUrlRegex) {
-    const regex = new RegExp(internalUrlRegex);
+    const regex = RegExp(internalUrlRegex);
     if (regex.test(newUrl)) {
       return true;
     }
   }
 
-  // `getDomain` command could be extended with valid internal hosts (possibly through the nativefier config?)
-  // const currentDomain = getDomain(currentUrl, { validHosts: ['localhost'] });
-  // const newDomain = getDomain(newUrl, { validHosts: ['localhost'] });
-  const currentDomain = getDomain(currentUrl);
-  const newDomain = getDomain(newUrl);
+  try {
+    // Consider as "same domain-ish", without TLD/SLD list:
+    // 1. app.foo.com and foo.com
+    // 2. www.foo.com and foo.com
+    // 3. www.foo.com and app.foo.com
 
-  // An URL in an incorrect syntax or without a correct domain returns `null`
-  return (
-    currentDomain !== null && newDomain !== null && currentDomain === newDomain
-  );
+    // Only use the tld and the main domain for domain-ish test
+    // Enables domain-ish equality for blog.foo.com and shop.foo.com
+    return domainify(currentUrl) === domainify(newUrl);
+  } catch (err) {
+    console.warn(
+      'Failed to parse domains as determining if link is internal. From:',
+      currentUrl,
+      'To:',
+      newUrl,
+      err,
+    );
+    return false;
+  }
+}
+
+function domainify(url: string): string {
+  // So here's what we're doing here:
+  // Get the hostname from the url
+  const hostname = new URL(url).hostname;
+  // Drop the first section if the domain
+  const domain = hostname.split('.').slice(1).join('.');
+  // Check the length, if it's too short, the hostname was probably the domain
+  // Or if the domain doesn't have a . in it we went too far
+  if (domain.length < 6 || domain.split('.').length === 0) {
+    return hostname;
+  }
+  // This SHOULD be the domain, but nothing is 100% guaranteed
+  return domain;
 }
 
 export function shouldInjectCss(): boolean {
