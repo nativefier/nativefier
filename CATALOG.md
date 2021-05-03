@@ -16,8 +16,7 @@ Library commands should be the strict necessary to make an app work. So, for exa
 ### Windows Command
 ```
 nativefier https://outlook.office.com/mail 
---name OutlookWA 
---internal-urls ".*?(outlook.live.com|outlook.office365.com|outlook.office.com|login.microsoftonline.com).*?" 
+--internal-urls ".*?(outlook.live.com|outlook.office365.com|outlook.office.com).*?" 
 --file-download-options "{\"saveAs\": true}" 
 --browserwindow-options "{ \"webPreferences\": { \"webviewTag\": true, \"nodeIntegration\": true, \"nodeIntegrationInSubFrames\": true, \"nativeWindowOpen\": true } }"
 ```
@@ -30,8 +29,7 @@ nativefier https://outlook.office.com/mail
 
 ### Windows Command
 ```
-nativefier https://www.udemy.com/ 
---name Udemy 
+nativefier https://www.udemy.com/  
 --internal-urls ".*?udemy.*?" 
 --file-download-options "{\"saveAs\": true}" 
 --widevine
