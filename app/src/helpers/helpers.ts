@@ -77,6 +77,12 @@ export function linkIsInternal(
   }
 }
 
+/**
+ * Helper to determine domain-ish equality for many cases, the trivial ones
+ * and the trickier ones, e.g. `blog.foo.com` and `shop.foo.com`,
+ * in a way that is "good enough", and doesn't need a list of SLDs.
+ * See chat at https://github.com/nativefier/nativefier/pull/1171#pullrequestreview-649132523
+ */
 function domainify(url: string): string {
   // So here's what we're doing here:
   // Get the hostname from the url
