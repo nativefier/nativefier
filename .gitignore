@@ -49,6 +49,7 @@ venv
 # IntelliJ project files
 .idea
 *.iml
+.run
 out
 gen
 

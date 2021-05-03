@@ -4,8 +4,10 @@ const internalUrl = 'https://medium.com/';
 const internalUrlWww = 'https://www.medium.com/';
 const sameBaseDomainUrl = 'https://app.medium.com/';
 const internalUrlCoUk = 'https://medium.co.uk/';
-const sameBaseDomainUrlCoUk = 'https://app.medium.co.uk/';
 const differentBaseDomainUrlCoUk = 'https://other.domain.co.uk/';
+const sameBaseDomainUrlCoUk = 'https://app.medium.co.uk/';
+const sameBaseDomainUrlTidalListen = 'https://listen.tidal.com/';
+const sameBaseDomainUrlTidalLogin = 'https://login.tidal.com/';
 const internalUrlSubPath = 'topic/technology';
 const externalUrl = 'https://www.wikipedia.org/wiki/Electron';
 const wildcardRegex = /.*/;
@@ -46,6 +48,16 @@ test('urls on the same "base domain" should be considered internal, even with a 
   expect(linkIsInternal(internalUrlWww, sameBaseDomainUrl, undefined)).toEqual(
     true,
   );
+});
+
+test('urls on the same "base domain" should be considered internal, even with different sub domains', () => {
+  expect(
+    linkIsInternal(
+      sameBaseDomainUrlTidalListen,
+      sameBaseDomainUrlTidalLogin,
+      undefined,
+    ),
+  ).toEqual(true);
 });
 
 test('urls on the same "base domain" should be considered internal, long SLD', () => {
