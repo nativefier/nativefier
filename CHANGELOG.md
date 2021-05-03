@@ -1,4 +1,9 @@
 
+43.1.2 / 2021-05-03
+===================
+
+  * Fix logging out users on upgrade / app recreate with same URL (fix #1176) (PR #1179)
+
 43.1.1 / 2021-05-02
 ===================
 
