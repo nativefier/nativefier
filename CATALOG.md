@@ -2,9 +2,8 @@
 
 Below you'll find a list of build commands contributed by the Nativefier community. They are here as examples, and to help you nativefy "complicated" apps that ask a bit of elbow grease to work.
 
-If you'd like to add to this catalog, please keep the following in mind:
-
-Library commands should be the strict necessary to make an app work. So, for example,
+- Only add sites that require something special! No need to document here that `simplesite.com` works with a simple `nativefier simplesite.com` 🙂
+- If you'd like to add to this catalog, please add commands with the *strict necessary* to make an app work. So, for example,
 
 - Yes to have `--widevine` in Udemy. Yes to `--internal-urls` and `--browserwindow-options` for Outlook Web. Yes to a name and icon for both...
 - ... but let's not have all the other flags that are a matter of personal preference (e.g. `--disable-dev-tools` or `--disk-cache-size`).
