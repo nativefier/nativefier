@@ -7,6 +7,8 @@ import {
   ipcMain,
   dialog,
   Event,
+  HeadersReceivedResponse,
+  OnHeadersReceivedListenerDetails,
   WebContents,
 } from 'electron';
 import windowStateKeeper from 'electron-window-state';
@@ -72,9 +74,18 @@ function injectCss(browserWindow: BrowserWindow): void {
     // Will run multiple times, see `did-finish-load` below that unsets this handler.
     browserWindow.webContents.session.webRequest.onHeadersReceived(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
-      (details, callback) => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        browserWindow.webContents.insertCSS(cssToInject);
+      (
+        details: OnHeadersReceivedListenerDetails,
+        callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
+      ) => {
+        log.debug(
+          'browserWindow.webContents.session.webRequest.onHeadersReceived',
+          { details, callback },
+        );
+        if (details.webContents) {
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
+          details.webContents.insertCSS(cssToInject);
+        }
         callback({ cancel: false, responseHeaders: details.responseHeaders });
       },
     );
@@ -349,7 +360,13 @@ export function createMainWindow(
     event: Event & { newGuest?: any },
     urlToGo: string,
     frameName: string,
-    disposition,
+    disposition:
+      | 'default'
+      | 'foreground-tab'
+      | 'background-tab'
+      | 'new-window'
+      | 'save-to-disk'
+      | 'other',
   ): void => {
     log.debug('onNewWindow', { event, urlToGo, frameName, disposition });
     const preventDefault = (newGuest: any): void => {
