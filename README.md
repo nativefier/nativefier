@@ -1,9 +1,6 @@
 # Nativefier
 
-[![Build Status](https://github.com/nativefier/nativefier/workflows/ci/badge.svg)](https://github.com/nativefier/nativefier/actions?query=workflow%3Aci)
-[![npm version](https://badge.fury.io/js/nativefier.svg)](https://www.npmjs.com/package/nativefier)
-
-![Dock](docs/dock.png)
+![Example of Nativefier app in the macOS dock](docs/dock.png)
 
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
