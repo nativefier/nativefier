@@ -35,3 +35,20 @@ nativefier https://www.udemy.com/
 ### Notes
 
 Most videos will work, but to be sure everything works you are better off using the `--widevine` version AND signing the app afterwards. See this post: [#1147 (comment)](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362)
+
+
+## Spotify
+
+```
+nativefier https://play.spotify.com/
+--internal-urls ".*" 
+--name "Spotify" 
+--widevine 
+-u "<useragent your browser uses>"
+--inject spotify.js
+--icon icon.
+```
+
+### Notes
+
+Create a file called spotify.js containing the script [here](https://github.com/nativefier/nativefier/issues/1185#issuecomment-839054611) in the working directory otherwise the app will say the browser is not supported. It is also required to [sign](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine) the app afterwards or many songs will not play. The [icon](https://github.com/nativefier/nativefier/blob/master/docs/api.md#icon) also needs to be changed manually.
