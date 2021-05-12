@@ -95,7 +95,8 @@ if (document.readyState === "interactive") {
     nukeWorkers();
 }
 ```
-- It is also required to [sign](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine) the app afterwards or many songs will not play.
+
+- It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine), or many songs will not play.
 - The [icon](https://github.com/nativefier/nativefier/blob/master/docs/api.md#icon) also needs to be changed manually.
 - To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following CSS as `spotify.css`:
 ```css
