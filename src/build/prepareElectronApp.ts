@@ -121,7 +121,7 @@ async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
     }
 
     const postFixHash = generateRandomSuffix();
-    const destFileName = `inject-${postFixHash}.${path.extname(src)}`;
+    const destFileName = `inject-${postFixHash}${path.extname(src)}`;
     const destPath = path.join(dest, 'inject', destFileName);
     log.debug(`Copying injection file "${src}" to "${destPath}"`);
     await copyFileOrDir(src, destPath);
