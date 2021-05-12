@@ -40,7 +40,7 @@ Most videos will work, but to be sure everything works you are better off using 
 ## Spotify
 
 ```
-nativefier https://play.spotify.com/
+nativefier https://open.spotify.com/
 --name "Spotify" 
 --widevine 
 -u "<useragent your browser uses>"
