@@ -59,7 +59,9 @@ Notes:
 function dontShowBrowserNoticePage() {
     const browserNotice = document.getElementById('browser-support-notice');
     console.log({ browserNotice })
-    if (typeof browserNotice !== "undefined" && browserNotice !== null) {
+    if (browserNotice) {
+        // when Spotify displays the browser notice, it's not just the notice, but the entire page is focused on not allowing you to proceed.
+        // So in this case, we hide the body element (so nothing shows) until the JS can delete the service worker and reload (which will actually load the player)
         document.getElementsByTagName('body')[0].style.display = 'none';
     }
 }
