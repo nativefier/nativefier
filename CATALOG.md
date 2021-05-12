@@ -24,7 +24,7 @@ Note: lying about the User Agent is required, else Google will notice your "Chro
 
 ```sh
 nativefier 'https://outlook.office.com/mail'
-  --internal-urls '.*?(outlook.live.com|outlook.office365.com|outlook.office.com).*?'
+  --internal-urls '.*?(outlook.live.com|outlook.office365.com).*?'
   --file-download-options '{"saveAs": true}'
   --browserwindow-options '{"webPreferences": { "webviewTag": true, "nodeIntegration": true, "nodeIntegrationInSubFrames": true, "nativeWindowOpen": true } }'
 ```
