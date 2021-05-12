@@ -51,7 +51,7 @@ nativefier https://open.spotify.com/
 
 ### Notes
 
-- [Inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the folowing javascript as `spotify.js` to prevent "Unsupported Browser" messages.
+- [Inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
 ```javascript
 function dontShowBrowserNoticePage() {
     const browserNotice = document.getElementById('browser-support-notice');
