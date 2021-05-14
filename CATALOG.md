@@ -42,6 +42,17 @@ nativefier 'https://www.udemy.com/'
 
 Note: most videos will work, but to play some DRMed videos you must pass `--widevine` AND [sign the app](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362).
 
+## HBO Max
+
+```sh
+nativefier 'https://play.hbomax.com/'
+  --widevine
+  --enable-es3-apis
+&& python -m castlabs_evs.vmp sign-pkg 'name_of_the_generated_hbo_app'
+```
+
+Note: as for Udemy, `--widevine` + [app signing](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362) is necessary.
+
 ## Spotify
 
 ```sh
@@ -60,8 +71,10 @@ function dontShowBrowserNoticePage() {
     const browserNotice = document.getElementById('browser-support-notice');
     console.log({ browserNotice })
     if (browserNotice) {
-        // when Spotify displays the browser notice, it's not just the notice, but the entire page is focused on not allowing you to proceed.
-        // So in this case, we hide the body element (so nothing shows) until the JS can delete the service worker and reload (which will actually load the player)
+        // When Spotify displays the browser notice, it's not just the notice,
+        // but the entire page is focused on not allowing you to proceed.
+        // So in this case, we hide the body element (so nothing shows)
+        // until our JS deletes the service worker and reload (which will actually load the player)
         document.getElementsByTagName('body')[0].style.display = 'none';
     }
 }
@@ -102,10 +115,7 @@ if (document.readyState === "interactive") {
 ```
 
 - It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine), or many songs will not play.
-- The [icon](https://github.com/nativefier/nativefier/blob/master/docs/api.md#icon) also needs to be changed manually.
 - To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following CSS as `spotify.css`:
 ```css
-a[href="/download"] {
-    display: none;
-}
+a[href="/download"] { display: none; }
 ```
