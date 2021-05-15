@@ -162,9 +162,10 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     log.warn(
       `\nATTENTION: Using the **unofficial** Electron from castLabs`,
       "\nIt implements Google's Widevine Content Decryption Module (CDM) for DRM-enabled playback.",
-      `\nSimply abort & re-run without passing the widevine flag to default to ${options.packager.electronVersion !== undefined
-        ? options.packager.electronVersion
-        : DEFAULT_ELECTRON_VERSION
+      `\nSimply abort & re-run without passing the widevine flag to default to ${
+        options.packager.electronVersion !== undefined
+          ? options.packager.electronVersion
+          : DEFAULT_ELECTRON_VERSION
       }`,
     );
   }
