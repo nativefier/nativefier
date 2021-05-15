@@ -133,8 +133,7 @@ export async function buildNativefierApp(rawOptions): Promise<string> {
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
     if (oldApp === null) {
       throw new Error(
-        `Could not find an old Nativfier app in "${
-          rawOptions.upgrade as string
+        `Could not find an old Nativfier app in "${rawOptions.upgrade as string
         }"`,
       );
     }

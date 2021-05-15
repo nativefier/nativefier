@@ -36,6 +36,7 @@ export interface AppOptions {
     fullScreen: boolean;
     globalShortcuts: any;
     hideWindowFrame: boolean;
+    honest: boolean;
     ignoreCertificate: boolean;
     ignoreGpuBlacklist: boolean;
     inject: string[];

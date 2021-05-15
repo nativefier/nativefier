@@ -53,6 +53,7 @@ function pickElectronAppArgs(options: AppOptions): any {
     height: options.nativefier.height,
     helperBundleId: options.packager.helperBundleId,
     hideWindowFrame: options.nativefier.hideWindowFrame,
+    honest: options.nativefier.honest,
     ignoreCertificate: options.nativefier.ignoreCertificate,
     ignoreGpuBlacklist: options.nativefier.ignoreGpuBlacklist,
     insecure: options.nativefier.insecure,
@@ -172,9 +173,7 @@ export async function prepareElectronApp(
   try {
     await copyFileOrDir(src, dest);
   } catch (err) {
-    throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${(
-      err as Error
-    ).toString()}`;
+    throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${(err as Error).toString()}`;
   }
 
   const appJsonPath = path.join(dest, '/nativefier.json');

@@ -4,10 +4,13 @@ import * as os from 'os';
 import * as path from 'path';
 
 import axios from 'axios';
+import * as dns from 'dns';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 import { ncp } from 'ncp';
 import * as tmp from 'tmp';
+
+import { parseJson } from '../utils/parseUtils';
 
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
@@ -170,4 +173,21 @@ export function generateRandomSuffix(length = 6): string {
   // Add a random salt to help avoid collisions
   hash.update(crypto.randomBytes(256));
   return hash.digest('hex').substring(0, length);
+}
+
+export function getProcessEnvs(val: string): any {
+  if (!val) {
+    return {};
+  }
+  return parseJson(val);
+}
+
+export function checkInternet(): void {
+  dns.lookup('npmjs.com', (err) => {
+    if (err && err.code === 'ENOTFOUND') {
+      log.warn(
+        '\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.',
+      );
+    }
+  });
 }
