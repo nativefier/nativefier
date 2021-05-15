@@ -49,14 +49,14 @@ describe('initArgs + parseArgs', () => {
 
   // App Creation Options
   test('upgrade arg', () => {
-    const args = parseArgs(initArgs(['--upgrade', 'path/to/upgrade']));
-    expect(args.upgrade).toBe('path/to/upgrade');
+    const args = parseArgs(initArgs(['--upgrade', 'pathToUpgrade']));
+    expect(args.upgrade).toBe('pathToUpgrade');
     expect(args.targetUrl).toBe('');
   });
 
   test('upgrade arg with out dir', () => {
-    const args = parseArgs(initArgs(['tmp', '--upgrade', 'path/to/upgrade']));
-    expect(args.upgrade).toBe('path/to/upgrade');
+    const args = parseArgs(initArgs(['tmp', '--upgrade', 'pathToUpgrade']));
+    expect(args.upgrade).toBe('pathToUpgrade');
     expect(args.out).toBe('tmp');
     expect(args.targetUrl).toBe('');
   });
@@ -117,7 +117,7 @@ describe('initArgs + parseArgs', () => {
       value: '{"test": 789}',
       isJsonString: true,
     },
-    { arg: 'flash-path', shortArg: null, value: 'path/to/flash' },
+    { arg: 'flash-path', shortArg: null, value: 'pathToFlash' },
     { arg: 'global-shortcuts', shortArg: null, value: 'shortcuts.json' },
     { arg: 'icon', shortArg: 'i', value: 'icon.png' },
     { arg: 'internal-urls', shortArg: null, value: '.*' },
