@@ -57,3 +57,6 @@ gen
 nativefier*.tgz
 
 .vscode
+
+# https://github.com/nektos/act
+.actrc

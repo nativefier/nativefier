@@ -14,7 +14,7 @@ jobs:
       matrix:
         node-version:
         - 16.x # Changing this? Remind to keep linter conditions below and in publish.yml aligned.
-        - 10.x
+        - 12.x
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
