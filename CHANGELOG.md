@@ -1,4 +1,24 @@
 
+43.1.3 / 2021-05-15
+===================
+
+👋 dear users. Two announcements in this release:
+
+**This release (43.1.3) is the last release supporting Node 10.x**
+We do our best to support the oldest Node we can (what Debian stable ships),
+but we are also constrained by what our _own_ Node dependencies require.
+It's time for a bump; the next release will be 44.0.0 and will require Node 12.
+
+Also, introducing **[CATALOG.md](https://github.com/nativefier/nativefier/blob/master/CATALOG.md),**
+**a list of build commands contributed by the Nativefier community**, to help you
+nativefy "complicated" apps that need a bit of elbow grease to work.
+When stuck nativefying a specific site, go take a look, it might give you ideas :) .
+
+  * Fix crash on tab close (only try to inject CSS for valid web requests) (#939, PR #1181)
+  * Fix considering `shop.foo.com` and `blog.foo.com` as internal (PR #1171)
+  * CATALOG.md: build command library (fix #1166) (PR #1178)
+  * Bump to Electron 12.0.7
+
 43.1.2 / 2021-05-03
 ===================
 
