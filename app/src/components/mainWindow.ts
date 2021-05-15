@@ -113,7 +113,9 @@ export function saveAppArgs(newAppArgs: any) {
   } catch (err) {
     // eslint-disable-next-line no-console
     log.warn(
-      `WARNING: Ignored nativefier.json rewrital (${(err as Error).toString()})`,
+      `WARNING: Ignored nativefier.json rewrital (${(
+        err as Error
+      ).toString()})`,
     );
   }
 }
