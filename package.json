@@ -4,9 +4,11 @@
   "description": "Wrap web apps natively",
   "license": "MIT",
   "author": "Goh Jia Hao",
+  "engines_README": "Bumping the minimum required Node version? You must bump: 1. package.json -> engines.node, 2. package.json -> devDependencies.@types/node , 3. tsconfig.json -> {target, lib} , 4. .github/workflows/ci.yml -> node-version",
+  "engines_READMEforEnginesNode": "Here in engines.node, we require a version as old as possible, for Nativefier to be easily installable using the stock Node.js shipped by conservative Linux distros. It's a balancing act between this, and our own dependencies requiring more a recent Node; as much as possible, try to keep supporting Debian stable; https://packages.debian.org/search?suite=stable&keywords=nodejs",
   "engines": {
-    "node": ">= 10.0.0",
-    "npm": ">= 6.0.0"
+    "node": ">= 12.9.0",
+    "npm": ">= 6.9.0"
   },
   "keywords": [
     "desktop",
@@ -66,7 +68,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/ncp": "^2.0.4",
-    "@types/node": "^10.17.55",
+    "@types/node": "^12.12.6",
     "@types/page-icon": "^0.3.3",
     "@types/tmp": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
