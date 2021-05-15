@@ -384,18 +384,18 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       group: '(In)Security Options',
       type: 'boolean',
     })
-    // Flash options
+    // Flash Options (DEPRECATED)
     .option('flash', {
       default: false,
       deprecated: true,
       description: 'enables Adobe Flash',
-      group: 'Flash Options',
+      group: 'Flash Options (DEPRECATED)',
       type: 'boolean',
     })
     .option('flash-path', {
       deprecated: true,
       description: 'path to Chrome flash plugin; find it in `chrome://plugins`',
-      group: 'Flash Options',
+      group: 'Flash Options (DEPRECATED)',
       normalize: true,
       type: 'string',
     })

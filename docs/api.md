@@ -61,7 +61,7 @@
     - [[internal-urls]](#internal-urls)
     - [[proxy-rules]](#proxy-rules)
   - [Auth Options](#auth-options)
-    - [[basic-auth-username] and [basic-auth-password]](#basic-auth-username-basic-auth-password)
+    - [[basic-auth-username] and [basic-auth-password]](#basic-auth-username-and-basic-auth-password)
   - [Graphics Options](#graphics-options)
     - [[disable-gpu]](#disable-gpu)
     - [[enable-es3-apis]](#enable-es3-apis)
