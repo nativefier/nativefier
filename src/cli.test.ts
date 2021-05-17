@@ -15,7 +15,7 @@ describe('initArgs + parseArgs', () => {
   });
 
   test('--help forces exit', () => {
-    // Mock console.log so as not to pullute the log with the yargs help text
+    // Mock console.log to not pollute the log with the yargs help text
     const mockLog = jest.spyOn(console, 'log').mockImplementation();
     initArgs(['https://www.google.com', '--help']);
     expect(mockExit).toHaveBeenCalledTimes(1);
