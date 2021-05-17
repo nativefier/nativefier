@@ -277,13 +277,6 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       group: 'Internal Browser Options',
       type: 'string',
     })
-    .option('honest', {
-      default: false,
-      description:
-        'prevent the normal changing of the user agent string to appear as a regular Chrome browser',
-      group: 'Internal Browser Options',
-      type: 'boolean',
-    })
     .option('inject', {
       description:
         'path to a CSS/JS file to be injected. Pass multiple times to inject multiple files.',
@@ -302,6 +295,14 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       description: 'set the app user agent string',
       group: 'Internal Browser Options',
       type: 'string',
+    })
+    .option('user-agent-honest', {
+      alias: 'honest',
+      default: false,
+      description:
+        'prevent the normal changing of the user agent string to appear as a regular Chrome browser',
+      group: 'Internal Browser Options',
+      type: 'boolean',
     })
     // URL Handling Options
     .option('block-external-urls', {
