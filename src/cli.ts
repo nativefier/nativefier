@@ -490,6 +490,9 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
 
 export function parseArgs(args: yargs.Argv<any>): any {
   const parsed = { ...args.argv };
+  // In yargs, the _ property of the parsed args is an array of the positional args
+  // https://github.com/yargs/yargs/blob/master/docs/examples.md#and-non-hyphenated-options-too-just-use-argv_
+  // So try to extract the targetUrl and outputDirectory from these
   parsed.targetUrl = parsed._.length > 0 ? parsed._[0].toString() : '';
   parsed.out = parsed._.length > 1 ? parsed._[1] : '';
 
