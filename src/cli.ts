@@ -31,7 +31,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     )
     .example(
       '$0 <targetUrl> -p <platform> -a <arch>',
-      'Make an app from <targetUrl> for the os <platform> and cpu architecture <arch>',
+      'Make an app from <targetUrl> for the OS <platform> and CPU architecture <arch>',
     )
     .positional('targetUrl', {
       describe:
@@ -48,8 +48,8 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('a', {
       alias: 'arch',
       choices: supportedArchs,
-      defaultDescription: "current node's compiled cpu architecture",
-      description: 'The cpu architecture to build for',
+      defaultDescription: "current Node's arch",
+      description: 'The CPU architecture to build for',
       group: 'App Creation Options',
       type: 'string',
     })
@@ -77,7 +77,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('i', {
       alias: 'icon',
       description:
-        'the icon file to use as the icon for the app (should be a .png, on macOS can also be an .icns)',
+        'the icon file to use as the icon for the app (.ico on Windows, .icns/.png on macOS, .png on Linux)',
       group: 'App Creation Options',
       normalize: true,
       type: 'string',
@@ -144,7 +144,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       type: 'string',
     })
     .option('bookmarks-menu', {
-      description: 'Path to JSON configuration file for the bookmarks menu',
+      description: 'Path to JSON config file for a bookmarks menu. See https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu',
       normalize: true,
       group: 'App Window Options',
       type: 'string',
@@ -195,7 +195,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('max-height', {
       defaultDescription: 'unlimited',
-      description: 'set window maximum height; in pixels',
+      description: 'set window maximum height in pixels',
       group: 'App Window Options',
       type: 'number',
     })
@@ -232,7 +232,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('single-instance', {
       default: false,
-      description: 'allow only a single instance of the application',
+      description: 'allow only a single instance of the app',
       group: 'App Window Options',
       type: 'boolean',
     })
@@ -269,7 +269,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('file-download-options', {
       coerce: parseJson,
       description:
-        'a JSON string of key/value pairs to be set as file download options. See https://github.com/sindresorhus/electron-dl for available options.',
+        'a JSON string defining file download options. See https://github.com/sindresorhus/electron-dl',
       group: 'Internal Browser Options',
       type: 'string',
     })
@@ -353,7 +353,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('clear-cache', {
       default: false,
       description:
-        'prevent the application from preserving cache between launches',
+        'prevent the app from preserving cache between launches',
       group: 'Caching Options',
       type: 'boolean',
     })
@@ -368,7 +368,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('disable-old-build-warning-yesiknowitisinsecure', {
       default: false,
       description:
-        'Disables warning when opening an app made with an old version of Nativefier. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it.)',
+        'disables warning when opening an app made too long ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it',
       group: '(In)Security Options',
       type: 'boolean',
     })
@@ -403,7 +403,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('app-copyright', {
       description:
         '(macOS, windows only) a human-readable copyright line for the app. Maps to `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on macOS',
-      group: 'Platform Specific Options',
+      group: 'Platform-Specific Options',
       type: 'string',
     })
     .option('app-version', {
@@ -476,7 +476,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .group(['version', 'help'], 'Other Options')
     .wrap(yargs.terminalWidth());
 
-  // Have to access argv to get yargs to actually process the args passed to it
+  // We must access argv in order to get yargs to actually process args
   // Do this now to go ahead and get any errors out of the way
   args.argv;
 
@@ -491,7 +491,7 @@ export function parseArgs(args: yargs.Argv<any>): any {
   if (parsed.upgrade && parsed.targetUrl !== '') {
     let targetAndUpgrade = false;
     if (parsed.out === '') {
-      // If we're upgrading the first positional args might be the outputDirectory, so swap these if we can
+      // If we're upgrading, the first positional args might be the outputDirectory, so swap these if we can
       try {
         // If this succeeds, we have a problem
         new URL(parsed.targetUrl);
