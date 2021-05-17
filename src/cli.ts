@@ -38,13 +38,13 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       'See https://github.com/nativefier/nativefier/blob/master/CATALOG.md',
     )
     .positional('targetUrl', {
-      describe:
-        'The URL that you wish to to turn into a native app. Required if not using --upgrade',
+      description:
+        'the URL that you wish to to turn into a native app; required if not using --upgrade',
       type: 'string',
     })
     .positional('outputDirectory', {
       defaultDescription: 'current directory',
-      describe: 'The directory to output the generated app to',
+      description: 'the directory to generate the app in',
       normalize: true,
       type: 'string',
     })
@@ -53,14 +53,14 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       alias: 'arch',
       choices: supportedArchs,
       defaultDescription: "current Node's arch",
-      description: 'The CPU architecture to build for',
+      description: 'the CPU architecture to build for',
       group: 'App Creation Options',
       type: 'string',
     })
     .option('c', {
       alias: 'conceal',
       default: false,
-      description: 'packages the app source code into an asar archive',
+      description: 'package the app source code into an asar archive',
       group: 'App Creation Options',
       type: 'boolean',
     })
@@ -68,12 +68,12 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       alias: 'electron-version',
       defaultDescription: DEFAULT_ELECTRON_VERSION,
       description:
-        "electron version to package, without the 'v', see https://github.com/electron/electron/releases",
+        "specify the electron version to use (without the 'v'); see https://github.com/electron/electron/releases",
       group: 'App Creation Options',
     })
     .option('global-shortcuts', {
       description:
-        'JSON file defining global shortcuts. See https://github.com/nativefier/nativefier/blob/master/docs/api.md#global-shortcuts',
+        'define global keyboard shortcuts via a JSON file; See https://github.com/nativefier/nativefier/blob/master/docs/api.md#global-shortcuts',
       group: 'App Creation Options',
       normalize: true,
       type: 'string',
@@ -88,8 +88,8 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('n', {
       alias: 'name',
-      defaultDescription: 'The title of the page passed via targetUrl',
-      describe: 'Name to use for the app',
+      defaultDescription: 'the title of the page passed via targetUrl',
+      description: 'specify the name of the app',
       group: 'App Creation Options',
       type: 'string',
     })
@@ -109,20 +109,20 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       alias: 'platform',
       choices: supportedPlatforms,
       defaultDescription: 'current operating system',
-      description: 'The operating system platform to build for',
+      description: 'the operating system platform to build for',
       group: 'App Creation Options',
       type: 'string',
     })
     .option('portable', {
       default: false,
       description:
-        'Make the app store its user data in the app folder. WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable for security risks',
+        'make the app store its user data in the app folder; WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable for security risks',
       group: 'App Creation Options',
       type: 'boolean',
     })
     .option('upgrade', {
-      describe:
-        'Upgrade an app built by an older version of Nativefier.\nYou must pass the full path to the existing app executable (app will be overwritten with upgraded version by default)',
+      description:
+        'upgrade an app built by an older version of Nativefier\nYou must pass the full path to the existing app executable (app will be overwritten with upgraded version by default)',
       group: 'App Creation Options',
       normalize: true,
       type: 'string',
@@ -143,12 +143,13 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('background-color', {
       description:
-        "sets the app background color, for better integration while the app is loading. Example value: '#2e2c29'",
+        "set the app background color, for better integration while the app is loading. Example value: '#2e2c29'",
       group: 'App Window Options',
       type: 'string',
     })
     .option('bookmarks-menu', {
-      description: 'Path to JSON config file for a bookmarks menu. See https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu',
+      description:
+        'create a bookmarks menu (via JSON file); See https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu',
       normalize: true,
       group: 'App Window Options',
       type: 'string',
@@ -156,7 +157,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('browserwindow-options', {
       coerce: parseJson,
       description:
-        'a JSON string that will be sent directly into electron BrowserWindow options. See https://github.com/nativefier/nativefier/blob/master/docs/api.md#browserwindow-options',
+        'override Electron BrowserWindow options (via JSON string); see https://github.com/nativefier/nativefier/blob/master/docs/api.md#browserwindow-options',
       group: 'App Window Options',
       type: 'string',
     })
@@ -243,7 +244,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('tray', {
       default: false,
       description:
-        "Allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
+        "allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
       group: 'App Window Options',
       type: 'boolean',
     })
@@ -265,7 +266,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('zoom', {
       default: 1.0,
-      description: 'default zoom factor to use when the app is opened',
+      description: 'set the default zoom factor for the app',
       group: 'App Window Options',
       type: 'number',
     })
@@ -273,13 +274,13 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('file-download-options', {
       coerce: parseJson,
       description:
-        'a JSON string defining file download options. See https://github.com/sindresorhus/electron-dl',
+        'a JSON string defining file download options; see https://github.com/sindresorhus/electron-dl',
       group: 'Internal Browser Options',
       type: 'string',
     })
     .option('inject', {
       description:
-        'path to a CSS/JS file to be injected. Pass multiple times to inject multiple files.',
+        'path to a CSS/JS file to be injected; pass multiple times to inject multiple files',
       group: 'Internal Browser Options',
       type: 'array',
     })
@@ -292,7 +293,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('u', {
       alias: 'user-agent',
-      description: 'set the app user agent string',
+      description: "set the app's user agent string",
       group: 'Internal Browser Options',
       type: 'string',
     })
@@ -314,7 +315,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('internal-urls', {
       defaultDescription: 'URLs sharing the same base domain',
       description:
-        'regex of URLs to consider "internal"; all other URLs will be opened in an external browser.',
+        'regex of URLs to consider "internal"; all other URLs will be opened in an external browser',
       group: 'URL Handling Options',
       type: 'string',
     })
@@ -357,15 +358,14 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     // Caching Options
     .option('clear-cache', {
       default: false,
-      description:
-        'prevent the app from preserving cache between launches',
+      description: 'prevent the app from preserving cache between launches',
       group: 'Caching Options',
       type: 'boolean',
     })
     .option('disk-cache-size', {
       defaultDescription: 'chromium default',
       description:
-        'forces the maximum disk space (in bytes) to be used by the disk cache',
+        'set the maximum disk space (in bytes) to be used by the disk cache',
       group: 'Caching Options',
       type: 'number',
     })
@@ -373,7 +373,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('disable-old-build-warning-yesiknowitisinsecure', {
       default: false,
       description:
-        'disables warning when opening an app made too long ago. Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it',
+        'disable warning shown when opening an app made too long ago; Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it',
       group: '(In)Security Options',
       type: 'boolean',
     })
@@ -393,7 +393,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('flash', {
       default: false,
       deprecated: true,
-      description: 'enables Adobe Flash',
+      description: 'enable Adobe Flash',
       group: 'Flash Options (DEPRECATED)',
       type: 'boolean',
     })
@@ -407,13 +407,13 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     // Platform Specific Options
     .option('app-copyright', {
       description:
-        '(macOS, windows only) a human-readable copyright line for the app. Maps to `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on macOS',
+        '(macOS, windows only) set a human-readable copyright line for the app; maps to `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on macOS',
       group: 'Platform-Specific Options',
       type: 'string',
     })
     .option('app-version', {
       description:
-        '(macOS, windows only) the version of the app. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS.',
+        '(macOS, windows only) set the version of the app; maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS',
       group: 'Platform Specific Options',
       type: 'string',
     })
@@ -426,7 +426,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('build-version', {
       description:
-        '(macOS, windows only) The build version of the app. Maps to `FileVersion` metadata property on Windows, and `CFBundleVersion` on macOS',
+        '(macOS, windows only) set the build version of the app; maps to `FileVersion` metadata property on Windows, and `CFBundleVersion` on macOS',
       group: 'Platform Specific Options',
       type: 'string',
     })
@@ -453,7 +453,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('title-bar-style', {
       choices: ['hidden', 'hiddenInset'],
       description:
-        '(macOS only) set title bar style. Consider injecting custom CSS (via --inject) for better integration',
+        '(macOS only) set title bar style; consider injecting custom CSS (via --inject) for better integration',
       group: 'Platform Specific Options',
       type: 'string',
     })
