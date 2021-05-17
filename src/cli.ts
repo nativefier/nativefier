@@ -33,6 +33,10 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       '$0 <targetUrl> -p <platform> -a <arch>',
       'Make an app from <targetUrl> for the os <platform> and cpu architecture <arch>',
     )
+    .example(
+      'for more examples and help...',
+      'See https://github.com/nativefier/nativefier/blob/master/CATALOG.md',
+    )
     .positional('targetUrl', {
       describe:
         'The URL that you wish to to turn into a native app. Required if not using --upgrade',
