@@ -394,13 +394,13 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       default: false,
       deprecated: true,
       description: 'enable Adobe Flash',
-      group: 'Flash Options (DEPRECATED)',
+      hidden: true,
       type: 'boolean',
     })
     .option('flash-path', {
       deprecated: true,
       description: 'path to Chrome flash plugin; find it in `chrome://plugins`',
-      group: 'Flash Options (DEPRECATED)',
+      hidden: true,
       normalize: true,
       type: 'string',
     })
