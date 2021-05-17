@@ -15,7 +15,7 @@ describe('initArgs + parseArgs', () => {
   });
 
   test('--help forces exit', () => {
-    // Mock console.log so as not to pullute the log with the yargs help text
+    // Mock console.log to not pollute the log with the yargs help text
     const mockLog = jest.spyOn(console, 'log').mockImplementation();
     initArgs(['https://www.google.com', '--help']);
     expect(mockExit).toHaveBeenCalledTimes(1);
@@ -24,7 +24,7 @@ describe('initArgs + parseArgs', () => {
   });
 
   test('--version forces exit', () => {
-    // Mock console.log so as not to pullute the log with the yargs help text
+    // Mock console.log to not pollute the log with the yargs help text
     const mockLog = jest.spyOn(console, 'log').mockImplementation();
     initArgs(['https://www.google.com', '--version']);
     expect(mockExit).toHaveBeenCalledTimes(1);
@@ -170,7 +170,7 @@ describe('initArgs + parseArgs', () => {
     const args = parseArgs(initArgs(['https://google.com', `--${arg}`, value]));
     expect(args[arg]).toBe(value);
 
-    // Mock console.error so as not to pullute the log with the yargs help text
+    // Mock console.error to not pollute the log with the yargs help text
     const mockError = jest.spyOn(console, 'error').mockImplementation();
     initArgs(['https://google.com', `--${arg}`, badValue]);
     expect(mockExit).toHaveBeenCalledTimes(1);
