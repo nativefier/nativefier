@@ -4,7 +4,7 @@
 # Will also create a commit with these changes locally
 #
 # Usage:
-# ./generate-changelog -- "7.0.0"
+# ./.github/generate-changelog -- "7.0.0"
 #
 # Prerequisites:
 # - On master branch

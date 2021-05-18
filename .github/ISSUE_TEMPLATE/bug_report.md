@@ -15,7 +15,7 @@ Incomprehensible / incomplete bug reports will be closed.
 
 **Homework**
 
-- [ ] I looked at `nativefier --help` and https://github.com/nativefier/nativefier/blob/master/docs/api.md
+- [ ] I looked at `nativefier --help` and https://github.com/nativefier/nativefier/blob/master/API.md
 - [ ] I checked the [Troubleshooting section of the README](https://github.com/nativefier/nativefier/blob/master/README.md#troubleshooting).
 - [ ] I searched existing issues, open & closed. Yes, my bug is new.
 - [ ] I'm using the latest version available at https://github.com/nativefier/nativefier/releases

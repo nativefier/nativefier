@@ -1,6 +1,6 @@
 # Nativefier
 
-![Example of Nativefier app in the macOS dock](docs/dock.png)
+![Example of Nativefier app in the macOS dock](.github/dock-screenshot.png)
 
 You want to make a native wrapper for WhatsApp Web (or any web page).
 
@@ -8,7 +8,7 @@ You want to make a native wrapper for WhatsApp Web (or any web page).
 nativefier 'web.whatsapp.com'
 ```
 
-![Walkthrough animation](docs/walkthrough.gif)
+![Walkthrough animation](.github/nativefier-walkthrough.gif)
 
 You're done.
 
@@ -25,7 +25,7 @@ through the numerous open tabs when I was using [Facebook Messenger](https://mes
 
 - Automatically retrieval of app icon / name.
 - JavaScript and CSS injection.
-- Many more, see the [API docs](docs/api.md) or `nativefier --help`
+- Many more, see the [API docs](API.md) or `nativefier --help`
 
 ## Installation
 
@@ -48,7 +48,7 @@ Nativefier will try to determine the app name, and well as lots of other options
 If desired, these options can be overwritten. For example, to override the name,
 `nativefier --name 'My Medium App' 'medium.com'`
 
-**Read the [API documentation](docs/api.md) or run `nativefier --help`**
+**Read the [API documentation](API.md) or run `nativefier --help`**
 to learn about other command-line flags usable to configure the packaged app.
 
 To have high-resolution icons used by default for an app/domain, please
@@ -83,7 +83,7 @@ docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target nativefier/na
 Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
 [feature requests](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request).
 
-[Developer / build docs](docs/development.md), [API documentation](docs/api.md), 
+[Developer / build docs](HACKING.md), [API documentation](API.md), 
 [Changelog](CHANGELOG.md).
 
 ## License
@@ -102,7 +102,7 @@ This issue comes up for sites that do not wish to support an app made with Nativ
 
 #### Troubleshooting Steps
 
-1. First try setting the [`--user-agent`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#user-agent) to something different. Try using the value you would get at [https://www.whatismybrowser.com/detect/what-is-my-user-agent] and use your current browser's user agent.
+1. First try setting the [`--user-agent`](https://github.com/nativefier/nativefier/blob/master/API.md#user-agent) to something different. Try using the value you would get at [https://www.whatismybrowser.com/detect/what-is-my-user-agent] and use your current browser's user agent.
 2. If this doesn't work, the site (such as WhatsApp) may be using a service worker to analyze the app and detect. You can disable the service worker cache by doing the following, which is a known fix for WhatsApp:
     1.  Create a javascript file containing the following snippet:
         ```javascript
@@ -114,7 +114,7 @@ This issue comes up for sites that do not wish to support an app made with Nativ
             });
         }
         ```
-    2. Inject the javascript file into your app when generating it with the [`--inject`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) argument.
+    2. Inject the javascript file into your app when generating it with the [`--inject`](https://github.com/nativefier/nativefier/blob/master/API.md#inject) argument.
 
 ### I am trying to use Nativefier to build an app for a site with video, but the video won't play.
 
@@ -122,7 +122,7 @@ This issue comes up for certain sites like [HBO Max](https://github.com/nativefi
 
 #### Troubleshooting Steps
 
-1. First try using the [`--widevine`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine) argument when building the app. This uses the [Castlabs version of Electron](https://github.com/castlabs/electron-releases) which allows the playback of DRM enabled video.
+1. First try using the [`--widevine`](https://github.com/nativefier/nativefier/blob/master/API.md#widevine) argument when building the app. This uses the [Castlabs version of Electron](https://github.com/castlabs/electron-releases) which allows the playback of DRM enabled video.
 2. If this doesn't work, the site may require your app to be signed for `--widevine` to work. See the [Castlabs documentation](https://github.com/castlabs/electron-releases/wiki/EVS) on using their application signing service to sign the application.
 
 ### I am trying different options to Nativefier to experiment with, but noticing that sometimes things cache between rebuilds of my app.
