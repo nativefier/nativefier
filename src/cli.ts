@@ -54,14 +54,12 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       choices: supportedArchs,
       defaultDescription: "current Node's arch",
       description: 'the CPU architecture to build for',
-      group: 'App Creation Options',
       type: 'string',
     })
     .option('c', {
       alias: 'conceal',
       default: false,
       description: 'package the app source code into an asar archive',
-      group: 'App Creation Options',
       type: 'boolean',
     })
     .option('e', {
@@ -69,12 +67,10 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       defaultDescription: DEFAULT_ELECTRON_VERSION,
       description:
         "specify the electron version to use (without the 'v'); see https://github.com/electron/electron/releases",
-      group: 'App Creation Options',
     })
     .option('global-shortcuts', {
       description:
         'define global keyboard shortcuts via a JSON file; See https://github.com/nativefier/nativefier/blob/master/docs/api.md#global-shortcuts',
-      group: 'App Creation Options',
       normalize: true,
       type: 'string',
     })
@@ -82,7 +78,6 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       alias: 'icon',
       description:
         'the icon file to use as the icon for the app (.ico on Windows, .icns/.png on macOS, .png on Linux)',
-      group: 'App Creation Options',
       normalize: true,
       type: 'string',
     })
@@ -90,13 +85,11 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       alias: 'name',
       defaultDescription: 'the title of the page passed via targetUrl',
       description: 'specify the name of the app',
-      group: 'App Creation Options',
       type: 'string',
     })
     .option('no-overwrite', {
       default: false,
       description: 'do not overwrite output directory if it already exists',
-      group: 'App Creation Options',
       type: 'boolean',
     })
     .option('overwrite', {
@@ -110,20 +103,17 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       choices: supportedPlatforms,
       defaultDescription: 'current operating system',
       description: 'the operating system platform to build for',
-      group: 'App Creation Options',
       type: 'string',
     })
     .option('portable', {
       default: false,
       description:
         'make the app store its user data in the app folder; WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable for security risks',
-      group: 'App Creation Options',
       type: 'boolean',
     })
     .option('upgrade', {
       description:
         'upgrade an app built by an older version of Nativefier\nYou must pass the full path to the existing app executable (app will be overwritten with upgraded version by default)',
-      group: 'App Creation Options',
       normalize: true,
       type: 'string',
     })
@@ -131,170 +121,186 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       default: false,
       description:
         "use a Widevine-enabled version of Electron for DRM playback (use at your own risk, it's unofficial, provided by CastLabs)",
-      group: 'App Creation Options',
       type: 'boolean',
     })
+    .group(
+      [
+        'arch',
+        'conceal',
+        'electron-version',
+        'global-shortcuts',
+        'icon',
+        'name',
+        'no-overwrite',
+        'platform',
+        'portable',
+        'upgrade',
+        'widevine',
+      ],
+      decorateYargOptionGroup('App Creation Options'),
+    )
     // App Window Options
     .option('always-on-top', {
       default: false,
       description: 'enable always on top window',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('background-color', {
       description:
         "set the app background color, for better integration while the app is loading. Example value: '#2e2c29'",
-      group: 'App Window Options',
       type: 'string',
     })
     .option('bookmarks-menu', {
       description:
         'create a bookmarks menu (via JSON file); See https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu',
       normalize: true,
-      group: 'App Window Options',
       type: 'string',
     })
     .option('browserwindow-options', {
       coerce: parseJson,
       description:
         'override Electron BrowserWindow options (via JSON string); see https://github.com/nativefier/nativefier/blob/master/docs/api.md#browserwindow-options',
-      group: 'App Window Options',
       type: 'string',
     })
     .option('disable-context-menu', {
       default: false,
       description: 'disable the context menu (right click)',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('disable-dev-tools', {
       default: false,
       description: 'disable developer tools (Ctrl+Shift+I / F12)',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('full-screen', {
       default: false,
       description: 'always start the app full screen',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('height', {
       defaultDescription: '800',
       description: 'set window default height in pixels',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('hide-window-frame', {
       default: false,
       description: 'disable window frame and controls',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('m', {
       alias: 'show-menu-bar',
       default: false,
       description: 'set menu bar visible',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('max-height', {
       defaultDescription: 'unlimited',
       description: 'set window maximum height in pixels',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('max-width', {
       defaultDescription: 'unlimited',
       description: 'set window maximum width in pixels',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('maximize', {
       default: false,
       description: 'always start the app maximized',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('min-height', {
       defaultDescription: '0',
       description: 'set window minimum height in pixels',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('min-width', {
       defaultDescription: '0',
       description: 'set window minimum width in pixels',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('process-envs', {
       coerce: getProcessEnvs,
       description:
         'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened',
-      group: 'App Window Options',
       type: 'string',
     })
     .option('single-instance', {
       default: false,
       description: 'allow only a single instance of the app',
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('tray', {
       default: false,
       description:
         "allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
-      group: 'App Window Options',
       type: 'boolean',
     })
     .option('width', {
       defaultDescription: '1280',
       description: 'app window default width in pixels',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('x', {
       description: 'set window x location in pixels from left',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('y', {
       description: 'set window y location in pixels from top',
-      group: 'App Window Options',
       type: 'number',
     })
     .option('zoom', {
       default: 1.0,
       description: 'set the default zoom factor for the app',
-      group: 'App Window Options',
       type: 'number',
     })
+    .group(
+      [
+        'always-on-top',
+        'background-color',
+        'bookmarks-menu',
+        'browserwindow-options',
+        'disable-context-menu',
+        'disable-dev-tools',
+        'full-screen',
+        'height',
+        'hide-window-frame',
+        'm',
+        'max-width',
+        'max-height',
+        'maximize',
+        'min-height',
+        'min-width',
+        'process-envs',
+        'single-instance',
+        'tray',
+        'width',
+        'x',
+        'y',
+        'zoom',
+      ],
+      decorateYargOptionGroup('App Window Options'),
+    )
     // Internal Browser Options
     .option('file-download-options', {
       coerce: parseJson,
       description:
         'a JSON string defining file download options; see https://github.com/sindresorhus/electron-dl',
-      group: 'Internal Browser Options',
       type: 'string',
     })
     .option('inject', {
       description:
         'path to a CSS/JS file to be injected; pass multiple times to inject multiple files',
-      group: 'Internal Browser Options',
       type: 'array',
     })
     .option('lang', {
       defaultDescription: 'os language at runtime of the app',
       description:
         'set the language or locale to render the web site as (e.g., "fr", "en-US", "es", etc.)',
-      group: 'Internal Browser Options',
       type: 'string',
     })
     .option('u', {
       alias: 'user-agent',
       description: "set the app's user agent string",
-      group: 'Internal Browser Options',
       type: 'string',
     })
     .option('user-agent-honest', {
@@ -302,93 +308,113 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       default: false,
       description:
         'prevent the normal changing of the user agent string to appear as a regular Chrome browser',
-      group: 'Internal Browser Options',
       type: 'boolean',
     })
-    // URL Handling Options
-    .option('block-external-urls', {
-      default: false,
-      description: `forbid navigation to URLs not considered "internal" (see '--internal-urls').  Instead of opening in an external browser, attempts to navigate to external URLs will be blocked`,
-      group: 'URL Handling Options',
-      type: 'boolean',
-    })
-    .option('internal-urls', {
-      defaultDescription: 'URLs sharing the same base domain',
-      description:
-        'regex of URLs to consider "internal"; all other URLs will be opened in an external browser',
-      group: 'URL Handling Options',
-      type: 'string',
-    })
-    .option('proxy-rules', {
-      description:
-        'proxy rules; see https://www.electronjs.org/docs/api/session#sessetproxyconfig',
-      group: 'URL Handling Options',
-      type: 'string',
-    })
-    // Auth Options
-    .option('basic-auth-password', {
-      description: 'basic http(s) auth password',
-      group: 'Auth Options',
-      type: 'string',
-    })
-    .option('basic-auth-username', {
-      description: 'basic http(s) auth username',
-      group: 'Auth Options',
-      type: 'string',
-    })
-    // Graphics Options
-    .option('disable-gpu', {
-      default: false,
-      description: 'disable hardware acceleration',
-      group: 'Graphics Options',
-      type: 'boolean',
-    })
-    .option('enable-es3-apis', {
-      default: false,
-      description: 'force activation of WebGL 2.0',
-      group: 'Graphics Options',
-      type: 'boolean',
-    })
-    .option('ignore-gpu-blacklist', {
-      default: false,
-      description: 'force WebGL apps to work on unsupported GPUs',
-      group: 'Graphics Options',
-      type: 'boolean',
-    })
-    // Caching Options
+    .group(
+      [
+        'file-download-options',
+        'inject',
+        'lang',
+        'user-agent',
+        'user-agent-honest',
+      ],
+      decorateYargOptionGroup('Internal Browser Options'),
+    )
+    // Internal Browser Cache Options
     .option('clear-cache', {
       default: false,
       description: 'prevent the app from preserving cache between launches',
-      group: 'Caching Options',
       type: 'boolean',
     })
     .option('disk-cache-size', {
       defaultDescription: 'chromium default',
       description:
         'set the maximum disk space (in bytes) to be used by the disk cache',
-      group: 'Caching Options',
       type: 'number',
     })
+    .group(
+      ['clear-cache', 'disk-cache-size'],
+      decorateYargOptionGroup('Internal Browser Cache Options'),
+    )
+    // URL Handling Options
+    .option('block-external-urls', {
+      default: false,
+      description: `forbid navigation to URLs not considered "internal" (see '--internal-urls').  Instead of opening in an external browser, attempts to navigate to external URLs will be blocked`,
+      type: 'boolean',
+    })
+    .option('internal-urls', {
+      defaultDescription: 'URLs sharing the same base domain',
+      description:
+        'regex of URLs to consider "internal"; all other URLs will be opened in an external browser',
+      type: 'string',
+    })
+    .option('proxy-rules', {
+      description:
+        'proxy rules; see https://www.electronjs.org/docs/api/session#sessetproxyconfig',
+      type: 'string',
+    })
+    .group(
+      ['block-external-urls', 'internal-urls', 'proxy-rules'],
+      decorateYargOptionGroup('URL Handling Options'),
+    )
+    // Auth Options
+    .option('basic-auth-password', {
+      description: 'basic http(s) auth password',
+      type: 'string',
+    })
+    .option('basic-auth-username', {
+      description: 'basic http(s) auth username',
+      type: 'string',
+    })
+    .group(
+      ['basic-auth-password', 'basic-auth-username'],
+      decorateYargOptionGroup('Auth Options'),
+    )
+    // Graphics Options
+    .option('disable-gpu', {
+      default: false,
+      description: 'disable hardware acceleration',
+      type: 'boolean',
+    })
+    .option('enable-es3-apis', {
+      default: false,
+      description: 'force activation of WebGL 2.0',
+      type: 'boolean',
+    })
+    .option('ignore-gpu-blacklist', {
+      default: false,
+      description: 'force WebGL apps to work on unsupported GPUs',
+      type: 'boolean',
+    })
+    .group(
+      ['disable-gpu', 'enable-es3-apis', 'ignore-gpu-blacklist'],
+      decorateYargOptionGroup('Graphics Options'),
+    )
     // (In)Security Options
     .option('disable-old-build-warning-yesiknowitisinsecure', {
       default: false,
       description:
         'disable warning shown when opening an app made too long ago; Nativefier uses the Chrome browser (through Electron), and it is dangerous to keep using an old version of it',
-      group: '(In)Security Options',
       type: 'boolean',
     })
     .option('ignore-certificate', {
       default: false,
       description: 'ignore certificate-related errors',
-      group: '(In)Security Options',
       type: 'boolean',
     })
     .option('insecure', {
       default: false,
       description: 'enable loading of insecure content',
-      group: '(In)Security Options',
       type: 'boolean',
     })
+    .group(
+      [
+        'disable-old-build-warning-yesiknowitisinsecure',
+        'ignore-certificate',
+        'insecure',
+      ],
+      decorateYargOptionGroup('(In)Security Options'),
+    )
     // Flash Options (DEPRECATED)
     .option('flash', {
       default: false,
@@ -408,74 +434,81 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('app-copyright', {
       description:
         '(macOS, windows only) set a human-readable copyright line for the app; maps to `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on macOS',
-      group: 'Platform-Specific Options',
       type: 'string',
     })
     .option('app-version', {
       description:
         '(macOS, windows only) set the version of the app; maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on macOS',
-      group: 'Platform Specific Options',
       type: 'string',
     })
     .option('bounce', {
       default: false,
       description:
         '(macOS only) make the dock icon bounce when the counter increases',
-      group: 'Platform Specific Options',
       type: 'boolean',
     })
     .option('build-version', {
       description:
         '(macOS, windows only) set the build version of the app; maps to `FileVersion` metadata property on Windows, and `CFBundleVersion` on macOS',
-      group: 'Platform Specific Options',
       type: 'string',
     })
     .option('counter', {
       default: false,
       description:
         '(macOS only) set a dock count badge, determined by looking for a number in the window title',
-      group: 'Platform Specific Options',
       type: 'boolean',
     })
     .option('darwin-dark-mode-support', {
       default: false,
       description: '(macOS only) enable Dark Mode support on macOS 10.14+',
-      group: 'Platform Specific Options',
       type: 'boolean',
     })
     .option('f', {
       alias: 'fast-quit',
       default: false,
       description: '(macOS only) quit app on window close',
-      group: 'Platform Specific Options',
       type: 'boolean',
     })
     .option('title-bar-style', {
       choices: ['hidden', 'hiddenInset'],
       description:
         '(macOS only) set title bar style; consider injecting custom CSS (via --inject) for better integration',
-      group: 'Platform Specific Options',
       type: 'string',
     })
     .option('win32metadata', {
       coerce: parseJson,
       description:
         '(windows only) a JSON string of key/value pairs (ProductName, InternalName, FileDescription) to embed as executable metadata',
-      group: 'Platform Specific Options',
       type: 'string',
     })
+    .group(
+      [
+        'app-copyright',
+        'app-version',
+        'bounce',
+        'build-version',
+        'counter',
+        'darwin-dark-mode-support',
+        'fast-quit',
+        'title-bar-style',
+        'win32metadata',
+      ],
+      decorateYargOptionGroup('Platform-Specific Options'),
+    )
     // Debug Options
     .option('crash-reporter', {
       description: 'remote server URL to send crash reports',
-      group: 'Debug Options',
       type: 'string',
     })
     .option('verbose', {
       default: false,
       description: 'enable verbose/debug/troubleshooting logs',
-      group: 'Debug Options',
       type: 'boolean',
     })
+    .group(
+      ['crash-reporter', 'verbose'],
+      decorateYargOptionGroup('Debug Options'),
+    )
     .version()
     .help()
     .group(['version', 'help'], 'Other Options')
@@ -486,6 +519,10 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
   args.argv;
 
   return args;
+}
+
+function decorateYargOptionGroup(value: string): string {
+  return `====== ${value} ======`;
 }
 
 export function parseArgs(args: yargs.Argv<any>): any {
