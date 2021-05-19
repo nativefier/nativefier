@@ -4,9 +4,12 @@ import * as path from 'path';
 
 import { DEFAULT_ELECTRON_VERSION } from './constants';
 import { getTempDir } from './helpers/helpers';
+import { getChromeVersionForElectronVersion } from './infer/browsers/inferChromeVersion';
+import { getLatestFirefoxVersion } from './infer/browsers/inferFirefoxVersion';
+import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
-import { inferUserAgent } from './infer/inferUserAgent';
 import { buildNativefierApp } from './main';
+import { userAgent } from './options/fields/userAgent';
 
 async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
   const arch = (inputOptions.arch as string) || inferArch();
@@ -66,14 +69,14 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
   );
 
   // Test user agent
-  expect(nativefierConfig.userAgent).toBe(
-    inputOptions.userAgent !== undefined
-      ? inputOptions.userAgent
-      : await inferUserAgent(
-          inputOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
-          inputOptions.platform,
-        ),
-  );
+  if (inputOptions.userAgent) {
+    const translatedUserAgent = await userAgent({
+      packager: { platform: inputOptions.platform },
+      nativefier: { userAgent: inputOptions.userAgent },
+    });
+    inputOptions.userAgent = translatedUserAgent || inputOptions.userAgent;
+  }
+  expect(nativefierConfig.userAgent).toBe(inputOptions.userAgent);
 
   // Test lang
   expect(nativefierConfig.lang).toBe(inputOptions.lang);
@@ -82,15 +85,15 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
 describe('Nativefier', () => {
   jest.setTimeout(300000);
 
-  test.each(['darwin', 'linux'])(
-    'builds a Nativefier app for platform %s',
-    async (platform) => {
+  test.each([{ platform: 'darwin' }, { platform: 'linux' }])(
+    'builds a Nativefier app for %s',
+    async (baseAppOptions) => {
       const tempDirectory = getTempDir('integtest');
       const options = {
+        ...baseAppOptions,
         targetUrl: 'https://google.com/',
         out: tempDirectory,
         overwrite: true,
-        platform,
         lang: 'en-US',
       };
       const appPath = await buildNativefierApp(options);
@@ -104,7 +107,7 @@ describe('Nativefier upgrade', () => {
 
   test.each([
     { platform: 'darwin', arch: 'x64' },
-    { platform: 'linux', arch: 'arm64', userAgent: 'FIREFOX' },
+    { platform: 'linux', arch: 'arm64', userAgent: 'FIREFOX 60' },
     // Exhaustive integration testing here would be neat, but takes too long.
     // -> For now, only testing a subset of platforms/archs
     // { platform: 'win32', arch: 'x64' },
@@ -134,14 +137,29 @@ describe('Nativefier upgrade', () => {
 
       const upgradeAppPath = await buildNativefierApp(upgradeOptions);
       options.electronVersion = DEFAULT_ELECTRON_VERSION;
-      options.userAgent =
-        baseAppOptions.userAgent !== undefined
-          ? baseAppOptions.userAgent
-          : await inferUserAgent(
-              DEFAULT_ELECTRON_VERSION,
-              baseAppOptions.platform,
-            );
+      options.userAgent = baseAppOptions.userAgent;
       await checkApp(upgradeAppPath, options);
     },
   );
+});
+
+describe('Browser version retrieval', () => {
+  test('get chrome version with electron version', async () => {
+    await expect(getChromeVersionForElectronVersion('12.0.0')).resolves.toBe(
+      '89.0.4389.69',
+    );
+  });
+
+  test('get latest firefox version', async () => {
+    const firefoxVersion = await getLatestFirefoxVersion();
+
+    const majorVersion = parseInt(firefoxVersion.split('.')[0]);
+    expect(majorVersion).toBeGreaterThanOrEqual(88);
+  });
+
+  test('get latest safari version', async () => {
+    const safariVersion = await getLatestSafariVersion();
+
+    expect(safariVersion.majorVersion).toBeGreaterThanOrEqual(14);
+  });
 });

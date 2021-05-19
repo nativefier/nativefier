@@ -184,13 +184,6 @@ export function useOldAppOptions(
   log.debug('rawOptions', rawOptions);
   log.debug('oldApp', oldApp);
 
-  if (
-    oldApp.options.userAgentOverriden === undefined ||
-    oldApp.options.userAgentOverriden === false
-  ) {
-    oldApp.options.userAgent = undefined;
-  }
-
   const combinedOptions = { ...rawOptions, ...oldApp.options };
 
   log.debug('Combined options', combinedOptions);
