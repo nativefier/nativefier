@@ -46,6 +46,17 @@ if (appArgs.portable) {
   app.setPath('userData', path.join(__dirname, '..', 'appData'));
 }
 
+if (!appArgs.userAgentHonest) {
+  // Electron userAgentFallback is the user agent used if none is specified when creating a window.
+  // For our purposes, it's useful because its format is similar enough to a real Chrome's user agent to not need
+  // to infer the userAgent. userAgentFallback normally looks like this:
+  // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) app-nativefier-804458/1.0.0 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36
+  // We just need to strip out the appName/1.0.0 and Electron/electronVersion
+  app.userAgentFallback = app.userAgentFallback
+    .replace(`Electron/${process.versions.electron}`, '')
+    .replace(`${app.getName()}/${app.getVersion()}`, ' ');
+}
+
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
   const maybeUrl = process.argv[1];

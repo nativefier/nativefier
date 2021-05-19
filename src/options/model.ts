@@ -36,7 +36,6 @@ export interface AppOptions {
     fullScreen: boolean;
     globalShortcuts: any;
     hideWindowFrame: boolean;
-    honest: boolean;
     ignoreCertificate: boolean;
     ignoreGpuBlacklist: boolean;
     inject: string[];
@@ -52,7 +51,7 @@ export interface AppOptions {
     titleBarStyle: string;
     tray: string | boolean;
     userAgent: string;
-    userAgentOverriden: boolean;
+    userAgentHonest: boolean;
     verbose: boolean;
     versionString: string;
     width: number;

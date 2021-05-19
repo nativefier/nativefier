@@ -78,7 +78,6 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       fullScreen: rawOptions.fullScreen || false,
       globalShortcuts: null,
       hideWindowFrame: rawOptions.hideWindowFrame,
-      honest: rawOptions.honest || false,
       ignoreCertificate: rawOptions.ignoreCertificate || false,
       ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
       inject: rawOptions.inject || [],
@@ -94,8 +93,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       titleBarStyle: rawOptions.titleBarStyle || null,
       tray: rawOptions.tray || false,
       userAgent: rawOptions.userAgent,
-      userAgentOverriden:
-        rawOptions.userAgent !== undefined && rawOptions.userAgent !== null,
+      userAgentHonest: rawOptions.userAgentHonest || false,
       verbose: rawOptions.verbose,
       versionString: rawOptions.versionString,
       width: rawOptions.width || 1280,
@@ -174,7 +172,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     options.nativefier.insecure = true;
   }
 
-  if (options.nativefier.honest) {
+  if (options.nativefier.userAgentHonest) {
     options.nativefier.userAgent = null;
   }
 
