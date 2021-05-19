@@ -54,7 +54,6 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "commander": "^7.1.0",
     "electron-packager": "^15.2.0",
     "gitcloud": "^0.2.0",
     "hasbin": "^1.2.3",
@@ -63,7 +62,8 @@
     "page-icon": "^0.4.0",
     "sanitize-filename": "^1.6.3",
     "source-map-support": "^0.5.19",
-    "tmp": "^0.2.1"
+    "tmp": "^0.2.1",
+    "yargs": "^17.0.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",

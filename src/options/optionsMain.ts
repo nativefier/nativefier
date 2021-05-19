@@ -78,6 +78,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       fullScreen: rawOptions.fullScreen || false,
       globalShortcuts: null,
       hideWindowFrame: rawOptions.hideWindowFrame,
+      honest: rawOptions.honest || false,
       ignoreCertificate: rawOptions.ignoreCertificate || false,
       ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
       inject: rawOptions.inject || [],
@@ -130,8 +131,8 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     log.setLevel('info');
   }
 
-  if (rawOptions.electronVersion) {
-    const requestedVersion: string = rawOptions.electronVersion;
+  if (options.packager.electronVersion) {
+    const requestedVersion: string = options.packager.electronVersion;
     if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
       throw `Invalid Electron version number "${requestedVersion}". Aborting.`;
     }
@@ -145,7 +146,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     }
   }
 
-  if (rawOptions.widevine) {
+  if (options.nativefier.widevine) {
     const widevineElectronVersion = `${options.packager.electronVersion}-wvvmp`;
     try {
       await axios.get(
@@ -162,8 +163,8 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       `\nATTENTION: Using the **unofficial** Electron from castLabs`,
       "\nIt implements Google's Widevine Content Decryption Module (CDM) for DRM-enabled playback.",
       `\nSimply abort & re-run without passing the widevine flag to default to ${
-        rawOptions.electronVersion !== undefined
-          ? (rawOptions.electronVersion as string)
+        options.packager.electronVersion !== undefined
+          ? options.packager.electronVersion
           : DEFAULT_ELECTRON_VERSION
       }`,
     );
@@ -173,7 +174,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     options.nativefier.insecure = true;
   }
 
-  if (rawOptions.honest) {
+  if (options.nativefier.honest) {
     options.nativefier.userAgent = null;
   }
 

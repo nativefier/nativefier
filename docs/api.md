@@ -9,78 +9,85 @@
   - [[dest]](#dest)
   - [Help](#help)
   - [Version](#version)
-  - [[upgrade]](#upgrade)
-  - [[name]](#name)
-  - [[platform]](#platform)
-  - [[arch]](#arch)
-  - [[app-copyright]](#app-copyright)
-  - [[app-version]](#app-version)
-  - [[build-version]](#build-version)
-  - [[electron-version]](#electron-version)
-  - [[widevine]](#widevine)
-  - [[no-overwrite]](#no-overwrite)
-  - [[conceal]](#conceal)
-  - [[icon]](#icon)
-    - [Packaging for Windows](#packaging-for-windows)
-    - [Packaging for Linux](#packaging-for-linux)
-    - [Packaging for macOS](#packaging-for-macos)
-      - [Manually Converting `.icns`](#manually-converting-icns)
-  - [[counter]](#counter)
-  - [[bounce]](#bounce)
-  - [[portable]](#portable)
-  - [[width]](#width)
-  - [[height]](#height)
-  - [[min-width]](#min-width)
-  - [[min-height]](#min-height)
-  - [[max-width]](#max-width)
-  - [[max-height]](#max-height)
-  - [[x]](#x)
-  - [[y]](#y)
-  - [[show-menu-bar]](#show-menu-bar)
-  - [[fast-quit]](#fast-quit)
-  - [[user-agent]](#user-agent)
-  - [[lang]](#lang)
-  - [[honest]](#honest)
-  - [[ignore-certificate]](#ignore-certificate)
-  - [[disable-gpu]](#disable-gpu)
-  - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
-  - [[enable-es3-apis]](#enable-es3-apis)
-  - [[insecure]](#insecure)
-  - [[internal-urls]](#internal-urls)
-  - [[block-external-urls]](#block-external-urls)
-  - [[proxy-rules]](#proxy-rules)
-  - [[disk-cache-size]](#disk-cache-size)
-  - [[inject]](#inject)
-  - [[full-screen]](#full-screen)
-  - [[maximize]](#maximize)
-  - [[hide-window-frame]](#hide-window-frame)
-  - [[title-bar-style]](#title-bar-style)
-  - [[verbose]](#verbose)
-  - [[disable-context-menu]](#disable-context-menu)
-  - [[disable-dev-tools]](#disable-dev-tools)
-  - [[crash-reporter]](#crash-reporter)
-  - [[zoom]](#zoom)
-  - [[single-instance]](#single-instance)
-  - [[clear-cache]](#clear-cache)
-  - [[tray]](#tray)
-  - [[basic-auth-username]](#basic-auth-username)
-  - [[processEnvs]](#processenvs)
-  - [[file-download-options]](#file-download-options)
-  - [[always-on-top]](#always-on-top)
-  - [[global-shortcuts]](#global-shortcuts)
-    - [Global Shortucts on macOS](#global-shortucts-on-macos)
-  - [[browserwindow-options]](#browserwindow-options)
-  - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
-  - [[background-color]](#background-color)
-  - [[bookmarks-menu]](#bookmarks-menu)
-  - [Deprecated](#deprecated)
-    - [[flash] and [flash-path]](#flash) (DEPRECATED)
-- [Programmatic API](#programmatic-api)
-  - [Addition packaging options for Windows](#addition-packaging-options-for-windows)
-    - [[version-string]](#version-string)
-    - [[win32metadata]](#win32metadata)
-      - [Programmatic API](#programmatic-api-1)
+  - [App Creation Options](#app-creation-options)
+    - [[arch]](#arch)
+    - [[conceal]](#conceal)
+    - [[electron-version]](#electron-version)
+    - [[global-shortcuts]](#global-shortcuts)
+      - [Global Shortucts on macOS](#global-shortucts-on-macos)
+    - [[icon]](#icon)
+      - [Packaging for Windows](#packaging-for-windows)
+      - [Packaging for Linux](#packaging-for-linux)
+      - [Packaging for macOS](#packaging-for-macos)
+        - [Manually Converting `.icns`](#manually-converting-icns)
+    - [[name]](#name)
+    - [[no-overwrite]](#no-overwrite)
+    - [[platform]](#platform)
+    - [[portable]](#portable)
+    - [[upgrade]](#upgrade)
+    - [[widevine]](#widevine)
+  - [App Window Options](#app-window-options)
+    - [[always-on-top]](#always-on-top)
+    - [[background-color]](#background-color)
+    - [[bookmarks-menu]](#bookmarks-menu)
+    - [[browserwindow-options]](#browserwindow-options)
+    - [[disable-context-menu]](#disable-context-menu)
+    - [[disable-dev-tools]](#disable-dev-tools)
+    - [[full-screen]](#full-screen)
+    - [[height]](#height)
+    - [[hide-window-frame]](#hide-window-frame)
+    - [[max-height]](#max-height)
+    - [[max-width]](#max-width)
+    - [[maximize]](#maximize)
+    - [[min-height]](#min-height)
+    - [[min-width]](#min-width)
+    - [[process-envs]](#process-envs)
+    - [[show-menu-bar]](#show-menu-bar)
+    - [[single-instance]](#single-instance)
+    - [[title-bar-style]](#title-bar-style)
+    - [[tray]](#tray)
+    - [[width]](#width)
+    - [[x]](#x)
+    - [[y]](#y)
+    - [[zoom]](#zoom)
+  - [Internal Browser Options](#internal-browser-options)
+    - [[file-download-options]](#file-download-options)
+    - [[honest]](#honest)
+    - [[inject]](#inject)
+    - [[lang]](#lang)
+    - [[user-agent]](#user-agent)
+  - [URL Handling Options](#url-handling-options)
+    - [[block-external-urls]](#block-external-urls)
+    - [[internal-urls]](#internal-urls)
+    - [[proxy-rules]](#proxy-rules)
+  - [Auth Options](#auth-options)
+    - [[basic-auth-username] and [basic-auth-password]](#basic-auth-username-and-basic-auth-password)
+  - [Graphics Options](#graphics-options)
+    - [[disable-gpu]](#disable-gpu)
+    - [[enable-es3-apis]](#enable-es3-apis)
+    - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
+  - [Caching Options](#caching-options)
+    - [[clear-cache]](#clear-cache)
+    - [[disk-cache-size]](#disk-cache-size)
+  - [(In)Security Options](#in-security-options)
     - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
+    - [[ignore-certificate]](#ignore-certificate)
+    - [[insecure]](#insecure)
+  - [Flash Options (Deprecated)](#flash-options-deprecated)
+    - [[flash] and [flash-path] (DEPRECATED)](#flash-and-flash-path-deprecated)
+  - [Platform Specific Options](#platform-specific-options)
+    - [[app-copyright]](#app-copyright)
+    - [[app-version]](#app-version)
+    - [[bounce]](#bounce)
+    - [[build-version]](#build-version)
+    - [[counter]](#counter)
+    - [[darwin-dark-mode-support]](#darwin-dark-mode-support)
+    - [[fast-quit]](#fast-quit)
+    - [[win32metadata]](#win32metadata)
+  - [Debug Options](#debug-options)
+    - [[crash-reporter]](#crash-reporter)
+    - [[verbose]](#verbose)
+- [Programmatic API](#programmatic-api)
 - [Accessing The Electron Session](#accessing-the-electron-session)
   - [Important Note On funcArgs](#important-note-on-funcargs)
   - [session-interaction-reply](#session-interaction-reply)
@@ -128,47 +135,7 @@ Prints the usage information.
 
 Prints the version of your `nativefier` install.
 
-#### [upgrade]
-
-```
---upgrade <pathToExistingApp>
-```
-
-*NEW IN 43.1.0*
-
-This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
-
-**IMPORTANT NOTE**
-
-**This action is an in-place upgrade, and will REPLACE the current application. In case this feature does not work as intended or as the user may wish, it is advised to make a backup of the app to be upgraded before using, or specify an alternate directory as you would when creating a new file.**
-
-The provided path must be the "executable" of an application packaged with a previous version of Nativefier, and to be upgraded to the latest version of Nativefier. "Executable" means: the `.exe` file on Windows, the executable on Linux, or the `.app` on macOS. The executable must be living in the original context where it was generated (i.e., on Windows and Linux, the exe file must still be in the folder containing the generated `resources` directory).
-
-#### [name]
-
-```
--n, --name <value>
-```
-
-The name of the application, which will affect strings in titles and the icon.
-
-**For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
-
-#### [platform]
-
-```
--p, --platform <value>
-```
-
-- Default: current operating system.
-    - To test your default platform you can run
-      ```
-      node -p "process.platform"
-      ```
-      (See https://nodejs.org/api/os.html#os_os_platform)
-- Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
-
-The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
+### App Creation Options
 
 #### [arch]
 
@@ -187,29 +154,13 @@ The processor architecture to target when building.
     - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or re-install node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
 - Can be overridden by specifying one of: `ia32`, `x64`, `armv7l`, `arm64`.
 
-#### [app-copyright]
+#### [conceal]
 
 ```
---app-copyright <value>
+-c, --conceal
 ```
 
-The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X.
-
-#### [app-version]
-
-```
---app-version <value>
-```
-
-The release version of the application. By default the `version` property in the `package.json` is used but it can be overridden with this argument. If neither are provided, the version of Electron will be used. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.
-
-#### [build-version]
-
-```
---build-version <value>
-```
-
-The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.
+Specifies if the source code within the nativefied app should be packaged into an archive, defaults to false, [read more](http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/).
 
 #### [electron-version]
 
@@ -218,43 +169,6 @@ The build version of the application. Maps to the `FileVersion` metadata propert
 ```
 
 Electron version without the `v`, see https://github.com/atom/electron/releases.
-
-#### [widevine]
-
-```
---widevine
-```
-
-Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
-
-Note: some sites using Widevine (like Udemy or HBO Max) may still refuse to load videos, and require EVS-signing your Nativefier app to work. Try signing your app using CastLabs tools. See https://github.com/castlabs/electron-releases/wiki/EVS and [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
-
-```bash
-# Install CastLabs tools:
-pip install --upgrade castlabs-evs
-
-# Sign up:
-python3 -m castlabs_evs.account signup
-
-# Sign your app
-python -m castlabs_evs.vmp sign-pkg Udemy-win32-x64
-```
-
-#### [no-overwrite]
-
-```
---no-overwrite
-```
-
-Specifies if the destination directory should be not overwritten, defaults to false.
-
-#### [conceal]
-
-```
--c, --conceal
-```
-
-Specifies if the source code within the nativefied app should be packaged into an archive, defaults to false, [read more](http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/).
 
 #### [icon]
 
@@ -282,21 +196,39 @@ If your `PATH` has our image-conversion dependencies (`iconutil`, and either Ima
 
 To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
 
-#### [counter]
+#### [name]
 
 ```
---counter
+-n, --name <value>
 ```
 
-Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).
+The name of the application, which will affect strings in titles and the icon.
 
-#### [bounce]
+**For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
+
+#### [no-overwrite]
 
 ```
---bounce
+--no-overwrite
 ```
 
-(macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
+Specifies if the destination directory should be not overwritten, defaults to false.
+
+#### [platform]
+
+```
+-p, --platform <value>
+```
+
+- Default: current operating system.
+    - To test your default platform you can run
+      ```
+      node -p "process.platform"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_platform)
+- Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
+
+The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
 
 #### [portable]
 
@@ -318,241 +250,136 @@ When creating a portable app, all data accumulated after running the app (includ
 4. Recreate it in the same way you did in step 1
 5. Distribute the app without opening it
 
-#### [width]
+#### [upgrade]
 
 ```
---width <value>
+--upgrade <pathToExistingApp>
 ```
 
-Width of the packaged application, defaults to `1280px`.
+*NEW IN 43.1.0*
 
-#### [height]
+This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
 
-```
---height <value>
-```
+**IMPORTANT NOTE**
 
-Height of the packaged application, defaults to `800px`.
+**This action is an in-place upgrade, and will REPLACE the current application. In case this feature does not work as intended or as the user may wish, it is advised to make a backup of the app to be upgraded before using, or specify an alternate directory as you would when creating a new file.**
 
-#### [min-width]
+The provided path must be the "executable" of an application packaged with a previous version of Nativefier, and to be upgraded to the latest version of Nativefier. "Executable" means: the `.exe` file on Windows, the executable on Linux, or the `.app` on macOS. The executable must be living in the original context where it was generated (i.e., on Windows and Linux, the exe file must still be in the folder containing the generated `resources` directory).
 
-```
---min-width <value>
-```
-
-Minimum width of the packaged application, defaults to `0`.
-
-#### [min-height]
+#### [widevine]
 
 ```
---min-height <value>
+--widevine
 ```
 
-Minimum height of the packaged application, defaults to `0`.
+Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
-#### [max-width]
-
-```
---max-width <value>
-```
-
-Maximum width of the packaged application, default is no limit.
-
-#### [max-height]
-
-```
---max-height <value>
-```
-
-Maximum height of the packaged application, default is no limit.
-
-#### [x]
-
-```
---x <value>
-```
-
-X location of the packaged application window.
-
-#### [y]
-
-```
---y <value>
-```
-
-Y location of the packaged application window.
-
-#### [show-menu-bar]
-
-```
--m, --show-menu-bar
-```
-
-Specifies if the menu bar should be shown.
-
-#### [fast-quit]
-
-```
--f, --fast-quit
-```
-
-(macOS only) Specifies to quit the app after closing all windows, defaults to false.
-
-#### [user-agent]
-
-```
--u, --user-agent <value>
-```
-
-Set the user agent to run the created app with.
-
-#### [lang]
-
-```
---lang <value>
-```
-
-Set the language or locale to render the web site as (e.g., "fr", "en-US", "es", etc.)
-
-#### [honest]
-
-```
---honest
-```
-
-By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
-
-If this flag is passed, it will not override the user agent.
-
-#### [ignore-certificate]
-
-```
---ignore-certificate
-```
-
-Forces the packaged app to ignore certificate errors.
-
-#### [disable-gpu]
-
-```
---disable-gpu
-```
-
-Disable hardware acceleration for the packaged application.
-
-#### [ignore-gpu-blacklist]
-
-```
---ignore-gpu-blacklist
-```
-
-Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
-
-#### [enable-es3-apis]
-
-```
---enable-es3-apis
-```
-
-Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
-
-#### [insecure]
-
-```
---insecure
-```
-
-Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
-
-#### [internal-urls]
-
-```
---internal-urls <regex>
-```
-
-Regular expression of URLs to consider "internal" while following a hyperlink.
-Internal URLs will open in Nativefier, other URLs will open in your preferred browser.
-
-Defaults to view as "internal" two URLs that share the same base domain,
-once stripped of `www.`. For example, by default,
-- URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
-- URLs from/to `abc.com` and `xyz.com` are considered external.
-
-*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
-(e.g. `accounts.google.com` or `login.live.com`) are considered internal.
-This does not replace `internal-urls`, it complements it, and happens *before*
-your `internal-urls` rule is applied. So, if you already set the flag to let such
-auth pages open internally, you don't need to change it but it might be unnecessary.
-
-We think this is desirable behavior and are so far unaware of cases where users
-might not want this. If you disagree, please chime in at
-[PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
-
-Example of `--internal-urls` causing all links to Google to be considered internal:
+Note: some sites using Widevine (like Udemy or HBO Max) may still refuse to load videos, and require EVS-signing your Nativefier app to work. Try signing your app using CastLabs tools. See https://github.com/castlabs/electron-releases/wiki/EVS and [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
 
 ```bash
-nativefier https://google.com --internal-urls ".*?\.google\.*?"
+# Install CastLabs tools:
+pip install --upgrade castlabs-evs
+
+# Sign up:
+python3 -m castlabs_evs.account signup
+
+# Sign your app
+python -m castlabs_evs.vmp sign-pkg Udemy-win32-x64
 ```
 
-Or, if you never expect Nativefier to open an "external" page in your OS browser,
+### App Window Options
 
-```bash
-nativefier https://google.com --internal-urls ".*?"
-```
-
-#### [block-external-urls]
+#### [always-on-top]
 
 ```
---block-external-urls
+--always-on-top
 ```
 
-Forbid navigation to URLs not considered "internal" (see '--internal-urls'). Instead of opening in an external browser, attempts to navigate to external URLs will be blocked, and an error message will be shown. Default: false
+Enable always on top for the packaged application.
+
+#### [background-color]
+
+```
+--background-color <string>
+```
+
+See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
+
+#### [bookmarks-menu]
+
+```
+--bookmarks-menu <string>
+```
+
+Path to a JSON file defining a bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
+
+This menu is a simple list; folders are not supported.
+
+Your `menuLabel` can be bound to a `Alt + letter` shortcut using the letter `&` before the `letter` you want. Be careful to not conflict with the letter of other menus!
+
+Keyboard shortcuts can use the modifier keys `Cmd`, `Ctrl`, `CmdOrCtrl`, `Alt`, `Option`, `AltGr`, `Shift`, and `Super`. See [the Electron documentation](https://www.electronjs.org/docs/api/accelerator) for more information.
+
+Example of such a JSON file:
+
+```json
+{
+    "menuLabel": "&Music",
+    "bookmarks": [
+        {
+            "title": "lofi.cafe",
+            "url": "https://lofi.cafe/",
+            "type": "link",
+            "shortcut": "CmdOrCtrl+1"
+        },
+        {
+            "title": "beats to relax/study to",
+            "url": "https://www.youtube.com/watch?v=5qap5aO4i9A",
+            "type": "link",
+            "shortcut": "CmdOrCtrl+2"
+        },
+        {
+            "type": "separator"
+        },
+        {
+            "title": "RÜFÜS DU SOL Live from Joshua Tree",
+            "type": "link",
+            "url": "https://www.youtube.com/watch?v=Zy4KtD98S2c"
+        }
+    ]
+}
+
+```
+
+#### [browserwindow-options]
+
+```
+--browserwindow-options <json-string>
+```
+
+a JSON string that will be sent directly into electron BrowserWindow options.
+See [Electron's BrowserWindow API Documentation](https://electronjs.org/docs/api/browser-window#new-browserwindowoptions) for the complete list of options.
 
 Example:
 
 ```bash
-nativefier https://google.com --internal-urls ".*?\.google\.*?" --block-external-urls
+nativefier <your-website> --browserwindow-options '{ "webPreferences": { "defaultFontFamily": { "standard": "Comic Sans MS", "serif": "Comic Sans MS" } } }'
 ```
 
-Blocks navigation to any URLs except Google and its subdomains.
-
-#### [proxy-rules]
+#### [disable-context-menu]
 
 ```
---proxy-rules <value>
+--disable-context-menu
 ```
 
-Proxy rules. See [proxyRules](https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback) for more details.
+Disable the context menu
 
-Example:
-
-```bash
-nativefier https://google.com --proxy-rules http://127.0.0.1:1080
-```
-
-#### [disk-cache-size]
+#### [disable-dev-tools]
 
 ```
---disk-cache-size <value>
+--disable-dev-tools
 ```
 
-Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
-
-#### [inject]
-
-```
---inject <value>
-```
-
-Allows you to inject javascript or css files. This command can be repeated multiple times to inject multiple files.
-
-_Note:_ The javascript file is loaded _after_ `DOMContentLoaded`, so you can assume the DOM is complete & available.
-
-Example:
-
-```bash
-nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
-```
+Disable the Chrome developer tools
 
 #### [full-screen]
 
@@ -562,13 +389,13 @@ nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css
 
 Makes the packaged app start in full screen.
 
-#### [maximize]
+#### [height]
 
 ```
---maximize
+--height <value>
 ```
 
-Makes the packaged app start maximized.
+Height of the packaged application, defaults to `800px`.
 
 #### [hide-window-frame]
 
@@ -577,6 +404,76 @@ Makes the packaged app start maximized.
 ```
 
 Disable window frame and controls.
+
+#### [max-height]
+
+```
+--max-height <value>
+```
+
+Maximum height of the packaged application, default is no limit.
+
+#### [max-width]
+
+```
+--max-width <value>
+```
+
+Maximum width of the packaged application, default is no limit.
+
+#### [maximize]
+
+```
+--maximize
+```
+
+Makes the packaged app start maximized.
+
+#### [min-height]
+
+```
+--min-height <value>
+```
+
+Minimum height of the packaged application, defaults to `0`.
+
+#### [min-width]
+
+```
+--min-width <value>
+```
+
+Minimum width of the packaged application, defaults to `0`.
+
+#### [process-envs]
+
+```
+--process-envs <json-string>
+```
+
+a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.
+
+Example:
+
+```bash
+nativefier <your-geolocation-enabled-website> --process-envs '{"GOOGLE_API_KEY": "<your-google-api-key>"}'
+```
+
+#### [show-menu-bar]
+
+```
+-m, --show-menu-bar
+```
+
+Specifies if the menu bar should be shown.
+
+#### [single-instance]
+
+```
+--single-instance
+```
+
+Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
 
 #### [title-bar-style]
 
@@ -612,68 +509,6 @@ header div:first-child {
 nativefier http://google.com --inject site.css --title-bar-style 'hiddenInset'
 ```
 
-#### [verbose]
-
-```
---verbose
-```
-
-Shows detailed logs in the console.
-
-#### [disable-context-menu]
-
-```
---disable-context-menu
-```
-
-Disable the context menu
-
-#### [disable-dev-tools]
-
-```
---disable-dev-tools
-```
-
-Disable the Chrome developer tools
-
-#### [crash-reporter]
-
-```
---crash-reporter <value>
-```
-
-Enables crash reporting and set the URL to submit crash reports to
-
-Example:
-
-```bash
-nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
-```
-
-#### [zoom]
-
-```
---zoom <value>
-```
-
-Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
-
-#### [single-instance]
-
-```
---single-instance
-```
-
-Prevents application from being run multiple times. If such an attempt occurs the already running instance is brought to front.
-
-#### [clear-cache]
-
-```
---clear-cache
-```
-
-Prevents the application from preserving cache between launches.
-
 #### [tray]
 
 ```
@@ -686,27 +521,39 @@ When the optional argument `start-in-tray` is provided, i.e. the application is 
 
 Limitation: when creating a macOS app using option `--tray`, from a non-macOS build machine, the tray icon (in the menu bar) will be invisible.
 
-#### [basic-auth-username]
+#### [width]
 
 ```
---basic-auth-username <value> --basic-auth-password <value>
+--width <value>
 ```
 
-Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
+Width of the packaged application, defaults to `1280px`.
 
-#### [processEnvs]
+#### [x]
 
 ```
---processEnvs <json-string>
+--x <value>
 ```
 
-a JSON string of key/value pairs to be set as environment variables before any browser windows are opened.
+X location of the packaged application window.
 
-Example:
+#### [y]
 
-```bash
-nativefier <your-geolocation-enabled-website> --processEnvs '{"GOOGLE_API_KEY": "<your-google-api-key>"}'
 ```
+--y <value>
+```
+
+Y location of the packaged application window.
+
+#### [zoom]
+
+```
+--zoom <value>
+```
+
+Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
+
+### Internal Browser Options
 
 #### [file-download-options]
 
@@ -721,14 +568,6 @@ Example:
 ```bash
 nativefier <your-website> --file-download-options '{"saveAs": true}'
 ```
-
-#### [always-on-top]
-
-```
---always-on-top
-```
-
-Enable always on top for the packaged application.
 
 #### [global-shortcuts]
 
@@ -829,89 +668,198 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 ]
 ```
 
-#### Global Shortucts on macOS
+##### Global Shortucts on macOS
 
 On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
-#### [browserwindow-options]
+#### [honest]
 
 ```
---browserwindow-options <json-string>
+--honest
 ```
 
-a JSON string that will be sent directly into electron BrowserWindow options.
-See [Electron's BrowserWindow API Documentation](https://electronjs.org/docs/api/browser-window#new-browserwindowoptions) for the complete list of options.
+By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
+
+If this flag is passed, it will not override the user agent.
+
+#### [inject]
+
+```
+--inject <value>
+```
+
+Allows you to inject javascript or css files. This command can be repeated multiple times to inject multiple files.
+
+_Note:_ The javascript file is loaded _after_ `DOMContentLoaded`, so you can assume the DOM is complete & available.
 
 Example:
 
 ```bash
-nativefier <your-website> --browserwindow-options '{ "webPreferences": { "defaultFontFamily": { "standard": "Comic Sans MS", "serif": "Comic Sans MS" } } }'
+nativefier http://google.com --inject ./some-js-injection.js --inject ./some-css-injection.css ~/Desktop
 ```
 
-#### [darwin-dark-mode-support]
+#### [lang]
 
 ```
---darwin-dark-mode-support
+--lang <value>
 ```
 
-Enables Dark Mode support on macOS 10.14+.
+Set the language or locale to render the web site as (e.g., "fr", "en-US", "es", etc.)
 
-#### [background-color]
-
-```
---background-color <string>
-```
-
-See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
-
-#### [bookmarks-menu]
+#### [user-agent]
 
 ```
---bookmarks-menu <string>
+-u, --user-agent <value>
 ```
 
-Path to a JSON file defining a bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
+Set the user agent to run the created app with.
 
-This menu is a simple list; folders are not supported.
+### URL Handling Options
 
-Your `menuLabel` can be bound to a `Alt + letter` shortcut using the letter `&` before the `letter` you want. Be careful to not conflict with the letter of other menus!
-
-Keyboard shortcuts can use the modifier keys `Cmd`, `Ctrl`, `CmdOrCtrl`, `Alt`, `Option`, `AltGr`, `Shift`, and `Super`. See [the Electron documentation](https://www.electronjs.org/docs/api/accelerator) for more information.
-
-Example of such a JSON file:
-
-```json
-{
-    "menuLabel": "&Music",
-    "bookmarks": [
-        {
-            "title": "lofi.cafe",
-            "url": "https://lofi.cafe/",
-            "type": "link",
-            "shortcut": "CmdOrCtrl+1"
-        },
-        {
-            "title": "beats to relax/study to",
-            "url": "https://www.youtube.com/watch?v=5qap5aO4i9A",
-            "type": "link",
-            "shortcut": "CmdOrCtrl+2"
-        },
-        {
-            "type": "separator"
-        },
-        {
-            "title": "RÜFÜS DU SOL Live from Joshua Tree",
-            "type": "link",
-            "url": "https://www.youtube.com/watch?v=Zy4KtD98S2c"
-        }
-    ]
-}
+#### [block-external-urls]
 
 ```
+--block-external-urls
+```
 
-### Deprecated
+Forbid navigation to URLs not considered "internal" (see '--internal-urls'). Instead of opening in an external browser, attempts to navigate to external URLs will be blocked, and an error message will be shown. Default: false
 
-#### [flash]
+Example:
+
+```bash
+nativefier https://google.com --internal-urls ".*?\.google\.*?" --block-external-urls
+```
+
+Blocks navigation to any URLs except Google and its subdomains.
+
+#### [internal-urls]
+
+```
+--internal-urls <regex>
+```
+
+Regular expression of URLs to consider "internal" while following a hyperlink.
+Internal URLs will open in Nativefier, other URLs will open in your preferred browser.
+
+Defaults to view as "internal" two URLs that share the same base domain,
+once stripped of `www.`. For example, by default,
+- URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
+- URLs from/to `abc.com` and `xyz.com` are considered external.
+
+*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
+(e.g. `accounts.google.com` or `login.live.com`) are considered internal.
+This does not replace `internal-urls`, it complements it, and happens *before*
+your `internal-urls` rule is applied. So, if you already set the flag to let such
+auth pages open internally, you don't need to change it but it might be unnecessary.
+
+We think this is desirable behavior and are so far unaware of cases where users
+might not want this. If you disagree, please chime in at
+[PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
+
+Example of `--internal-urls` causing all links to Google to be considered internal:
+
+```bash
+nativefier https://google.com --internal-urls ".*?\.google\.*?"
+```
+
+Or, if you never expect Nativefier to open an "external" page in your OS browser,
+
+```bash
+nativefier https://google.com --internal-urls ".*?"
+```
+
+#### [proxy-rules]
+
+```
+--proxy-rules <value>
+```
+
+Proxy rules. See [proxyRules](https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback) for more details.
+
+Example:
+
+```bash
+nativefier https://google.com --proxy-rules http://127.0.0.1:1080
+```
+
+### Auth Options
+
+#### [[basic-auth-username] and [basic-auth-password]]
+
+```
+--basic-auth-username <value> --basic-auth-password <value>
+```
+
+Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
+
+### Graphics Options
+
+#### [disable-gpu]
+
+```
+--disable-gpu
+```
+
+Disable hardware acceleration for the packaged application.
+
+#### [enable-es3-apis]
+
+```
+--enable-es3-apis
+```
+
+Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
+
+#### [ignore-gpu-blacklist]
+
+```
+--ignore-gpu-blacklist
+```
+
+Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
+
+
+
+
+### Caching Options
+
+#### [clear-cache]
+
+```
+--clear-cache
+```
+
+Prevents the application from preserving cache between launches.
+
+#### [disk-cache-size]
+
+```
+--disk-cache-size <value>
+```
+
+Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
+
+### (In)Security Options
+
+#### [ignore-certificate]
+
+```
+--ignore-certificate
+```
+
+Forces the packaged app to ignore certificate errors.
+
+#### [insecure]
+
+```
+--insecure
+```
+
+Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
+
+### Flash Options (DEPRECATED)
+
+#### flash] and [flash-path] (DEPRECATED)
 
 **DEPRECATED as of 2021-03-10, will be removed at some point**
 
@@ -952,6 +900,88 @@ to prevent Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.
 You can also specify the path to the Chrome flash plugin directly with this flag.
 The path can be found at [chrome://plugins](chrome://plugins), under
 `Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag.
+
+### Platform Specific Options
+
+#### [app-copyright]
+
+```
+--app-copyright <value>
+```
+
+The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X.
+
+#### [app-version]
+
+```
+--app-version <value>
+```
+
+(macOS and Windows only) The release version of the application. By default the `version` property in the `package.json` is used but it can be overridden with this argument. If neither are provided, the version of Electron will be used. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.
+
+#### [bounce]
+
+```
+--bounce
+```
+
+(macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
+
+#### [build-version]
+
+```
+--build-version <value>
+```
+
+(macOS and Windows only) The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.
+
+#### [counter]
+
+```
+--counter
+```
+
+(macOS only) Use a counter that persists even with window focus for the application badge for sites that use an "(X)" format counter in the page title (i.e. Gmail).
+
+#### [darwin-dark-mode-support]
+
+```
+--darwin-dark-mode-support
+```
+
+(macOS only) Enables Dark Mode support on macOS 10.14+.
+
+#### [fast-quit]
+
+```
+-f, --fast-quit
+```
+
+(macOS only) Specifies to quit the app after closing all windows, defaults to false.
+
+### Debug Options
+
+#### [crash-reporter]
+
+```
+--crash-reporter <value>
+```
+
+Enables crash reporting and set the URL to submit crash reports to
+
+Example:
+
+```bash
+nativefier http://google.com --crash-reporter https://electron-crash-reporter.appspot.com/PROJECT_ID/create/
+```
+
+#### [verbose]
+
+```
+--verbose
+```
+
+Shows detailed logs in the console.
 
 ## Programmatic API
 
@@ -1011,13 +1041,6 @@ nativefier(options, function (error, appPath) {
   console.log('App has been nativefied to', appPath);
 });
 ```
-
-### Additional packaging options for Windows
-
-#### [version-string]
-
-_Object_ (**deprecated** as removed in `electron-packager` 9.0.0, please use the
-[`win32metadata`](#win32metadata) parameter instead)
 
 #### [win32metadata]
 
