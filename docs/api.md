@@ -52,10 +52,13 @@
     - [[zoom]](#zoom)
   - [Internal Browser Options](#internal-browser-options)
     - [[file-download-options]](#file-download-options)
-    - [[honest]](#honest)
     - [[inject]](#inject)
     - [[lang]](#lang)
     - [[user-agent]](#user-agent)
+    - [[user-agent-honest]](#user-agent-honest)
+  - [Internal Browser Cache Options](#internal-browser-cache-options)
+    - [[clear-cache]](#clear-cache)
+    - [[disk-cache-size]](#disk-cache-size)
   - [URL Handling Options](#url-handling-options)
     - [[block-external-urls]](#block-external-urls)
     - [[internal-urls]](#internal-urls)
@@ -66,9 +69,6 @@
     - [[disable-gpu]](#disable-gpu)
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
-  - [Caching Options](#caching-options)
-    - [[clear-cache]](#clear-cache)
-    - [[disk-cache-size]](#disk-cache-size)
   - [(In)Security Options](#in-security-options)
     - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
     - [[ignore-certificate]](#ignore-certificate)
@@ -106,7 +106,6 @@ nativefier [options] [targetUrl] [dest]
 ```
 
 You must provide:
-
 - Either a `targetUrl` to generate a new app from it.
 - Or option `--upgrade <pathOfAppToUpgrade>` to upgrade an existing app.
 
@@ -147,12 +146,12 @@ Prints the version of your `nativefier` install.
 The processor architecture to target when building.
 
 - Default: the architecture of the installed version of node (usually the architecture of the build-time machine).
-  - To test your default architecture you can run
-    ```
-    node -p "process.arch"
-    ```
-    (See https://nodejs.org/api/os.html#os_os_arch)
-  - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or re-install node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
+    - To test your default architecture you can run
+      ```
+      node -p "process.arch"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_arch)
+    - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or re-install node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
 - Can be overridden by specifying one of: `ia32`, `x64`, `armv7l`, `arm64`.
 
 #### [conceal]
@@ -222,11 +221,11 @@ Specifies if the destination directory should be not overwritten, defaults to fa
 ```
 
 - Default: current operating system.
-  - To test your default platform you can run
-    ```
-    node -p "process.platform"
-    ```
-    (See https://nodejs.org/api/os.html#os_os_platform)
+    - To test your default platform you can run
+      ```
+      node -p "process.platform"
+      ```
+      (See https://nodejs.org/api/os.html#os_os_platform)
 - Can be overwritten by specifying either `linux`, `windows`, `osx` or `mas` for a Mac App Store specific build.
 
 The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can also be used.
@@ -243,7 +242,7 @@ Make your app store its user data (cookies, cache, etc) inside the app folder, m
 
 When creating a portable app, all data accumulated after running the app (including login information, cache, cookies), will be saved in the app folder. If this app is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENTIALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
 
-→ Best practice to _distribute apps_ using this flag:
+→ Best practice to *distribute apps* using this flag:
 
 1. Create your application with this flag
 2. Test it
@@ -257,7 +256,7 @@ When creating a portable app, all data accumulated after running the app (includ
 --upgrade <pathToExistingApp>
 ```
 
-_NEW IN 43.1.0_
+*NEW IN 43.1.0*
 
 This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
 
@@ -324,30 +323,31 @@ Example of such a JSON file:
 
 ```json
 {
-  "menuLabel": "&Music",
-  "bookmarks": [
-    {
-      "title": "lofi.cafe",
-      "url": "https://lofi.cafe/",
-      "type": "link",
-      "shortcut": "CmdOrCtrl+1"
-    },
-    {
-      "title": "beats to relax/study to",
-      "url": "https://www.youtube.com/watch?v=5qap5aO4i9A",
-      "type": "link",
-      "shortcut": "CmdOrCtrl+2"
-    },
-    {
-      "type": "separator"
-    },
-    {
-      "title": "RÜFÜS DU SOL Live from Joshua Tree",
-      "type": "link",
-      "url": "https://www.youtube.com/watch?v=Zy4KtD98S2c"
-    }
-  ]
+    "menuLabel": "&Music",
+    "bookmarks": [
+        {
+            "title": "lofi.cafe",
+            "url": "https://lofi.cafe/",
+            "type": "link",
+            "shortcut": "CmdOrCtrl+1"
+        },
+        {
+            "title": "beats to relax/study to",
+            "url": "https://www.youtube.com/watch?v=5qap5aO4i9A",
+            "type": "link",
+            "shortcut": "CmdOrCtrl+2"
+        },
+        {
+            "type": "separator"
+        },
+        {
+            "title": "RÜFÜS DU SOL Live from Joshua Tree",
+            "type": "link",
+            "url": "https://www.youtube.com/watch?v=Zy4KtD98S2c"
+        }
+    ]
 }
+
 ```
 
 #### [browserwindow-options]
@@ -672,16 +672,6 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 
 On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
-#### [honest]
-
-```
---honest
-```
-
-By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
-
-If this flag is passed, it will not override the user agent.
-
 #### [inject]
 
 ```
@@ -712,13 +702,41 @@ Set the language or locale to render the web site as (e.g., "fr", "en-US", "es",
 -u, --user-agent <value>
 ```
 
-Set the user agent to run the created app with.
+Set the user agent to run the created app with. Use `--user-agent-honest` to use the true Electron user agent.
 
 The following short codes are also supported to generate a user agent: `edge`, `firefox`, `safari`.
 
 - `edge` will generate a Microsoft Edge user agent matching the Chrome version of Electron being used
 - `firefox` will generate a Mozilla Firefox user agent matching the latest stable release of that browser
 - `safari` will generate an Apple Safari user agent matching the latest stable release of that browser
+
+#### [user-agent-honest]
+
+```
+--user-agent-honest, --honest
+```
+
+By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that for some sites, it will not say that the current browser is unsupported.
+
+If this flag is passed, it will not override the user agent, and use Electron's default generated one for your app.
+
+### Internal Browser Cache Options
+
+#### [clear-cache]
+
+```
+--clear-cache
+```
+
+Prevents the application from preserving cache between launches.
+
+#### [disk-cache-size]
+
+```
+--disk-cache-size <value>
+```
+
+Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 ### URL Handling Options
 
@@ -749,13 +767,12 @@ Internal URLs will open in Nativefier, other URLs will open in your preferred br
 
 Defaults to view as "internal" two URLs that share the same base domain,
 once stripped of `www.`. For example, by default,
-
 - URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
 - URLs from/to `abc.com` and `xyz.com` are considered external.
 
-_[Breaking change in Nativefier 43.0.0]_ Finally, URLs for known login pages
+*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
 (e.g. `accounts.google.com` or `login.live.com`) are considered internal.
-This does not replace `internal-urls`, it complements it, and happens _before_
+This does not replace `internal-urls`, it complements it, and happens *before*
 your `internal-urls` rule is applied. So, if you already set the flag to let such
 auth pages open internally, you don't need to change it but it might be unnecessary.
 
@@ -824,24 +841,6 @@ Passes the enable-es3-apis flag to the Chrome engine, to force the activation of
 ```
 
 Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
-
-### Caching Options
-
-#### [clear-cache]
-
-```
---clear-cache
-```
-
-Prevents the application from preserving cache between launches.
-
-#### [disk-cache-size]
-
-```
---disk-cache-size <value>
-```
-
-Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 ### (In)Security Options
 
@@ -1144,7 +1143,9 @@ const electron = require('electron');
 
 const request = {
   func: 'setDownloadPath',
-  funcArgs: [`/home/user/downloads`],
+  funcArgs: [
+    `/home/user/downloads`,
+  ],
 };
 electron.ipcRenderer.send('session-interaction', request);
 ```
@@ -1168,7 +1169,7 @@ const request = {
 electron.ipcRenderer.send('session-interaction', request);
 
 electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
-  console.log('session-interaction-reply', event, result.value);
+    console.log('session-interaction-reply', event, result.value)
 });
 ```
 
@@ -1182,9 +1183,7 @@ const electron = require('electron');
 const request = {
   property: 'availableSpellCheckerLanguages',
 };
-console.log(
-  electron.ipcRenderer.sendSync('session-interaction', request).value,
-);
+console.log(electron.ipcRenderer.sendSync('session-interaction', request).value);
 ```
 
 ### Request IDs
@@ -1201,7 +1200,7 @@ const request = {
 electron.ipcRenderer.send('session-interaction', request);
 
 electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
-  console.log('session-interaction-reply', event, result.id, result.value);
+    console.log('session-interaction-reply', event, result.id, result.value)
 });
 ```
 
@@ -1213,12 +1212,10 @@ If an error occurs while handling the interaction, it will be returned in the `s
 const electron = require('electron');
 
 electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
-  console.log('session-interaction-reply', event, result.error);
+    console.log('session-interaction-reply', event, result.error)
 });
 
-electron.ipcRenderer.send('session-interaction', {
-  func: 'thisFunctionDoesNotExist',
-});
+electron.ipcRenderer.send('session-interaction', { func: 'thisFunctionDoesNotExist' });
 ```
 
 ### Complex Return Values
@@ -1228,6 +1225,7 @@ Due to the nature of how these events are transmitted back and forth, session fu
 For example, the following code will return an error instead of the expected value:
 
 ```javascript
+
 const electron = require('electron');
 
 const request = {
@@ -1237,7 +1235,7 @@ const request = {
 electron.ipcRenderer.send('session-interaction', request);
 
 electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
-  console.log('session-interaction-reply', event, result);
+  console.log('session-interaction-reply', event, result)
 });
 ```
 
@@ -1249,58 +1247,37 @@ This javascript, when injected as a file via `--inject`, will attempt to call th
 const electron = require('electron');
 
 electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
-  console.log('session-interaction-reply', event, result);
-  switch (result.id) {
-    case 'isSpellCheckerEnabled':
-      console.log('SpellChecker enabled?', result.value);
-      if (result.value === true) {
-        console.log('Getting supported languages...');
-        electron.ipcRenderer.send('session-interaction', {
-          id: 'availableSpellCheckerLanguages',
-          property: 'availableSpellCheckerLanguages',
-        });
-      } else {
-        console.log('SpellChecker disabled. Enabling...');
-        electron.ipcRenderer.send('session-interaction', {
-          id: 'setSpellCheckerEnabled',
-          property: 'spellCheckerEnabled',
-          propertyValue: true,
-        });
-      }
-      break;
-    case 'setSpellCheckerEnabled':
-      console.log(
-        'SpellChecker has now been enabled. Getting supported languages...',
-      );
-      electron.ipcRenderer.send('session-interaction', {
-        id: 'availableSpellCheckerLanguages',
-        property: 'availableSpellCheckerLanguages',
-      });
-      break;
-    case 'availableSpellCheckerLanguages':
-      console.log('Avaliable spellChecker languages:', result.value);
-      if (result.value.indexOf('fr') > -1) {
-        electron.ipcRenderer.send('session-interaction', {
-          id: 'setSpellCheckerLanguages',
-          func: 'setSpellCheckerLanguages',
-          funcArgs: [['fr']],
-        });
-      } else {
-        console.log(
-          "Not changing spellChecker language. 'fr' is not supported.",
-        );
-      }
-      break;
-    case 'setSpellCheckerLanguages':
-      console.log('SpellChecker language was set.');
-      break;
-    default:
-      console.error('Unknown reply id:', result.id);
-  }
+    console.log('session-interaction-reply', event, result);
+    switch (result.id) {
+        case 'isSpellCheckerEnabled':
+            console.log('SpellChecker enabled?', result.value);
+            if (result.value === true) {
+                console.log("Getting supported languages...");
+                electron.ipcRenderer.send('session-interaction', { id: 'availableSpellCheckerLanguages', property: 'availableSpellCheckerLanguages', });
+            } else {
+                console.log("SpellChecker disabled. Enabling...");
+                electron.ipcRenderer.send('session-interaction', { id: 'setSpellCheckerEnabled', property: 'spellCheckerEnabled', propertyValue: true, });
+            }
+            break;
+        case 'setSpellCheckerEnabled':
+            console.log('SpellChecker has now been enabled. Getting supported languages...');
+            electron.ipcRenderer.send('session-interaction', { id: 'availableSpellCheckerLanguages', property: 'availableSpellCheckerLanguages', });
+            break;
+        case 'availableSpellCheckerLanguages':
+            console.log('Avaliable spellChecker languages:', result.value);
+            if (result.value.indexOf('fr') > -1) {
+                electron.ipcRenderer.send('session-interaction', { id: 'setSpellCheckerLanguages', func: 'setSpellCheckerLanguages', funcArgs: [['fr']], });
+            } else {
+                console.log("Not changing spellChecker language. 'fr' is not supported.");
+            }
+            break;
+        case 'setSpellCheckerLanguages':
+            console.log('SpellChecker language was set.');
+            break;
+        default:
+            console.error("Unknown reply id:", result.id);
+    }
 });
 
-electron.ipcRenderer.send('session-interaction', {
-  id: 'isSpellCheckerEnabled',
-  func: 'isSpellCheckerEnabled',
-});
+electron.ipcRenderer.send('session-interaction', { id: 'isSpellCheckerEnabled', func: 'isSpellCheckerEnabled', });
 ```
