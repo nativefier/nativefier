@@ -71,7 +71,11 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
   // Test user agent
   if (inputOptions.userAgent) {
     const translatedUserAgent = await userAgent({
-      packager: { platform: inputOptions.platform },
+      packager: {
+        platform: inputOptions.platform,
+        electronVersion:
+          inputOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
+      },
       nativefier: { userAgent: inputOptions.userAgent },
     });
     inputOptions.userAgent = translatedUserAgent || inputOptions.userAgent;
@@ -85,12 +89,12 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
 describe('Nativefier', () => {
   jest.setTimeout(300000);
 
-  test.each([{ platform: 'darwin' }, { platform: 'linux' }])(
-    'builds a Nativefier app for %s',
-    async (baseAppOptions) => {
+  test.each(['darwin', 'linux'])(
+    'builds a Nativefier app for platform %s',
+    async (platform) => {
       const tempDirectory = getTempDir('integtest');
       const options = {
-        ...baseAppOptions,
+        platform,
         targetUrl: 'https://google.com/',
         out: tempDirectory,
         overwrite: true,
