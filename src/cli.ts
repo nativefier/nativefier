@@ -70,7 +70,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('global-shortcuts', {
       description:
-        'define global keyboard shortcuts via a JSON file; See https://github.com/nativefier/nativefier/blob/master/docs/api.md#global-shortcuts',
+        'define global keyboard shortcuts via a JSON file; See https://github.com/nativefier/nativefier/blob/master/API.md#global-shortcuts',
       normalize: true,
       type: 'string',
     })
@@ -108,7 +108,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     .option('portable', {
       default: false,
       description:
-        'make the app store its user data in the app folder; WARNING: see https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable for security risks',
+        'make the app store its user data in the app folder; WARNING: see https://github.com/nativefier/nativefier/blob/master/API.md#portable for security risks',
       type: 'boolean',
     })
     .option('upgrade', {
@@ -152,14 +152,14 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('bookmarks-menu', {
       description:
-        'create a bookmarks menu (via JSON file); See https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu',
+        'create a bookmarks menu (via JSON file); See https://github.com/nativefier/nativefier/blob/master/API.md#bookmarks-menu',
       normalize: true,
       type: 'string',
     })
     .option('browserwindow-options', {
       coerce: parseJson,
       description:
-        'override Electron BrowserWindow options (via JSON string); see https://github.com/nativefier/nativefier/blob/master/docs/api.md#browserwindow-options',
+        'override Electron BrowserWindow options (via JSON string); see https://github.com/nativefier/nativefier/blob/master/API.md#browserwindow-options',
       type: 'string',
     })
     .option('disable-context-menu', {

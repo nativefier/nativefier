@@ -65,7 +65,7 @@ nativefier 'https://open.spotify.com/'
 
 Notes:
 
-- [Inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
+- [Inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
 ```javascript
 function dontShowBrowserNoticePage() {
     const browserNotice = document.getElementById('browser-support-notice');
@@ -114,8 +114,8 @@ if (document.readyState === "interactive") {
 }
 ```
 
-- It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine), or many songs will not play.
-- To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following CSS as `spotify.css`:
+- It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/API.md#widevine), or many songs will not play.
+- To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following CSS as `spotify.css`:
 ```css
 a[href="/download"] { display: none; }
 ```
