@@ -37,10 +37,10 @@ with a special shoutout to @TheCleric for a mountain of awesome work.
 
 Features! (nothing breaking)
 
-  * Add a [`--upgrade`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#upgrade) option to easily upgrade an existing app (fix #1131) (PR #1138)
-  * Support defining a custom [`--bookmarks-menu`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#bookmarks-menu) (fix #1065) (PR #1155)
-  * Support setting apps [`--lang`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#lang)uage (fix #175) (PR #1173)
-  * Support creating self-contained "[`--portable`](https://github.com/nativefier/nativefier/blob/master/docs/api.md#portable)" apps writing their app data to the app folder (fix #376) (PR #1168)
+  * Add a [`--upgrade`](https://github.com/nativefier/nativefier/blob/master/API.md#upgrade) option to easily upgrade an existing app (fix #1131) (PR #1138)
+  * Support defining a custom [`--bookmarks-menu`](https://github.com/nativefier/nativefier/blob/master/API.md#bookmarks-menu) (fix #1065) (PR #1155)
+  * Support setting apps [`--lang`](https://github.com/nativefier/nativefier/blob/master/API.md#lang)uage (fix #175) (PR #1173)
+  * Support creating self-contained "[`--portable`](https://github.com/nativefier/nativefier/blob/master/API.md#portable)" apps writing their app data to the app folder (fix #376) (PR #1168)
   * Support opening URLs passed as arg to Nativefied apps (fix #405) (PR #1154)
   
 Bugfixes!
@@ -166,7 +166,7 @@ This release includes several contributor patches. Thanks @sorhtyre @mattruzzi !
 
   * **[BREAKING CHANGE] Warn on old Electron/Chrome (fix #556) (PR #1076)**
     ⚠️ Users packaging kiosk apps running for a long time on internal websites,
-    see https://github.com/nativefier/nativefier/blob/master/docs/api.md#disable-old-build-warning-yesiknowitisinsecure
+    see https://github.com/nativefier/nativefier/blob/master/API.md#disable-old-build-warning-yesiknowitisinsecure
   * Check for improperly-formatted arguments (fix #885) (PR #1080)
   * Correctly start in tray when both `--maximize` and `--tray start-in-tray` are passed (fix #1015) (PR #1079)
   * Fix icon path error when passing asar `--conceal` flag (fix #975) (PR #1074)
