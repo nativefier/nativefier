@@ -53,8 +53,8 @@ if (!appArgs.userAgentHonest) {
   // Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) app-nativefier-804458/1.0.0 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36
   // We just need to strip out the appName/1.0.0 and Electron/electronVersion
   app.userAgentFallback = app.userAgentFallback
-    .replace(`Electron/${process.versions.electron}`, '')
-    .replace(`${app.getName()}/${app.getVersion()}`, ' ');
+    .replace(`Electron/${process.versions.electron} `, '')
+    .replace(`${app.getName()}/${app.getVersion()} `, ' ');
 }
 
 // Take in a URL on the command line as an override
