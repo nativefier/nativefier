@@ -148,6 +148,14 @@ export async function createMainWindow(
     defaultHeight: options.height || 800,
   });
 
+  const browserwindowOptions: BrowserWindowConstructorOptions = {
+    ...options.browserwindowOptions,
+  };
+  // We're going to remove this an append it separately
+  // Otherwise browserwindowOptions.webPreferences object will eliminate the webPreferences
+  // specified in the DEFAULT_WINDOW_OPTIONS and replace it with itself
+  delete browserwindowOptions.webPreferences;
+
   const DEFAULT_WINDOW_OPTIONS: BrowserWindowConstructorOptions = {
     // Convert dashes to spaces because on linux the app name is joined with dashes
     title: options.name,
@@ -159,8 +167,11 @@ export async function createMainWindow(
       webSecurity: !options.insecure,
       preload: path.join(__dirname, 'preload.js'),
       zoomFactor: options.zoom,
+      ...(options.browserwindowOptions.webPreferences
+        ? options.browserwindowOptions.webPreferences
+        : {}),
     },
-    ...options.browserwindowOptions,
+    ...browserwindowOptions,
   };
 
   const mainWindow = new BrowserWindow({
