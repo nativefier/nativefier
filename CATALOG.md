@@ -15,7 +15,7 @@ Below you'll find a list of build commands contributed by the Nativefier communi
 
 ```sh
 nativefier 'https://docs.google.com/spreadsheets' \
-  --user-agent 'user agent of current stable Firefox'
+  --user-agent firefox
 ```
 
 Note: lying about the User Agent is required, else Google will notice your "Chrome" isn't a real Chrome, and will refuse access.
@@ -58,7 +58,7 @@ Note: as for Udemy, `--widevine` + [app signing](https://github.com/nativefier/n
 ```sh
 nativefier 'https://open.spotify.com/'
   --widevine
-  -u 'useragent of a non-Chrome browser, e.g. the current stable Firefox'
+  --user-agent firefox
   --inject spotify.js
   --inject spotify.css
 ```
