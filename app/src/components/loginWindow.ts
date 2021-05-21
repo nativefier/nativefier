@@ -1,9 +1,17 @@
 import * as path from 'path';
 
+import * as log from 'loglevel';
+
 import { BrowserWindow, ipcMain } from 'electron';
 
-export async function createLoginWindow(loginCallback): Promise<BrowserWindow> {
+export async function createLoginWindow(
+  loginCallback,
+  parent?: BrowserWindow,
+): Promise<BrowserWindow> {
+  log.debug('createLoginWindow', loginCallback, parent);
+
   const loginWindow = new BrowserWindow({
+    parent,
     width: 300,
     height: 400,
     frame: false,

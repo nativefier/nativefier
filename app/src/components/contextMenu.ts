@@ -1,8 +1,12 @@
-import { shell } from 'electron';
+import { BrowserWindow } from 'electron';
 import contextMenu from 'electron-context-menu';
-import * as log from 'loglevel';
 
-export function initContextMenu(createNewWindow, createNewTab): void {
+export function initContextMenu(
+  createNewWindow,
+  createNewTab,
+  openExternal,
+  window?: BrowserWindow,
+): void {
   contextMenu({
     prepend: (actions, params) => {
       const items = [];
@@ -10,22 +14,20 @@ export function initContextMenu(createNewWindow, createNewTab): void {
         items.push({
           label: 'Open Link in Default Browser',
           click: () => {
-            shell
-              .openExternal(params.linkURL)
-              .catch((err) => log.error('shell.openExternal ERROR', err));
+            openExternal(params.linkURL);
           },
         });
         items.push({
           label: 'Open Link in New Window',
           click: () => {
-            createNewWindow(params.linkURL);
+            createNewWindow(params.linkURL, window);
           },
         });
         if (createNewTab) {
           items.push({
             label: 'Open Link in New Tab',
             click: () => {
-              createNewTab(params.linkURL, false);
+              createNewTab(params.linkURL, false, window);
             },
           });
         }

@@ -9,6 +9,7 @@ import {
   Event,
   HeadersReceivedResponse,
   OnHeadersReceivedListenerDetails,
+  OpenExternalOptions,
   WebContents,
 } from 'electron';
 import windowStateKeeper from 'electron-window-state';
@@ -70,7 +71,10 @@ function injectCss(browserWindow: BrowserWindow): void {
   const cssToInject = getCssToInject();
 
   browserWindow.webContents.on('did-navigate', () => {
-    log.debug('browserWindow.webContents.did-navigate');
+    log.debug(
+      'browserWindow.webContents.did-navigate',
+      browserWindow.webContents.getURL(),
+    );
     // We must inject css early enough; so onHeadersReceived is a good place.
     // Will run multiple times, see `did-finish-load` below that unsets this handler.
     browserWindow.webContents.session.webRequest.onHeadersReceived(
@@ -207,6 +211,7 @@ export async function createMainWindow(
     gotoUrl,
     clearAppData,
     disableDevTools: options.disableDevTools,
+    openExternal,
   };
 
   createMenu(menuOptions);
@@ -214,6 +219,8 @@ export async function createMainWindow(
     initContextMenu(
       createNewWindow,
       nativeTabsSupported() ? createNewTab : undefined,
+      openExternal,
+      mainWindow,
     );
   }
 
@@ -351,7 +358,9 @@ export async function createMainWindow(
   await mainWindow.loadURL(options.targetUrl);
 
   // @ts-ignore new-tab isn't in the type definition, but it does exist
-  mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
+  mainWindow.on('new-tab', () =>
+    createNewTab(options.targetUrl, true, mainWindow),
+  );
 
   mainWindow.on('close', (event) => {
     log.debug('mainWindow.close', event);
@@ -467,9 +476,7 @@ export async function createMainWindow(
       if (options.blockExternalUrls) {
         onBlockedExternalUrl(urlToGo);
       } else {
-        shell
-          .openExternal(urlToGo)
-          .catch((err) => log.error('shell.openExternal ERROR', err));
+        openExternal(urlToGo);
       }
     }
   }
@@ -496,8 +503,9 @@ export async function createMainWindow(
     }
   }
 
-  function createNewWindow(url: string): BrowserWindow {
-    const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
+  function createNewWindow(url: string, parent?: BrowserWindow): BrowserWindow {
+    log.debug('createNewWindow', { url, parent, DEFAULT_WINDOW_OPTIONS });
+    const window = new BrowserWindow({ parent, ...DEFAULT_WINDOW_OPTIONS });
     setupWindow(window);
     window.loadURL(url).catch((err) => log.error('window.loadURL ERROR', err));
     return window;
@@ -514,15 +522,30 @@ export async function createMainWindow(
 
     injectCss(window);
     sendParamsOnDidFinishLoad(window);
+
+    // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
+    // We can't quite cut over to that yet for a few reasons:
+    // 1. Our version of Electron does not yet support a parameter to
+    //    setWindowOpenHandler that contains `disposition', which we need.
+    //    See https://github.com/electron/electron/issues/28380
+    // 2. setWindowOpenHandler doesn't support newGuest as well
+    // Though at this point, 'new-window' bugs seem to be coming up and downstream
+    // users are being pointed to use setWindowOpenHandler.
+    // E.g., https://github.com/electron/electron/issues/28374
+
     window.webContents.on('new-window', onNewWindow);
     window.webContents.on('will-navigate', onWillNavigate);
     window.webContents.on('will-prevent-unload', onWillPreventUnload);
   }
 
-  function createNewTab(url: string, foreground: boolean): BrowserWindow {
-    log.debug('createNewTab', { url, foreground });
+  function createNewTab(
+    url: string,
+    foreground: boolean,
+    parent?: BrowserWindow,
+  ): BrowserWindow {
+    log.debug('createNewTab', { url, foreground, parent });
     withFocusedWindow((focusedWindow) => {
-      const newTab = createNewWindow(url);
+      const newTab = createNewWindow(url, parent);
       focusedWindow.addTabbedWindow(newTab);
       if (!foreground) {
         focusedWindow.focus();
@@ -532,8 +555,8 @@ export async function createMainWindow(
     return undefined;
   }
 
-  function createAboutBlankWindow(): BrowserWindow {
-    const window = createNewWindow('about:blank');
+  function createAboutBlankWindow(parent?: BrowserWindow): BrowserWindow {
+    const window = createNewWindow('about:blank', parent);
     setupWindow(window);
     window.show();
     window.focus();
@@ -565,13 +588,21 @@ export async function createMainWindow(
       options.targetUrl,
       options.internalUrls,
       preventDefault,
-      shell.openExternal.bind(this),
+      openExternal,
       createAboutBlankWindow,
       nativeTabsSupported,
       createNewTab,
       options.blockExternalUrls,
       onBlockedExternalUrl,
+      mainWindow,
     );
+  }
+
+  function openExternal(url: string, options?: OpenExternalOptions): void {
+    log.debug('openExternal', { url, options });
+    shell
+      .openExternal(url, options)
+      .catch((err) => log.error('openExternal ERROR', err));
   }
 
   function sendParamsOnDidFinishLoad(window: BrowserWindow): void {

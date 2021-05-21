@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import path from 'path';
 
-import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
+import { clipboard, Menu, MenuItemConstructorOptions } from 'electron';
 import * as log from 'loglevel';
 
 type BookmarksLink = {
@@ -32,6 +32,7 @@ export function createMenu({
   gotoUrl,
   clearAppData,
   disableDevTools,
+  openExternal,
 }): void {
   const zoomResetLabel =
     zoomBuildTimeValue === 1.0
@@ -240,17 +241,13 @@ export function createMenu({
       {
         label: `Built with Nativefier v${nativefierVersion}`,
         click: () => {
-          shell
-            .openExternal('https://github.com/nativefier/nativefier')
-            .catch((err) => log.error('shell.openExternal ERROR', err));
+          openExternal('https://github.com/nativefier/nativefier');
         },
       },
       {
         label: 'Report an Issue',
         click: () => {
-          shell
-            .openExternal('https://github.com/nativefier/nativefier/issues')
-            .catch((err) => log.error('shell.openExternal ERROR', err));
+          openExternal('https://github.com/nativefier/nativefier/issues');
         },
       },
     ],

@@ -353,7 +353,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   ) {
     callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
   } else {
-    createLoginWindow(callback).catch((err) =>
+    createLoginWindow(callback, mainWindow).catch((err) =>
       log.error('createLoginWindow ERROR', err),
     );
   }
