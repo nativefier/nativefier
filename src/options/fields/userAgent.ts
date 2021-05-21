@@ -45,6 +45,7 @@ export async function userAgent(options: UserAgentOpts): Promise<string> {
     );
     return null;
   }
+
   options.packager.platform = normalizePlatform(options.packager.platform);
 
   const userAgentPlatform =

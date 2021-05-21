@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as log from 'loglevel';
+import { DEFAULT_FIREFOX_VERSION } from '../../constants';
 
 type FirefoxVersions = {
   FIREFOX_AURORA: string;
@@ -25,13 +26,24 @@ const FIREFOX_VERSIONS_URL =
 export async function getLatestFirefoxVersion(
   url = FIREFOX_VERSIONS_URL,
 ): Promise<string> {
-  log.debug('Grabbing Firefox version data from', url);
-  const response = await axios.get(url, { timeout: 5000 });
-  if (response.status !== 200) {
-    throw new Error(`Bad request: Status code ${response.status}`);
-  }
-  const firefoxVersions: FirefoxVersions = response.data;
+  try {
+    log.debug('Grabbing Firefox version data from', url);
+    const response = await axios.get(url, { timeout: 5000 });
+    if (response.status !== 200) {
+      throw new Error(`Bad request: Status code ${response.status}`);
+    }
+    const firefoxVersions: FirefoxVersions = response.data;
 
-  log.debug(`Got latest Firefox version ${firefoxVersions.LATEST_FIREFOX_VERSION}`);
-  return firefoxVersions.LATEST_FIREFOX_VERSION;
+    log.debug(
+      `Got latest Firefox version ${firefoxVersions.LATEST_FIREFOX_VERSION}`,
+    );
+    return firefoxVersions.LATEST_FIREFOX_VERSION;
+  } catch (err) {
+    log.error('getLatestFirefoxVersion ERROR', err);
+    log.debug(
+      'Falling back to default Firefox version',
+      DEFAULT_FIREFOX_VERSION,
+    );
+    return DEFAULT_FIREFOX_VERSION;
+  }
 }

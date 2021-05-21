@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as log from 'loglevel';
+import { DEFAULT_SAFARI_VERSION } from '../../constants';
 
 export type SafariVersion = {
   majorVersion: number;
@@ -13,13 +14,13 @@ const SAFARI_VERSIONS_HISTORY_URL =
 export async function getLatestSafariVersion(
   url = SAFARI_VERSIONS_HISTORY_URL,
 ): Promise<SafariVersion> {
-  log.debug('Grabbing apple version data from', url);
-  const response = await axios.get(url, { timeout: 5000 });
-  if (response.status !== 200) {
-    throw new Error(`Bad request: Status code ${response.status}`);
-  }
-
   try {
+    log.debug('Grabbing apple version data from', url);
+    const response = await axios.get(url, { timeout: 5000 });
+    if (response.status !== 200) {
+      throw new Error(`Bad request: Status code ${response.status}`);
+    }
+
     // This would be easier with an HTML parser, but we're not going to include an extra dependency for something that dumb
     const rawData: string = response.data;
 
@@ -66,7 +67,8 @@ export async function getLatestSafariVersion(
       webkitVersion,
     };
   } catch (err) {
-    log.error(err);
-    return null;
+    log.error('getLatestSafariVersion ERROR', err);
+    log.debug('Falling back to default Safari version', DEFAULT_SAFARI_VERSION);
+    return DEFAULT_SAFARI_VERSION;
   }
 }

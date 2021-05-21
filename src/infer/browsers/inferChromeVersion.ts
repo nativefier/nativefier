@@ -29,24 +29,30 @@ export async function getChromeVersionForElectronVersion(
     return DEFAULT_CHROME_VERSION;
   }
 
-  log.debug('Grabbing electron<->chrome versions file from', url);
-  const response = await axios.get(url, { timeout: 5000 });
-  if (response.status !== 200) {
-    throw new Error(`Bad request: Status code ${response.status}`);
-  }
-  const electronReleases: ElectronRelease[] = response.data;
-  const electronVersionToChromeVersion: { [key: string]: string } = {};
-  for (const release of electronReleases) {
-    electronVersionToChromeVersion[release.version] = release.chrome;
-  }
-  if (!(electronVersion in electronVersionToChromeVersion)) {
-    throw new Error(
-      `Electron version '${electronVersion}' not found in retrieved version list!`,
+  try {
+    log.debug('Grabbing electron<->chrome versions file from', url);
+    const response = await axios.get(url, { timeout: 5000 });
+    if (response.status !== 200) {
+      throw new Error(`Bad request: Status code ${response.status}`);
+    }
+    const electronReleases: ElectronRelease[] = response.data;
+    const electronVersionToChromeVersion: { [key: string]: string } = {};
+    for (const release of electronReleases) {
+      electronVersionToChromeVersion[release.version] = release.chrome;
+    }
+    if (!(electronVersion in electronVersionToChromeVersion)) {
+      throw new Error(
+        `Electron version '${electronVersion}' not found in retrieved version list!`,
+      );
+    }
+    const chromeVersion = electronVersionToChromeVersion[electronVersion];
+    log.debug(
+      `Associated electron v${electronVersion} to chrome v${chromeVersion}`,
     );
+    return chromeVersion;
+  } catch (err) {
+    log.error('getChromeVersionForElectronVersion ERROR', err);
+    log.debug('Falling back to default Chrome version', DEFAULT_CHROME_VERSION);
+    return DEFAULT_CHROME_VERSION;
   }
-  const chromeVersion = electronVersionToChromeVersion[electronVersion];
-  log.debug(
-    `Associated electron v${electronVersion} to chrome v${chromeVersion}`,
-  );
-  return chromeVersion;
 }
