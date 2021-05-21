@@ -42,7 +42,7 @@ export function linkIsInternal(
   newUrl: string,
   internalUrlRegex: string | RegExp,
 ): boolean {
-  if (newUrl === 'about:blank') {
+  if (newUrl.split('#')[0] === 'about:blank') {
     return true;
   }
 

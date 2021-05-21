@@ -1,3 +1,6 @@
+import { BrowserWindow } from 'electron';
+import * as log from 'loglevel';
+
 import { linkIsInternal } from '../helpers/helpers';
 
 export function onNewWindowHelper(
@@ -35,6 +38,7 @@ export function onNewWindowHelper(
     } else {
       openExternal(urlToGo);
     }
+  } else if (urlToGo.split('#')[0] === 'about:blank') {
     const newWindow = createAboutBlankWindow(parent);
     preventDefault(newWindow);
   } else if (nativeTabsSupported()) {
