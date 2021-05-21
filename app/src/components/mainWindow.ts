@@ -26,6 +26,7 @@ import {
 import { initContextMenu } from './contextMenu';
 import { onNewWindowHelper } from './mainWindowHelpers';
 import { createMenu } from './menu';
+import { BrowserWindowConstructorOptions } from 'electron/main';
 
 export const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 const ZOOM_INTERVAL = 0.1;
@@ -83,8 +84,9 @@ function injectCss(browserWindow: BrowserWindow): void {
           { details, callback },
         );
         if (details.webContents) {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          details.webContents.insertCSS(cssToInject);
+          details.webContents
+            .insertCSS(cssToInject)
+            .catch((err) => log.error('webContents.insertCSS ERROR', err));
         }
         callback({ cancel: false, responseHeaders: details.responseHeaders });
       },
@@ -99,12 +101,13 @@ async function clearCache(browserWindow: BrowserWindow): Promise<void> {
 }
 
 function setProxyRules(browserWindow: BrowserWindow, proxyRules): void {
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  browserWindow.webContents.session.setProxy({
-    proxyRules,
-    pacScript: '',
-    proxyBypassRules: '',
-  });
+  browserWindow.webContents.session
+    .setProxy({
+      proxyRules,
+      pacScript: '',
+      proxyBypassRules: '',
+    })
+    .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
 export function saveAppArgs(newAppArgs: any) {
@@ -130,18 +133,18 @@ export type createWindowResult = {
  * @param {function} onAppQuit
  * @param {function} setDockBadge
  */
-export function createMainWindow(
+export async function createMainWindow(
   nativefierOptions,
   onAppQuit,
   setDockBadge,
-): createWindowResult {
+): Promise<createWindowResult> {
   const options = { ...nativefierOptions };
   const mainWindowState = windowStateKeeper({
     defaultWidth: options.width || 1280,
     defaultHeight: options.height || 800,
   });
 
-  const DEFAULT_WINDOW_OPTIONS = {
+  const DEFAULT_WINDOW_OPTIONS: BrowserWindowConstructorOptions = {
     // Convert dashes to spaces because on linux the app name is joined with dashes
     title: options.name,
     tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
@@ -153,9 +156,8 @@ export function createMainWindow(
       preload: path.join(__dirname, 'preload.js'),
       zoomFactor: options.zoom,
     },
+    ...options.browserwindowOptions,
   };
-
-  const browserwindowOptions = { ...options.browserwindowOptions };
 
   const mainWindow = new BrowserWindow({
     frame: !options.hideWindowFrame,
@@ -177,7 +179,6 @@ export function createMainWindow(
     show: options.tray !== 'start-in-tray',
     backgroundColor: options.backgroundColor,
     ...DEFAULT_WINDOW_OPTIONS,
-    ...browserwindowOptions,
   });
 
   mainWindowState.manage(mainWindow);
@@ -498,11 +499,15 @@ export function createMainWindow(
             typeof result.value['then'] === 'function'
           ) {
             // This is a promise. We'll resolve it here otherwise it will blow up trying to serialize it in the reply
-            result.value.then((trueResultValue) => {
-              result.value = trueResultValue;
-              log.debug('ipcMain.session-interaction:result', result);
-              event.reply('session-interaction-reply', result);
-            });
+            result.value
+              .then((trueResultValue) => {
+                result.value = trueResultValue;
+                log.debug('ipcMain.session-interaction:result', result);
+                event.reply('session-interaction-reply', result);
+              })
+              .catch((err) =>
+                log.error('session-interaction ERROR', request, err),
+              );
             awaitingPromise = true;
           }
         } else if (request.property !== undefined) {
@@ -543,22 +548,21 @@ export function createMainWindow(
     // Restore pinch-to-zoom, disabled by default in recent Electron.
     // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598309817
     // and https://github.com/electron/electron/pull/12679
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    mainWindow.webContents.setVisualZoomLevelLimits(1, 3);
+    mainWindow.webContents
+      .setVisualZoomLevelLimits(1, 3)
+      .catch((err) => log.error('webContents.setVisualZoomLevelLimits', err));
 
     // Remove potential css injection code set in `did-navigate`) (see injectCss code)
     mainWindow.webContents.session.webRequest.onHeadersReceived(null);
   });
 
   if (options.clearCache) {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    clearCache(mainWindow);
+    await clearCache(mainWindow);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  mainWindow.loadURL(options.targetUrl);
+  await mainWindow.loadURL(options.targetUrl);
 
-  // @ts-ignore
+  // @ts-ignore new-tab isn't in the type definition, but it does exist
   mainWindow.on('new-tab', () => createNewTab(options.targetUrl, true));
 
   mainWindow.on('close', (event) => {
@@ -576,8 +580,7 @@ export function createMainWindow(
     hideWindow(mainWindow, event, options.fastQuit, options.tray);
 
     if (options.clearCache) {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      clearCache(mainWindow);
+      clearCache(mainWindow).catch((err) => log.error('clearCache ERROR', err));
     }
   });
 

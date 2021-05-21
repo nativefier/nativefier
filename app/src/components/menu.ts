@@ -240,15 +240,17 @@ export function createMenu({
       {
         label: `Built with Nativefier v${nativefierVersion}`,
         click: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/nativefier/nativefier');
+          shell
+            .openExternal('https://github.com/nativefier/nativefier')
+            .catch((err) => log.error('shell.openExternal ERROR', err));
         },
       },
       {
         label: 'Report an Issue',
         click: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/nativefier/nativefier/issues');
+          shell
+            .openExternal('https://github.com/nativefier/nativefier/issues')
+            .catch((err) => log.error('shell.openExternal ERROR', err));
         },
       },
     ],

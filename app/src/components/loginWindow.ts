@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import { BrowserWindow, ipcMain } from 'electron';
 
-export function createLoginWindow(loginCallback): BrowserWindow {
+export async function createLoginWindow(loginCallback): Promise<BrowserWindow> {
   const loginWindow = new BrowserWindow({
     width: 300,
     height: 400,
@@ -12,8 +12,9 @@ export function createLoginWindow(loginCallback): BrowserWindow {
       nodeIntegration: true, // TODO work around this; insecure
     },
   });
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  loginWindow.loadURL(`file://${path.join(__dirname, 'static/login.html')}`);
+  await loginWindow.loadURL(
+    `file://${path.join(__dirname, 'static/login.html')}`,
+  );
 
   ipcMain.once('login-message', (event, usernameAndPassword) => {
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);

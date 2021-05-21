@@ -31,6 +31,8 @@ if (require('electron-squirrel-startup')) {
 
 if (process.argv.indexOf('--verbose') > -1) {
   log.setLevel('DEBUG');
+  process.traceDeprecation = true;
+  process.traceProcessWarnings = true;
 }
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
@@ -225,7 +227,7 @@ if (shouldQuit) {
     // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
     app.on('widevine-ready', (version: string, lastVersion: string) => {
       log.debug('app.widevine-ready', { version, lastVersion });
-      onReady();
+      onReady().catch((err) => log.error('onReady ERROR', err));
     });
 
     app.on(
@@ -246,17 +248,18 @@ if (shouldQuit) {
   } else {
     app.on('ready', () => {
       log.debug('ready');
-      onReady();
+      onReady().catch((err) => log.error('onReady ERROR', err));
     });
   }
 }
 
-function onReady(): void {
-  const createWindowResult = createMainWindow(
+async function onReady(): Promise<void> {
+  const createWindowResult = await createMainWindow(
     appArgs,
     app.quit.bind(this),
     setDockBadge,
   );
+
   log.debug('onReady', createWindowResult);
   mainWindow = createWindowResult.window;
   setupWindow = createWindowResult.setupWindow;
@@ -325,12 +328,13 @@ function onReady(): void {
     const oldBuildWarningText =
       appArgs.oldBuildWarningText ||
       'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.';
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    dialog.showMessageBox(null, {
-      type: 'warning',
-      message: 'Old build detected',
-      detail: oldBuildWarningText,
-    });
+    dialog
+      .showMessageBox(null, {
+        type: 'warning',
+        message: 'Old build detected',
+        detail: oldBuildWarningText,
+      })
+      .catch((err) => log.error('dialog.showMessageBox ERROR', err));
   }
 }
 app.on('new-window-for-tab', () => {
@@ -349,7 +353,9 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   ) {
     callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
   } else {
-    createLoginWindow(callback);
+    createLoginWindow(callback).catch((err) =>
+      log.error('createLoginWindow ERROR', err),
+    );
   }
 });
 

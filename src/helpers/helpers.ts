@@ -66,7 +66,7 @@ export async function copyFileOrDir(
   });
 }
 
-export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
+export function downloadFile(fileUrl: string): Promise<DownloadResult> {
   log.debug(`Downloading ${fileUrl}`);
   return axios
     .get(fileUrl, {

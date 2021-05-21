@@ -1,5 +1,6 @@
 import { shell } from 'electron';
 import contextMenu from 'electron-context-menu';
+import * as log from 'loglevel';
 
 export function initContextMenu(createNewWindow, createNewTab): void {
   contextMenu({
@@ -9,7 +10,9 @@ export function initContextMenu(createNewWindow, createNewTab): void {
         items.push({
           label: 'Open Link in Default Browser',
           click: () => {
-            shell.openExternal(params.linkURL); // eslint-disable-line @typescript-eslint/no-floating-promises
+            shell
+              .openExternal(params.linkURL)
+              .catch((err) => log.error('shell.openExternal ERROR', err));
           },
         });
         items.push({
