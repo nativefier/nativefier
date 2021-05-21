@@ -194,218 +194,6 @@ export async function createMainWindow(
     mainWindow.hide();
   }
 
-  const withFocusedWindow = (block: (window: BrowserWindow) => void): void => {
-    const focusedWindow = BrowserWindow.getFocusedWindow();
-    if (focusedWindow) {
-      return block(focusedWindow);
-    }
-    return undefined;
-  };
-
-  const adjustWindowZoom = (
-    window: BrowserWindow,
-    adjustment: number,
-  ): void => {
-    window.webContents.zoomFactor = window.webContents.zoomFactor + adjustment;
-  };
-
-  const onZoomIn = (): void => {
-    log.debug('onZoomIn');
-    withFocusedWindow((focusedWindow: BrowserWindow) =>
-      adjustWindowZoom(focusedWindow, ZOOM_INTERVAL),
-    );
-  };
-
-  const onZoomOut = (): void => {
-    log.debug('onZoomOut');
-    withFocusedWindow((focusedWindow: BrowserWindow) =>
-      adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL),
-    );
-  };
-
-  const onZoomReset = (): void => {
-    log.debug('onZoomReset');
-    withFocusedWindow((focusedWindow: BrowserWindow) => {
-      focusedWindow.webContents.zoomFactor = options.zoom;
-    });
-  };
-
-  const clearAppData = async (): Promise<void> => {
-    const response = await dialog.showMessageBox(mainWindow, {
-      type: 'warning',
-      buttons: ['Yes', 'Cancel'],
-      defaultId: 1,
-      title: 'Clear cache confirmation',
-      message:
-        'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?',
-    });
-
-    if (response.response !== 0) {
-      return;
-    }
-    await clearCache(mainWindow);
-  };
-
-  const onGoBack = (): void => {
-    log.debug('onGoBack');
-    withFocusedWindow((focusedWindow) => {
-      focusedWindow.webContents.goBack();
-    });
-  };
-
-  const onGoForward = (): void => {
-    log.debug('onGoForward');
-    withFocusedWindow((focusedWindow) => {
-      focusedWindow.webContents.goForward();
-    });
-  };
-
-  const getCurrentUrl = (): void =>
-    withFocusedWindow((focusedWindow) => focusedWindow.webContents.getURL());
-
-  const gotoUrl = (url: string): void =>
-    withFocusedWindow((focusedWindow) => void focusedWindow.loadURL(url));
-
-  const onBlockedExternalUrl = (url: string) => {
-    log.debug('onBlockedExternalUrl', url);
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    dialog.showMessageBox(mainWindow, {
-      message: `Cannot navigate to external URL: ${url}`,
-      type: 'error',
-      title: 'Navigation blocked',
-    });
-  };
-
-  const onWillNavigate = (event: Event, urlToGo: string): void => {
-    log.debug('onWillNavigate', { event, urlToGo });
-    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
-      event.preventDefault();
-      if (options.blockExternalUrls) {
-        onBlockedExternalUrl(urlToGo);
-      } else {
-        shell.openExternal(urlToGo); // eslint-disable-line @typescript-eslint/no-floating-promises
-      }
-    }
-  };
-
-  const onWillPreventUnload = (event: Event): void => {
-    log.debug('onWillPreventUnload', event);
-    const eventAny = event as any;
-    if (eventAny.sender === undefined) {
-      return;
-    }
-    const webContents: WebContents = eventAny.sender;
-    const browserWindow = BrowserWindow.fromWebContents(webContents);
-    const choice = dialog.showMessageBoxSync(browserWindow, {
-      type: 'question',
-      buttons: ['Proceed', 'Stay'],
-      message:
-        'You may have unsaved changes, are you sure you want to proceed?',
-      title: 'Changes you made may not be saved.',
-      defaultId: 0,
-      cancelId: 1,
-    });
-    if (choice === 0) {
-      event.preventDefault();
-    }
-  };
-
-  const createNewWindow: (url: string) => BrowserWindow = (url: string) => {
-    const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
-    setupWindow(window);
-    window.loadURL(url); // eslint-disable-line @typescript-eslint/no-floating-promises
-    return window;
-  };
-
-  function setupWindow(window: BrowserWindow): void {
-    if (options.userAgent) {
-      window.webContents.userAgent = options.userAgent;
-    }
-
-    if (options.proxyRules) {
-      setProxyRules(window, options.proxyRules);
-    }
-
-    injectCss(window);
-    sendParamsOnDidFinishLoad(window);
-    window.webContents.on('new-window', onNewWindow);
-    window.webContents.on('will-navigate', onWillNavigate);
-    window.webContents.on('will-prevent-unload', onWillPreventUnload);
-  }
-
-  const createNewTab = (url: string, foreground: boolean): BrowserWindow => {
-    log.debug('createNewTab', { url, foreground });
-    withFocusedWindow((focusedWindow) => {
-      const newTab = createNewWindow(url);
-      focusedWindow.addTabbedWindow(newTab);
-      if (!foreground) {
-        focusedWindow.focus();
-      }
-      return newTab;
-    });
-    return undefined;
-  };
-
-  const createAboutBlankWindow = (): BrowserWindow => {
-    const window = createNewWindow('about:blank');
-    window.hide();
-    window.webContents.once('did-stop-loading', () => {
-      if (window.webContents.getURL() === 'about:blank') {
-        window.close();
-      } else {
-        window.show();
-      }
-    });
-    return window;
-  };
-
-  const onNewWindow = (
-    event: Event & { newGuest?: any },
-    urlToGo: string,
-    frameName: string,
-    disposition:
-      | 'default'
-      | 'foreground-tab'
-      | 'background-tab'
-      | 'new-window'
-      | 'save-to-disk'
-      | 'other',
-  ): void => {
-    log.debug('onNewWindow', { event, urlToGo, frameName, disposition });
-    const preventDefault = (newGuest: any): void => {
-      event.preventDefault();
-      if (newGuest) {
-        event.newGuest = newGuest;
-      }
-    };
-    onNewWindowHelper(
-      urlToGo,
-      disposition,
-      options.targetUrl,
-      options.internalUrls,
-      preventDefault,
-      shell.openExternal.bind(this),
-      createAboutBlankWindow,
-      nativeTabsSupported,
-      createNewTab,
-      options.blockExternalUrls,
-      onBlockedExternalUrl,
-    );
-  };
-
-  const sendParamsOnDidFinishLoad = (window: BrowserWindow): void => {
-    window.webContents.on('did-finish-load', () => {
-      log.debug('sendParamsOnDidFinishLoad.window.webContents.did-finish-load');
-      // In children windows too: Restore pinch-to-zoom, disabled by default in recent Electron.
-      // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598612128
-      // and https://github.com/electron/electron/pull/12679
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      window.webContents.setVisualZoomLevelLimits(1, 3);
-
-      window.webContents.send('params', JSON.stringify(options));
-    });
-  };
-
   const menuOptions = {
     nativefierVersion: options.nativefierVersion,
     appQuit: onAppQuit,
@@ -585,4 +373,221 @@ export async function createMainWindow(
   });
 
   return { window: mainWindow, setupWindow };
+
+  function withFocusedWindow(block: (window: BrowserWindow) => void): void {
+    const focusedWindow = BrowserWindow.getFocusedWindow();
+    if (focusedWindow) {
+      return block(focusedWindow);
+    }
+    return undefined;
+  }
+
+  function adjustWindowZoom(window: BrowserWindow, adjustment: number): void {
+    window.webContents.zoomFactor = window.webContents.zoomFactor + adjustment;
+  }
+
+  function onZoomIn(): void {
+    log.debug('onZoomIn');
+    withFocusedWindow((focusedWindow: BrowserWindow) =>
+      adjustWindowZoom(focusedWindow, ZOOM_INTERVAL),
+    );
+  }
+
+  function onZoomOut(): void {
+    log.debug('onZoomOut');
+    withFocusedWindow((focusedWindow: BrowserWindow) =>
+      adjustWindowZoom(focusedWindow, -ZOOM_INTERVAL),
+    );
+  }
+
+  function onZoomReset(): void {
+    log.debug('onZoomReset');
+    withFocusedWindow((focusedWindow: BrowserWindow) => {
+      focusedWindow.webContents.zoomFactor = options.zoom;
+    });
+  }
+
+  async function clearAppData(): Promise<void> {
+    const response = await dialog.showMessageBox(mainWindow, {
+      type: 'warning',
+      buttons: ['Yes', 'Cancel'],
+      defaultId: 1,
+      title: 'Clear cache confirmation',
+      message:
+        'This will clear all data (cookies, local storage etc) from this app. Are you sure you wish to proceed?',
+    });
+
+    if (response.response !== 0) {
+      return;
+    }
+    await clearCache(mainWindow);
+  }
+
+  function onGoBack(): void {
+    log.debug('onGoBack');
+    withFocusedWindow((focusedWindow) => {
+      focusedWindow.webContents.goBack();
+    });
+  }
+
+  function onGoForward(): void {
+    log.debug('onGoForward');
+    withFocusedWindow((focusedWindow) => {
+      focusedWindow.webContents.goForward();
+    });
+  }
+
+  function getCurrentUrl(): void {
+    return withFocusedWindow((focusedWindow) =>
+      focusedWindow.webContents.getURL(),
+    );
+  }
+
+  function gotoUrl(url: string): void {
+    return withFocusedWindow(
+      (focusedWindow) => void focusedWindow.loadURL(url),
+    );
+  }
+
+  function onBlockedExternalUrl(url: string) {
+    log.debug('onBlockedExternalUrl', url);
+    dialog
+      .showMessageBox(mainWindow, {
+        message: `Cannot navigate to external URL: ${url}`,
+        type: 'error',
+        title: 'Navigation blocked',
+      })
+      .catch((err) => log.error('dialog.showMessageBox ERROR', err));
+  }
+
+  function onWillNavigate(event: Event, urlToGo: string): void {
+    log.debug('onWillNavigate', { event, urlToGo });
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+      event.preventDefault();
+      if (options.blockExternalUrls) {
+        onBlockedExternalUrl(urlToGo);
+      } else {
+        shell
+          .openExternal(urlToGo)
+          .catch((err) => log.error('shell.openExternal ERROR', err));
+      }
+    }
+  }
+
+  function onWillPreventUnload(event: Event): void {
+    log.debug('onWillPreventUnload', event);
+    const eventAny = event as any;
+    if (eventAny.sender === undefined) {
+      return;
+    }
+    const webContents: WebContents = eventAny.sender;
+    const browserWindow = BrowserWindow.fromWebContents(webContents);
+    const choice = dialog.showMessageBoxSync(browserWindow, {
+      type: 'question',
+      buttons: ['Proceed', 'Stay'],
+      message:
+        'You may have unsaved changes, are you sure you want to proceed?',
+      title: 'Changes you made may not be saved.',
+      defaultId: 0,
+      cancelId: 1,
+    });
+    if (choice === 0) {
+      event.preventDefault();
+    }
+  }
+
+  function createNewWindow(url: string): BrowserWindow {
+    const window = new BrowserWindow(DEFAULT_WINDOW_OPTIONS);
+    setupWindow(window);
+    window.loadURL(url).catch((err) => log.error('window.loadURL ERROR', err));
+    return window;
+  }
+
+  function setupWindow(window: BrowserWindow): void {
+    if (options.userAgent) {
+      window.webContents.userAgent = options.userAgent;
+    }
+
+    if (options.proxyRules) {
+      setProxyRules(window, options.proxyRules);
+    }
+
+    injectCss(window);
+    sendParamsOnDidFinishLoad(window);
+    window.webContents.on('new-window', onNewWindow);
+    window.webContents.on('will-navigate', onWillNavigate);
+    window.webContents.on('will-prevent-unload', onWillPreventUnload);
+  }
+
+  function createNewTab(url: string, foreground: boolean): BrowserWindow {
+    log.debug('createNewTab', { url, foreground });
+    withFocusedWindow((focusedWindow) => {
+      const newTab = createNewWindow(url);
+      focusedWindow.addTabbedWindow(newTab);
+      if (!foreground) {
+        focusedWindow.focus();
+      }
+      return newTab;
+    });
+    return undefined;
+  }
+
+  function createAboutBlankWindow(): BrowserWindow {
+    const window = createNewWindow('about:blank');
+    setupWindow(window);
+    window.show();
+    window.focus();
+    return window;
+  }
+
+  function onNewWindow(
+    event: Event & { newGuest?: any },
+    urlToGo: string,
+    frameName: string,
+    disposition:
+      | 'default'
+      | 'foreground-tab'
+      | 'background-tab'
+      | 'new-window'
+      | 'save-to-disk'
+      | 'other',
+  ): void {
+    log.debug('onNewWindow', { event, urlToGo, frameName, disposition });
+    const preventDefault = (newGuest: any): void => {
+      event.preventDefault();
+      if (newGuest) {
+        event.newGuest = newGuest;
+      }
+    };
+    onNewWindowHelper(
+      urlToGo,
+      disposition,
+      options.targetUrl,
+      options.internalUrls,
+      preventDefault,
+      shell.openExternal.bind(this),
+      createAboutBlankWindow,
+      nativeTabsSupported,
+      createNewTab,
+      options.blockExternalUrls,
+      onBlockedExternalUrl,
+    );
+  }
+
+  function sendParamsOnDidFinishLoad(window: BrowserWindow): void {
+    window.webContents.on('did-finish-load', () => {
+      log.debug(
+        'sendParamsOnDidFinishLoad.window.webContents.did-finish-load',
+        window.webContents.getURL(),
+      );
+      // In children windows too: Restore pinch-to-zoom, disabled by default in recent Electron.
+      // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598612128
+      // and https://github.com/electron/electron/pull/12679
+      window.webContents
+        .setVisualZoomLevelLimits(1, 3)
+        .catch((err) => log.error('webContents.setVisualZoomLevelLimits', err));
+
+      window.webContents.send('params', JSON.stringify(options));
+    });
+  }
 }
