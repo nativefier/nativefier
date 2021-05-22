@@ -300,7 +300,8 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
     })
     .option('u', {
       alias: 'user-agent',
-      description: "set the app's user agent string",
+      description:
+        "set the app's user agent string; may also use 'edge', 'firefox', or 'safari' to have one auto-generated",
       type: 'string',
     })
     .option('user-agent-honest', {
