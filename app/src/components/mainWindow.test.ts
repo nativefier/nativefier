@@ -1,8 +1,14 @@
+jest.mock('../helpers/windowEvents');
 jest.mock('../helpers/windowHelpers');
 
 import { MainWindow } from './mainWindow';
 import * as helpers from '../helpers/helpers';
-import { createAboutBlankWindow, createNewTab } from '../helpers/windowHelpers';
+const { onNewWindowHelper } = jest.requireActual('../helpers/windowEvents');
+import {
+  blockExternalUrl,
+  createAboutBlankWindow,
+  createNewTab,
+} from '../helpers/windowHelpers';
 
 describe('onNewWindowHelper', () => {
   const originalUrl = 'https://medium.com/';
@@ -17,25 +23,21 @@ describe('onNewWindowHelper', () => {
   let mockNativeTabsSupported: jest.SpyInstance = jest
     .spyOn(helpers, 'nativeTabsSupported')
     .mockImplementation(() => false);
-  let mockOnBlockedExternal: jest.SpyInstance;
-  const mockOpenExternal: jest.SpyInstance = jest.spyOn(
-    helpers,
-    'openExternal',
-  );
+  const mockBlockExternalUrl: jest.SpyInstance = blockExternalUrl as jest.Mock;
+  const mockOpenExternal: jest.SpyInstance = jest
+    .spyOn(helpers, 'openExternal')
+    .mockImplementation();
   const preventDefault = jest.fn();
 
   beforeEach(() => {
     mockNativeTabsSupported.mockImplementation(() => false);
-    mockOnBlockedExternal = jest
-      .spyOn(MainWindow, 'onBlockedExternalUrl')
-      .mockImplementation();
   });
 
   afterEach(() => {
     mockCreateAboutBlank.mockReset();
     mockCreateNewTab.mockReset();
     mockNativeTabsSupported.mockReset();
-    mockOnBlockedExternal.mockReset();
+    mockBlockExternalUrl.mockReset();
     mockOpenExternal.mockReset();
 
     preventDefault.mockReset();
@@ -47,8 +49,9 @@ describe('onNewWindowHelper', () => {
       blockExternalUrls: false,
     };
 
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       internalUrl,
       undefined,
       preventDefault,
@@ -56,7 +59,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
@@ -66,8 +69,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: false,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       externalUrl,
       undefined,
       preventDefault,
@@ -75,7 +79,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -85,8 +89,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: true,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       externalUrl,
       undefined,
       preventDefault,
@@ -94,7 +99,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockOnBlockedExternal).toHaveBeenCalledTimes(1);
+    expect(mockBlockExternalUrl).toHaveBeenCalledTimes(1);
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -104,8 +109,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: false,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       internalUrl,
       foregroundDisposition,
       preventDefault,
@@ -113,7 +119,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
@@ -123,8 +129,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: false,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       externalUrl,
       foregroundDisposition,
       preventDefault,
@@ -132,7 +139,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -146,8 +153,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: false,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       internalUrl,
       foregroundDisposition,
       preventDefault,
@@ -157,13 +165,12 @@ describe('onNewWindowHelper', () => {
     expect(mockCreateNewTab).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).toHaveBeenCalledWith(
       options,
-      MainWindow.getDefaultWindowOptions(options),
       MainWindow.setupWindow,
       internalUrl,
       true,
       undefined,
     );
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -177,8 +184,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: false,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       internalUrl,
       backgroundDisposition,
       preventDefault,
@@ -188,13 +196,12 @@ describe('onNewWindowHelper', () => {
     expect(mockCreateNewTab).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).toHaveBeenCalledWith(
       options,
-      MainWindow.getDefaultWindowOptions(options),
       MainWindow.setupWindow,
       internalUrl,
       false,
       undefined,
     );
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -204,8 +211,9 @@ describe('onNewWindowHelper', () => {
       targetUrl: originalUrl,
       blockExternalUrls: false,
     };
-    MainWindow.onNewWindowHelper(
+    onNewWindowHelper(
       options,
+      MainWindow.setupWindow,
       'about:blank',
       undefined,
       preventDefault,
@@ -213,7 +221,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockOnBlockedExternal).not.toHaveBeenCalled();
+    expect(mockBlockExternalUrl).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });

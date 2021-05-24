@@ -162,7 +162,7 @@ export function openExternal(url: string, options?: OpenExternalOptions): void {
     .catch((err) => log.error('openExternal ERROR', err));
 }
 
-export function shouldInjectCss(): boolean {
+export function shouldInjectCSS(): boolean {
   try {
     return fs.existsSync(INJECT_DIR);
   } catch (e) {
