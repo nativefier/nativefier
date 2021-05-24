@@ -1,5 +1,4 @@
 import { BrowserWindow } from 'electron';
-import contextMenu from 'electron-context-menu';
 
 export function initContextMenu(
   createNewWindow,
@@ -7,6 +6,11 @@ export function initContextMenu(
   openExternal,
   window?: BrowserWindow,
 ): void {
+  // Require this at call time, otherwise its child dependency 'electron-is-dev'
+  // throws an error during unit testing.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { contextMenu } = require('electron-context-menu');
+
   contextMenu({
     prepend: (actions, params) => {
       const items = [];

@@ -16,8 +16,8 @@ import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
-  createMainWindow,
   saveAppArgs,
+  MainWindow,
   APP_ARGS_FILE_PATH,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
@@ -89,7 +89,6 @@ if (appArgs.processEnvs) {
 }
 
 let mainWindow: BrowserWindow;
-let setupWindow: (BrowserWindow) => void;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
@@ -254,15 +253,12 @@ if (shouldQuit) {
 }
 
 async function onReady(): Promise<void> {
-  const createWindowResult = await createMainWindow(
+  const mainWindow = await new MainWindow(
     appArgs,
     app.quit.bind(this),
     setDockBadge,
-  );
+  ).create();
 
-  log.debug('onReady', createWindowResult);
-  mainWindow = createWindowResult.window;
-  setupWindow = createWindowResult.setupWindow;
   createTrayIcon(appArgs, mainWindow);
 
   // Register global shortcuts
@@ -382,8 +378,8 @@ app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
 
 app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
   log.debug('app.browser-window-created', { event, window });
-  if (setupWindow !== undefined) {
-    setupWindow(window);
+  if (MainWindow.setupWindow !== undefined) {
+    MainWindow.setupWindow(appArgs, window);
   }
 });
 
