@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcMain, BrowserWindow, Event } from 'electron';
+import { ipcMain, BrowserWindow, IpcMainEvent } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import log from 'loglevel';
 
@@ -22,11 +22,11 @@ import {
   clearCache,
   createNewTab,
   createNewWindow,
-  getCurrentUrl,
+  getCurrentURL,
   getDefaultWindowOptions,
   goBack,
   goForward,
-  gotoUrl,
+  goToURL,
   hideWindow,
   injectCSS,
   sendParamsOnDidFinishLoad,
@@ -117,10 +117,10 @@ export class MainWindow {
       appQuit: this.onAppQuit,
       clearAppData: () => clearAppData(this.window),
       disableDevTools: this.options.disableDevTools,
-      getCurrentUrl,
+      getCurrentURL,
       goBack,
       goForward,
-      gotoUrl,
+      goToURL,
       openExternal,
       zoomBuildTimeValue: this.options.zoom,
       zoomIn,
@@ -136,7 +136,7 @@ export class MainWindow {
           ? (url: string, foreground: boolean) =>
               createNewTab(
                 this.options,
-                MainWindow.setupWindow,
+                setupWindow,
                 url,
                 foreground,
                 this.window,
@@ -147,7 +147,7 @@ export class MainWindow {
       );
     }
 
-    MainWindow.setupWindow(this.options, this.window);
+    setupWindow(this.options, this.window);
 
     if (this.options.counter) {
       this.window.on('page-title-updated', (event, title) => {
@@ -255,14 +255,14 @@ export class MainWindow {
 
     await this.window.loadURL(this.options.targetUrl);
 
-    this.window.on('close', (event) => {
+    this.window.on('close', (event: IpcMainEvent) => {
       log.debug('mainWindow.close', event);
       if (this.window.isFullScreen()) {
         if (nativeTabsSupported()) {
           this.window.moveTabToNewWindow();
         }
         this.window.setFullScreen(false);
-        this.window.once('leave-full-screen', (event: Event) =>
+        this.window.once('leave-full-screen', (event: IpcMainEvent) =>
           hideWindow(
             this.window,
             event,
@@ -282,70 +282,6 @@ export class MainWindow {
 
     return this.window;
   }
-
-  static setupWindow = (options, window: BrowserWindow): void => {
-    if (options.userAgent) {
-      window.webContents.userAgent = options.userAgent;
-    }
-
-    if (options.proxyRules) {
-      setProxyRules(window, options.proxyRules);
-    }
-
-    injectCSS(window);
-    sendParamsOnDidFinishLoad(options, window);
-
-    // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
-    // We can't quite cut over to that yet for a few reasons:
-    // 1. Our version of Electron does not yet support a parameter to
-    //    setWindowOpenHandler that contains `disposition', which we need.
-    //    See https://github.com/electron/electron/issues/28380
-    // 2. setWindowOpenHandler doesn't support newGuest as well
-    // Though at this point, 'new-window' bugs seem to be coming up and downstream
-    // users are being pointed to use setWindowOpenHandler.
-    // E.g., https://github.com/electron/electron/issues/28374
-
-    window.webContents.on(
-      'new-window',
-      () => (event, url, frameName, disposition) =>
-        onNewWindow(
-          options,
-          MainWindow.setupWindow,
-          event,
-          url,
-          frameName,
-          disposition,
-        ),
-    );
-    window.webContents.on('will-navigate', (event: Event, url: string) =>
-      onWillNavigate(options, event, url),
-    );
-    window.webContents.on('will-prevent-unload', onWillPreventUnload);
-
-    window.webContents.on('did-finish-load', () => {
-      log.debug('mainWindow.webContents.did-finish-load');
-      // Restore pinch-to-zoom, disabled by default in recent Electron.
-      // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598309817
-      // and https://github.com/electron/electron/pull/12679
-      window.webContents
-        .setVisualZoomLevelLimits(1, 3)
-        .catch((err) => log.error('webContents.setVisualZoomLevelLimits', err));
-
-      // Remove potential css injection code set in `did-navigate`) (see injectCss code)
-      window.webContents.session.webRequest.onHeadersReceived(null);
-    });
-
-    // @ts-ignore new-tab isn't in the type definition, but it does exist
-    this.window.on('new-tab', () =>
-      createNewTab(
-        options,
-        MainWindow.setupWindow,
-        options.targetUrl,
-        true,
-        window,
-      ),
-    );
-  };
 }
 
 export function saveAppArgs(newAppArgs: any) {
@@ -359,4 +295,55 @@ export function saveAppArgs(newAppArgs: any) {
       ).toString()})`,
     );
   }
+}
+
+export function setupWindow(options, window: BrowserWindow): void {
+  if (options.userAgent) {
+    window.webContents.userAgent = options.userAgent;
+  }
+
+  if (options.proxyRules) {
+    setProxyRules(window, options.proxyRules);
+  }
+
+  injectCSS(window);
+  sendParamsOnDidFinishLoad(options, window);
+
+  // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
+  // We can't quite cut over to that yet for a few reasons:
+  // 1. Our version of Electron does not yet support a parameter to
+  //    setWindowOpenHandler that contains `disposition', which we need.
+  //    See https://github.com/electron/electron/issues/28380
+  // 2. setWindowOpenHandler doesn't support newGuest as well
+  // Though at this point, 'new-window' bugs seem to be coming up and downstream
+  // users are being pointed to use setWindowOpenHandler.
+  // E.g., https://github.com/electron/electron/issues/28374
+
+  window.webContents.on(
+    'new-window',
+    () => (event, url, frameName, disposition) =>
+      onNewWindow(options, this, event, url, frameName, disposition),
+  );
+  window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) =>
+    onWillNavigate(options, event, url),
+  );
+  window.webContents.on('will-prevent-unload', onWillPreventUnload);
+
+  window.webContents.on('did-finish-load', () => {
+    log.debug('mainWindow.webContents.did-finish-load');
+    // Restore pinch-to-zoom, disabled by default in recent Electron.
+    // See https://github.com/nativefier/nativefier/issues/379#issuecomment-598309817
+    // and https://github.com/electron/electron/pull/12679
+    window.webContents
+      .setVisualZoomLevelLimits(1, 3)
+      .catch((err) => log.error('webContents.setVisualZoomLevelLimits', err));
+
+    // Remove potential css injection code set in `did-navigate`) (see injectCss code)
+    window.webContents.session.webRequest.onHeadersReceived(null);
+  });
+
+  // @ts-ignore new-tab isn't in the type definition, but it does exist
+  this.window.on('new-tab', () =>
+    createNewTab(options, this, options.targetUrl, true, window),
+  );
 }

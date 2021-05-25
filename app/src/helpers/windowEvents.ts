@@ -1,8 +1,8 @@
-import { dialog, BrowserWindow, WebContents } from 'electron';
+import { dialog, BrowserWindow, IpcMainEvent, WebContents } from 'electron';
 import log from 'loglevel';
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
 import {
-  blockExternalUrl,
+  blockExternalURL,
   createAboutBlankWindow,
   createNewTab,
   getDefaultWindowOptions,
@@ -63,7 +63,7 @@ export function onNewWindowHelper(
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     preventDefault();
     if (options.blockExternalUrls) {
-      blockExternalUrl(urlToGo);
+      blockExternalURL(urlToGo);
     } else {
       openExternal(urlToGo);
     }
@@ -85,25 +85,28 @@ export function onNewWindowHelper(
   }
 }
 
-export function onWillNavigate(options, event: Event, urlToGo: string): void {
+export function onWillNavigate(
+  options,
+  event: IpcMainEvent,
+  urlToGo: string,
+): void {
   log.debug('onWillNavigate', { options, event, urlToGo });
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     event.preventDefault();
     if (options.blockExternalUrls) {
-      blockExternalUrl(urlToGo);
+      blockExternalURL(urlToGo);
     } else {
       openExternal(urlToGo);
     }
   }
 }
 
-export function onWillPreventUnload(event: Event): void {
+export function onWillPreventUnload(event: IpcMainEvent): void {
   log.debug('onWillPreventUnload', event);
-  const eventAny = event as any;
-  if (eventAny.sender === undefined) {
+  if (!event.sender) {
     return;
   }
-  const webContents: WebContents = eventAny.sender;
+  const webContents: WebContents = event.sender;
   const browserWindow = BrowserWindow.fromWebContents(webContents);
   const choice = dialog.showMessageBoxSync(browserWindow, {
     type: 'question',

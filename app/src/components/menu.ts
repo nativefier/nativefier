@@ -28,8 +28,8 @@ export function createMenu({
   zoomBuildTimeValue,
   goBack,
   goForward,
-  getCurrentUrl,
-  gotoUrl,
+  getCurrentURL,
+  goToURL,
   clearAppData,
   disableDevTools,
   openExternal,
@@ -69,7 +69,7 @@ export function createMenu({
         label: 'Copy Current URL',
         accelerator: 'CmdOrCtrl+L',
         click: () => {
-          const currentURL = getCurrentUrl();
+          const currentURL = getCurrentURL();
           clipboard.writeText(currentURL);
         },
       },
@@ -332,7 +332,7 @@ export function createMenu({
             return {
               label: bookmark.title,
               click: () => {
-                gotoUrl(bookmark.url);
+                goToURL(bookmark.url);
               },
               accelerator: accelerator,
             };

@@ -10,6 +10,7 @@ import {
   globalShortcut,
   systemPreferences,
   BrowserWindow,
+  IpcMainEvent,
 } from 'electron';
 import electronDownload from 'electron-dl';
 import * as log from 'loglevel';
@@ -19,6 +20,7 @@ import {
   saveAppArgs,
   MainWindow,
   APP_ARGS_FILE_PATH,
+  setupWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX } from './helpers/helpers';
@@ -357,7 +359,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
 
 app.on(
   'accessibility-support-changed',
-  (event: Event, accessibilitySupportEnabled: boolean) => {
+  (event: IpcMainEvent, accessibilitySupportEnabled: boolean) => {
     log.debug('app.accessibility-support-changed', {
       event,
       accessibilitySupportEnabled,
@@ -367,22 +369,25 @@ app.on(
 
 app.on(
   'activity-was-continued',
-  (event: Event, type: string, userInfo: any) => {
+  (event: IpcMainEvent, type: string, userInfo: any) => {
     log.debug('app.activity-was-continued', { event, type, userInfo });
   },
 );
 
-app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
+app.on('browser-window-blur', (event: IpcMainEvent, window: BrowserWindow) => {
   log.debug('app.browser-window-blur', { event, window });
 });
 
-app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-created', { event, window });
-  if (MainWindow.setupWindow !== undefined) {
-    MainWindow.setupWindow(appArgs, window);
-  }
-});
+app.on(
+  'browser-window-created',
+  (event: IpcMainEvent, window: BrowserWindow) => {
+    log.debug('app.browser-window-created', { event, window });
+    if (setupWindow !== undefined) {
+      setupWindow(appArgs, window);
+    }
+  },
+);
 
-app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
+app.on('browser-window-focus', (event: IpcMainEvent, window: BrowserWindow) => {
   log.debug('app.browser-window-focus', { event, window });
 });

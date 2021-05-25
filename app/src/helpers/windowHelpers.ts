@@ -3,6 +3,7 @@ import {
   BrowserWindowConstructorOptions,
   dialog,
   HeadersReceivedResponse,
+  IpcMainEvent,
   OnHeadersReceivedListenerDetails,
 } from 'electron';
 
@@ -25,7 +26,7 @@ export function adjustWindowZoom(adjustment: number): void {
   );
 }
 
-export function blockExternalUrl(url: string) {
+export function blockExternalURL(url: string) {
   withFocusedWindow((focusedWindow) => {
     dialog
       .showMessageBox(focusedWindow, {
@@ -106,7 +107,7 @@ export function createNewWindow(
   return window;
 }
 
-export function getCurrentUrl(): string {
+export function getCurrentURL(): string {
   return withFocusedWindow((focusedWindow) =>
     focusedWindow.webContents.getURL(),
   ) as unknown as string;
@@ -157,13 +158,13 @@ export function goForward(): void {
   });
 }
 
-export function gotoUrl(url: string): void {
+export function goToURL(url: string): void {
   return withFocusedWindow((focusedWindow) => void focusedWindow.loadURL(url));
 }
 
 export function hideWindow(
   window: BrowserWindow,
-  event: Event,
+  event: IpcMainEvent,
   fastQuit: boolean,
   tray,
 ): void {
