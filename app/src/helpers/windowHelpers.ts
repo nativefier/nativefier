@@ -206,9 +206,16 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         if (details.webContents) {
           details.webContents
             .insertCSS(cssToInject)
-            .catch((err) => log.error('webContents.insertCSS ERROR', err));
+            .catch((err) => {
+              log.error('webContents.insertCSS ERROR', err);
+            })
+            .finally(() =>
+              callback({
+                cancel: false,
+                responseHeaders: details.responseHeaders,
+              }),
+            );
         }
-        callback({ cancel: false, responseHeaders: details.responseHeaders });
       },
     );
   });
