@@ -1,5 +1,6 @@
 import { dialog, BrowserWindow, IpcMainEvent, WebContents } from 'electron';
 import log from 'loglevel';
+
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
 import {
   blockExternalURL,
@@ -103,10 +104,12 @@ export function onWillNavigate(
 
 export function onWillPreventUnload(event: IpcMainEvent): void {
   log.debug('onWillPreventUnload', event);
-  if (!event.sender) {
+
+  const webContents: WebContents = event.sender;
+  if (webContents === undefined) {
     return;
   }
-  const webContents: WebContents = event.sender;
+
   const browserWindow = BrowserWindow.fromWebContents(webContents);
   const choice = dialog.showMessageBoxSync(browserWindow, {
     type: 'question',

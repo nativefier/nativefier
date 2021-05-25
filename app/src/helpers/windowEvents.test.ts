@@ -1,6 +1,7 @@
 jest.mock('../helpers/windowEvents');
 jest.mock('../helpers/windowHelpers');
 
+import { dialog, BrowserWindow, WebContents } from 'electron';
 import * as helpers from './helpers';
 const { onNewWindowHelper, onWillPreventUnload } =
   jest.requireActual('./windowEvents');
@@ -42,6 +43,14 @@ describe('onNewWindowHelper', () => {
     mockOpenExternal.mockReset();
     preventDefault.mockReset();
     setupWindow.mockReset();
+  });
+
+  afterAll(() => {
+    mockCreateAboutBlank.mockRestore();
+    mockCreateNewTab.mockRestore();
+    mockNativeTabsSupported.mockRestore();
+    mockBlockExternalURL.mockRestore();
+    mockOpenExternal.mockRestore();
   });
 
   test('internal urls should not be handled', () => {
@@ -228,3 +237,54 @@ describe('onNewWindowHelper', () => {
   });
 });
 
+describe('onWillPreventUnload', () => {
+  const mockFromWebContents: jest.SpyInstance = jest
+    .spyOn(BrowserWindow, 'fromWebContents')
+    .mockImplementation(() => new BrowserWindow());
+  const mockShowDialog: jest.SpyInstance = jest
+    .spyOn(dialog, 'showMessageBoxSync')
+    .mockImplementation();
+  const preventDefault: jest.SpyInstance = jest.fn();
+
+  afterEach(() => {
+    mockFromWebContents.mockReset();
+    mockShowDialog.mockReset();
+    preventDefault.mockReset();
+  });
+
+  afterAll(() => {
+    mockFromWebContents.mockRestore();
+    mockShowDialog.mockRestore();
+  });
+
+  test('with no sender', () => {
+    const event = {};
+    onWillPreventUnload(event);
+
+    expect(mockFromWebContents).not.toHaveBeenCalled();
+    expect(mockShowDialog).not.toHaveBeenCalled();
+    expect(preventDefault).not.toHaveBeenCalled();
+  });
+
+  test('shows dialog and calls preventDefault on ok', () => {
+    mockShowDialog.mockImplementation(() => 0);
+
+    const event = { preventDefault, sender: new WebContents() };
+    onWillPreventUnload(event);
+
+    expect(mockFromWebContents).toHaveBeenCalledWith(event.sender);
+    expect(mockShowDialog).toHaveBeenCalled();
+    expect(preventDefault).toHaveBeenCalledWith();
+  });
+
+  test('shows dialog and does not call preventDefault on cancel', () => {
+    mockShowDialog.mockImplementation(() => 1);
+
+    const event = { preventDefault, sender: new WebContents() };
+    onWillPreventUnload(event);
+
+    expect(mockFromWebContents).toHaveBeenCalledWith(event.sender);
+    expect(mockShowDialog).toHaveBeenCalled();
+    expect(preventDefault).not.toHaveBeenCalled();
+  });
+});
