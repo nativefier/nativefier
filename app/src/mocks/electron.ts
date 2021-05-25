@@ -32,19 +32,35 @@ class MockBrowserWindow extends EventEmitter {
 }
 
 class MockDialog {
-  static showMessageBoxSync = (
+  static showMessageBox(
     browserWindow: MockBrowserWindow,
     options: any,
-  ): number => {
+  ): Promise<number> {
+    return Promise.resolve(undefined);
+  }
+
+  static showMessageBoxSync(
+    browserWindow: MockBrowserWindow,
+    options: any,
+  ): number {
     return undefined;
-  };
+  }
 }
 
 class MockSession extends EventEmitter {
   webRequest: MockWebRequest;
+
   constructor() {
     super();
     this.webRequest = new MockWebRequest();
+  }
+
+  clearCache(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  clearStorageData(): Promise<void> {
+    return Promise.resolve();
   }
 }
 

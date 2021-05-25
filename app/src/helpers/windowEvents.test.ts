@@ -303,9 +303,10 @@ describe('onWillPreventUnload', () => {
   const mockFromWebContents: jest.SpyInstance = jest
     .spyOn(BrowserWindow, 'fromWebContents')
     .mockImplementation(() => new BrowserWindow());
-  const mockShowDialog: jest.SpyInstance = jest
-    .spyOn(dialog, 'showMessageBoxSync')
-    .mockImplementation();
+  const mockShowDialog: jest.SpyInstance = jest.spyOn(
+    dialog,
+    'showMessageBoxSync',
+  );
   const preventDefault: jest.SpyInstance = jest.fn();
 
   beforeEach(() => {

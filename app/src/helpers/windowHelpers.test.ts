@@ -1,11 +1,59 @@
-import { BrowserWindow, HeadersReceivedResponse, WebContents } from 'electron';
+import {
+  dialog,
+  BrowserWindow,
+  HeadersReceivedResponse,
+  WebContents,
+} from 'electron';
 jest.mock('loglevel');
 import { error } from 'loglevel';
 
 jest.mock('./helpers');
 import { getCSSToInject, shouldInjectCSS } from './helpers';
 jest.mock('./windowEvents');
-import { injectCSS } from './windowHelpers';
+import { clearAppData, injectCSS } from './windowHelpers';
+
+describe('clearAppData', () => {
+  let window: BrowserWindow;
+  let mockClearCache: jest.SpyInstance;
+  let mockClearStorageData: jest.SpyInstance;
+  const mockShowDialog: jest.SpyInstance = jest.spyOn(dialog, 'showMessageBox');
+
+  beforeEach(() => {
+    window = new BrowserWindow();
+    mockClearCache = jest.spyOn(window.webContents.session, 'clearCache');
+    mockClearStorageData = jest.spyOn(
+      window.webContents.session,
+      'clearStorageData',
+    );
+    mockShowDialog.mockReset().mockResolvedValue(undefined);
+  });
+
+  afterAll(() => {
+    mockClearCache.mockRestore();
+    mockClearStorageData.mockRestore();
+    mockShowDialog.mockRestore();
+  });
+
+  test('will not clear app data if dialog canceled', async () => {
+    mockShowDialog.mockResolvedValue(1);
+
+    await clearAppData(window);
+
+    expect(mockShowDialog).toHaveBeenCalledTimes(1);
+    expect(mockClearCache).not.toHaveBeenCalled();
+    expect(mockClearStorageData).not.toHaveBeenCalled();
+  });
+
+  test('will clear app data if ok is clicked', async () => {
+    mockShowDialog.mockResolvedValue(0);
+
+    await clearAppData(window);
+
+    expect(mockShowDialog).toHaveBeenCalledTimes(1);
+    expect(mockClearCache).not.toHaveBeenCalledTimes(1);
+    expect(mockClearStorageData).not.toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('injectCSS', () => {
   const mockGetCSSToInject: jest.SpyInstance = getCSSToInject as jest.Mock;
