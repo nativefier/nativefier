@@ -1,9 +1,10 @@
-jest.mock('../helpers/windowEvents');
-jest.mock('../helpers/windowHelpers');
+jest.mock('./helpers');
+jest.mock('./windowEvents');
+jest.mock('./windowHelpers');
 
 import { dialog, BrowserWindow, WebContents } from 'electron';
-import * as helpers from './helpers';
-const { onNewWindowHelper, onWillPreventUnload } =
+import { linkIsInternal, openExternal, nativeTabsSupported } from './helpers';
+const { onNewWindowHelper, onWillNavigate, onWillPreventUnload } =
   jest.requireActual('./windowEvents');
 import {
   blockExternalURL,
@@ -18,45 +19,43 @@ describe('onNewWindowHelper', () => {
   const foregroundDisposition = 'foreground-tab';
   const backgroundDisposition = 'background-tab';
 
+  const mockBlockExternalURL: jest.SpyInstance = blockExternalURL as jest.Mock;
   const mockCreateAboutBlank: jest.SpyInstance =
     createAboutBlankWindow as jest.Mock;
   const mockCreateNewTab: jest.SpyInstance = createNewTab as jest.Mock;
-  let mockNativeTabsSupported: jest.SpyInstance = jest
-    .spyOn(helpers, 'nativeTabsSupported')
-    .mockImplementation(() => false);
-  const mockBlockExternalURL: jest.SpyInstance = blockExternalURL as jest.Mock;
-  const mockOpenExternal: jest.SpyInstance = jest
-    .spyOn(helpers, 'openExternal')
-    .mockImplementation();
+  const mockLinkIsInternal: jest.SpyInstance = (
+    linkIsInternal as jest.Mock
+  ).mockImplementation(() => true);
+  const mockNativeTabsSupported: jest.SpyInstance =
+    nativeTabsSupported as jest.Mock;
+  const mockOpenExternal: jest.SpyInstance = openExternal as jest.Mock;
   const preventDefault = jest.fn();
   const setupWindow = jest.fn();
 
   beforeEach(() => {
-    mockNativeTabsSupported.mockImplementation(() => false);
-  });
-
-  afterEach(() => {
+    mockBlockExternalURL.mockReset();
     mockCreateAboutBlank.mockReset();
     mockCreateNewTab.mockReset();
-    mockNativeTabsSupported.mockReset();
-    mockBlockExternalURL.mockReset();
+    mockLinkIsInternal.mockReset().mockReturnValue(true);
+    mockNativeTabsSupported.mockReset().mockReturnValue(false);
     mockOpenExternal.mockReset();
     preventDefault.mockReset();
     setupWindow.mockReset();
   });
 
   afterAll(() => {
+    mockBlockExternalURL.mockRestore();
     mockCreateAboutBlank.mockRestore();
     mockCreateNewTab.mockRestore();
+    mockLinkIsInternal.mockRestore();
     mockNativeTabsSupported.mockRestore();
-    mockBlockExternalURL.mockRestore();
     mockOpenExternal.mockRestore();
   });
 
   test('internal urls should not be handled', () => {
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
 
     onNewWindowHelper(
@@ -75,9 +74,10 @@ describe('onNewWindowHelper', () => {
   });
 
   test('external urls should be opened externally', () => {
+    mockLinkIsInternal.mockReturnValue(false);
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -95,9 +95,10 @@ describe('onNewWindowHelper', () => {
   });
 
   test('external urls should be ignored if blockExternalUrls is true', () => {
+    mockLinkIsInternal.mockReturnValue(false);
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: true,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -116,8 +117,8 @@ describe('onNewWindowHelper', () => {
 
   test('tab disposition should be ignored if tabs are not enabled', () => {
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -135,9 +136,10 @@ describe('onNewWindowHelper', () => {
   });
 
   test('tab disposition should be ignored if url is external', () => {
+    mockLinkIsInternal.mockReturnValue(false);
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -155,13 +157,11 @@ describe('onNewWindowHelper', () => {
   });
 
   test('foreground tabs with internal urls should be opened in the foreground', () => {
-    mockNativeTabsSupported = mockNativeTabsSupported.mockImplementation(
-      () => true,
-    );
+    mockNativeTabsSupported.mockReturnValue(true);
 
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -186,13 +186,11 @@ describe('onNewWindowHelper', () => {
   });
 
   test('background tabs with internal urls should be opened in background tabs', () => {
-    mockNativeTabsSupported = mockNativeTabsSupported.mockImplementation(
-      () => true,
-    );
+    mockNativeTabsSupported.mockReturnValue(true);
 
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -218,8 +216,8 @@ describe('onNewWindowHelper', () => {
 
   test('about:blank urls should be handled', () => {
     const options = {
-      targetUrl: originalURL,
       blockExternalUrls: false,
+      targetUrl: originalURL,
     };
     onNewWindowHelper(
       options,
@@ -237,6 +235,70 @@ describe('onNewWindowHelper', () => {
   });
 });
 
+describe('onWillNavigate', () => {
+  const originalURL = 'https://medium.com/';
+  const internalURL = 'https://medium.com/topics/technology';
+  const externalURL = 'https://www.wikipedia.org/wiki/Electron';
+
+  const mockBlockExternalURL: jest.SpyInstance = blockExternalURL as jest.Mock;
+  const mockLinkIsInternal: jest.SpyInstance = linkIsInternal as jest.Mock;
+  const mockOpenExternal: jest.SpyInstance = openExternal as jest.Mock;
+  const preventDefault = jest.fn();
+
+  beforeEach(() => {
+    mockBlockExternalURL.mockReset();
+    mockLinkIsInternal.mockReset().mockReturnValue(false);
+    mockOpenExternal.mockReset();
+    preventDefault.mockReset();
+  });
+
+  afterAll(() => {
+    mockBlockExternalURL.mockRestore();
+    mockLinkIsInternal.mockRestore();
+    mockOpenExternal.mockRestore();
+  });
+
+  test('internal urls should not be handled', () => {
+    mockLinkIsInternal.mockReturnValue(true);
+    const options = {
+      blockExternalUrls: false,
+      targetUrl: originalURL,
+    };
+    const event = { preventDefault };
+    onWillNavigate(options, event, internalURL);
+
+    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockOpenExternal).not.toHaveBeenCalled();
+    expect(preventDefault).not.toHaveBeenCalled();
+  });
+
+  test('external urls should be opened externally', () => {
+    const options = {
+      blockExternalUrls: false,
+      targetUrl: originalURL,
+    };
+    const event = { preventDefault };
+    onWillNavigate(options, event, externalURL);
+
+    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockOpenExternal).toHaveBeenCalledTimes(1);
+    expect(preventDefault).toHaveBeenCalledTimes(1);
+  });
+
+  test('external urls should be ignored if blockExternalUrls is true', () => {
+    const options = {
+      blockExternalUrls: true,
+      targetUrl: originalURL,
+    };
+    const event = { preventDefault };
+    onWillNavigate(options, event, externalURL);
+
+    expect(mockBlockExternalURL).toHaveBeenCalledTimes(1);
+    expect(mockOpenExternal).not.toHaveBeenCalled();
+    expect(preventDefault).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('onWillPreventUnload', () => {
   const mockFromWebContents: jest.SpyInstance = jest
     .spyOn(BrowserWindow, 'fromWebContents')
@@ -246,9 +308,9 @@ describe('onWillPreventUnload', () => {
     .mockImplementation();
   const preventDefault: jest.SpyInstance = jest.fn();
 
-  afterEach(() => {
+  beforeEach(() => {
     mockFromWebContents.mockReset();
-    mockShowDialog.mockReset();
+    mockShowDialog.mockReset().mockReturnValue(undefined);
     preventDefault.mockReset();
   });
 
@@ -267,7 +329,7 @@ describe('onWillPreventUnload', () => {
   });
 
   test('shows dialog and calls preventDefault on ok', () => {
-    mockShowDialog.mockImplementation(() => 0);
+    mockShowDialog.mockReturnValue(0);
 
     const event = { preventDefault, sender: new WebContents() };
     onWillPreventUnload(event);
@@ -278,7 +340,7 @@ describe('onWillPreventUnload', () => {
   });
 
   test('shows dialog and does not call preventDefault on cancel', () => {
-    mockShowDialog.mockImplementation(() => 1);
+    mockShowDialog.mockReturnValue(1);
 
     const event = { preventDefault, sender: new WebContents() };
     onWillPreventUnload(event);

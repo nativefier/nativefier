@@ -64,9 +64,9 @@ export function onNewWindowHelper(
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     preventDefault();
     if (options.blockExternalUrls) {
-      blockExternalURL(urlToGo);
+      return blockExternalURL(urlToGo);
     } else {
-      openExternal(urlToGo);
+      return openExternal(urlToGo);
     }
   } else if (urlToGo === 'about:blank') {
     const newWindow = createAboutBlankWindow(
@@ -74,14 +74,14 @@ export function onNewWindowHelper(
       getDefaultWindowOptions(options),
       parent,
     );
-    preventDefault(newWindow);
+    return preventDefault(newWindow);
   } else if (nativeTabsSupported()) {
     if (disposition === 'background-tab') {
       const newTab = createNewTab(options, setupWindow, urlToGo, false, parent);
-      preventDefault(newTab);
+      return preventDefault(newTab);
     } else if (disposition === 'foreground-tab') {
       const newTab = createNewTab(options, setupWindow, urlToGo, true, parent);
-      preventDefault(newTab);
+      return preventDefault(newTab);
     }
   }
 }
@@ -95,9 +95,9 @@ export function onWillNavigate(
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     event.preventDefault();
     if (options.blockExternalUrls) {
-      blockExternalURL(urlToGo);
+      return blockExternalURL(urlToGo);
     } else {
-      openExternal(urlToGo);
+      return openExternal(urlToGo);
     }
   }
 }
