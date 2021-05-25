@@ -15,7 +15,7 @@ Below you'll find a list of build commands contributed by the Nativefier communi
 
 ```sh
 nativefier 'https://docs.google.com/spreadsheets' \
-  --user-agent 'user agent of current stable Firefox'
+  --user-agent firefox
 ```
 
 Note: lying about the User Agent is required, else Google will notice your "Chrome" isn't a real Chrome, and will refuse access.
@@ -58,14 +58,14 @@ Note: as for Udemy, `--widevine` + [app signing](https://github.com/nativefier/n
 ```sh
 nativefier 'https://open.spotify.com/'
   --widevine
-  -u 'useragent of a non-Chrome browser, e.g. the current stable Firefox'
+  --user-agent firefox
   --inject spotify.js
   --inject spotify.css
 ```
 
 Notes:
 
-- [Inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
+- [Inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
 ```javascript
 function dontShowBrowserNoticePage() {
     const browserNotice = document.getElementById('browser-support-notice');
@@ -114,8 +114,8 @@ if (document.readyState === "interactive") {
 }
 ```
 
-- It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/docs/api.md#widevine), or many songs will not play.
-- To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/docs/api.md#inject) the following CSS as `spotify.css`:
+- It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/API.md#widevine), or many songs will not play.
+- To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following CSS as `spotify.css`:
 ```css
 a[href="/download"] { display: none; }
 ```

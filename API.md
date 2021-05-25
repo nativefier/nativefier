@@ -52,10 +52,13 @@
     - [[zoom]](#zoom)
   - [Internal Browser Options](#internal-browser-options)
     - [[file-download-options]](#file-download-options)
-    - [[honest]](#honest)
     - [[inject]](#inject)
     - [[lang]](#lang)
     - [[user-agent]](#user-agent)
+    - [[user-agent-honest]](#user-agent-honest)
+  - [Internal Browser Cache Options](#internal-browser-cache-options)
+    - [[clear-cache]](#clear-cache)
+    - [[disk-cache-size]](#disk-cache-size)
   - [URL Handling Options](#url-handling-options)
     - [[block-external-urls]](#block-external-urls)
     - [[internal-urls]](#internal-urls)
@@ -66,9 +69,6 @@
     - [[disable-gpu]](#disable-gpu)
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
-  - [Caching Options](#caching-options)
-    - [[clear-cache]](#clear-cache)
-    - [[disk-cache-size]](#disk-cache-size)
   - [(In)Security Options](#in-security-options)
     - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
     - [[ignore-certificate]](#ignore-certificate)
@@ -672,16 +672,6 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 
 On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
-#### [honest]
-
-```
---honest
-```
-
-By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that sites like WhatsApp Web will not say that the current browser is unsupported.
-
-If this flag is passed, it will not override the user agent.
-
 #### [inject]
 
 ```
@@ -712,7 +702,41 @@ Set the language or locale to render the web site as (e.g., "fr", "en-US", "es",
 -u, --user-agent <value>
 ```
 
-Set the user agent to run the created app with.
+Set the user agent to run the created app with. Use `--user-agent-honest` to use the true Electron user agent.
+
+The following short codes are also supported to generate a user agent: `edge`, `firefox`, `safari`.
+
+- `edge` will generate a Microsoft Edge user agent matching the Chrome version of Electron being used
+- `firefox` will generate a Mozilla Firefox user agent matching the latest stable release of that browser
+- `safari` will generate an Apple Safari user agent matching the latest stable release of that browser
+
+#### [user-agent-honest]
+
+```
+--user-agent-honest, --honest
+```
+
+By default, Nativefier uses a preset user agent string for your OS and masquerades as a regular Google Chrome browser, so that for some sites, it will not say that the current browser is unsupported.
+
+If this flag is passed, it will not override the user agent, and use Electron's default generated one for your app.
+
+### Internal Browser Cache Options
+
+#### [clear-cache]
+
+```
+--clear-cache
+```
+
+Prevents the application from preserving cache between launches.
+
+#### [disk-cache-size]
+
+```
+--disk-cache-size <value>
+```
+
+Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 ### URL Handling Options
 
@@ -817,27 +841,6 @@ Passes the enable-es3-apis flag to the Chrome engine, to force the activation of
 ```
 
 Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
-
-
-
-
-### Caching Options
-
-#### [clear-cache]
-
-```
---clear-cache
-```
-
-Prevents the application from preserving cache between launches.
-
-#### [disk-cache-size]
-
-```
---disk-cache-size <value>
-```
-
-Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 ### (In)Security Options
 

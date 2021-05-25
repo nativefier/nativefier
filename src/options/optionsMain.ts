@@ -37,7 +37,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
       out: rawOptions.out || process.cwd(),
       overwrite: rawOptions.overwrite,
-      platform: rawOptions.platform || inferPlatform(),
+      platform: rawOptions.platform,
       portable: rawOptions.portable || false,
       targetUrl:
         rawOptions.targetUrl === undefined
@@ -78,7 +78,6 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       fullScreen: rawOptions.fullScreen || false,
       globalShortcuts: null,
       hideWindowFrame: rawOptions.hideWindowFrame,
-      honest: rawOptions.honest || false,
       ignoreCertificate: rawOptions.ignoreCertificate || false,
       ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
       inject: rawOptions.inject || [],
@@ -94,8 +93,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       titleBarStyle: rawOptions.titleBarStyle || null,
       tray: rawOptions.tray || false,
       userAgent: rawOptions.userAgent,
-      userAgentOverriden:
-        rawOptions.userAgent !== undefined && rawOptions.userAgent !== null,
+      userAgentHonest: rawOptions.userAgentHonest || false,
       verbose: rawOptions.verbose,
       versionString: rawOptions.versionString,
       width: rawOptions.width || 1280,
@@ -174,18 +172,14 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     options.nativefier.insecure = true;
   }
 
-  if (options.nativefier.honest) {
+  if (options.nativefier.userAgentHonest && options.nativefier.userAgent) {
     options.nativefier.userAgent = null;
+    log.warn(
+      `\nATTENTION: user-agent AND user-agent-honest/honest were provided. In this case, honesty wins. user-agent will be ignored`,
+    );
   }
 
-  const platform = options.packager.platform.toLowerCase();
-  if (platform === 'windows') {
-    options.packager.platform = 'win32';
-  }
-
-  if (['osx', 'mac', 'macos'].includes(platform)) {
-    options.packager.platform = 'darwin';
-  }
+  options.packager.platform = normalizePlatform(options.packager.platform);
 
   if (options.nativefier.width > options.nativefier.maxWidth) {
     options.nativefier.width = options.nativefier.maxWidth;
@@ -217,4 +211,19 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   await asyncConfig(options);
 
   return options;
+}
+
+export function normalizePlatform(platform: string): string {
+  if (!platform) {
+    return inferPlatform();
+  }
+  if (platform.toLowerCase() === 'windows') {
+    return 'win32';
+  }
+
+  if (['osx', 'mac', 'macos'].includes(platform.toLowerCase())) {
+    return 'darwin';
+  }
+
+  return platform.toLowerCase();
 }

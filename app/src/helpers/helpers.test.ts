@@ -1,4 +1,8 @@
-import { linkIsInternal, getCounterValue } from './helpers';
+import {
+  linkIsInternal,
+  getCounterValue,
+  removeUserAgentSpecifics,
+} from './helpers';
 
 const internalUrl = 'https://medium.com/';
 const internalUrlWww = 'https://www.medium.com/';
@@ -145,4 +149,20 @@ test('getCounterValue should return a string for small counter numbers in the ti
 
 test('getCounterValue should return a string for large counter numbers in the title', () => {
   expect(getCounterValue(largeCounterTitle)).toEqual('8,756');
+});
+
+describe('removeUserAgentSpecifics', () => {
+  test('removes Electron and App specific info', () => {
+    const userAgentFallback =
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) app-nativefier-804458/1.0.0 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36';
+    expect(
+      removeUserAgentSpecifics(
+        userAgentFallback,
+        'app-nativefier-804458',
+        '1.0.0',
+      ),
+    ).not.toBe(
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
+    );
+  });
 });

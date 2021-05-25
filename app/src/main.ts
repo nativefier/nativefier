@@ -23,7 +23,7 @@ import {
   setupWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import { isOSX } from './helpers/helpers';
+import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
@@ -48,6 +48,14 @@ if (appArgs.portable) {
   );
   app.setPath('appData', path.join(__dirname, '..', 'appData'));
   app.setPath('userData', path.join(__dirname, '..', 'appData'));
+}
+
+if (!appArgs.userAgentHonest) {
+  app.userAgentFallback = removeUserAgentSpecifics(
+    app.userAgentFallback,
+    app.getName(),
+    app.getVersion(),
+  );
 }
 
 // Take in a URL on the command line as an override
