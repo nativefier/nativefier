@@ -10,7 +10,7 @@ import { error } from 'loglevel';
 jest.mock('./helpers');
 import { getCSSToInject, shouldInjectCSS } from './helpers';
 jest.mock('./windowEvents');
-import { clearAppData, injectCSS } from './windowHelpers';
+import { clearAppData, createNewTab, injectCSS } from './windowHelpers';
 
 describe('clearAppData', () => {
   let window: BrowserWindow;
@@ -54,6 +54,22 @@ describe('clearAppData', () => {
     expect(mockClearStorageData).not.toHaveBeenCalledTimes(1);
   });
 });
+
+// describe('createNewTab', () => {
+//   test('creates new tab', () => {
+//     const window = new BrowserWindow();
+//     const options = {};
+//     const setupWindow = jest.fn();
+//     const url = 'https://github.com/nativefier/nativefier';
+//     const mockAddTabbedWindow: jest.SpyInstance = jest.spyOn(
+//       BrowserWindow.prototype,
+//       'addTabbedWindow',
+//     );
+//     const tab = createNewTab(options, setupWindow, url, true, window);
+//     expect(mockAddTabbedWindow).toHaveBeenCalledWith(tab);
+//     expect(setupWindow).toHaveBeenCalledWith(tab);
+//   });
+// });
 
 describe('injectCSS', () => {
   const mockGetCSSToInject: jest.SpyInstance = getCSSToInject as jest.Mock;

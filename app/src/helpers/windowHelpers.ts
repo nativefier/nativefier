@@ -4,6 +4,7 @@ import {
   dialog,
   HeadersReceivedResponse,
   IpcMainEvent,
+  MessageBoxReturnValue,
   OnHeadersReceivedListenerDetails,
 } from 'electron';
 
@@ -19,22 +20,26 @@ import {
 const ZOOM_INTERVAL = 0.1;
 
 export function adjustWindowZoom(adjustment: number): void {
-  withFocusedWindow(
-    (focusedWindow: BrowserWindow) =>
-      (focusedWindow.webContents.zoomFactor =
-        focusedWindow.webContents.zoomFactor + adjustment),
-  );
+  withFocusedWindow((focusedWindow: BrowserWindow) => {
+    focusedWindow.webContents.zoomFactor =
+      focusedWindow.webContents.zoomFactor + adjustment;
+  });
 }
 
-export function blockExternalURL(url: string) {
-  withFocusedWindow((focusedWindow) => {
-    dialog
-      .showMessageBox(focusedWindow, {
-        message: `Cannot navigate to external URL: ${url}`,
-        type: 'error',
-        title: 'Navigation blocked',
-      })
-      .catch((err) => log.error('dialog.showMessageBox ERROR', err));
+export function blockExternalURL(url: string): Promise<MessageBoxReturnValue> {
+  return new Promise((resolve, reject) => {
+    withFocusedWindow((focusedWindow) => {
+      dialog
+        .showMessageBox(focusedWindow, {
+          message: `Cannot navigate to external URL: ${url}`,
+          type: 'error',
+          title: 'Navigation blocked',
+        })
+        .then((result) => resolve(result))
+        .catch((err) => {
+          reject(err);
+        });
+    });
   });
 }
 
@@ -78,9 +83,9 @@ export function createNewTab(
   url: string,
   foreground: boolean,
   parent?: BrowserWindow,
-): BrowserWindow {
+): Promise<BrowserWindow> {
   log.debug('createNewTab', { url, foreground, parent });
-  withFocusedWindow((focusedWindow) => {
+  return withFocusedWindow((focusedWindow) => {
     const newTab = createNewWindow(options, setupWindow, url, parent);
     focusedWindow.addTabbedWindow(newTab);
     if (!foreground) {
@@ -88,7 +93,6 @@ export function createNewTab(
     }
     return newTab;
   });
-  return undefined;
 }
 
 export function createNewWindow(
@@ -158,8 +162,8 @@ export function goForward(): void {
   });
 }
 
-export function goToURL(url: string): void {
-  return withFocusedWindow((focusedWindow) => void focusedWindow.loadURL(url));
+export function goToURL(url: string): Promise<void> {
+  return withFocusedWindow((focusedWindow) => focusedWindow.loadURL(url));
 }
 
 export function hideWindow(
@@ -192,7 +196,8 @@ export function injectCSS(browserWindow: BrowserWindow): void {
       browserWindow.webContents.getURL(),
     );
     // We must inject css early enough; so onHeadersReceived is a good place.
-    // Will run multiple times, see `did-finish-load` below that unsets this handler.
+    // Will run multiple times, see `did-finish-load` event on the window
+    // that unsets this handler.
     browserWindow.webContents.session.webRequest.onHeadersReceived(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
       (
@@ -215,6 +220,11 @@ export function injectCSS(browserWindow: BrowserWindow): void {
                 responseHeaders: details.responseHeaders,
               }),
             );
+        } else {
+          callback({
+            cancel: false,
+            responseHeaders: details.responseHeaders,
+          });
         }
       },
     );
@@ -251,14 +261,13 @@ export function setProxyRules(window: BrowserWindow, proxyRules): void {
     .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
-export function withFocusedWindow(
-  block: (window: BrowserWindow) => void,
-): void {
+export function withFocusedWindow(block: (window: BrowserWindow) => any): any {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (focusedWindow) {
     return block(focusedWindow);
   }
-  return undefined;
+
+  return null;
 }
 
 export function zoomOut(): void {
@@ -268,9 +277,9 @@ export function zoomOut(): void {
 
 export function zoomReset(options): void {
   log.debug('zoomReset');
-  withFocusedWindow((focusedWindow: BrowserWindow) => {
-    focusedWindow.webContents.zoomFactor = options.zoom;
-  });
+  withFocusedWindow(
+    (focusedWindow) => (focusedWindow.webContents.zoomFactor = options.zoom),
+  );
 }
 
 export function zoomIn(): void {

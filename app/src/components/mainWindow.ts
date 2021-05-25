@@ -324,9 +324,12 @@ export function setupWindow(options, window: BrowserWindow): void {
     () => (event, url, frameName, disposition) =>
       onNewWindow(options, this, event, url, frameName, disposition),
   );
-  window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) =>
-    onWillNavigate(options, event, url),
-  );
+  window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) => {
+    onWillNavigate(options, event, url).catch((err) => {
+      log.error(' window.webContents.on.will-navigate ERROR', err);
+      event.preventDefault();
+    });
+  });
   window.webContents.on('will-prevent-unload', onWillPreventUnload);
 
   window.webContents.on('did-finish-load', () => {
@@ -338,12 +341,14 @@ export function setupWindow(options, window: BrowserWindow): void {
       .setVisualZoomLevelLimits(1, 3)
       .catch((err) => log.error('webContents.setVisualZoomLevelLimits', err));
 
-    // Remove potential css injection code set in `did-navigate`) (see injectCss code)
+    // Remove potential css injection code set in `did-navigate`) (see injectCSS code)
     window.webContents.session.webRequest.onHeadersReceived(null);
   });
 
   // @ts-ignore new-tab isn't in the type definition, but it does exist
-  this.window.on('new-tab', () =>
-    createNewTab(options, this, options.targetUrl, true, window),
-  );
+  window.on('new-tab', () => {
+    createNewTab(options, this, options.targetUrl, true, window).catch((err) =>
+      log.error('new-tab ERROR', err),
+    );
+  });
 }

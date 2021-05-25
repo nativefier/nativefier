@@ -15,7 +15,7 @@ export function debugLog(browserWindow: BrowserWindow, message: string): void {
   setTimeout(() => {
     browserWindow.webContents.send('debug', message);
   }, 3000);
-  log.info(message);
+  log.debug(message);
 }
 
 /**
@@ -155,11 +155,12 @@ export function nativeTabsSupported(): boolean {
   return isOSX();
 }
 
-export function openExternal(url: string, options?: OpenExternalOptions): void {
+export function openExternal(
+  url: string,
+  options?: OpenExternalOptions,
+): Promise<void> {
   log.debug('openExternal', { url, options });
-  shell
-    .openExternal(url, options)
-    .catch((err) => log.error('openExternal ERROR', err));
+  return shell.openExternal(url, options);
 }
 
 export function removeUserAgentSpecifics(

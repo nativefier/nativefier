@@ -33,7 +33,9 @@ describe('onNewWindowHelper', () => {
   const setupWindow = jest.fn();
 
   beforeEach(() => {
-    mockBlockExternalURL.mockReset();
+    mockBlockExternalURL
+      .mockReset()
+      .mockReturnValue(Promise.resolve(undefined));
     mockCreateAboutBlank.mockReset();
     mockCreateNewTab.mockReset();
     mockLinkIsInternal.mockReset().mockReturnValue(true);
@@ -246,7 +248,9 @@ describe('onWillNavigate', () => {
   const preventDefault = jest.fn();
 
   beforeEach(() => {
-    mockBlockExternalURL.mockReset();
+    mockBlockExternalURL
+      .mockReset()
+      .mockReturnValue(Promise.resolve(undefined));
     mockLinkIsInternal.mockReset().mockReturnValue(false);
     mockOpenExternal.mockReset();
     preventDefault.mockReset();

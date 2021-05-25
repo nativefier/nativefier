@@ -23,7 +23,7 @@ export function onNewWindow(
     | 'save-to-disk'
     | 'other',
   parent?: BrowserWindow,
-): void {
+): Promise<void> {
   log.debug('onNewWindow', {
     event,
     urlToGo,
@@ -37,7 +37,7 @@ export function onNewWindow(
       event.newGuest = newGuest;
     }
   };
-  onNewWindowHelper(
+  return onNewWindowHelper(
     options,
     setupWindow,
     urlToGo,
@@ -54,7 +54,7 @@ export function onNewWindowHelper(
   disposition: string,
   preventDefault,
   parent?: BrowserWindow,
-): void {
+): Promise<void> {
   log.debug('onNewWindowHelper', {
     urlToGo,
     disposition,
@@ -64,7 +64,7 @@ export function onNewWindowHelper(
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     preventDefault();
     if (options.blockExternalUrls) {
-      return blockExternalURL(urlToGo);
+      return blockExternalURL(urlToGo).then(() => null);
     } else {
       return openExternal(urlToGo);
     }
@@ -90,12 +90,12 @@ export function onWillNavigate(
   options,
   event: IpcMainEvent,
   urlToGo: string,
-): void {
+): Promise<void> {
   log.debug('onWillNavigate', { options, event, urlToGo });
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     event.preventDefault();
     if (options.blockExternalUrls) {
-      return blockExternalURL(urlToGo);
+      return blockExternalURL(urlToGo).then(() => null);
     } else {
       return openExternal(urlToGo);
     }

@@ -26,8 +26,16 @@ class MockBrowserWindow extends EventEmitter {
     this.webContents = new MockWebContents();
   }
 
+  addTabbedWindow(tab: MockBrowserWindow) {
+    return;
+  }
+
   static fromWebContents(webContents: MockWebContents): MockBrowserWindow {
     return new MockBrowserWindow();
+  }
+
+  static getFocusedWindow(window: MockBrowserWindow): MockBrowserWindow {
+    return window;
   }
 }
 
