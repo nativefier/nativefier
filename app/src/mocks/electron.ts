@@ -66,10 +66,10 @@ class MockWebContents extends EventEmitter {
 }
 
 class MockWebRequest {
-  handlers: any;
+  emitter: InternalEmitter;
 
   constructor() {
-    this.handlers = { onHeadersReceived: [] };
+    this.emitter = new InternalEmitter();
   }
 
   onHeadersReceived(
@@ -81,21 +81,19 @@ class MockWebRequest {
         ) => void)
       | null,
   ): void {
-    this.handlers.onHeadersReceived.push({ filter, listener });
+    this.emitter.addListener(
+      'onHeadersReceived',
+      (details: any, callback: (headersReceivedResponse: any) => void) =>
+        listener(details, callback),
+    );
   }
 
-  send(
-    event: 'onHeadersReceived',
-    details: any,
-    callback: (headersReceivedResponse: any) => void,
-  ): void {
-    if (this.handlers[event] && this.handlers[event].length > 0) {
-      this.handlers[event].forEach((handler) =>
-        handler.listener(details, callback),
-      );
-    }
+  send(event: string, ...args: any[]): void {
+    this.emitter.emit(event, ...args);
   }
 }
+
+class InternalEmitter extends EventEmitter {}
 
 export {
   MockDialog as dialog,
