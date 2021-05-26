@@ -16,8 +16,6 @@ import { setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearAppData,
   clearCache,
-  createNewTab,
-  createNewWindow,
   getCurrentURL,
   getDefaultWindowOptions,
   goBack,
@@ -129,21 +127,7 @@ export async function createMainWindow(
 
 function createContextMenu(options, window: BrowserWindow): void {
   if (!options.disableContextMenu) {
-    initContextMenu(
-      createNewWindow,
-      nativeTabsSupported()
-        ? (url: string, foreground: boolean) =>
-            createNewTab(
-              options,
-              setupNativefierWindow,
-              url,
-              foreground,
-              window,
-            )
-        : undefined,
-      openExternal,
-      window,
-    );
+    initContextMenu(options, window);
   }
 }
 
