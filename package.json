@@ -77,7 +77,7 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "jest": "^27.0.1",
-    "node-notifier": "^10.0.0",
+    "node-notifier": "^9.0.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "ts-jest": "^27.0.0",
