@@ -96,7 +96,8 @@
     "testPathIgnorePatterns": [
       "/node_modules/",
       "[.]js$"
-    ]
+    ],
+    "testTimeout": 7500
   },
   "prettier": {
     "arrowParens": "always",
