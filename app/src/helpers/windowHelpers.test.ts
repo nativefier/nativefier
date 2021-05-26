@@ -55,21 +55,46 @@ describe('clearAppData', () => {
   });
 });
 
-// describe('createNewTab', () => {
-//   test('creates new tab', () => {
-//     const window = new BrowserWindow();
-//     const options = {};
-//     const setupWindow = jest.fn();
-//     const url = 'https://github.com/nativefier/nativefier';
-//     const mockAddTabbedWindow: jest.SpyInstance = jest.spyOn(
-//       BrowserWindow.prototype,
-//       'addTabbedWindow',
-//     );
-//     const tab = createNewTab(options, setupWindow, url, true, window);
-//     expect(mockAddTabbedWindow).toHaveBeenCalledWith(tab);
-//     expect(setupWindow).toHaveBeenCalledWith(tab);
-//   });
-// });
+describe('createNewTab', () => {
+  const window = new BrowserWindow();
+  const options = {};
+  const setupWindow = jest.fn();
+  const url = 'https://github.com/nativefier/nativefier';
+  const mockAddTabbedWindow: jest.SpyInstance = jest.spyOn(
+    BrowserWindow.prototype,
+    'addTabbedWindow',
+  );
+  const mockFocus: jest.SpyInstance = jest.spyOn(
+    BrowserWindow.prototype,
+    'focus',
+  );
+  const mockLoadURL: jest.SpyInstance = jest.spyOn(
+    BrowserWindow.prototype,
+    'loadURL',
+  );
+
+  test('creates new foreground tab', () => {
+    const foreground = true;
+
+    const tab = createNewTab(options, setupWindow, url, foreground, window);
+
+    expect(mockAddTabbedWindow).toHaveBeenCalledWith(tab);
+    expect(setupWindow).toHaveBeenCalledWith(options, tab);
+    expect(mockLoadURL).toHaveBeenCalledWith(url);
+    expect(mockFocus).not.toHaveBeenCalled();
+  });
+
+  test('creates new background tab', () => {
+    const foreground = false;
+
+    const tab = createNewTab(options, setupWindow, url, foreground, window);
+
+    expect(mockAddTabbedWindow).toHaveBeenCalledWith(tab);
+    expect(setupWindow).toHaveBeenCalledWith(options, tab);
+    expect(mockLoadURL).toHaveBeenCalledWith(url);
+    expect(mockFocus).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe('injectCSS', () => {
   const mockGetCSSToInject: jest.SpyInstance = getCSSToInject as jest.Mock;

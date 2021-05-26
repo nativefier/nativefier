@@ -30,12 +30,20 @@ class MockBrowserWindow extends EventEmitter {
     return;
   }
 
+  focus(): void {
+    return;
+  }
+
   static fromWebContents(webContents: MockWebContents): MockBrowserWindow {
     return new MockBrowserWindow();
   }
 
   static getFocusedWindow(window: MockBrowserWindow): MockBrowserWindow {
-    return window;
+    return window ?? new MockBrowserWindow();
+  }
+
+  loadURL(url: string, options?: any): Promise<void> {
+    return Promise.resolve(undefined);
   }
 }
 
