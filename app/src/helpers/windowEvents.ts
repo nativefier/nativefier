@@ -6,12 +6,11 @@ import {
   blockExternalURL,
   createAboutBlankWindow,
   createNewTab,
-  getDefaultWindowOptions,
 } from './windowHelpers';
 
 export function onNewWindow(
   options,
-  setupWindow,
+  setupWindow: (...args) => void,
   event: Event & { newGuest?: any },
   urlToGo: string,
   frameName: string,
@@ -49,7 +48,7 @@ export function onNewWindow(
 
 export function onNewWindowHelper(
   options,
-  setupWindow,
+  setupWindow: (...args) => void,
   urlToGo: string,
   disposition: string,
   preventDefault,
@@ -61,28 +60,41 @@ export function onNewWindowHelper(
     preventDefault,
     parent,
   });
-  if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
-    preventDefault();
-    if (options.blockExternalUrls) {
-      return blockExternalURL(urlToGo).then(() => null);
-    } else {
-      return openExternal(urlToGo);
+  try {
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+      preventDefault();
+      if (options.blockExternalUrls) {
+        return blockExternalURL(urlToGo).then(() => null);
+      } else {
+        return openExternal(urlToGo);
+      }
+    } else if (urlToGo === 'about:blank') {
+      const newWindow = createAboutBlankWindow(options, setupWindow, parent);
+      return Promise.resolve(preventDefault(newWindow));
+    } else if (nativeTabsSupported()) {
+      if (disposition === 'background-tab') {
+        const newTab = createNewTab(
+          options,
+          setupWindow,
+          urlToGo,
+          false,
+          parent,
+        );
+        return Promise.resolve(preventDefault(newTab));
+      } else if (disposition === 'foreground-tab') {
+        const newTab = createNewTab(
+          options,
+          setupWindow,
+          urlToGo,
+          true,
+          parent,
+        );
+        return Promise.resolve(preventDefault(newTab));
+      }
     }
-  } else if (urlToGo === 'about:blank') {
-    const newWindow = createAboutBlankWindow(
-      options,
-      getDefaultWindowOptions(options),
-      parent,
-    );
-    return preventDefault(newWindow);
-  } else if (nativeTabsSupported()) {
-    if (disposition === 'background-tab') {
-      const newTab = createNewTab(options, setupWindow, urlToGo, false, parent);
-      return preventDefault(newTab);
-    } else if (disposition === 'foreground-tab') {
-      const newTab = createNewTab(options, setupWindow, urlToGo, true, parent);
-      return preventDefault(newTab);
-    }
+    return Promise.resolve(undefined);
+  } catch (err) {
+    return Promise.reject(err);
   }
 }
 
@@ -100,6 +112,7 @@ export function onWillNavigate(
       return openExternal(urlToGo);
     }
   }
+  return Promise.resolve(undefined);
 }
 
 export function onWillPreventUnload(event: IpcMainEvent): void {

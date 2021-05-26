@@ -67,13 +67,18 @@ export async function clearCache(window: BrowserWindow): Promise<void> {
 
 export function createAboutBlankWindow(
   options,
-  setupWindow,
+  setupWindow: (...args) => void,
   parent?: BrowserWindow,
 ): BrowserWindow {
   const window = createNewWindow(options, setupWindow, 'about:blank', parent);
-  setupWindow(options, window);
-  window.show();
-  window.focus();
+  window.hide();
+  window.webContents.once('did-stop-loading', () => {
+    if (window.webContents.getURL() === 'about:blank') {
+      window.close();
+    } else {
+      window.show();
+    }
+  });
   return window;
 }
 
@@ -97,7 +102,7 @@ export function createNewTab(
 
 export function createNewWindow(
   options,
-  setupWindow,
+  setupWindow: (...args) => void,
   url: string,
   parent?: BrowserWindow,
 ): BrowserWindow {
@@ -123,12 +128,16 @@ export function getDefaultWindowOptions(
   const browserwindowOptions: BrowserWindowConstructorOptions = {
     ...options.browserwindowOptions,
   };
-  // We're going to remove this an merge it separately into DEFAULT_WINDOW_OPTIONS.webPreferences
-  // Otherwise browserwindowOptions.webPreferences object will eliminate the webPreferences
-  // specified in the DEFAULT_WINDOW_OPTIONS and replace it with itself
+  // We're going to remove this and merge it separately into DEFAULT_WINDOW_OPTIONS.webPreferences
+  // Otherwise the browserwindowOptions.webPreferences object will completely replace the
+  // webPreferences specified in the DEFAULT_WINDOW_OPTIONS with itself
   delete browserwindowOptions.webPreferences;
 
-  return {
+  const webPreferences = {
+    ...(options.browserwindowOptions?.webPreferences ?? {}),
+  };
+
+  const defaultOptions = {
     // Convert dashes to spaces because on linux the app name is joined with dashes
     title: options.name,
     tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
@@ -139,13 +148,18 @@ export function getDefaultWindowOptions(
       webSecurity: !options.insecure,
       preload: path.join(__dirname, 'preload.js'),
       zoomFactor: options.zoom,
-      ...(options.browserWindowOptions &&
-      options.browserwindowOptions.webPreferences
-        ? options.browserwindowOptions.webPreferences
-        : {}),
+      ...webPreferences,
     },
     ...browserwindowOptions,
   };
+
+  log.debug('getDefaultWindowOptions', {
+    options,
+    webPreferences,
+    defaultOptions,
+  });
+
+  return defaultOptions;
 }
 
 export function goBack(): void {
@@ -277,9 +291,9 @@ export function zoomOut(): void {
 
 export function zoomReset(options): void {
   log.debug('zoomReset');
-  withFocusedWindow(
-    (focusedWindow) => (focusedWindow.webContents.zoomFactor = options.zoom),
-  );
+  withFocusedWindow((focusedWindow) => {
+    focusedWindow.webContents.zoomFactor = options.zoom;
+  });
 }
 
 export function zoomIn(): void {

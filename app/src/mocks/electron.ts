@@ -21,8 +21,8 @@ import { EventEmitter } from 'events';
 class MockBrowserWindow extends EventEmitter {
   webContents: MockWebContents;
 
-  constructor() {
-    super();
+  constructor(options?: any) {
+    super(options);
     this.webContents = new MockWebContents();
   }
 

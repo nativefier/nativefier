@@ -18,9 +18,9 @@ import * as log from 'loglevel';
 import { createLoginWindow } from './components/loginWindow';
 import {
   saveAppArgs,
-  MainWindow,
   APP_ARGS_FILE_PATH,
-  setupWindow,
+  setupNativefierWindow,
+  createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
@@ -263,11 +263,11 @@ if (shouldQuit) {
 }
 
 async function onReady(): Promise<void> {
-  const mainWindow = await new MainWindow(
+  const mainWindow = await createMainWindow(
     appArgs,
     app.quit.bind(this),
     setDockBadge,
-  ).create();
+  );
 
   createTrayIcon(appArgs, mainWindow);
 
@@ -345,7 +345,9 @@ async function onReady(): Promise<void> {
 }
 app.on('new-window-for-tab', () => {
   log.debug('app.new-window-for-tab');
-  mainWindow.emit('new-tab');
+  if (mainWindow) {
+    mainWindow.emit('new-tab');
+  }
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
@@ -390,8 +392,8 @@ app.on(
   'browser-window-created',
   (event: IpcMainEvent, window: BrowserWindow) => {
     log.debug('app.browser-window-created', { event, window });
-    if (setupWindow !== undefined) {
-      setupWindow(appArgs, window);
+    if (setupNativefierWindow !== undefined) {
+      setupNativefierWindow(appArgs, window);
     }
   },
 );
