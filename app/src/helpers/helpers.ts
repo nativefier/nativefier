@@ -29,6 +29,7 @@ function isInternalLoginPage(url: string): boolean {
     'mail\\.google\\.[a-zA-Z\\.]*\\/accounts/SetOSID', // Google
     'linkedin\\.[a-zA-Z\\.]*/uas/login', // LinkedIn
     'login\\.live\\.[a-zA-Z\\.]*', // Microsoft
+    'login\\.microsoftonline\\.[a-zA-Z\\.]*', // Microsoft
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
