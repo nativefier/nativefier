@@ -13,7 +13,8 @@
     //   1. package.json -> engines.node
     //   2. package.json -> devDependencies.@types/node
     //   3. tsconfig.json -> {target, lib}
-    //   4. .github/workflows/ci.yml -> node-version
+    //   4. app/tsconfig.json -> {target, lib}
+    //   5. .github/workflows/ci.yml -> node-version
     //
     // Here in tsconfig.json, we want to set the `target` and `lib` keys
     // to the "best" values for the minimum/required version of node.
