@@ -19,12 +19,12 @@ import { createLoginWindow } from './components/loginWindow';
 import {
   saveAppArgs,
   APP_ARGS_FILE_PATH,
-  setupNativefierWindow,
   createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
+import { setupNativefierWindow } from './helpers/windowEvents';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
 if (require('electron-squirrel-startup')) {
@@ -392,9 +392,7 @@ app.on(
   'browser-window-created',
   (event: IpcMainEvent, window: BrowserWindow) => {
     log.debug('app.browser-window-created', { event, window });
-    if (setupNativefierWindow !== undefined) {
-      setupNativefierWindow(appArgs, window);
-    }
+    setupNativefierWindow(appArgs, window);
   },
 );
 

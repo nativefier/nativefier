@@ -12,11 +12,7 @@ import {
   nativeTabsSupported,
   openExternal,
 } from '../helpers/helpers';
-import {
-  onNewWindow,
-  onWillNavigate,
-  onWillPreventUnload,
-} from '../helpers/windowEvents';
+import { setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearAppData,
   clearCache,
@@ -28,9 +24,6 @@ import {
   goForward,
   goToURL,
   hideWindow,
-  injectCSS,
-  sendParamsOnDidFinishLoad,
-  setProxyRules,
   zoomIn,
   zoomOut,
   zoomReset,
@@ -242,59 +235,6 @@ function setupNotificationBadge(
   window.on('focus', () => {
     log.debug('mainWindow.focus');
     setDockBadge('');
-  });
-}
-
-export function setupNativefierWindow(options, window: BrowserWindow): void {
-  if (options.userAgent) {
-    window.webContents.userAgent = options.userAgent;
-  }
-
-  if (options.proxyRules) {
-    setProxyRules(window, options.proxyRules);
-  }
-
-  injectCSS(window);
-
-  // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
-  // We can't quite cut over to that yet for a few reasons:
-  // 1. Our version of Electron does not yet support a parameter to
-  //    setWindowOpenHandler that contains `disposition', which we need.
-  //    See https://github.com/electron/electron/issues/28380
-  // 2. setWindowOpenHandler doesn't support newGuest as well
-  // Though at this point, 'new-window' bugs seem to be coming up and downstream
-  // users are being pointed to use setWindowOpenHandler.
-  // E.g., https://github.com/electron/electron/issues/28374
-
-  window.webContents.on('new-window', (event, url, frameName, disposition) => {
-    onNewWindow(
-      options,
-      setupNativefierWindow,
-      event,
-      url,
-      frameName,
-      disposition,
-    ).catch((err) => log.error('onNewWindow ERROR', err));
-  });
-  window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) => {
-    onWillNavigate(options, event, url).catch((err) => {
-      log.error(' window.webContents.on.will-navigate ERROR', err);
-      event.preventDefault();
-    });
-  });
-  window.webContents.on('will-prevent-unload', onWillPreventUnload);
-
-  sendParamsOnDidFinishLoad(options, window);
-
-  // @ts-ignore new-tab isn't in the type definition, but it does exist
-  window.on('new-tab', () => {
-    createNewTab(
-      options,
-      setupNativefierWindow,
-      options.targetUrl,
-      true,
-      window,
-    ).catch((err) => log.error('new-tab ERROR', err));
   });
 }
 
