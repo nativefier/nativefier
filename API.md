@@ -808,7 +808,7 @@ Current known internal login pages:
 Note: While .com is specified, for most of these we try to match even on non-US
 based domains such as `.co.uk` as well
 
-If you think this list is missing a login page that you think should be internal, feel free to submit an [issue](https://github.com/nativefier/nativefier/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=[Feature%20Request]%20-%20New%20internal%20login%20page%20request) or even better a pull request!
+If you think this list is missing a login page that you think should be internal, feel free to submit an [issue](https://github.com/nativefier/nativefier/issues/new?assignees=&labels=bug&template=bug_report.md&title=[New%20internal%20login%20page%20request]%20Your%20login%20page%20here) or even better a pull request!
 
 #### [proxy-rules]
 
