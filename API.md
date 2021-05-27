@@ -791,10 +791,6 @@ it, and happens *before* your `internal-urls` rule is applied. So, if you
 already set the flag to let such auth pages open internally, you don't need to
 change it but it might be unnecessary.
 
-We think this is desirable behavior and are so far unaware of cases where users
-might not want this. If you disagree, please chime in at
-[PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
-
 Current known internal login pages:
 - `amazon.com/signin`
 - `facebook.com/login`
