@@ -784,6 +784,7 @@ nativefier https://google.com --internal-urls ".*?"
 ```
 
 ##### Internal Login Pages
+
 *[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
 are considered internal. This does not replace `internal-urls`, it complements
 it, and happens *before* your `internal-urls` rule is applied. So, if you
