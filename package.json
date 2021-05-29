@@ -47,7 +47,7 @@
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
     "test:unit": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watch",
     "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest --testRegex '[-.]test\\.js$'",
     "watch": "npx concurrently \"npm:*:watch\""
