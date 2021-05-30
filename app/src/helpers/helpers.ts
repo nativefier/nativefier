@@ -20,7 +20,7 @@ export function isWindows(): boolean {
 }
 
 function isInternalLoginPage(url: string): boolean {
-  // Making changes? Remember to update the tests in helpers.test.ts
+  // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const internalLoginPagesArray = [
     'amazon\\.[a-zA-Z\\.]*/[a-zA-Z\\/]*signin', // Amazon
     `facebook\\.[a-zA-Z\\.]*\\/login`, // Facebook
@@ -29,10 +29,12 @@ function isInternalLoginPage(url: string): boolean {
     'mail\\.google\\.[a-zA-Z\\.]*\\/accounts/SetOSID', // Google
     'linkedin\\.[a-zA-Z\\.]*/uas/login', // LinkedIn
     'login\\.live\\.[a-zA-Z\\.]*', // Microsoft
+    'login\\.microsoftonline\\.[a-zA-Z\\.]*', // Microsoft
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
   ];
+  // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const regex = RegExp(internalLoginPagesArray.join('|'));
   return regex.test(url);
 }
