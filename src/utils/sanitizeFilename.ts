@@ -16,7 +16,9 @@ export function sanitizeFilename(
 
   if (!result || result === '') {
     result = DEFAULT_APP_NAME;
-    log.warn('Falling back to default app name as result of filename sanitization. Use flag "--name" to set a name');
+    log.warn(
+      'Falling back to default app name as result of filename sanitization. Use flag "--name" to set a name',
+    );
   }
   log.debug(`Sanitized filename for ${filenameToSanitize} : ${result}`);
   return result;
