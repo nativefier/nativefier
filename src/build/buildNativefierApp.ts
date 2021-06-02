@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
@@ -16,6 +17,8 @@ import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
 import { AppOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
+import ncp = require('ncp');
+import { promisify } from 'util';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -128,6 +131,8 @@ function trimUnprocessableOptions(options: AppOptions): void {
 export async function buildNativefierApp(rawOptions): Promise<string> {
   log.info('\nProcessing options...');
 
+  const tmpUpgradePath = getTempDir('upgrade', 0o755);
+
   if (isUpgrade(rawOptions)) {
     log.debug('Attempting to upgrade from', rawOptions.upgrade);
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
@@ -139,8 +144,8 @@ export async function buildNativefierApp(rawOptions): Promise<string> {
       );
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
-    if (rawOptions.out === undefined && rawOptions.overwrite) {
-      rawOptions.out = path.dirname(rawOptions.upgrade);
+    if (!rawOptions.out && rawOptions.overwrite) {
+      rawOptions.out = tmpUpgradePath;
     }
   }
   log.debug('rawOptions', rawOptions);
@@ -181,7 +186,33 @@ export async function buildNativefierApp(rawOptions): Promise<string> {
   const appPathArray = await electronPackager(options.packager);
 
   log.info('\nFinalizing build...');
-  const appPath = getAppPath(appPathArray);
+  let appPath = getAppPath(appPathArray);
+
+  if (options.packager.upgrade && rawOptions.out == tmpUpgradePath) {
+    let newPath = path.dirname(options.packager.upgradeFrom);
+    const syncNcp = promisify(ncp);
+    if (options.packager.platform === 'darwin') {
+      await syncNcp(
+        path.join(appPath, `${options.packager.name}.app`),
+        newPath,
+        { clobber: options.packager.overwrite },
+      );
+      newPath = newPath.endsWith('.app')
+        ? newPath
+        : path.join(newPath, `${options.packager.name}.app`);
+    } else {
+      fs.readdirSync(appPath).forEach(
+        async (x) =>
+          await syncNcp(
+            path.join(appPath, `${options.packager.name}.app`),
+            newPath,
+            { clobber: options.packager.overwrite },
+          ),
+      );
+    }
+    fs.rmdirSync(appPath, { recursive: true });
+    appPath = newPath;
+  }
 
   if (appPath) {
     let osRunHelp = '';

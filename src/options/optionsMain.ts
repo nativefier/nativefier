@@ -109,26 +109,6 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     },
   };
 
-  if (options.nativefier.verbose) {
-    log.setLevel('trace');
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('debug').enable('electron-packager');
-    } catch (err) {
-      log.debug(
-        'Failed to enable electron-packager debug output. This should not happen,',
-        'and suggests their internals changed. Please report an issue.',
-      );
-    }
-
-    log.debug(
-      'Running in verbose mode! This will produce a mountain of logs and',
-      'is recommended only for troubleshooting or if you like Shakespeare.',
-    );
-  } else {
-    log.setLevel('info');
-  }
-
   if (options.packager.electronVersion) {
     const requestedVersion: string = options.packager.electronVersion;
     if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
@@ -201,11 +181,18 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   }
 
   if (rawOptions.globalShortcuts) {
-    log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
-    const globalShortcuts = JSON.parse(
-      fs.readFileSync(rawOptions.globalShortcuts).toString(),
-    );
-    options.nativefier.globalShortcuts = globalShortcuts;
+    if (typeof rawOptions.globalShortcuts === 'string') {
+      // This is a file we got over the command line
+      log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
+      const globalShortcuts = JSON.parse(
+        fs.readFileSync(rawOptions.globalShortcuts).toString(),
+      );
+      options.nativefier.globalShortcuts = globalShortcuts;
+    } else {
+      // This is an object we got from an existing config in an upgrade
+      log.debug('Using global shortcuts object', rawOptions.globalShortcuts);
+      options.nativefier.globalShortcuts = rawOptions.globalShortcuts;
+    }
   }
 
   await asyncConfig(options);

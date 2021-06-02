@@ -178,11 +178,9 @@ export async function prepareElectronApp(
   }
 
   const appJsonPath = path.join(dest, '/nativefier.json');
-  log.debug(`Writing app config to ${appJsonPath}`);
-  await writeFileAsync(
-    appJsonPath,
-    JSON.stringify(pickElectronAppArgs(options)),
-  );
+  const pickedOptions = pickElectronAppArgs(options);
+  log.debug(`Writing app config to ${appJsonPath}`, pickedOptions);
+  await writeFileAsync(appJsonPath, JSON.stringify(pickedOptions));
 
   if (options.nativefier.bookmarksMenu) {
     const bookmarksJsonPath = path.join(dest, '/bookmarks.json');

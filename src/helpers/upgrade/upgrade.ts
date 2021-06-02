@@ -181,7 +181,6 @@ export function useOldAppOptions(
     rawOptions.out = rawOptions.targetUrl;
   }
 
-  log.debug('rawOptions', rawOptions);
   log.debug('oldApp', oldApp);
 
   const combinedOptions = { ...rawOptions, ...oldApp.options };
