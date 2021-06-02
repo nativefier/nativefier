@@ -2,10 +2,82 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, OpenExternalOptions, shell } from 'electron';
 import * as log from 'loglevel';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
+
+/**
+ * Helper to print debug messages from the main process in the browser window
+ */
+export function debugLog(browserWindow: BrowserWindow, message: string): void {
+  // Need a delay, as it takes time for the preloaded js to be loaded by the window
+  setTimeout(() => {
+    browserWindow.webContents.send('debug', message);
+  }, 3000);
+  log.debug(message);
+}
+
+/**
+ * Helper to determine domain-ish equality for many cases, the trivial ones
+ * and the trickier ones, e.g. `blog.foo.com` and `shop.foo.com`,
+ * in a way that is "good enough", and doesn't need a list of SLDs.
+ * See chat at https://github.com/nativefier/nativefier/pull/1171#pullrequestreview-649132523
+ */
+function domainify(url: string): string {
+  // So here's what we're doing here:
+  // Get the hostname from the url
+  const hostname = new URL(url).hostname;
+  // Drop the first section if the domain
+  const domain = hostname.split('.').slice(1).join('.');
+  // Check the length, if it's too short, the hostname was probably the domain
+  // Or if the domain doesn't have a . in it we went too far
+  if (domain.length < 6 || domain.split('.').length === 0) {
+    return hostname;
+  }
+  // This SHOULD be the domain, but nothing is 100% guaranteed
+  return domain;
+}
+
+export function getAppIcon(): string {
+  // Prefer ICO under Windows, see
+  // https://www.electronjs.org/docs/api/browser-window#new-browserwindowoptions
+  // https://www.electronjs.org/docs/api/native-image#supported-formats
+  if (isWindows()) {
+    const ico = path.join(__dirname, '..', 'icon.ico');
+    if (fs.existsSync(ico)) {
+      return ico;
+    }
+  }
+  const png = path.join(__dirname, '..', 'icon.png');
+  if (fs.existsSync(png)) {
+    return png;
+  }
+}
+
+export function getCounterValue(title: string): string {
+  const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
+  const match = itemCountRegex.exec(title);
+  return match ? match[1] : undefined;
+}
+
+export function getCSSToInject(): string {
+  let cssToInject = '';
+  const cssFiles = fs
+    .readdirSync(INJECT_DIR, { withFileTypes: true })
+    .filter(
+      (injectFile) => injectFile.isFile() && injectFile.name.endsWith('.css'),
+    )
+    .map((cssFileStat) =>
+      path.resolve(path.join(INJECT_DIR, cssFileStat.name)),
+    );
+  for (const cssFile of cssFiles) {
+    log.debug('Injecting CSS file', cssFile);
+    const cssFileData = fs.readFileSync(cssFile);
+    cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
+  }
+  return cssToInject;
+}
 
 export function isOSX(): boolean {
   return os.platform() === 'darwin';
@@ -44,7 +116,8 @@ export function linkIsInternal(
   newUrl: string,
   internalUrlRegex: string | RegExp,
 ): boolean {
-  if (newUrl === 'about:blank') {
+  log.debug('linkIsInternal', { currentUrl, newUrl, internalUrlRegex });
+  if (newUrl.split('#')[0] === 'about:blank') {
     return true;
   }
 
@@ -80,87 +153,16 @@ export function linkIsInternal(
   }
 }
 
-/**
- * Helper to determine domain-ish equality for many cases, the trivial ones
- * and the trickier ones, e.g. `blog.foo.com` and `shop.foo.com`,
- * in a way that is "good enough", and doesn't need a list of SLDs.
- * See chat at https://github.com/nativefier/nativefier/pull/1171#pullrequestreview-649132523
- */
-function domainify(url: string): string {
-  // So here's what we're doing here:
-  // Get the hostname from the url
-  const hostname = new URL(url).hostname;
-  // Drop the first section if the domain
-  const domain = hostname.split('.').slice(1).join('.');
-  // Check the length, if it's too short, the hostname was probably the domain
-  // Or if the domain doesn't have a . in it we went too far
-  if (domain.length < 6 || domain.split('.').length === 0) {
-    return hostname;
-  }
-  // This SHOULD be the domain, but nothing is 100% guaranteed
-  return domain;
-}
-
-export function shouldInjectCss(): boolean {
-  try {
-    return fs.existsSync(INJECT_DIR);
-  } catch (e) {
-    return false;
-  }
-}
-
-export function getCssToInject(): string {
-  let cssToInject = '';
-  const cssFiles = fs
-    .readdirSync(INJECT_DIR, { withFileTypes: true })
-    .filter(
-      (injectFile) => injectFile.isFile() && injectFile.name.endsWith('.css'),
-    )
-    .map((cssFileStat) =>
-      path.resolve(path.join(INJECT_DIR, cssFileStat.name)),
-    );
-  for (const cssFile of cssFiles) {
-    log.debug('Injecting CSS file', cssFile);
-    const cssFileData = fs.readFileSync(cssFile);
-    cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
-  }
-  return cssToInject;
-}
-/**
- * Helper to print debug messages from the main process in the browser window
- */
-export function debugLog(browserWindow: BrowserWindow, message: string): void {
-  // Need a delay, as it takes time for the preloaded js to be loaded by the window
-  setTimeout(() => {
-    browserWindow.webContents.send('debug', message);
-  }, 3000);
-  log.info(message);
-}
-
-export function getAppIcon(): string {
-  // Prefer ICO under Windows, see
-  // https://www.electronjs.org/docs/api/browser-window#new-browserwindowoptions
-  // https://www.electronjs.org/docs/api/native-image#supported-formats
-  if (isWindows()) {
-    const ico = path.join(__dirname, '..', 'icon.ico');
-    if (fs.existsSync(ico)) {
-      return ico;
-    }
-  }
-  const png = path.join(__dirname, '..', 'icon.png');
-  if (fs.existsSync(png)) {
-    return png;
-  }
-}
-
 export function nativeTabsSupported(): boolean {
   return isOSX();
 }
 
-export function getCounterValue(title: string): string {
-  const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
-  const match = itemCountRegex.exec(title);
-  return match ? match[1] : undefined;
+export function openExternal(
+  url: string,
+  options?: OpenExternalOptions,
+): Promise<void> {
+  log.debug('openExternal', { url, options });
+  return shell.openExternal(url, options);
 }
 
 export function removeUserAgentSpecifics(
@@ -176,4 +178,12 @@ export function removeUserAgentSpecifics(
   return userAgentFallback
     .replace(`Electron/${process.versions.electron} `, '')
     .replace(`${appName}/${appVersion} `, ' ');
+}
+
+export function shouldInjectCSS(): boolean {
+  try {
+    return fs.existsSync(INJECT_DIR);
+  } catch (e) {
+    return false;
+  }
 }

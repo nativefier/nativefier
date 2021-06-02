@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import path from 'path';
 
-import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
+import { clipboard, Menu, MenuItemConstructorOptions } from 'electron';
 import * as log from 'loglevel';
 
 type BookmarksLink = {
@@ -28,10 +28,11 @@ export function createMenu({
   zoomBuildTimeValue,
   goBack,
   goForward,
-  getCurrentUrl,
-  gotoUrl,
+  getCurrentURL,
+  goToURL,
   clearAppData,
   disableDevTools,
+  openExternal,
 }): void {
   const zoomResetLabel =
     zoomBuildTimeValue === 1.0
@@ -68,7 +69,7 @@ export function createMenu({
         label: 'Copy Current URL',
         accelerator: 'CmdOrCtrl+L',
         click: () => {
-          const currentURL = getCurrentUrl();
+          const currentURL = getCurrentURL();
           clipboard.writeText(currentURL);
         },
       },
@@ -240,15 +241,13 @@ export function createMenu({
       {
         label: `Built with Nativefier v${nativefierVersion}`,
         click: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/nativefier/nativefier');
+          openExternal('https://github.com/nativefier/nativefier');
         },
       },
       {
         label: 'Report an Issue',
         click: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/nativefier/nativefier/issues');
+          openExternal('https://github.com/nativefier/nativefier/issues');
         },
       },
     ],
@@ -333,7 +332,7 @@ export function createMenu({
             return {
               label: bookmark.title,
               click: () => {
-                gotoUrl(bookmark.url);
+                goToURL(bookmark.url);
               },
               accelerator: accelerator,
             };

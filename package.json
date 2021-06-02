@@ -90,6 +90,9 @@
   },
   "jest": {
     "collectCoverage": true,
+    "moduleNameMapper": {
+      "^electron$": "<rootDir>/app/dist/mocks/electron.js"
+    },
     "setupFiles": [
       "./lib/jestSetupFiles"
     ],

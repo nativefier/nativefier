@@ -10,19 +10,21 @@ import {
   globalShortcut,
   systemPreferences,
   BrowserWindow,
+  IpcMainEvent,
 } from 'electron';
 import electronDownload from 'electron-dl';
 import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
-  createMainWindow,
   saveAppArgs,
   APP_ARGS_FILE_PATH,
+  createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
+import { setupNativefierWindow } from './helpers/windowEvents';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
 if (require('electron-squirrel-startup')) {
@@ -31,6 +33,8 @@ if (require('electron-squirrel-startup')) {
 
 if (process.argv.indexOf('--verbose') > -1) {
   log.setLevel('DEBUG');
+  process.traceDeprecation = true;
+  process.traceProcessWarnings = true;
 }
 
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
@@ -95,7 +99,6 @@ if (appArgs.processEnvs) {
 }
 
 let mainWindow: BrowserWindow;
-let setupWindow: (BrowserWindow) => void;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
@@ -233,7 +236,7 @@ if (shouldQuit) {
     // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
     app.on('widevine-ready', (version: string, lastVersion: string) => {
       log.debug('app.widevine-ready', { version, lastVersion });
-      onReady();
+      onReady().catch((err) => log.error('onReady ERROR', err));
     });
 
     app.on(
@@ -254,20 +257,18 @@ if (shouldQuit) {
   } else {
     app.on('ready', () => {
       log.debug('ready');
-      onReady();
+      onReady().catch((err) => log.error('onReady ERROR', err));
     });
   }
 }
 
-function onReady(): void {
-  const createWindowResult = createMainWindow(
+async function onReady(): Promise<void> {
+  const mainWindow = await createMainWindow(
     appArgs,
     app.quit.bind(this),
     setDockBadge,
   );
-  log.debug('onReady', createWindowResult);
-  mainWindow = createWindowResult.window;
-  setupWindow = createWindowResult.setupWindow;
+
   createTrayIcon(appArgs, mainWindow);
 
   // Register global shortcuts
@@ -333,17 +334,20 @@ function onReady(): void {
     const oldBuildWarningText =
       appArgs.oldBuildWarningText ||
       'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.';
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    dialog.showMessageBox(null, {
-      type: 'warning',
-      message: 'Old build detected',
-      detail: oldBuildWarningText,
-    });
+    dialog
+      .showMessageBox(null, {
+        type: 'warning',
+        message: 'Old build detected',
+        detail: oldBuildWarningText,
+      })
+      .catch((err) => log.error('dialog.showMessageBox ERROR', err));
   }
 }
 app.on('new-window-for-tab', () => {
   log.debug('app.new-window-for-tab');
-  mainWindow.emit('new-tab');
+  if (mainWindow) {
+    mainWindow.emit('new-tab');
+  }
 });
 
 app.on('login', (event, webContents, request, authInfo, callback) => {
@@ -357,13 +361,15 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   ) {
     callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
   } else {
-    createLoginWindow(callback);
+    createLoginWindow(callback, mainWindow).catch((err) =>
+      log.error('createLoginWindow ERROR', err),
+    );
   }
 });
 
 app.on(
   'accessibility-support-changed',
-  (event: Event, accessibilitySupportEnabled: boolean) => {
+  (event: IpcMainEvent, accessibilitySupportEnabled: boolean) => {
     log.debug('app.accessibility-support-changed', {
       event,
       accessibilitySupportEnabled,
@@ -373,22 +379,23 @@ app.on(
 
 app.on(
   'activity-was-continued',
-  (event: Event, type: string, userInfo: any) => {
+  (event: IpcMainEvent, type: string, userInfo: any) => {
     log.debug('app.activity-was-continued', { event, type, userInfo });
   },
 );
 
-app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
+app.on('browser-window-blur', (event: IpcMainEvent, window: BrowserWindow) => {
   log.debug('app.browser-window-blur', { event, window });
 });
 
-app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-created', { event, window });
-  if (setupWindow !== undefined) {
-    setupWindow(window);
-  }
-});
+app.on(
+  'browser-window-created',
+  (event: IpcMainEvent, window: BrowserWindow) => {
+    log.debug('app.browser-window-created', { event, window });
+    setupNativefierWindow(appArgs, window);
+  },
+);
 
-app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
+app.on('browser-window-focus', (event: IpcMainEvent, window: BrowserWindow) => {
   log.debug('app.browser-window-focus', { event, window });
 });

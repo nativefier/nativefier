@@ -1,9 +1,17 @@
 import * as path from 'path';
 
+import * as log from 'loglevel';
+
 import { BrowserWindow, ipcMain } from 'electron';
 
-export function createLoginWindow(loginCallback): BrowserWindow {
+export async function createLoginWindow(
+  loginCallback,
+  parent?: BrowserWindow,
+): Promise<BrowserWindow> {
+  log.debug('createLoginWindow', loginCallback, parent);
+
   const loginWindow = new BrowserWindow({
+    parent,
     width: 300,
     height: 400,
     frame: false,
@@ -12,8 +20,9 @@ export function createLoginWindow(loginCallback): BrowserWindow {
       nodeIntegration: true, // TODO work around this; insecure
     },
   });
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  loginWindow.loadURL(`file://${path.join(__dirname, 'static/login.html')}`);
+  await loginWindow.loadURL(
+    `file://${path.join(__dirname, 'static/login.html')}`,
+  );
 
   ipcMain.once('login-message', (event, usernameAndPassword) => {
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);
