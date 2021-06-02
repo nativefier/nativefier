@@ -42,8 +42,28 @@ class MockBrowserWindow extends EventEmitter {
     return window ?? new MockBrowserWindow();
   }
 
+  isSimpleFullScreen(): boolean {
+    return undefined;
+  }
+
+  isFullScreen(): boolean {
+    return undefined;
+  }
+
+  isFullScreenable(): boolean {
+    return undefined;
+  }
+
   loadURL(url: string, options?: any): Promise<void> {
     return Promise.resolve(undefined);
+  }
+
+  setFullScreen(flag: boolean): void {
+    return;
+  }
+
+  setSimpleFullScreen(flag: boolean): void {
+    return;
   }
 }
 
