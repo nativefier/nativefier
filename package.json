@@ -101,14 +101,13 @@
       "<rootDir>/src.*",
       "<rootDir>/node_modules.*",
       "<rootDir>/app/src.*",
-      "<rootDir>/app/dist.*",
       "<rootDir>/app/node_modules.*"
     ],
     "watchPathIgnorePatterns": [
       "<rootDir>/src.*",
       "<rootDir>/tsconfig.json",
+      "<rootDir>/app/node_modules.*",
       "<rootDir>/app/src.*",
-      "<rootDir>/app/dist.*",
       "<rootDir>/app/tsconfig.json"
     ]
   },
