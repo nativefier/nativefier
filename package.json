@@ -34,20 +34,20 @@
     "build-app": "cd app && webpack",
     "build-app-static": "ncp app/src/static/ app/lib/static/ && ncp app/dist/preload.js app/lib/preload.js && ncp app/dist/preload.js.map app/lib/preload.js.map",
     "build": "npm run clean && tsc --build . app && npm run build-app && npm run build-app-static",
-    "build:watch": "tsc --build . app --watch",
+    "build:watch": "npm run clean && tsc --build . app --watch",
     "changelog": "./.github/generate-changelog",
     "ci": "npm run lint && npm test",
     "clean": "rimraf lib/ app/lib/ app/dist/",
     "clean:full": "rimraf lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
     "lint:fix": "eslint . --ext .ts --fix",
-    "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
+    "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
     "prepare": "cd app && npm install && cd .. && npm run build",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
     "test:unit": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest --testRegex '[-.]test\\.js$'",
     "watch": "npx concurrently \"npm:*:watch\""
@@ -66,7 +66,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.20",
+    "@types/jest": "^26.0.23",
     "@types/ncp": "^2.0.4",
     "@types/node": "^12.12.6",
     "@types/page-icon": "^0.3.3",
@@ -76,13 +76,17 @@
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "jest": "^26.6.3",
+    "jest": "^27.0.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.2.1",
     "typescript": "^4.2.3",
     "webpack": "^5.24.4",
     "webpack-cli": "^4.5.0"
+  },
+  "jest_COMMENTS": {
+    "testPathIgnorePatterns": "See https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring . We set it to 1. ignore coverage for deps, and 2. be sure we test the compiled JS, which is in `lib`, not `src` or `dist`",
+    "watchPathIgnorePatterns": "See https://jestjs.io/docs/configuration#watchpathignorepatterns-arraystring . We set it for `jest --watch` (a.k.a. `npm run test:watch`) to trigger only after `tsc --watch` (a.k.a. `npm run build:watch`) completes its incremental compilation. Else, jest will pick up immediately on changes in `src` when TSC is barely running, hence testing not-recompiled-yet code and being super confusing, as 1. your changes won't be taken during this first run, and 2. the *next* run (e.g. after a second 'Save' in your editor) will actually have the new code :D"
   },
   "jest": {
     "collectCoverage": true,
@@ -94,9 +98,18 @@
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "/node_modules/",
+      "<rootDir>/src.*",
+      "<rootDir>/node_modules.*",
       "<rootDir>/app/src.*",
-      "<rootDir>/src.*"
+      "<rootDir>/app/dist.*",
+      "<rootDir>/app/node_modules.*"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/src.*",
+      "<rootDir>/tsconfig.json",
+      "<rootDir>/app/src.*",
+      "<rootDir>/app/dist.*",
+      "<rootDir>/app/tsconfig.json"
     ]
   },
   "prettier": {

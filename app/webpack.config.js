@@ -1,5 +1,7 @@
 const path = require('path');
 
+// Q: Why do you use webpack?
+// A: https://github.com/nativefier/nativefier/commit/cde5c1e13bdc2739604cab04bac64eae0d719ed1
 module.exports = {
   target: 'node',
   entry: './src/main.ts',
