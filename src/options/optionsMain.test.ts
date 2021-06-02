@@ -3,12 +3,12 @@ import * as asyncConfig from './asyncConfig';
 import { inferPlatform } from '../infer/inferOs';
 
 const mockedAsyncConfig = { some: 'options' };
-let asyncConfigMock: jasmine.Spy;
+let asyncConfigMock: jest.SpyInstance;
 
 beforeAll(() => {
-  asyncConfigMock = spyOn(asyncConfig, 'asyncConfig').and.returnValue(
-    mockedAsyncConfig,
-  );
+  asyncConfigMock = jest
+    .spyOn(asyncConfig, 'asyncConfig')
+    .mockResolvedValue(mockedAsyncConfig);
 });
 
 test('it should call the async config', async () => {

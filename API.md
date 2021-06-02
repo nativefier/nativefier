@@ -62,6 +62,7 @@
   - [URL Handling Options](#url-handling-options)
     - [[block-external-urls]](#block-external-urls)
     - [[internal-urls]](#internal-urls)
+      - [[internal-login-pages]](#internal-login-pages)
     - [[proxy-rules]](#proxy-rules)
   - [Auth Options](#auth-options)
     - [[basic-auth-username] and [basic-auth-password]](#basic-auth-username-and-basic-auth-password)
@@ -770,16 +771,6 @@ once stripped of `www.`. For example, by default,
 - URLs from/to `foo.com`, `app.foo.com`, `www.foo.com` are considered internal.
 - URLs from/to `abc.com` and `xyz.com` are considered external.
 
-*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
-(e.g. `accounts.google.com` or `login.live.com`) are considered internal.
-This does not replace `internal-urls`, it complements it, and happens *before*
-your `internal-urls` rule is applied. So, if you already set the flag to let such
-auth pages open internally, you don't need to change it but it might be unnecessary.
-
-We think this is desirable behavior and are so far unaware of cases where users
-might not want this. If you disagree, please chime in at
-[PR #1124: App: Automatically consider known login pages as internal](https://github.com/nativefier/nativefier/pull/1124)
-
 Example of `--internal-urls` causing all links to Google to be considered internal:
 
 ```bash
@@ -791,6 +782,33 @@ Or, if you never expect Nativefier to open an "external" page in your OS browser
 ```bash
 nativefier https://google.com --internal-urls ".*?"
 ```
+
+##### Internal Login Pages
+
+*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
+are considered internal. This does not replace `internal-urls`, it complements
+it, and happens *before* your `internal-urls` rule is applied. So, if you
+already set the flag to let such auth pages open internally, you don't need to
+change it but it might be unnecessary.
+
+Current known internal login pages:
+- `amazon.com/signin`
+- `facebook.com/login`
+- `github.com/login`
+- `github.com/session`
+- `accounts.google.com`
+- `mail.google.com/accounts/SetOSID`
+- `linkedin.com/uas/login`
+- `login.live.com`
+- `login.microsoftonline.com`
+- `okta.com`
+- `twitter.com/oauth/authenticate`
+- `appleid.apple.com/auth/authorize`
+
+Note: While .com is specified, for most of these we try to match even on non-US
+based domains such as `.co.uk` as well
+
+If you think this list is missing a login page that you think should be internal, feel free to submit an [issue](https://github.com/nativefier/nativefier/issues/new?assignees=&labels=bug&template=bug_report.md&title=[New%20internal%20login%20page%20request]%20Your%20login%20page%20here) or even better a pull request!
 
 #### [proxy-rules]
 
