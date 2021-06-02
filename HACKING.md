@@ -106,8 +106,7 @@ but is painful to do manually. Do yourself a favor and install a
 - For a good live experience, open two terminal panes/tabs running code/tests watchers:
   1. Run a TSC watcher: `npm run build:watch`
   2. Run a Jest unit tests watcher: `npm run test:watch`
-  3. This should look like this:
-     https://user-images.githubusercontent.com/522085/120407694-abdf3f00-c31b-11eb-9ab5-a531a929adb9.mp4
+  3. Here is [a screencast of how the live-reload experience should look like](https://user-images.githubusercontent.com/522085/120407694-abdf3f00-c31b-11eb-9ab5-a531a929adb9.mp4)
 - Alternatively, you can run both test processes in the same terminal by running: `npm run watch`
 
 ## Release
