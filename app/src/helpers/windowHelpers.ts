@@ -218,31 +218,56 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         details: OnHeadersReceivedListenerDetails,
         callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
       ) => {
-        log.debug(
-          'browserWindow.webContents.session.webRequest.onHeadersReceived',
-          { details, callback },
-        );
-        if (details.webContents) {
-          details.webContents
-            .insertCSS(cssToInject)
-            .catch((err) => {
-              log.error('webContents.insertCSS ERROR', err);
-            })
-            .finally(() =>
-              callback({
-                cancel: false,
-                responseHeaders: details.responseHeaders,
-              }),
-            );
-        } else {
-          callback({
-            cancel: false,
-            responseHeaders: details.responseHeaders,
+        injectCSSIntoResponse(details, cssToInject)
+          .then((responseHeaders) => {
+            callback({
+              cancel: false,
+              responseHeaders,
+            });
+          })
+          .catch((err) => {
+            log.error('winjectCSSIntoResponse ERROR', err);
+            callback({
+              cancel: false,
+              responseHeaders: details.responseHeaders,
+            });
           });
-        }
       },
     );
   });
+}
+
+async function injectCSSIntoResponse(
+  details: OnHeadersReceivedListenerDetails,
+  cssToInject: string,
+): Promise<Record<string, string[]>> {
+  const nonInjectableMethods = ['DELETE', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
+  const nonInjectableResourceTypes = [
+    'image',
+    'other',
+    'script',
+    'stylesheet',
+    'xhr',
+  ];
+
+  if (
+    nonInjectableMethods.includes(details.method) ||
+    nonInjectableResourceTypes.includes(details.resourceType) ||
+    !details.webContents
+  ) {
+    log.debug(
+      `Skipping CSS injection for:\n${details.url}\nwith method ${details.method} and resourceType ${details.resourceType} and content-type ${details.responseHeaders['content-type']}`,
+    );
+    return details.responseHeaders;
+  }
+
+  log.debug('browserWindow.webContents.session.webRequest.onHeadersReceived', {
+    details,
+    contentType: details.responseHeaders['content-type'],
+  });
+  await details.webContents.insertCSS(cssToInject);
+
+  return details.responseHeaders;
 }
 
 export function sendParamsOnDidFinishLoad(
