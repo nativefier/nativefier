@@ -69,8 +69,6 @@
     - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
     - [[ignore-certificate]](#ignore-certificate)
     - [[insecure]](#insecure)
-  - [Flash Options (Deprecated)](#flash-options-deprecated)
-    - [[flash] and [flash-path] (DEPRECATED)](#flash-and-flash-path-deprecated)
   - [Platform Specific Options](#platform-specific-options)
     - [[app-copyright]](#app-copyright)
     - [[app-version]](#app-version)
@@ -83,6 +81,8 @@
   - [Debug Options](#debug-options)
     - [[crash-reporter]](#crash-reporter)
     - [[verbose]](#verbose)
+  - [Flash Options (Deprecated)](#flash-options-deprecated)
+    - [[flash] and [flash-path] (DEPRECATED)](#flash-and-flash-path-deprecated)
 - [Programmatic API](#programmatic-api)
 - [Accessing The Electron Session](#accessing-the-electron-session)
   - [Important Note On funcArgs](#important-note-on-funcargs)
@@ -177,12 +177,9 @@ Notes:
 - When packaging for Windows, must be a path to a `.ico` file.
 - When packaging for Linux, must be a path to a `.png` file.
 - When packaging for macOS, must be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
+  If your `PATH` has our image-conversion dependencies (`iconutil`, and either ImageMagick `convert` + `identify`, or GraphicsMagick `gm`), Nativefier will automatically convert the `.png` to a `.icns` for you.
 
-If your `PATH` has our image-conversion dependencies (`iconutil`, and either ImageMagick `convert` + `identify`, or GraphicsMagick `gm`), Nativefier will automatically convert the `.png` to a `.icns` for you.
-
-##### Manually Converting `.icns`
-
-[iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
+Alternative to macOS users: [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
 To retrieve the `.icns` file from the downloaded file, extract it first and press File > Get Info. Then select the icon in the top left corner of the info window and press `⌘-C`. Open Preview and press File > New from clipboard and save the `.icns` file. It took me a while to figure out how to do that and question why a `.icns` file was not simply provided in the downloaded archive.
 
@@ -194,7 +191,7 @@ To retrieve the `.icns` file from the downloaded file, extract it first and pres
 
 The name of the application, which will affect strings in titles and the icon.
 
-**For Linux Users:** Do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
+Note to Linux users: do not put spaces if you define the app name yourself with `--name`, as this will cause problems (tested on Ubuntu 14.04) when pinning a packaged app to the launcher.
 
 #### [no-overwrite]
 
@@ -228,9 +225,7 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can 
 
 *[New in 43.1.0]* Make your app store its user data (cookies, cache, etc) inside the app folder, making it "portable" in the sense popularized by [PortableApps.com](https://portableapps.com/): you can carry it around e.g. on a USB key, and it will work the same with your data.
 
-**IMPORTANT SECURITY NOTICE**
-
-When creating a portable app, all data accumulated after running the app (including login information, cache, cookies), will be saved in the app folder. If this app is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENTIALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
+*IMPORTANT SECURITY NOTICE*: when creating a portable app, all data accumulated after running the app (including login information, cache, cookies), will be saved in the app folder. If this app is then shared with others, THEY WILL HAVE THAT ACCUMULATED DATA, POTENTIALLY INCLUDING ACCESS TO ANY ACCOUNTS YOU LOGGED INTO.
 
 → Best practice to *distribute apps* using this flag:
 
@@ -248,9 +243,7 @@ When creating a portable app, all data accumulated after running the app (includ
 
 *[New in 43.1.0]* This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
 
-**IMPORTANT NOTE**
-
-**This action is an in-place upgrade, and will REPLACE the current application. In case this feature does not work as intended or as the user may wish, it is advised to make a backup of the app to be upgraded before using, or specify an alternate directory as you would when creating a new file.**
+*Important data safety note*: This action is an in-place upgrade, and will REPLACE the current application. In case this feature does not work as intended or as the user may wish, it is advised to make a backup of the app to be upgraded before using, or specify an alternate directory as you would when creating a new file.**
 
 The provided path must be the "executable" of an application packaged with a previous version of Nativefier, and to be upgraded to the latest version of Nativefier. "Executable" means: the `.exe` file on Windows, the executable on Linux, or the `.app` on macOS. The executable must be living in the original context where it was generated (i.e., on Windows and Linux, the exe file must still be in the folder containing the generated `resources` directory).
 
@@ -585,16 +578,12 @@ You may define multiple global shortcuts which can trigger a series of input eve
 ];
 ```
 
-**Important note for using modifier keys:**
-
-If you want to trigger key events which include a modifier (Ctrl, Shift,...), you need to keyDown the modifier key first, then keyDown the actual key _including_ the modifier key as modifier property and then keyUp both keys again. No idea what this means? See the example for `MediaPreviousTrack` below!
-
-**For more details, please see the Electron documentation:**
+*Note regarding modifier keys:* If you want to trigger key events which include a modifier (Ctrl, Shift,...), you need to keyDown the modifier key first, then keyDown the actual key _including_ the modifier key as modifier property and then keyUp both keys again. No idea what this means? See the example for `MediaPreviousTrack` below! For more details, please see the Electron documentation:
 
 - List of available keys: https://github.com/electron/electron/blob/master/docs/api/accelerator.md
 - Details about how to create input event objects: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
 
-**Note about Global Shortucts on macOS**
+*Note about Global Shortcuts on macOS*
 
 On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
@@ -849,6 +838,14 @@ nativefier https://google.com --proxy-rules http://127.0.0.1:1080
 
 ### (In)Security Options
 
+#### [disable-old-build-warning-yesiknowitisinsecure]
+
+Disables the warning shown when opening a Nativefier app made a long time ago, using an old and probably insecure Electron. Nativefier uses the Chrome browser (through Electron), and remaining on an old version is A. performance sub-optimal and B. dangerous.
+
+However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
+
+More description about the options for `nativefier` can be found at the above [section](#command-line).
+
 #### [ignore-certificate]
 
 ```
@@ -864,50 +861,6 @@ Forces the packaged app to ignore certificate errors.
 ```
 
 Forces the packaged app to ignore web security errors, such as [Mixed Content](https://developer.mozilla.org/en-US/docs/Security/Mixed_content) errors when receiving HTTP content on a HTTPS site.
-
-### Flash Options (DEPRECATED)
-
-#### flash] and [flash-path] (DEPRECATED)
-
-**DEPRECATED as of 2021-03-10, will be removed at some point**
-
-There's nothing Nativefier can do to stop this treadmill, so here it goes.
-Flash is triply dead upstream: at Adobe, in Chrome, and now in Electron.
-Nativefier 43.0.0 was just released, and defaults to Electron 12, which
-[removes support for Flash](https://www.electronjs.org/blog/electron-12-0#breaking-changes):
-
-> Removed Flash support: Chromium has removed support for Flash, which was also
-> removed in Electron 12. See [Chromium's Flash Roadmap](https://www.chromium.org/flash-roadmap).
-
-Your best bet now is on [Ruffle, "a Flash Player emulator built in Rust"](https://ruffle.rs/).
-It's usable to play `.swf`s, and that's [what Archive.org does](https://blog.archive.org/2020/11/19/flash-animations-live-forever-at-the-internet-archive/).
-It's an emulator, so it's not the real perfect deal, but it already works well
-for many swfs, and will get better with time.
-
-You _might_ still be able to use Nativefier's existing Flash flags while they work,
-by adding a `--electron-version 11.3.0` to your flags, but it's only downhill
-from here and our Flash flags will be removed at some point in the future,
-when maintaining compatibility with old Electrons becomes impossible.
-
-```
---flash
-```
-
-If `--flash` is specified, Nativefier will automatically try to determine the
-location of your Google Chrome flash binary. Take note that the version of Chrome
-on your computer should be the same as the version used by the version of Electron
-for the Nativefied package.
-
-Note that if this flag is specified, the `--insecure` flag will be added automatically,
-to prevent Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/).
-
-```
---flash-path <value>
-```
-
-You can also specify the path to the Chrome flash plugin directly with this flag.
-The path can be found at [chrome://plugins](chrome://plugins), under
-`Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag.
 
 ### Platform Specific Options
 
@@ -991,6 +944,62 @@ nativefier http://google.com --crash-reporter https://electron-crash-reporter.ap
 
 Shows detailed logs in the console.
 
+#### [win32metadata]
+
+```
+--win32metadata <json-string>
+```
+
+a JSON string of key/value pairs of application metadata (ProductName, InternalName, FileDescription) to embed into the executable (Windows only).
+
+Example:
+
+```bash
+nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "Your Product Name", "InternalName", "Your Internal Name", "FileDescription": "Your File Description"}'
+```
+
+### Flash Options (DEPRECATED)
+
+#### [flash] and [flash-path] (DEPRECATED)
+
+*DEPRECATED as of 2021-03-10, will be removed at some point*: There's nothing Nativefier can do to stop this treadmill, so here it goes.
+Flash is triply dead upstream: at Adobe, in Chrome, and now in Electron.
+Nativefier 43.0.0 was just released, and defaults to Electron 12, which
+[removes support for Flash](https://www.electronjs.org/blog/electron-12-0#breaking-changes):
+
+> Removed Flash support: Chromium has removed support for Flash, which was also
+> removed in Electron 12. See [Chromium's Flash Roadmap](https://www.chromium.org/flash-roadmap).
+
+Your best bet now is on [Ruffle, "a Flash Player emulator built in Rust"](https://ruffle.rs/).
+It's usable to play `.swf`s, and that's [what Archive.org does](https://blog.archive.org/2020/11/19/flash-animations-live-forever-at-the-internet-archive/).
+It's an emulator, so it's not the real perfect deal, but it already works well
+for many swfs, and will get better with time.
+
+You _might_ still be able to use Nativefier's existing Flash flags while they work,
+by adding a `--electron-version 11.3.0` to your flags, but it's only downhill
+from here and our Flash flags will be removed at some point in the future,
+when maintaining compatibility with old Electrons becomes impossible.
+
+```
+--flash
+```
+
+If `--flash` is specified, Nativefier will automatically try to determine the
+location of your Google Chrome flash binary. Take note that the version of Chrome
+on your computer should be the same as the version used by the version of Electron
+for the Nativefied package.
+
+Note that if this flag is specified, the `--insecure` flag will be added automatically,
+to prevent Mixed Content errors on sites such as [Twitch.tv](https://www.twitch.tv/).
+
+```
+--flash-path <value>
+```
+
+You can also specify the path to the Chrome flash plugin directly with this flag.
+The path can be found at [chrome://plugins](chrome://plugins), under
+`Adobe Flash Player` > `Location`. This flag automatically enables the `--flash` flag.
+
 ## Programmatic API
 
 In addition to CLI flags, Nativefier offers a programmatic Node.js API.
@@ -1049,57 +1058,6 @@ nativefier(options, function (error, appPath) {
   console.log('App has been nativefied to', appPath);
 });
 ```
-
-#### [win32metadata]
-
-```
---win32metadata <json-string>
-```
-
-a JSON string of key/value pairs of application metadata (ProductName, InternalName, FileDescription) to embed into the executable (Windows only).
-
-Example:
-
-```bash
-nativefier <your-geolocation-enabled-website> --win32metadata '{"ProductName": "Your Product Name", "InternalName", "Your Internal Name", "FileDescription": "Your File Description"}'
-```
-
-##### Programmatic API
-
-_Object_
-
-Object (also known as a "hash") of application metadata to embed into the executable:
-
-- `CompanyName`
-- `FileDescription`
-- `OriginalFilename`
-- `ProductName`
-- `InternalName`
-
-_(Note that `win32metadata` was added to `electron-packager` in version 8.0.0)_
-
-In your `.js` file:
-
-```javascript
-var options = {
-    ...
-    win32metadata: {
-      CompanyName: 'Your Company Name',
-      FileDescription: 'Your File Description',
-      OriginalFilename: 'Your Original Filename',
-      ProductName: 'Your Product Name',
-      InternalName: 'Your Internal Name'
-    }
-};
-```
-
-#### [disable-old-build-warning-yesiknowitisinsecure]
-
-Disables the warning shown when opening a Nativefier app made a long time ago, using an old and probably insecure Electron. Nativefier uses the Chrome browser (through Electron), and remaining on an old version is A. performance sub-optimal and B. dangerous.
-
-However, there are legitimate use cases to disable such a warning. For example, if you are using Nativefier to ship a kiosk app exposing an internal site (over which you have control). Under those circumstances, it is reasonable to disable this warning that you definitely don't want end-users to see.
-
-More description about the options for `nativefier` can be found at the above [section](#command-line).
 
 ## Accessing The Electron Session
 
