@@ -14,12 +14,7 @@
     - [[conceal]](#conceal)
     - [[electron-version]](#electron-version)
     - [[global-shortcuts]](#global-shortcuts)
-      - [Global Shortucts on macOS](#global-shortucts-on-macos)
     - [[icon]](#icon)
-      - [Packaging for Windows](#packaging-for-windows)
-      - [Packaging for Linux](#packaging-for-linux)
-      - [Packaging for macOS](#packaging-for-macos)
-        - [Manually Converting `.icns`](#manually-converting-icns)
     - [[name]](#name)
     - [[no-overwrite]](#no-overwrite)
     - [[platform]](#platform)
@@ -177,21 +172,15 @@ Electron version without the `v`, see https://github.com/atom/electron/releases.
 -i, --icon <path>
 ```
 
-##### Packaging for Windows
+Notes:
 
-The icon parameter should be a path to a `.ico` file.
-
-##### Packaging for Linux
-
-The icon parameter should be a path to a `.png` file.
-
-##### Packaging for macOS
-
-The icon parameter can either be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
+- When packaging for Windows, must be a path to a `.ico` file.
+- When packaging for Linux, must be a path to a `.png` file.
+- When packaging for macOS, must be a `.icns` or a `.png` file if the [optional dependencies](../README.md#optional-dependencies) are installed.
 
 If your `PATH` has our image-conversion dependencies (`iconutil`, and either ImageMagick `convert` + `identify`, or GraphicsMagick `gm`), Nativefier will automatically convert the `.png` to a `.icns` for you.
 
-###### Manually Converting `.icns`
+##### Manually Converting `.icns`
 
 [iConvertIcons](https://iconverticons.com/online/) can be used to convert `.pngs`, though it can be quite cumbersome.
 
@@ -237,7 +226,7 @@ The alternative values `win32` (for Windows) or `darwin`, `mac` (for macOS) can 
 --portable
 ```
 
-Make your app store its user data (cookies, cache, etc) inside the app folder, making it "portable" in the sense popularized by [PortableApps.com](https://portableapps.com/): you can carry it around e.g. on a USB key, and it will work the same with your data.
+*[New in 43.1.0]* Make your app store its user data (cookies, cache, etc) inside the app folder, making it "portable" in the sense popularized by [PortableApps.com](https://portableapps.com/): you can carry it around e.g. on a USB key, and it will work the same with your data.
 
 **IMPORTANT SECURITY NOTICE**
 
@@ -257,9 +246,7 @@ When creating a portable app, all data accumulated after running the app (includ
 --upgrade <pathToExistingApp>
 ```
 
-*NEW IN 43.1.0*
-
-This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
+*[New in 43.1.0]* This option will attempt to extract all existing options from the old app, and upgrade it using the current Nativefier CLI.
 
 **IMPORTANT NOTE**
 
@@ -273,7 +260,7 @@ The provided path must be the "executable" of an application packaged with a pre
 --widevine
 ```
 
-Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
+*[New in 11.0.2]* Use a Widevine-enabled version of Electron for DRM playback, see https://github.com/castlabs/electron-releases.
 
 Note: some sites using Widevine (like Udemy or HBO Max) may still refuse to load videos, and require EVS-signing your Nativefier app to work. Try signing your app using CastLabs tools. See https://github.com/castlabs/electron-releases/wiki/EVS and [#1147](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362). TL;DR:
 
@@ -296,7 +283,7 @@ python -m castlabs_evs.vmp sign-pkg Udemy-win32-x64
 --always-on-top
 ```
 
-Enable always on top for the packaged application.
+*[New in 7.6.0]* Enable always on top for the packaged application.
 
 #### [background-color]
 
@@ -304,7 +291,7 @@ Enable always on top for the packaged application.
 --background-color <string>
 ```
 
-See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
+*[New in 7.7.0]* See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
 
 #### [bookmarks-menu]
 
@@ -312,7 +299,7 @@ See https://electronjs.org/docs/api/browser-window#setting-backgroundcolor
 --bookmarks-menu <string>
 ```
 
-Path to a JSON file defining a bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
+*[New in 43.1.0]* Path to a JSON file defining a bookmarks menu. In addition to containing a list of bookmarks, this file customizes the name of the menu and (optionally) allows assigning keyboard shortcuts to bookmarks.
 
 This menu is a simple list; folders are not supported.
 
@@ -357,7 +344,7 @@ Example of such a JSON file:
 --browserwindow-options <json-string>
 ```
 
-a JSON string that will be sent directly into electron BrowserWindow options.
+*[New in 7.7.0]* A JSON string that will be sent directly into Electron BrowserWindow options.
 See [Electron's BrowserWindow API Documentation](https://electronjs.org/docs/api/browser-window#new-browserwindowoptions) for the complete list of options.
 
 Example:
@@ -482,7 +469,7 @@ Prevents application from being run multiple times. If such an attempt occurs th
 --title-bar-style <value>
 ```
 
-(macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://github.com/electron/electron/blob/master/docs/api/frameless-window.md#alternatives-on-macos) documentation.
+*[New in 7.6.4]* (macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://github.com/electron/electron/blob/master/docs/api/frameless-window.md#alternatives-on-macos) documentation.
 
 Consider injecting a custom CSS (via `--inject`) for better integration. Specifically, the CSS should specify a draggable region. For instance, if the target website has a `<header>` element, you can make it draggable like so.
 
@@ -516,7 +503,7 @@ nativefier http://google.com --inject site.css --title-bar-style 'hiddenInset'
 --tray [start-in-tray]
 ```
 
-Application will stay as an icon in the system tray. Prevents application from being closed from clicking the window close button.
+*[New in 7.5.0]* Application will stay as an icon in the system tray. Prevents application from being closed from clicking the window close button.
 
 When the optional argument `start-in-tray` is provided, i.e. the application is started using `--tray start-in-tray`, the main window will not be shown on first start.
 
@@ -544,7 +531,7 @@ X location of the packaged application window.
 --y <value>
 ```
 
-Y location of the packaged application window.
+*[New in 7.6.0]* Y location of the packaged application window.
 
 #### [zoom]
 
@@ -552,7 +539,7 @@ Y location of the packaged application window.
 --zoom <value>
 ```
 
-Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
+*[New in 7.6.0]* Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 
 ### Internal Browser Options
 
@@ -562,7 +549,7 @@ Sets a default zoom factor to be used when the app is opened, defaults to `1.0`.
 --file-download-options <json-string>
 ```
 
-a JSON string of key/value pairs to be set as file download options. See [electron-dl](https://github.com/sindresorhus/electron-dl) for available options.
+*[New in 7.6.0]* A JSON string of key/value pairs to be set as file download options. See [electron-dl](https://github.com/sindresorhus/electron-dl) for available options.
 
 Example:
 
@@ -576,7 +563,7 @@ nativefier <your-website> --file-download-options '{"saveAs": true}'
 --global-shortcuts shortcuts.json
 ```
 
-Register global shortcuts which will trigger input events like key presses or pointer events in the application.
+*[New in 7.6.9]* Register global shortcuts which will trigger input events like key presses or pointer events in the application.
 
 You may define multiple global shortcuts which can trigger a series of input events. It has the following structure:
 
@@ -606,6 +593,10 @@ If you want to trigger key events which include a modifier (Ctrl, Shift,...), yo
 
 - List of available keys: https://github.com/electron/electron/blob/master/docs/api/accelerator.md
 - Details about how to create input event objects: https://github.com/electron/electron/blob/master/docs/api/web-contents.md#contentssendinputeventevent
+
+**Note about Global Shortucts on macOS**
+
+On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
 
 Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to get your play/pause/previous/next media keys working:
 
@@ -669,10 +660,6 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 ]
 ```
 
-##### Global Shortucts on macOS
-
-On MacOS 10.14+, if you have set a global shortcut that includes a Media key, the user will need to be prompted for permissions to enable these keys in System Preferences > Security & Privacy > Accessibility.
-
 #### [inject]
 
 ```
@@ -705,7 +692,7 @@ Set the language or locale to render the web site as (e.g., "fr", "en-US", "es",
 
 Set the user agent to run the created app with. Use `--user-agent-honest` to use the true Electron user agent.
 
-The following short codes are also supported to generate a user agent: `edge`, `firefox`, `safari`.
+*[New in 44.0.0]* The following short codes are also supported to generate a user agent: `edge`, `firefox`, `safari`.
 
 - `edge` will generate a Microsoft Edge user agent matching the Chrome version of Electron being used
 - `firefox` will generate a Mozilla Firefox user agent matching the latest stable release of that browser
@@ -729,7 +716,7 @@ If this flag is passed, it will not override the user agent, and use Electron's 
 --clear-cache
 ```
 
-Prevents the application from preserving cache between launches.
+*[New in 7.6.11]* Prevents the application from preserving cache between launches.
 
 #### [disk-cache-size]
 
@@ -737,7 +724,7 @@ Prevents the application from preserving cache between launches.
 --disk-cache-size <value>
 ```
 
-Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
+*[New in 7.4.1]* Forces the maximum disk space to be used by the disk cache. Value is given in bytes.
 
 ### URL Handling Options
 
@@ -785,7 +772,7 @@ nativefier https://google.com --internal-urls ".*?"
 
 ##### Internal Login Pages
 
-*[Breaking change in Nativefier 43.0.0]* Finally, URLs for known login pages
+*[New in 43.0.0]* Finally, URLs for known login pages
 are considered internal. This does not replace `internal-urls`, it complements
 it, and happens *before* your `internal-urls` rule is applied. So, if you
 already set the flag to let such auth pages open internally, you don't need to
@@ -816,7 +803,7 @@ If you think this list is missing a login page that you think should be internal
 --proxy-rules <value>
 ```
 
-Proxy rules. See [proxyRules](https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback) for more details.
+*[New in 7.7.1]* See [Electron proxyRules](https://electronjs.org/docs/api/session?q=proxy#sessetproxyconfig-callback) for more details.
 
 Example:
 
@@ -832,7 +819,7 @@ nativefier https://google.com --proxy-rules http://127.0.0.1:1080
 --basic-auth-username <value> --basic-auth-password <value>
 ```
 
-Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
+*[New in 7.5.0]* Set basic http(s) auth via the command line to have the app automatically log you in to a protected site. Both fields are required if one is set.
 
 ### Graphics Options
 
@@ -842,7 +829,7 @@ Set basic http(s) auth via the command line to have the app automatically log yo
 --disable-gpu
 ```
 
-Disable hardware acceleration for the packaged application.
+*[New in 7.6.2]* Disable hardware acceleration for the packaged application.
 
 #### [enable-es3-apis]
 
@@ -850,7 +837,7 @@ Disable hardware acceleration for the packaged application.
 --enable-es3-apis
 ```
 
-Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
+*[New in 7.4.1]* Passes the enable-es3-apis flag to the Chrome engine, to force the activation of WebGl 2.0.
 
 #### [ignore-gpu-blacklist]
 
@@ -858,7 +845,7 @@ Passes the enable-es3-apis flag to the Chrome engine, to force the activation of
 --ignore-gpu-blacklist
 ```
 
-Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
+*[New in 7.4.1]* Passes the ignore-gpu-blacklist flag to the Chrome engine, to allow for WebGl apps to work on non supported graphics cards.
 
 ### (In)Security Options
 
@@ -930,7 +917,7 @@ The path can be found at [chrome://plugins](chrome://plugins), under
 --app-copyright <value>
 ```
 
-The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X.
+*[New in 7.5.0]* The human-readable copyright line for the app. Maps to the `LegalCopyright` metadata property on Windows, and `NSHumanReadableCopyright` on OS X.
 
 #### [app-version]
 
@@ -938,7 +925,7 @@ The human-readable copyright line for the app. Maps to the `LegalCopyright` meta
 --app-version <value>
 ```
 
-(macOS and Windows only) The release version of the application. By default the `version` property in the `package.json` is used but it can be overridden with this argument. If neither are provided, the version of Electron will be used. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.
+*[New in 7.5.0]* (macOS and Windows only) The release version of the application. By default the `version` property in the `package.json` is used but it can be overridden with this argument. If neither are provided, the version of Electron will be used. Maps to the `ProductVersion` metadata property on Windows, and `CFBundleShortVersionString` on OS X.
 
 #### [bounce]
 
@@ -946,7 +933,7 @@ The human-readable copyright line for the app. Maps to the `LegalCopyright` meta
 --bounce
 ```
 
-(macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
+*[New in 7.6.2]* (macOS only) When the counter increases, the dock icon will bounce for one second. This only works if the `--counter` option is active.
 
 #### [build-version]
 
@@ -954,7 +941,7 @@ The human-readable copyright line for the app. Maps to the `LegalCopyright` meta
 --build-version <value>
 ```
 
-(macOS and Windows only) The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.
+*[New in 7.5.0]* (macOS and Windows only) The build version of the application. Maps to the `FileVersion` metadata property on Windows, and `CFBundleVersion` on OS X.
 
 #### [counter]
 
