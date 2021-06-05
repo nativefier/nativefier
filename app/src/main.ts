@@ -263,7 +263,7 @@ if (shouldQuit) {
 }
 
 async function onReady(): Promise<void> {
-  const mainWindow = await createMainWindow(
+  mainWindow = await createMainWindow(
     appArgs,
     app.quit.bind(this),
     setDockBadge,
