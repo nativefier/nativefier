@@ -98,6 +98,8 @@ export async function createMainWindow(
   // users are being pointed to use setWindowOpenHandler.
   // E.g., https://github.com/electron/electron/issues/28374
 
+  // Note it is important to add this handler only to the *main* window,
+  // else we run into weird behavior like opening tabs twice
   mainWindow.webContents.on(
     'new-window',
     (event, url, frameName, disposition) => {
