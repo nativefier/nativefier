@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Manual test to validate some hard-to-programmatically-test features work.
-
 set -eo pipefail
 
 missingDeps=false
@@ -10,7 +9,7 @@ if ! command -v node > /dev/null; then echo "Missing node"; missingDeps=true; fi
 if [ "$missingDeps" = true ]; then exit 1; fi
 
 function launch_app() {
-  printf "\n***** Running app *****\n"
+  printf '\n*** Running appn'
   if [ "$(uname -s)" = "Darwin" ]; then
     open -a "$1/$2-darwin-x64/$2.app"
   else
@@ -19,36 +18,32 @@ function launch_app() {
 }
 
 function do_cleanup() {
-  if [ -n "1" ]; then
-  printf "\n***** Deleting test dir %s *****\n" "$1"
-  rm -rf "$1"
-  printf "\n"
-fi
+  if [ -n "$1" ]; then
+    printf '\n***** Deleting test dir %s *****\n' "$1"
+    rm -rf "$1"
+    printf '\n'
+  fi
 }
 
 function request_feedback() {
-  printf "\nDid everything work as expected? [yN] "
+  printf '\nDid everything work as expected? [yN] '
   read -r response
 
-  do_cleanup $1
+  do_cleanup "$1"
 
   if [ "$response" != 'y' ]; then
     echo "Back to fixing"
     exit 1
-  else
-    echo "Yayyyyyyyyyyy"
   fi
+  echo "Yayyyyyyyyyyy"
 }
 
-printf "\n***** Setting up and building *****\n"
+printf "\n***** SMOKE TEST 1: Setting up test and building app... *****\n"
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 nativefier_dir="$script_dir/.."
 pushd "$nativefier_dir"
-npm run build
-
-printf "\n***** Creating test dirs & resources *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-XXXXX)
-name="app"
+name="nativefier-smoke-test-1"
 resources_dir="$tmp_dir/resources"
 mkdir "$resources_dir"
 injected_css="$resources_dir/inject.css"
@@ -56,72 +51,54 @@ injected_js="$resources_dir/inject.js"
 echo '* { background-color: blue; }' > "$injected_css"
 echo 'alert("hello world from inject");' > "$injected_js"
 
-printf "\n***** Building test app *****\n"
 node ./lib/cli.js 'https://npmjs.com/' \
   --inject "$injected_css" \
   --inject "$injected_js" \
   --name "$name" \
   "$tmp_dir"
 
-printf "\n***** Test checklist *****
+printf '\n***** SMOKE TEST 1: Test checklist *****
 - Injected js: should show an alert saying hello
 - Injected css: should make npmjs all blue
 - Internal links open internally
 - External links open in browser
 - Keyboard shortcuts: {back, forward, zoom in/out/zero} work
-- Console: no Electron runtime deprecation warnings/error logged
-"
+- Console: no Electron runtime deprecation warnings/error logged'
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
 
-launch_app $tmp_dir $name
+# ------------------------------------------------------------------------------
 
-request_feedback $tmp_dir
-
-printf "\n***** Creating test dirs & resources *****\n"
+printf "\n***** SMOKE TEST 2: Setting up test and building app... *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-XXXXX)
-name="app"
-
-printf "\n***** Building test app *****\n"
+name="nativefier-smoke-test-2"
 node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
   --basic-auth-username foo \
   --basic-auth-password bar \
   --name "$name" \
   "$tmp_dir"
 
-printf "\n***** Test checklist *****
+printf '\n***** SMOKE TEST 2: Test checklist *****
 - Was successfully logged in via HTTP Basic Auth. Should see:
-    {
-      \"authenticated\": true, 
-      \"user\": \"foo\"
-    }
-- Console: no Electron runtime deprecation warnings/error logged
-"
+  { "authenticated": true,  "user": "foo" }
+- Console: no Electron runtime deprecation warnings/error logged'
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
 
-launch_app $tmp_dir $name
+# ------------------------------------------------------------------------------
 
-request_feedback $tmp_dir
-
-
-printf "\n***** Creating test dirs & resources *****\n"
+printf '\n***** SMOKE TEST 3: Setting up test and building app... *****\n'
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-prompt-XXXXX)
-name="app"
-
-printf "\n***** Building test app *****\n"
+name='nativefier-smoke-test-3'
 node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
   --name "$name" \
   "$tmp_dir"
 
-printf "\n***** Test checklist *****
-- Should get a login window to access page.
-    - Username is \"foo\"
-    - Password is \"bar\".
+printf '\n***** SMOKE TEST 3: Test checklist *****
+- Should get a login window. Log in with username="foo" and password="bar".
 - Post login, you should see:
-    {
-      \"authenticated\": true, 
-      \"user\": \"foo\"
-    }
-- Console: no Electron runtime deprecation warnings/error logged
-"
+  { "authenticated": true,  "user": "foo" }
+- Console: no Electron runtime deprecation warnings/error logged'
 
-launch_app $tmp_dir $name
-
-request_feedback $tmp_dir
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
