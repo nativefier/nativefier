@@ -285,7 +285,7 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
 
 async function onReady(): Promise<void> {
   // Warning: `mainWindow` below is the *global* unique `mainWindow`, created at init time
-  mainWindow = await createMainWindow(appArgs, setDockBadge);  
+  mainWindow = await createMainWindow(appArgs, setDockBadge);
 
   createTrayIcon(appArgs, mainWindow);
 
