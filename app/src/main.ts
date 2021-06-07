@@ -274,17 +274,12 @@ app.on('login', (event, webContents, request, authInfo, callback) => {
   // for http authentication
   event.preventDefault();
 
-  if (
-    appArgs.basicAuthUsername !== null &&
-    appArgs.basicAuthPassword !== null
-  ) {
+  if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
     callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
   } else {
-    if (mainWindow) {
-      createLoginWindow(callback, mainWindow).catch((err) =>
-        log.error('createLoginWindow ERROR', err),
-      );
-    }
+    createLoginWindow(callback, mainWindow).catch((err) =>
+      log.error('createLoginWindow ERROR', err),
+    );
   }
 });
 

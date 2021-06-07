@@ -13,6 +13,7 @@ if [ "$missingDeps" = true ]; then exit 1; fi
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 nativefier_dir="$script_dir/.."
 pushd "$nativefier_dir"
+npm run build
 
 printf "\n***** Creating test dirs & resources *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-XXXXX)
@@ -74,6 +75,50 @@ node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
 
 printf "\n***** Test checklist *****
 - Was successfully logged in via HTTP Basic Auth. Should see:
+    {
+      \"authenticated\": true, 
+      \"user\": \"foo\"
+    }
+- Console: no Electron runtime deprecation warnings/error logged
+"
+
+printf "\n***** Running app *****\n"
+if [ "$(uname -s)" = "Darwin" ]; then
+  open -a "$tmp_dir/app-darwin-x64/app.app"
+else
+  "$tmp_dir/app-linux-x64/app"
+fi
+
+printf "\nDid everything work as expected? [yN] "
+read -r response
+
+if [ -n "$tmp_dir" ]; then
+  printf "\n***** Deleting test dir %s *****\n" "$tmp_dir"
+  rm -rf "$tmp_dir"
+  printf "\n"
+fi
+
+if [ "$response" != 'y' ]; then
+  echo "Back to fixing"
+  exit 1
+else
+  echo "Yayyyyyyyyyyy"
+fi
+
+
+printf "\n***** Creating test dirs & resources *****\n"
+tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-prompt-XXXXX)
+
+printf "\n***** Building test app *****\n"
+node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+  --name "app" \
+  "$tmp_dir"
+
+printf "\n***** Test checklist *****
+- Should get a login window to access page.
+    - Username is \"foo\"
+    - Password is \"bar\".
+- Post login, you should see:
     {
       \"authenticated\": true, 
       \"user\": \"foo\"
