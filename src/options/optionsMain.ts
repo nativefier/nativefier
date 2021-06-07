@@ -1,11 +1,12 @@
 import * as fs from 'fs';
 
 import axios from 'axios';
+import * as debug from 'debug';
 import * as log from 'loglevel';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra `src` folder in `lib`
-const packageJson = require('../../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
+import packageJson = require('../../package.json');
 import {
   DEFAULT_ELECTRON_VERSION,
   PLACEHOLDER_APP_DIR,
@@ -13,8 +14,9 @@ import {
 } from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
-import { AppOptions } from './model';
+import { AppOptions, GlobalShortcut, RawOptions } from './model';
 import { normalizeUrl } from './normalizeUrl';
+import { parseJson } from '../utils/parseUtils';
 
 const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
@@ -22,7 +24,7 @@ const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
  * Process and validate raw user arguments
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getOptions(rawOptions: any): Promise<AppOptions> {
+export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   const options: AppOptions = {
     packager: {
       appCopyright: rawOptions.appCopyright,
@@ -45,7 +47,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
           : normalizeUrl(rawOptions.targetUrl),
       tmpdir: false, // workaround for electron-packager#375
       upgrade: rawOptions.upgrade !== undefined ? true : false,
-      upgradeFrom: rawOptions.upgrade,
+      upgradeFrom: rawOptions.upgradeFrom,
       win32metadata: rawOptions.win32metadata || {
         ProductName: rawOptions.name,
         InternalName: rawOptions.name,
@@ -74,7 +76,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
       enableEs3Apis: rawOptions.enableEs3Apis || false,
       fastQuit: rawOptions.fastQuit || false,
       fileDownloadOptions: rawOptions.fileDownloadOptions,
-      flashPluginDir: rawOptions.flashPath || rawOptions.flash || null,
+      flashPluginDir: rawOptions.flashPath || null,
       fullScreen: rawOptions.fullScreen || false,
       globalShortcuts: null,
       hideWindowFrame: rawOptions.hideWindowFrame,
@@ -112,8 +114,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   if (options.nativefier.verbose) {
     log.setLevel('trace');
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('debug').enable('electron-packager');
+      debug.enable('electron-packager');
     } catch (err) {
       log.debug(
         'Failed to enable electron-packager debug output. This should not happen,',
@@ -202,8 +203,8 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
 
   if (rawOptions.globalShortcuts) {
     log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
-    const globalShortcuts = JSON.parse(
-      fs.readFileSync(rawOptions.globalShortcuts).toString(),
+    const globalShortcuts = parseJson<GlobalShortcut[]>(
+      fs.readFileSync(rawOptions.globalShortcuts as string).toString(),
     );
     options.nativefier.globalShortcuts = globalShortcuts;
   }

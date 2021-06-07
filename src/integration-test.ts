@@ -10,15 +10,17 @@ import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { userAgent } from './options/fields/userAgent';
+import { NativefierOptions } from './options/model';
+import { parseJson } from './utils/parseUtils';
 
-async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
-  const arch = (inputOptions.arch as string) || inferArch();
+async function checkApp(
+  appRoot: string,
+  inputOptions: NativefierOptions,
+): Promise<void> {
+  const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
   if (inputOptions.out !== undefined) {
     expect(
-      path.join(
-        inputOptions.out,
-        `Google-${inputOptions.platform as string}-${arch}`,
-      ),
+      path.join(inputOptions.out, `Google-${inputOptions.platform}-${arch}`),
     ).toBe(appRoot);
   }
 
@@ -43,7 +45,9 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
   const appPath = path.join(appRoot, relativeAppFolder);
 
   const configPath = path.join(appPath, 'nativefier.json');
-  const nativefierConfig = JSON.parse(fs.readFileSync(configPath).toString());
+  const nativefierConfig: NativefierOptions = parseJson<NativefierOptions>(
+    fs.readFileSync(configPath).toString(),
+  );
   expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
 
   // Test name inferring
@@ -135,7 +139,7 @@ describe('Nativefier upgrade', () => {
       await checkApp(appPath, options);
 
       const upgradeOptions = {
-        upgrade: appPath,
+        upgradeFrom: appPath,
         overwrite: true,
       };
 

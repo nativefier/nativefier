@@ -25,14 +25,14 @@ export const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 type SessionInteractionRequest = {
   id?: string;
   func?: string;
-  funcArgs?: any[];
+  funcArgs?: unknown[];
   property?: string;
-  propertyValue?: any;
+  propertyValue?: unknown;
 };
 
 type SessionInteractionResult = {
   id?: string;
-  value?: any;
+  value?: unknown;
   error?: Error;
 };
 
@@ -216,7 +216,7 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
             typeof result.value['then'] === 'function'
           ) {
             // This is a promise. We'll resolve it here otherwise it will blow up trying to serialize it in the reply
-            result.value
+            (result.value as Promise<unknown>)
               .then((trueResultValue) => {
                 result.value = trueResultValue;
                 log.debug('ipcMain.session-interaction:result', result);

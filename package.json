@@ -58,6 +58,7 @@
     "gitcloud": "^0.2.0",
     "hasbin": "^1.2.3",
     "loglevel": "^1.7.1",
+    "lookpath": "^1.2.1",
     "ncp": "^2.0.0",
     "page-icon": "^0.4.0",
     "sanitize-filename": "^1.6.3",
@@ -66,6 +67,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@types/hasbin": "^1.2.0",
     "@types/jest": "^26.0.23",
     "@types/ncp": "^2.0.4",
     "@types/node": "^12.12.6",
@@ -94,7 +96,7 @@
       "^electron$": "<rootDir>/app/dist/mocks/electron.js"
     },
     "setupFiles": [
-      "./lib/jestSetupFiles"
+      "./lib/src/jestSetupFiles"
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [

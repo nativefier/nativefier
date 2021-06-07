@@ -17,25 +17,26 @@ module.exports = {
   rules: {
     'no-console': 'error',
     'prettier/prettier': [
-      'error', {
-        'endOfLine': 'auto'
-      }
+      'error',
+      {
+        endOfLine: 'auto',
+      },
     ],
     // TODO remove when done killing `any`s and making tsc strict
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unsafe-assignment': 'off',
-    '@typescript-eslint/no-unsafe-call': 'off',
-    '@typescript-eslint/no-unsafe-member-access': 'off',
-    '@typescript-eslint/no-unsafe-return': 'off',
+    '@typescript-eslint/ban-ts-comment': 'error',
+    '@typescript-eslint/no-explicit-any': 'error',
+    '@typescript-eslint/no-unsafe-assignment': 'error',
+    '@typescript-eslint/no-unsafe-call': 'error',
+    '@typescript-eslint/no-unsafe-member-access': 'error',
+    '@typescript-eslint/no-unsafe-return': 'error',
   },
   // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
   ignorePatterns: [
-    "node_modules/**",
-    "app/node_modules/**",
-    "app/lib/**",
-    "lib/**",
-    "built-tests/**",
-    "coverage/**",
-  ]
+    'node_modules/**',
+    'app/node_modules/**',
+    'app/lib/**',
+    'lib/**',
+    'built-tests/**',
+    'coverage/**',
+  ],
 };

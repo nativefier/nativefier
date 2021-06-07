@@ -67,7 +67,7 @@ function getExecutableInfo(
   platform: string,
 ): ExecutableInfo {
   if (!fileExists(executablePath)) {
-    return {};
+    return undefined;
   }
 
   const exeBytes = getExecutableBytes(executablePath);

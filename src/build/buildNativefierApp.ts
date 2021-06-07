@@ -2,18 +2,18 @@ import * as path from 'path';
 
 import * as electronGet from '@electron/get';
 import * as electronPackager from 'electron-packager';
-import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
 
 import { convertIconIfNecessary } from './buildIcon';
 import {
   copyFileOrDir,
   getTempDir,
+  hasWine,
   isWindows,
   isWindowsAdmin,
 } from '../helpers/helpers';
 import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
-import { AppOptions } from '../options/model';
+import { AppOptions, RawOptions } from '../options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
 
@@ -89,20 +89,16 @@ function getAppPath(appPath: string | string[]): string {
   return appPath[0];
 }
 
-function isUpgrade(rawOptions) {
+function isUpgrade(rawOptions: RawOptions) {
   return (
     rawOptions.upgrade !== undefined &&
-    (rawOptions.upgrade === true ||
-      (typeof rawOptions.upgrade === 'string' && rawOptions.upgrade !== ''))
+    typeof rawOptions.upgrade === 'string' &&
+    rawOptions.upgrade !== ''
   );
 }
 
 function trimUnprocessableOptions(options: AppOptions): void {
-  if (
-    options.packager.platform === 'win32' &&
-    !isWindows() &&
-    !hasbin.sync('wine')
-  ) {
+  if (options.packager.platform === 'win32' && !isWindows() && !hasWine()) {
     const optionsPresent = Object.entries(options)
       .filter(
         ([key, value]) =>
@@ -125,7 +121,9 @@ function trimUnprocessableOptions(options: AppOptions): void {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function buildNativefierApp(rawOptions): Promise<string> {
+export async function buildNativefierApp(
+  rawOptions: RawOptions,
+): Promise<string> {
   log.info('\nProcessing options...');
 
   if (isUpgrade(rawOptions)) {
@@ -133,14 +131,12 @@ export async function buildNativefierApp(rawOptions): Promise<string> {
     const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
     if (oldApp === null) {
       throw new Error(
-        `Could not find an old Nativfier app in "${
-          rawOptions.upgrade as string
-        }"`,
+        `Could not find an old Nativfier app in "${rawOptions.upgradeFrom}"`,
       );
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
     if (rawOptions.out === undefined && rawOptions.overwrite) {
-      rawOptions.out = path.dirname(rawOptions.upgrade);
+      rawOptions.out = path.dirname(rawOptions.upgradeFrom);
     }
   }
   log.debug('rawOptions', rawOptions);

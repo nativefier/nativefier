@@ -5,7 +5,7 @@ import { getLatestFirefoxVersion } from '../../infer/browsers/inferFirefoxVersio
 import { getLatestSafariVersion } from '../../infer/browsers/inferSafariVersion';
 import { normalizePlatform } from '../optionsMain';
 
-type UserAgentOpts = {
+export type UserAgentOpts = {
   packager: {
     electronVersion?: string;
     platform?: string;
@@ -15,13 +15,16 @@ type UserAgentOpts = {
   };
 };
 
-const USER_AGENT_PLATFORM_MAPS = {
+const USER_AGENT_PLATFORM_MAPS: Record<string, string> = {
   darwin: 'Macintosh; Intel Mac OS X 10_15_7',
   linux: 'X11; Linux x86_64',
   win32: 'Windows NT 10.0; Win64; x64',
 };
 
-const USER_AGENT_SHORT_CODE_MAPS = {
+const USER_AGENT_SHORT_CODE_MAPS: Record<
+  string,
+  (platform: string, electronVersion: string) => Promise<string>
+> = {
   edge: edgeUserAgent,
   firefox: firefoxUserAgent,
   safari: safariUserAgent,
@@ -48,7 +51,7 @@ export async function userAgent(options: UserAgentOpts): Promise<string> {
 
   options.packager.platform = normalizePlatform(options.packager.platform);
 
-  const userAgentPlatform =
+  const userAgentPlatform: string =
     USER_AGENT_PLATFORM_MAPS[
       options.packager.platform === 'mas' ? 'darwin' : options.packager.platform
     ];

@@ -16,7 +16,7 @@ export async function getLatestSafariVersion(
 ): Promise<SafariVersion> {
   try {
     log.debug('Grabbing apple version data from', url);
-    const response = await axios.get(url, { timeout: 5000 });
+    const response = await axios.get<string>(url, { timeout: 5000 });
     if (response.status !== 200) {
       throw new Error(`Bad request: Status code ${response.status}`);
     }
@@ -39,8 +39,8 @@ export async function getLatestSafariVersion(
 
     const versionRows = majorVersionTable.split('<tbody')[1].split('<tr');
 
-    let version = null;
-    let webkitVersion: string = null;
+    let version: string;
+    let webkitVersion: string;
 
     for (const versionRow of versionRows.reverse()) {
       const versionMatch = [

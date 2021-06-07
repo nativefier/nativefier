@@ -28,7 +28,7 @@ export async function getLatestFirefoxVersion(
 ): Promise<string> {
   try {
     log.debug('Grabbing Firefox version data from', url);
-    const response = await axios.get(url, { timeout: 5000 });
+    const response = await axios.get<FirefoxVersions>(url, { timeout: 5000 });
     if (response.status !== 200) {
       throw new Error(`Bad request: Status code ${response.status}`);
     }

@@ -11,11 +11,12 @@ import {
 } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
-import { NativefierOptions } from './options/model';
+import { RawOptions } from './options/model';
 import { parseJson } from './utils/parseUtils';
 import { DEFAULT_ELECTRON_VERSION } from './constants';
+import electronPackager = require('electron-packager');
 
-export function initArgs(argv: string[]): yargs.Argv<any> {
+export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   const args = yargs(argv)
     .scriptName('nativefier')
     .usage(
@@ -112,6 +113,7 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       type: 'boolean',
     })
     .option('upgrade', {
+      alias: 'upgrade-from',
       description:
         'upgrade an app built by an older version of Nativefier\nYou must pass the full path to the existing app executable (app will be overwritten with upgraded version by default)',
       normalize: true,
@@ -160,7 +162,6 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       coerce: parseJson,
       description:
         'override Electron BrowserWindow options (via JSON string); see https://github.com/nativefier/nativefier/blob/master/API.md#browserwindow-options',
-      type: 'string',
     })
     .option('disable-context-menu', {
       default: false,
@@ -222,7 +223,6 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       coerce: getProcessEnvs,
       description:
         'a JSON string of key/value pairs to be set as environment variables before any browser windows are opened',
-      type: 'string',
     })
     .option('single-instance', {
       default: false,
@@ -285,11 +285,11 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       coerce: parseJson,
       description:
         'a JSON string defining file download options; see https://github.com/sindresorhus/electron-dl',
-      type: 'string',
     })
     .option('inject', {
       description:
         'path to a CSS/JS file to be injected; pass multiple times to inject multiple files',
+      string: true,
       type: 'array',
     })
     .option('lang', {
@@ -477,10 +477,10 @@ export function initArgs(argv: string[]): yargs.Argv<any> {
       type: 'string',
     })
     .option('win32metadata', {
-      coerce: parseJson,
+      coerce: (value: string) =>
+        parseJson<electronPackager.Win32MetadataOptions>(value),
       description:
         '(windows only) a JSON string of key/value pairs (ProductName, InternalName, FileDescription) to embed as executable metadata',
-      type: 'string',
     })
     .group(
       [
@@ -526,15 +526,15 @@ function decorateYargOptionGroup(value: string): string {
   return `====== ${value} ======`;
 }
 
-export function parseArgs(args: yargs.Argv<any>): any {
+export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
   const parsed = { ...args.argv };
   // In yargs, the _ property of the parsed args is an array of the positional args
   // https://github.com/yargs/yargs/blob/master/docs/examples.md#and-non-hyphenated-options-too-just-use-argv_
   // So try to extract the targetUrl and outputDirectory from these
-  parsed.targetUrl = parsed._.length > 0 ? parsed._[0].toString() : '';
-  parsed.out = parsed._.length > 1 ? parsed._[1] : '';
+  parsed.targetUrl = parsed._.length > 0 ? parsed._[0].toString() : undefined;
+  parsed.out = parsed._.length > 1 ? (parsed._[1] as string) : undefined;
 
-  if (parsed.upgrade && parsed.targetUrl !== '') {
+  if (parsed.upgradeFrom && parsed.targetUrl) {
     let targetAndUpgrade = false;
     if (parsed.out === '') {
       // If we're upgrading, the first positional args might be the outputDirectory, so swap these if we can
@@ -559,7 +559,7 @@ export function parseArgs(args: yargs.Argv<any>): any {
     }
   }
 
-  if (parsed.targetUrl === '' && !parsed.upgrade) {
+  if (parsed.targetUrl === '' && !parsed.upgradeFrom) {
     throw new Error(
       'ERROR: Nativefier must be called with either a targetUrl or the --upgrade option.\n',
     );
@@ -572,7 +572,7 @@ export function parseArgs(args: yargs.Argv<any>): any {
 
 if (require.main === module) {
   // Not sure if we still need this with yargs. Keeping for now.
-  const sanitizedArgs = [];
+  const sanitizedArgs: string[] = [];
   process.argv.forEach((arg) => {
     if (isArgFormatInvalid(arg)) {
       throw new Error(
@@ -593,7 +593,7 @@ if (require.main === module) {
     sanitizedArgs.push(arg);
   });
 
-  let args, parsedArgs;
+  let args: yargs.Argv<RawOptions>, parsedArgs: RawOptions;
   try {
     args = initArgs(sanitizedArgs.slice(2));
     parsedArgs = parseArgs(args);
@@ -607,7 +607,7 @@ if (require.main === module) {
     process.exit(1);
   }
 
-  const options: NativefierOptions = {
+  const options: RawOptions = {
     ...parsedArgs,
   };
 

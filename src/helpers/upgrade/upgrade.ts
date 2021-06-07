@@ -3,10 +3,11 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { NativefierOptions } from '../../options/model';
+import { NativefierOptions, RawOptions } from '../../options/model';
 import { dirExists, fileExists } from '../fsHelpers';
 import { extractBoolean, extractString } from './plistInfoXMLHelpers';
 import { getOptionsFromExecutable } from './executableHelpers';
+import { parseJson } from '../../utils/parseUtils';
 
 export type UpgradeAppInfo = {
   appResourcesDir: string;
@@ -153,7 +154,7 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
   }
 
   log.debug(`Loading ${path.join(appResourcesDir, 'nativefier.json')}`);
-  const options: NativefierOptions = JSON.parse(
+  const options: NativefierOptions = parseJson<NativefierOptions>(
     fs.readFileSync(path.join(appResourcesDir, 'nativefier.json'), 'utf8'),
   );
 
@@ -173,9 +174,9 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
 }
 
 export function useOldAppOptions(
-  rawOptions: NativefierOptions,
+  rawOptions: RawOptions,
   oldApp: UpgradeAppInfo,
-): NativefierOptions {
+): RawOptions {
   if (rawOptions.targetUrl !== undefined && dirExists(rawOptions.targetUrl)) {
     // You got your ouput dir in my targetUrl!
     rawOptions.out = rawOptions.targetUrl;

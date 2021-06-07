@@ -6,14 +6,15 @@ import { promisify } from 'util';
 import * as log from 'loglevel';
 
 import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
-import { AppOptions } from '../options/model';
+import { AppOptions, OutputOptions, PackageJSON } from '../options/model';
+import { parseJson } from '../utils/parseUtils';
 
 const writeFileAsync = promisify(fs.writeFile);
 
 /**
  * Only picks certain app args to pass to nativefier.json
  */
-function pickElectronAppArgs(options: AppOptions): any {
+function pickElectronAppArgs(options: AppOptions): OutputOptions {
   return {
     accessibilityPrompt: options.nativefier.accessibilityPrompt,
     alwaysOnTop: options.nativefier.alwaysOnTop,
@@ -151,7 +152,9 @@ function changeAppPackageJsonName(
   url: string,
 ): void {
   const packageJsonPath = path.join(appPath, '/package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath).toString());
+  const packageJson = parseJson<PackageJSON>(
+    fs.readFileSync(packageJsonPath).toString(),
+  );
   const normalizedAppName = normalizeAppName(name, url);
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);

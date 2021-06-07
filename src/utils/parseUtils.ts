@@ -39,10 +39,10 @@ export function parseBooleanOrString(val: string): boolean | string {
   }
 }
 
-export function parseJson(val: string): any {
-  if (!val) return {};
+export function parseJson<Type>(val: string): Type {
+  if (!val) return undefined;
   try {
-    return JSON.parse(val);
+    return parseJson<Type>(val);
   } catch (err) {
     const windowsShellHint = isWindows()
       ? `\n   In particular, Windows cmd doesn't have single quotes, so you have to use only double-quotes plus escaping: "{\\"someKey\\": \\"someValue\\"}"`

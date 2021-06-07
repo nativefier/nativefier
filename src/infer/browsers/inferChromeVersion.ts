@@ -31,7 +31,7 @@ export async function getChromeVersionForElectronVersion(
 
   try {
     log.debug('Grabbing electron<->chrome versions file from', url);
-    const response = await axios.get(url, { timeout: 5000 });
+    const response = await axios.get<ElectronRelease[]>(url, { timeout: 5000 });
     if (response.status !== 200) {
       throw new Error(`Bad request: Status code ${response.status}`);
     }
