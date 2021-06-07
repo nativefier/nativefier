@@ -37,6 +37,8 @@ if (process.argv.indexOf('--verbose') > -1) {
   process.traceProcessWarnings = true;
 }
 
+let mainWindow: BrowserWindow;
+
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 log.debug('appArgs', appArgs);
@@ -229,67 +231,61 @@ if (appArgs.widevine) {
   });
 }
 
-function initAppWindowEvents(mainWindow: BrowserWindow) {
-  app.on('activate', (event, hasVisibleWindows) => {
-    log.debug('app.activate', { event, hasVisibleWindows });
-    if (isOSX()) {
-      // this is called when the dock is clicked
-      if (!hasVisibleWindows) {
+app.on('activate', (event, hasVisibleWindows) => {
+  log.debug('app.activate', { event, hasVisibleWindows });
+  if (isOSX()) {
+    // this is called when the dock is clicked
+    if (!hasVisibleWindows) {
+      mainWindow.show();
+    }
+  }
+});
+
+// quit if singleInstance mode and there's already another instance running
+const shouldQuit = appArgs.singleInstance && !app.requestSingleInstanceLock();
+if (shouldQuit) {
+  app.quit();
+} else {
+  app.on('second-instance', () => {
+    log.debug('app.second-instance');
+    if (mainWindow) {
+      if (!mainWindow.isVisible()) {
+        // try
         mainWindow.show();
       }
-    }
-  });
-
-  // quit if singleInstance mode and there's already another instance running
-  const shouldQuit = appArgs.singleInstance && !app.requestSingleInstanceLock();
-  if (shouldQuit) {
-    app.quit();
-  } else {
-    app.on('second-instance', () => {
-      log.debug('app.second-instance');
-      if (mainWindow) {
-        if (!mainWindow.isVisible()) {
-          // try
-          mainWindow.show();
-        }
-        if (mainWindow.isMinimized()) {
-          // minimized
-          mainWindow.restore();
-        }
-        mainWindow.focus();
+      if (mainWindow.isMinimized()) {
+        // minimized
+        mainWindow.restore();
       }
-    });
-  }
-
-  app.on('new-window-for-tab', () => {
-    log.debug('app.new-window-for-tab');
-    if (mainWindow) {
-      mainWindow.emit('new-tab');
-    }
-  });
-
-  app.on('login', (event, webContents, request, authInfo, callback) => {
-    log.debug('app.login', { event, request });
-    // for http authentication
-    event.preventDefault();
-
-    if (
-      appArgs.basicAuthUsername !== null &&
-      appArgs.basicAuthPassword !== null
-    ) {
-      callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
-    } else {
-      createLoginWindow(callback, mainWindow).catch((err) =>
-        log.error('createLoginWindow ERROR', err),
-      );
+      mainWindow.focus();
     }
   });
 }
 
-async function onReady(): Promise<void> {
-  const mainWindow = await createMainWindow(appArgs, setDockBadge);
+app.on('new-window-for-tab', () => {
+  log.debug('app.new-window-for-tab');
+  if (mainWindow) {
+    mainWindow.emit('new-tab');
+  }
+});
 
-  initAppWindowEvents(mainWindow);
+app.on('login', (event, webContents, request, authInfo, callback) => {
+  log.debug('app.login', { event, request });
+  // for http authentication
+  event.preventDefault();
+
+  if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
+    callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
+  } else {
+    createLoginWindow(callback, mainWindow).catch((err) =>
+      log.error('createLoginWindow ERROR', err),
+    );
+  }
+});
+
+async function onReady(): Promise<void> {
+  // Warning: `mainWindow` below is the *global* unique `mainWindow`, created at init time
+  mainWindow = await createMainWindow(appArgs, setDockBadge);
 
   createTrayIcon(appArgs, mainWindow);
 

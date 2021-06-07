@@ -8,7 +8,7 @@ export async function createLoginWindow(
   loginCallback,
   parent?: BrowserWindow,
 ): Promise<BrowserWindow> {
-  log.debug('createLoginWindow', loginCallback, parent);
+  log.debug('createLoginWindow', { loginCallback, parent });
 
   const loginWindow = new BrowserWindow({
     parent,
@@ -18,6 +18,7 @@ export async function createLoginWindow(
     resizable: false,
     webPreferences: {
       nodeIntegration: true, // TODO work around this; insecure
+      contextIsolation: false, // https://github.com/electron/electron/issues/28017
     },
   });
   await loginWindow.loadURL(
@@ -25,6 +26,7 @@ export async function createLoginWindow(
   );
 
   ipcMain.once('login-message', (event, usernameAndPassword) => {
+    log.debug('login-message', { event, username: usernameAndPassword[0] });
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);
     loginWindow.close();
   });
