@@ -11,7 +11,7 @@ import {
   isOSX,
   nativeTabsSupported,
 } from '../helpers/helpers';
-import { setupNativefierWindow } from '../helpers/windowEvents';
+import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearCache,
   getDefaultWindowOptions,
@@ -87,6 +87,32 @@ export async function createMainWindow(
   createMenu(options, mainWindow);
   createContextMenu(options, mainWindow);
   setupNativefierWindow(options, mainWindow);
+
+  // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
+  // We can't quite cut over to that yet for a few reasons:
+  // 1. Our version of Electron does not yet support a parameter to
+  //    setWindowOpenHandler that contains `disposition', which we need.
+  //    See https://github.com/electron/electron/issues/28380
+  // 2. setWindowOpenHandler doesn't support newGuest as well
+  // Though at this point, 'new-window' bugs seem to be coming up and downstream
+  // users are being pointed to use setWindowOpenHandler.
+  // E.g., https://github.com/electron/electron/issues/28374
+
+  // Note it is important to add this handler only to the *main* window,
+  // else we run into weird behavior like opening tabs twice
+  mainWindow.webContents.on(
+    'new-window',
+    (event, url, frameName, disposition) => {
+      onNewWindow(
+        options,
+        setupNativefierWindow,
+        event,
+        url,
+        frameName,
+        disposition,
+      ).catch((err) => log.error('onNewWindow ERROR', err));
+    },
+  );
 
   if (options.counter) {
     setupCounter(options, mainWindow, setDockBadge);
