@@ -10,21 +10,12 @@ import {
   getCounterValue,
   isOSX,
   nativeTabsSupported,
-  openExternal,
 } from '../helpers/helpers';
 import { setupNativefierWindow } from '../helpers/windowEvents';
 import {
-  clearAppData,
   clearCache,
-  getCurrentURL,
   getDefaultWindowOptions,
-  goBack,
-  goForward,
-  goToURL,
   hideWindow,
-  zoomIn,
-  zoomOut,
-  zoomReset,
 } from '../helpers/windowHelpers';
 import { initContextMenu } from './contextMenu';
 import { createMenu } from './menu';
@@ -47,12 +38,10 @@ type SessionInteractionResult = {
 
 /**
  * @param {{}} nativefierOptions AppArgs from nativefier.json
- * @param {function} onAppQuit
  * @param {function} setDockBadge
  */
 export async function createMainWindow(
   nativefierOptions,
-  onAppQuit: () => void,
   setDockBadge: (value: number | string, bounce?: boolean) => void,
 ): Promise<BrowserWindow> {
   const options = { ...nativefierOptions };
@@ -74,8 +63,7 @@ export async function createMainWindow(
     y: options.y,
     autoHideMenuBar: !options.showMenuBar,
     icon: getAppIcon(),
-    // set to undefined and not false because explicitly setting to false will disable full screen
-    fullscreen: options.fullScreen ?? undefined,
+    fullscreen: options.fullScreen,
     // Whether the window should always stay on top of other windows. Default is false.
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle,
@@ -96,8 +84,7 @@ export async function createMainWindow(
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
   }
-
-  createMainMenu(options, mainWindow, onAppQuit);
+  createMenu(options, mainWindow);
   createContextMenu(options, mainWindow);
   setupNativefierWindow(options, mainWindow);
 
@@ -180,30 +167,6 @@ function setupCounter(
   });
 }
 
-function createMainMenu(
-  options: any,
-  window: BrowserWindow,
-  onAppQuit: () => void,
-) {
-  const menuOptions = {
-    nativefierVersion: options.nativefierVersion,
-    appQuit: onAppQuit,
-    clearAppData: () => clearAppData(window),
-    disableDevTools: options.disableDevTools,
-    getCurrentURL,
-    goBack,
-    goForward,
-    goToURL,
-    openExternal,
-    zoomBuildTimeValue: options.zoom,
-    zoomIn,
-    zoomOut,
-    zoomReset,
-  };
-
-  createMenu(menuOptions);
-}
-
 function setupNotificationBadge(
   options,
   window: BrowserWindow,
@@ -275,7 +238,7 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
           result.value = window.webContents.session[request.property];
         } else {
           // Why even send the event if you're going to do this? You're just wasting time! ;)
-          throw Error(
+          throw new Error(
             'Received neither a func nor a property in the request. Unable to process.',
           );
         }

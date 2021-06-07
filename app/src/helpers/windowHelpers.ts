@@ -137,16 +137,16 @@ export function getDefaultWindowOptions(
     ...(options.browserwindowOptions?.webPreferences ?? {}),
   };
 
-  const defaultOptions = {
-    // Convert dashes to spaces because on linux the app name is joined with dashes
-    title: options.name,
+  const defaultOptions: BrowserWindowConstructorOptions = {
+    fullscreenable: true,
     tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
+    title: options.name,
     webPreferences: {
       javascript: true,
-      plugins: true,
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
-      webSecurity: !options.insecure,
       preload: path.join(__dirname, 'preload.js'),
+      plugins: true,
+      webSecurity: !options.insecure,
       zoomFactor: options.zoom,
       ...webPreferences,
     },

@@ -263,11 +263,7 @@ if (shouldQuit) {
 }
 
 async function onReady(): Promise<void> {
-  const mainWindow = await createMainWindow(
-    appArgs,
-    app.quit.bind(this),
-    setDockBadge,
-  );
+  const mainWindow = await createMainWindow(appArgs, setDockBadge);
 
   createTrayIcon(appArgs, mainWindow);
 
