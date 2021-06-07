@@ -25,7 +25,7 @@ export async function createLoginWindow(
     `file://${path.join(__dirname, 'static/login.html')}`,
   );
 
-  ipcMain.on('login-message', (event, usernameAndPassword) => {
+  ipcMain.once('login-message', (event, usernameAndPassword) => {
     log.debug('login-message', { event, username: usernameAndPassword[0] });
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);
     loginWindow.close();
