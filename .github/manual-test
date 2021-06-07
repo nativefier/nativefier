@@ -9,7 +9,38 @@ if ! command -v uname > /dev/null; then echo "Missing uname"; missingDeps=true; 
 if ! command -v node > /dev/null; then echo "Missing node"; missingDeps=true; fi
 if [ "$missingDeps" = true ]; then exit 1; fi
 
+function launch_app() {
+  printf "\n***** Running app *****\n"
+  if [ "$(uname -s)" = "Darwin" ]; then
+    open -a "$1/$2-darwin-x64/$2.app"
+  else
+    "$1/$2-linux-x64/$2"
+  fi
+}
 
+function do_cleanup() {
+  if [ -n "1" ]; then
+  printf "\n***** Deleting test dir %s *****\n" "$1"
+  rm -rf "$1"
+  printf "\n"
+fi
+}
+
+function request_feedback() {
+  printf "\nDid everything work as expected? [yN] "
+  read -r response
+
+  do_cleanup $1
+
+  if [ "$response" != 'y' ]; then
+    echo "Back to fixing"
+    exit 1
+  else
+    echo "Yayyyyyyyyyyy"
+  fi
+}
+
+printf "\n***** Setting up and building *****\n"
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 nativefier_dir="$script_dir/.."
 pushd "$nativefier_dir"
@@ -17,6 +48,7 @@ npm run build
 
 printf "\n***** Creating test dirs & resources *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-XXXXX)
+name="app"
 resources_dir="$tmp_dir/resources"
 mkdir "$resources_dir"
 injected_css="$resources_dir/inject.css"
@@ -28,7 +60,7 @@ printf "\n***** Building test app *****\n"
 node ./lib/cli.js 'https://npmjs.com/' \
   --inject "$injected_css" \
   --inject "$injected_js" \
-  --name "app" \
+  --name "$name" \
   "$tmp_dir"
 
 printf "\n***** Test checklist *****
@@ -40,37 +72,19 @@ printf "\n***** Test checklist *****
 - Console: no Electron runtime deprecation warnings/error logged
 "
 
-printf "\n***** Running app *****\n"
-if [ "$(uname -s)" = "Darwin" ]; then
-  open -a "$tmp_dir/app-darwin-x64/app.app"
-else
-  "$tmp_dir/app-linux-x64/app"
-fi
+launch_app $tmp_dir $name
 
-printf "\nDid everything work as expected? [yN] "
-read -r response
-
-if [ -n "$tmp_dir" ]; then
-  printf "\n***** Deleting test dir %s *****\n" "$tmp_dir"
-  rm -rf "$tmp_dir"
-  printf "\n"
-fi
-
-if [ "$response" != 'y' ]; then
-  echo "Back to fixing"
-  exit 1
-else
-  echo "Yayyyyyyyyyyy"
-fi
+request_feedback $tmp_dir
 
 printf "\n***** Creating test dirs & resources *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-XXXXX)
+name="app"
 
 printf "\n***** Building test app *****\n"
 node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
   --basic-auth-username foo \
   --basic-auth-password bar \
-  --name "app" \
+  --name "$name" \
   "$tmp_dir"
 
 printf "\n***** Test checklist *****
@@ -82,36 +96,18 @@ printf "\n***** Test checklist *****
 - Console: no Electron runtime deprecation warnings/error logged
 "
 
-printf "\n***** Running app *****\n"
-if [ "$(uname -s)" = "Darwin" ]; then
-  open -a "$tmp_dir/app-darwin-x64/app.app"
-else
-  "$tmp_dir/app-linux-x64/app"
-fi
+launch_app $tmp_dir $name
 
-printf "\nDid everything work as expected? [yN] "
-read -r response
-
-if [ -n "$tmp_dir" ]; then
-  printf "\n***** Deleting test dir %s *****\n" "$tmp_dir"
-  rm -rf "$tmp_dir"
-  printf "\n"
-fi
-
-if [ "$response" != 'y' ]; then
-  echo "Back to fixing"
-  exit 1
-else
-  echo "Yayyyyyyyyyyy"
-fi
+request_feedback $tmp_dir
 
 
 printf "\n***** Creating test dirs & resources *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-prompt-XXXXX)
+name="app"
 
 printf "\n***** Building test app *****\n"
 node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
-  --name "app" \
+  --name "$name" \
   "$tmp_dir"
 
 printf "\n***** Test checklist *****
@@ -126,25 +122,6 @@ printf "\n***** Test checklist *****
 - Console: no Electron runtime deprecation warnings/error logged
 "
 
-printf "\n***** Running app *****\n"
-if [ "$(uname -s)" = "Darwin" ]; then
-  open -a "$tmp_dir/app-darwin-x64/app.app"
-else
-  "$tmp_dir/app-linux-x64/app"
-fi
+launch_app $tmp_dir $name
 
-printf "\nDid everything work as expected? [yN] "
-read -r response
-
-if [ -n "$tmp_dir" ]; then
-  printf "\n***** Deleting test dir %s *****\n" "$tmp_dir"
-  rm -rf "$tmp_dir"
-  printf "\n"
-fi
-
-if [ "$response" != 'y' ]; then
-  echo "Back to fixing"
-  exit 1
-else
-  echo "Yayyyyyyyyyyy"
-fi
+request_feedback $tmp_dir
