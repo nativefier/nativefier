@@ -1,4 +1,25 @@
 
+44.0.0 / 2021-06-04
+===================
+
+  * **[BREAKING]** Nativefier now requires node>=12.9 and npm>=6.9 (#1192)
+    We do our best to support the oldest Node we can (what Debian stable ships),
+    but we are also constrained by what our _own_ Node dependencies require.
+    Now is the time for a bump.
+
+  * Feature: Provide easy-to-use user-agent shortcodes (e.g. `firefox`) (#1198)
+  * Feature: Organize CLI flags into groups (for better `--help` usability) (#1191)
+
+  * Fix broken window popups (fix #1197, PR #1203)
+  * Fix allowing non-ascii app names like 微信读书 (fix #1056, PR #1207)
+  * Fix considering `login.microsoftonline.com` as internal login page (#1205)
+  * Bump default Electron from 12.0.7 to 12.0.10 with a couple of fixes. See changelogs for:
+    [12.0.8](https://github.com/electron/electron/releases/tag/v12.0.8),
+    [12.0.9](https://github.com/electron/electron/releases/tag/v12.0.9),
+    [12.0.10](https://github.com/electron/electron/releases/tag/v12.0.10).
+
+  * Maintenance: docs, tests tooling, deps bumps
+
 43.1.3 / 2021-05-15
 ===================
 
