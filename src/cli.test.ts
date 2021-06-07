@@ -51,22 +51,22 @@ describe('initArgs + parseArgs', () => {
   test('upgrade arg', () => {
     const args = parseArgs(initArgs(['--upgrade', 'pathToUpgrade']));
     expect(args.upgrade).toBe('pathToUpgrade');
-    expect(args.targetUrl).toBe('');
+    expect(args.targetUrl).toBeUndefined();
   });
 
   test('upgrade arg with out dir', () => {
     const args = parseArgs(initArgs(['tmp', '--upgrade', 'pathToUpgrade']));
     expect(args.upgrade).toBe('pathToUpgrade');
     expect(args.out).toBe('tmp');
-    expect(args.targetUrl).toBe('');
+    expect(args.targetUrl).toBeUndefined();
   });
 
   test('upgrade arg with targetUrl', () => {
-    expect(() => {
+    expect(() =>
       parseArgs(
         initArgs(['https://www.google.com', '--upgrade', 'path/to/upgrade']),
-      );
-    }).toThrow();
+      ),
+    ).toThrow();
   });
 
   test('multi-inject', () => {

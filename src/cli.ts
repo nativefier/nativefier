@@ -536,7 +536,7 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
 
   if (parsed.upgradeFrom && parsed.targetUrl) {
     let targetAndUpgrade = false;
-    if (parsed.out === '') {
+    if (!parsed.out) {
       // If we're upgrading, the first positional args might be the outputDirectory, so swap these if we can
       try {
         // If this succeeds, we have a problem
@@ -545,7 +545,7 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
       } catch {
         // Cool, it's not a URL
         parsed.out = parsed.targetUrl;
-        parsed.targetUrl = '';
+        parsed.targetUrl = undefined;
       }
     } else {
       // Someone supplied a targetUrl, an outputDirectory, and --upgrade. That's not cool.
@@ -559,7 +559,7 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
     }
   }
 
-  if (parsed.targetUrl === '' && !parsed.upgradeFrom) {
+  if (!parsed.targetUrl && !parsed.upgradeFrom) {
     throw new Error(
       'ERROR: Nativefier must be called with either a targetUrl or the --upgrade option.\n',
     );
