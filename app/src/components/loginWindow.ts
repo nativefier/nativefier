@@ -18,7 +18,7 @@ export async function createLoginWindow(
     resizable: false,
     webPreferences: {
       nodeIntegration: true, // TODO work around this; insecure
-      contextIsolation: false,
+      contextIsolation: false, // https://github.com/electron/electron/issues/28017
     },
   });
   await loginWindow.loadURL(
