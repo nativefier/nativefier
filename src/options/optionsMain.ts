@@ -4,7 +4,14 @@ import axios from 'axios';
 import * as debug from 'debug';
 import * as log from 'loglevel';
 
-import * as packageJson from '../../package.json';
+// package.json is `require`d to let tsc strip the `src` folder by determining
+// baseUrl=src. A static import would prevent that and cause an ugly extra `src` folder in `lib`
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const packageJson: {
+  name: string;
+  version: string;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+} = require('../../package.json');
 import {
   DEFAULT_ELECTRON_VERSION,
   PLACEHOLDER_APP_DIR,
