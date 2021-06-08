@@ -1,4 +1,16 @@
 
+44.0.2 / 2021-06-07
+===================
+
+  * Fix HTTP basic auth broken since 44.0.1 (fix #1219) (#1220)
+  * Fix tabs opening twice since 44.0.0 (fix #1209) (#1221)
+
+44.0.1 / 2021-06-07
+===================
+
+  * macOS: fix crash on activating main window (fix #1212) (PR #1213)
+  * macOS: fix fullscreen not working + menu refactor (fix #1206) (PR #1210)
+
 44.0.0 / 2021-06-04
 ===================
 
