@@ -88,18 +88,16 @@ export function createNewTab(
   url: string,
   foreground: boolean,
   parent?: BrowserWindow,
-): Promise<BrowserWindow> {
+): BrowserWindow {
   log.debug('createNewTab', { url, foreground, parent });
-  return Promise.resolve(
-    withFocusedWindow((focusedWindow) => {
-      const newTab = createNewWindow(options, setupWindow, url, parent);
-      focusedWindow.addTabbedWindow(newTab);
-      if (!foreground) {
-        focusedWindow.focus();
-      }
-      return newTab;
-    }),
-  );
+  return withFocusedWindow((focusedWindow) => {
+    const newTab = createNewWindow(options, setupWindow, url, parent);
+    focusedWindow.addTabbedWindow(newTab);
+    if (!foreground) {
+      focusedWindow.focus();
+    }
+    return newTab;
+  });
 }
 
 export function createNewWindow(

@@ -13,7 +13,7 @@ export async function inferTitle(url: string): Promise<string> {
   });
   log.debug(`Fetched ${(data.length / 1024).toFixed(1)} kb page at`, url);
   const inferredTitle =
-    /<\s*title.*?>(?<title>.+?)<\s*\/title\s*?>/i.exec(data).groups?.title ||
+    /<\s*title.*?>(?<title>.+?)<\s*\/title\s*?>/i.exec(data)?.groups?.title ??
     'Webapp';
   log.debug('Inferred title:', inferredTitle);
   return inferredTitle;

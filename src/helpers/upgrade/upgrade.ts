@@ -157,10 +157,18 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
     return null;
   }
 
-  log.debug(`Loading ${path.join(appResourcesDir, 'nativefier.json')}`);
-  const options: NativefierOptions = parseJson<NativefierOptions>(
-    fs.readFileSync(path.join(appResourcesDir, 'nativefier.json'), 'utf8'),
+  const nativefierJSONPath = path.join(appResourcesDir, 'nativefier.json');
+
+  log.debug(`Loading ${nativefierJSONPath}`);
+  const options = parseJson<NativefierOptions>(
+    fs.readFileSync(nativefierJSONPath, 'utf8'),
   );
+
+  if (!options) {
+    throw new Error(
+      `Could not read Nativefier options from ${nativefierJSONPath}`,
+    );
+  }
 
   options.electronVersion = undefined;
 

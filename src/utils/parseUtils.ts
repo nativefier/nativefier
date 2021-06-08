@@ -3,9 +3,12 @@ import * as log from 'loglevel';
 import { isWindows } from '../helpers/helpers';
 
 export function parseBoolean(
-  val: boolean | string | number,
+  val: boolean | string | number | undefined,
   _default: boolean,
 ): boolean {
+  if (val === undefined) {
+    return _default;
+  }
   try {
     if (typeof val === 'boolean') {
       return val;
@@ -39,7 +42,7 @@ export function parseBooleanOrString(val: string): boolean | string {
   }
 }
 
-export function parseJson<Type>(val: string): Type {
+export function parseJson<Type>(val: string): Type | undefined {
   if (!val) return undefined;
   try {
     return JSON.parse(val) as Type;

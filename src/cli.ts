@@ -593,7 +593,8 @@ if (require.main === module) {
     sanitizedArgs.push(arg);
   });
 
-  let args: yargs.Argv<RawOptions>, parsedArgs: RawOptions;
+  let args: yargs.Argv<RawOptions> | undefined = undefined;
+  let parsedArgs: RawOptions;
   try {
     args = initArgs(sanitizedArgs.slice(2));
     parsedArgs = parseArgs(args);

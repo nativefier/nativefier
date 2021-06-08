@@ -11,10 +11,10 @@ export { buildNativefierApp };
  */
 function buildNativefierAppOldCallbackStyle(
   options: RawOptions, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
-  callback: (err: Error, result?: string) => void,
+  callback: (err?: Error, result?: string) => void,
 ): void {
   buildNativefierApp(options)
-    .then((result) => callback(null, result))
+    .then((result) => callback(undefined, result))
     .catch((err: Error) => callback(err));
 }
 

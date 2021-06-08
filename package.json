@@ -37,8 +37,8 @@
     "build:watch": "npm run clean && tsc --build . app --watch",
     "changelog": "./.github/generate-changelog",
     "ci": "npm run lint && npm test",
-    "clean": "rimraf lib/ app/lib/ app/dist/",
-    "clean:full": "rimraf lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
+    "clean": "rimraf coverage/ lib/ app/lib/ app/dist/",
+    "clean:full": "rimraf coverage/ lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
     "lint:fix": "eslint . --ext .ts --fix",
     "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts'",
     "lint": "eslint . --ext .ts",
@@ -97,7 +97,7 @@
       "^electron$": "<rootDir>/app/dist/mocks/electron.js"
     },
     "setupFiles": [
-      "./lib/src/jestSetupFiles"
+      "./lib/jestSetupFiles"
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [

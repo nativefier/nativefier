@@ -2,6 +2,7 @@ import * as path from 'path';
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 
+// @ts-expect-error No types defined until we merge https://github.com/nativefier/gitcloud-client/pull/3
 import * as gitcloud from 'gitcloud';
 import * as pageIcon from 'page-icon';
 
@@ -70,7 +71,7 @@ function mapIconWithMatchScore(
 async function inferIconFromStore(
   targetUrl: string,
   platform: string,
-): Promise<DownloadResult> {
+): Promise<DownloadResult | undefined> {
   log.debug(`Inferring icon from store for ${targetUrl} on ${platform}`);
   const allowedFormats = new Set(getAllowedIconFormats(platform));
 
@@ -85,7 +86,7 @@ async function inferIconFromStore(
 
   if (maxScore === 0) {
     log.debug('No relevant icon in store.');
-    return null;
+    return undefined;
   }
 
   const iconsMatchingScore = getMatchingIcons(iconWithScores, maxScore);
@@ -97,7 +98,7 @@ async function inferIconFromStore(
 
   if (!iconUrl) {
     log.debug('Could not infer icon from store');
-    return null;
+    return undefined;
   }
   return downloadFile(iconUrl);
 }
@@ -105,21 +106,19 @@ async function inferIconFromStore(
 export async function inferIcon(
   targetUrl: string,
   platform: string,
-): Promise<string> {
+): Promise<string | undefined> {
   log.debug(`Inferring icon for ${targetUrl} on ${platform}`);
   const tmpDirPath = getTempDir('iconinfer');
 
-  let icon: { ext: string; data: Buffer } = await inferIconFromStore(
-    targetUrl,
-    platform,
-  );
+  let icon: { ext: string; data: Buffer } | undefined =
+    await inferIconFromStore(targetUrl, platform);
   if (!icon) {
     const ext = platform === 'win32' ? '.ico' : '.png';
     log.debug(`Trying to extract a ${ext} icon from the page.`);
     icon = await pageIcon(targetUrl, { ext });
   }
   if (!icon) {
-    return null;
+    return undefined;
   }
   log.debug(`Got an icon from the page.`);
 

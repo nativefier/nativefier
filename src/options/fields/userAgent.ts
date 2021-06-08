@@ -1,4 +1,5 @@
 import * as log from 'loglevel';
+import { DEFAULT_ELECTRON_VERSION } from '../../constants';
 
 import { getChromeVersionForElectronVersion } from '../../infer/browsers/inferChromeVersion';
 import { getLatestFirefoxVersion } from '../../infer/browsers/inferFirefoxVersion';
@@ -30,10 +31,12 @@ const USER_AGENT_SHORT_CODE_MAPS: Record<
   safari: safariUserAgent,
 };
 
-export async function userAgent(options: UserAgentOpts): Promise<string> {
+export async function userAgent(
+  options: UserAgentOpts,
+): Promise<string | undefined> {
   if (!options.nativefier.userAgent) {
     // No user agent got passed. Let's handle it with the app.userAgentFallback
-    return null;
+    return undefined;
   }
 
   if (
@@ -46,7 +49,7 @@ export async function userAgent(options: UserAgentOpts): Promise<string> {
       `${options.nativefier.userAgent.toLowerCase()} not found in`,
       Object.keys(USER_AGENT_SHORT_CODE_MAPS),
     );
-    return null;
+    return undefined;
   }
 
   options.packager.platform = normalizePlatform(options.packager.platform);
@@ -58,7 +61,10 @@ export async function userAgent(options: UserAgentOpts): Promise<string> {
 
   const mapFunction = USER_AGENT_SHORT_CODE_MAPS[options.nativefier.userAgent];
 
-  return await mapFunction(userAgentPlatform, options.packager.electronVersion);
+  return await mapFunction(
+    userAgentPlatform,
+    options.packager.electronVersion ?? DEFAULT_ELECTRON_VERSION,
+  );
 }
 
 async function edgeUserAgent(

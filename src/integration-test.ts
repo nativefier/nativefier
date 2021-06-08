@@ -48,9 +48,10 @@ async function checkApp(
   const appPath = path.join(appRoot, relativeAppFolder);
 
   const configPath = path.join(appPath, 'nativefier.json');
-  const nativefierConfig: NativefierOptions = parseJson<NativefierOptions>(
-    fs.readFileSync(configPath).toString(),
-  );
+  const nativefierConfig: NativefierOptions | undefined =
+    parseJson<NativefierOptions>(fs.readFileSync(configPath).toString());
+  expect(nativefierConfig).not.toBeUndefined();
+  if (!nativefierConfig) return;
   expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
 
   // Test name inferring
@@ -108,7 +109,8 @@ describe('Nativefier', () => {
         lang: 'en-US',
       };
       const appPath = await buildNativefierApp(options);
-      await checkApp(appPath, options);
+      expect(appPath).not.toBeUndefined();
+      await checkApp(appPath as string, options);
     },
   );
 });
@@ -139,7 +141,8 @@ describe('Nativefier upgrade', () => {
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
-      await checkApp(appPath, options);
+      expect(appPath).not.toBeUndefined();
+      await checkApp(appPath as string, options);
 
       const upgradeOptions = {
         upgradeFrom: appPath,
@@ -149,7 +152,8 @@ describe('Nativefier upgrade', () => {
       const upgradeAppPath = await buildNativefierApp(upgradeOptions);
       options.electronVersion = DEFAULT_ELECTRON_VERSION;
       options.userAgent = baseAppOptions.userAgent;
-      await checkApp(upgradeAppPath, options);
+      expect(upgradeAppPath).not.toBeUndefined();
+      await checkApp(upgradeAppPath as string, options);
     },
   );
 });

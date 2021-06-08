@@ -6,7 +6,7 @@ import { name } from './name';
 type OptionPostprocessor = {
   namespace: 'nativefier' | 'packager';
   option: 'icon' | 'name' | 'userAgent';
-  processor: (options: AppOptions) => Promise<string>;
+  processor: (options: AppOptions) => Promise<string | undefined>;
 };
 
 const OPTION_POSTPROCESSORS: OptionPostprocessor[] = [
@@ -29,10 +29,12 @@ export async function processOptions(options: AppOptions): Promise<AppOptions> {
 
   for (const { namespace, option, result } of processedOptions) {
     if (
-      result !== null &&
+      result &&
       namespace in options &&
+      options[namespace] &&
       option in options[namespace]
     ) {
+      // @ts-expect-error We're fiddling with objects at the string key level, which TS doesn't support well.
       options[namespace][option] = result;
     }
   }

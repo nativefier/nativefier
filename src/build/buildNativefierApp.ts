@@ -70,13 +70,13 @@ async function copyIconsIfNecessary(
 /**
  * Checks the app path array to determine if packaging completed successfully
  */
-function getAppPath(appPath: string | string[]): string {
+function getAppPath(appPath: string | string[]): string | undefined {
   if (!Array.isArray(appPath)) {
     return appPath;
   }
 
   if (appPath.length === 0) {
-    return null; // directory already exists and `--overwrite` not set
+    return undefined; // directory already exists and `--overwrite` not set
   }
 
   if (appPath.length > 1) {
@@ -115,7 +115,7 @@ function trimUnprocessableOptions(options: AppOptions): void {
       'features, like a correct icon and process name. Do yourself a favor and install Wine, please.',
     );
     for (const keyToUnset of optionsPresent) {
-      options[keyToUnset] = null;
+      (options as unknown as Record<string, undefined>)[keyToUnset] = undefined;
     }
   }
 }
@@ -123,12 +123,12 @@ function trimUnprocessableOptions(options: AppOptions): void {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(
   rawOptions: RawOptions,
-): Promise<string> {
+): Promise<string | undefined> {
   log.info('\nProcessing options...');
 
   if (isUpgrade(rawOptions)) {
     log.debug('Attempting to upgrade from', rawOptions.upgrade);
-    const oldApp = findUpgradeApp(rawOptions.upgrade.toString());
+    const oldApp = findUpgradeApp(rawOptions.upgrade as string);
     if (oldApp === null) {
       throw new Error(
         `Could not find an old Nativfier app in "${
@@ -138,7 +138,7 @@ export async function buildNativefierApp(
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
     if (rawOptions.out === undefined && rawOptions.overwrite) {
-      rawOptions.out = path.dirname(rawOptions.upgradeFrom);
+      rawOptions.out = path.dirname(rawOptions.upgradeFrom as string);
     }
   }
   log.debug('rawOptions', rawOptions);

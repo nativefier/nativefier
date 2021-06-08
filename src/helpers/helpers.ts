@@ -63,7 +63,7 @@ export async function copyFileOrDir(
   dest: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    ncp(sourceFileOrDir, dest, (error: Error[]) => {
+    ncp(sourceFileOrDir, dest, (error: Error[] | null): void => {
       if (error) {
         reject(error);
       }
@@ -72,7 +72,9 @@ export async function copyFileOrDir(
   });
 }
 
-export function downloadFile(fileUrl: string): Promise<DownloadResult> {
+export function downloadFile(
+  fileUrl: string,
+): Promise<DownloadResult | undefined> {
   log.debug(`Downloading ${fileUrl}`);
   return axios
     .get<Buffer>(fileUrl, {
@@ -80,7 +82,7 @@ export function downloadFile(fileUrl: string): Promise<DownloadResult> {
     })
     .then((response) => {
       if (!response.data) {
-        return null;
+        return undefined;
       }
       return {
         data: response.data,
@@ -181,7 +183,7 @@ export function generateRandomSuffix(length = 6): string {
   return hash.digest('hex').substring(0, length);
 }
 
-export function getProcessEnvs(val: string): ProcessEnvs {
+export function getProcessEnvs(val: string): ProcessEnvs | undefined {
   if (!val) {
     return undefined;
   }

@@ -60,3 +60,5 @@ nativefier*.tgz
 
 # https://github.com/nektos/act
 .actrc
+
+tsconfig.tsbuildinfo

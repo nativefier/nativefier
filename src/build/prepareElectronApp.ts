@@ -100,7 +100,10 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
   };
 }
 
-async function maybeCopyScripts(srcs: string[], dest: string): Promise<void> {
+async function maybeCopyScripts(
+  srcs: string[] | undefined,
+  dest: string,
+): Promise<void> {
   if (!srcs || srcs.length === 0) {
     log.debug('No files to inject, skipping copy.');
     return;
@@ -155,6 +158,9 @@ function changeAppPackageJsonName(
   const packageJson = parseJson<PackageJSON>(
     fs.readFileSync(packageJsonPath).toString(),
   );
+  if (!packageJson) {
+    throw new Error(`Could not load package.json from ${packageJsonPath}`);
+  }
   const normalizedAppName = normalizeAppName(name, url);
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
@@ -203,7 +209,7 @@ export async function prepareElectronApp(
   }
   changeAppPackageJsonName(
     dest,
-    options.packager.name,
+    options.packager.name as string,
     options.packager.targetUrl,
   );
 }

@@ -39,8 +39,8 @@ export async function getLatestSafariVersion(
 
     const versionRows = majorVersionTable.split('<tbody')[1].split('<tr');
 
-    let version: string;
-    let webkitVersion: string;
+    let version: string | undefined = undefined;
+    let webkitVersion: string | undefined = undefined;
 
     for (const versionRow of versionRows.reverse()) {
       const versionMatch = [
@@ -61,11 +61,14 @@ export async function getLatestSafariVersion(
       }
     }
 
-    return {
-      majorVersion,
-      version,
-      webkitVersion,
-    };
+    if (version && webkitVersion) {
+      return {
+        majorVersion,
+        version,
+        webkitVersion,
+      };
+    }
+    return DEFAULT_SAFARI_VERSION;
   } catch (err: unknown) {
     log.error('getLatestSafariVersion ERROR', err);
     log.debug('Falling back to default Safari version', DEFAULT_SAFARI_VERSION);

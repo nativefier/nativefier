@@ -4,9 +4,7 @@ import axios from 'axios';
 import * as debug from 'debug';
 import * as log from 'loglevel';
 
-// package.json is `require`d to let tsc strip the `src` folder by determining
-// baseUrl=src. A static import would prevent that and cause an ugly extra `src` folder in `lib`
-import packageJson = require('../../package.json');
+import * as packageJson from '../../package.json';
 import {
   DEFAULT_ELECTRON_VERSION,
   PLACEHOLDER_APP_DIR,
@@ -29,18 +27,18 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
     packager: {
       appCopyright: rawOptions.appCopyright,
       appVersion: rawOptions.appVersion,
-      arch: rawOptions.arch || inferArch(),
-      asar: rawOptions.asar || rawOptions.conceal || false,
+      arch: rawOptions.arch ?? inferArch(),
+      asar: rawOptions.asar ?? rawOptions.conceal ?? false,
       buildVersion: rawOptions.buildVersion,
-      darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
+      darwinDarkModeSupport: rawOptions.darwinDarkModeSupport ?? false,
       dir: PLACEHOLDER_APP_DIR,
-      electronVersion: rawOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
+      electronVersion: rawOptions.electronVersion ?? DEFAULT_ELECTRON_VERSION,
       icon: rawOptions.icon,
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
-      out: rawOptions.out || process.cwd(),
+      out: rawOptions.out ?? process.cwd(),
       overwrite: rawOptions.overwrite,
       platform: rawOptions.platform,
-      portable: rawOptions.portable || false,
+      portable: rawOptions.portable ?? false,
       targetUrl:
         rawOptions.targetUrl === undefined
           ? '' // We'll plug this in later via upgrade
@@ -48,7 +46,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       tmpdir: false, // workaround for electron-packager#375
       upgrade: rawOptions.upgrade !== undefined ? true : false,
       upgradeFrom: rawOptions.upgradeFrom,
-      win32metadata: rawOptions.win32metadata || {
+      win32metadata: rawOptions.win32metadata ?? {
         ProductName: rawOptions.name,
         InternalName: rawOptions.name,
         FileDescription: rawOptions.name,
@@ -56,58 +54,58 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
     },
     nativefier: {
       accessibilityPrompt: true,
-      alwaysOnTop: rawOptions.alwaysOnTop || false,
-      backgroundColor: rawOptions.backgroundColor || null,
-      basicAuthPassword: rawOptions.basicAuthPassword || null,
-      basicAuthUsername: rawOptions.basicAuthUsername || null,
-      blockExternalUrls: rawOptions.blockExternalUrls || false,
-      bookmarksMenu: rawOptions.bookmarksMenu || null,
-      bounce: rawOptions.bounce || false,
+      alwaysOnTop: rawOptions.alwaysOnTop ?? false,
+      backgroundColor: rawOptions.backgroundColor,
+      basicAuthPassword: rawOptions.basicAuthPassword,
+      basicAuthUsername: rawOptions.basicAuthUsername,
+      blockExternalUrls: rawOptions.blockExternalUrls ?? false,
+      bookmarksMenu: rawOptions.bookmarksMenu,
+      bounce: rawOptions.bounce ?? false,
       browserwindowOptions: rawOptions.browserwindowOptions,
-      clearCache: rawOptions.clearCache || false,
-      counter: rawOptions.counter || false,
+      clearCache: rawOptions.clearCache ?? false,
+      counter: rawOptions.counter ?? false,
       crashReporter: rawOptions.crashReporter,
-      disableContextMenu: rawOptions.disableContextMenu,
-      disableDevTools: rawOptions.disableDevTools,
-      disableGpu: rawOptions.disableGpu || false,
-      diskCacheSize: rawOptions.diskCacheSize || null,
+      disableContextMenu: rawOptions.disableContextMenu ?? false,
+      disableDevTools: rawOptions.disableDevTools ?? false,
+      disableGpu: rawOptions.disableGpu ?? false,
+      diskCacheSize: rawOptions.diskCacheSize,
       disableOldBuildWarning:
-        rawOptions.disableOldBuildWarningYesiknowitisinsecure || false,
-      enableEs3Apis: rawOptions.enableEs3Apis || false,
-      fastQuit: rawOptions.fastQuit || false,
+        rawOptions.disableOldBuildWarningYesiknowitisinsecure ?? false,
+      enableEs3Apis: rawOptions.enableEs3Apis ?? false,
+      fastQuit: rawOptions.fastQuit ?? false,
       fileDownloadOptions: rawOptions.fileDownloadOptions,
-      flashPluginDir: rawOptions.flashPath || null,
-      fullScreen: rawOptions.fullScreen || false,
-      globalShortcuts: null,
-      hideWindowFrame: rawOptions.hideWindowFrame,
-      ignoreCertificate: rawOptions.ignoreCertificate || false,
-      ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
-      inject: rawOptions.inject || [],
-      insecure: rawOptions.insecure || false,
-      internalUrls: rawOptions.internalUrls || null,
-      lang: rawOptions.lang || undefined,
-      maximize: rawOptions.maximize || false,
+      flashPluginDir: rawOptions.flashPath,
+      fullScreen: rawOptions.fullScreen ?? false,
+      globalShortcuts: undefined,
+      hideWindowFrame: rawOptions.hideWindowFrame ?? false,
+      ignoreCertificate: rawOptions.ignoreCertificate ?? false,
+      ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist ?? false,
+      inject: rawOptions.inject ?? [],
+      insecure: rawOptions.insecure ?? false,
+      internalUrls: rawOptions.internalUrls,
+      lang: rawOptions.lang,
+      maximize: rawOptions.maximize ?? false,
       nativefierVersion: packageJson.version,
       processEnvs: rawOptions.processEnvs,
-      proxyRules: rawOptions.proxyRules || null,
-      showMenuBar: rawOptions.showMenuBar || false,
-      singleInstance: rawOptions.singleInstance || false,
-      titleBarStyle: rawOptions.titleBarStyle || null,
-      tray: rawOptions.tray || false,
+      proxyRules: rawOptions.proxyRules,
+      showMenuBar: rawOptions.showMenuBar ?? false,
+      singleInstance: rawOptions.singleInstance ?? false,
+      titleBarStyle: rawOptions.titleBarStyle,
+      tray: rawOptions.tray ?? false,
       userAgent: rawOptions.userAgent,
-      userAgentHonest: rawOptions.userAgentHonest || false,
-      verbose: rawOptions.verbose,
+      userAgentHonest: rawOptions.userAgentHonest ?? false,
+      verbose: rawOptions.verbose ?? false,
       versionString: rawOptions.versionString,
-      width: rawOptions.width || 1280,
-      height: rawOptions.height || 800,
+      width: rawOptions.width ?? 1280,
+      height: rawOptions.height ?? 800,
       minWidth: rawOptions.minWidth,
       minHeight: rawOptions.minHeight,
       maxWidth: rawOptions.maxWidth,
       maxHeight: rawOptions.maxHeight,
-      widevine: rawOptions.widevine || false,
+      widevine: rawOptions.widevine ?? false,
       x: rawOptions.x,
       y: rawOptions.y,
-      zoom: rawOptions.zoom || 1.0,
+      zoom: rawOptions.zoom ?? 1.0,
     },
   };
 
@@ -179,7 +177,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   }
 
   if (options.nativefier.userAgentHonest && options.nativefier.userAgent) {
-    options.nativefier.userAgent = null;
+    options.nativefier.userAgent = undefined;
     log.warn(
       `\nATTENTION: user-agent AND user-agent-honest/honest were provided. In this case, honesty wins. user-agent will be ignored`,
     );
@@ -187,11 +185,19 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
 
   options.packager.platform = normalizePlatform(options.packager.platform);
 
-  if (options.nativefier.width > options.nativefier.maxWidth) {
+  if (
+    options.nativefier.maxWidth &&
+    options.nativefier.width &&
+    options.nativefier.width > options.nativefier.maxWidth
+  ) {
     options.nativefier.width = options.nativefier.maxWidth;
   }
 
-  if (options.nativefier.height > options.nativefier.maxHeight) {
+  if (
+    options.nativefier.maxHeight &&
+    options.nativefier.height &&
+    options.nativefier.height > options.nativefier.maxHeight
+  ) {
     options.nativefier.height = options.nativefier.maxHeight;
   }
 
@@ -219,7 +225,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   return options;
 }
 
-export function normalizePlatform(platform: string): string {
+export function normalizePlatform(platform: string | undefined): string {
   if (!platform) {
     return inferPlatform();
   }
