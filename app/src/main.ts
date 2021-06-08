@@ -37,6 +37,8 @@ if (process.argv.indexOf('--verbose') > -1) {
   process.traceProcessWarnings = true;
 }
 
+let mainWindow: BrowserWindow;
+
 const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 log.debug('appArgs', appArgs);
@@ -97,8 +99,6 @@ if (appArgs.processEnvs) {
     });
   }
 }
-
-let mainWindow: BrowserWindow;
 
 if (typeof appArgs.flashPluginDir === 'string') {
   app.commandLine.appendSwitch('ppapi-flash-path', appArgs.flashPluginDir);
@@ -169,16 +169,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', (event, hasVisibleWindows) => {
-  log.debug('app.activate', { event, hasVisibleWindows });
-  if (isOSX()) {
-    // this is called when the dock is clicked
-    if (!hasVisibleWindows) {
-      mainWindow.show();
-    }
-  }
-});
-
 app.on('before-quit', () => {
   log.debug('app.before-quit');
   // not fired when the close button on the window is clicked
@@ -212,6 +202,45 @@ if (appArgs.crashReporter) {
   });
 }
 
+if (appArgs.widevine) {
+  // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+  app.on('widevine-ready', (version: string, lastVersion: string) => {
+    log.debug('app.widevine-ready', { version, lastVersion });
+    onReady().catch((err) => log.error('onReady ERROR', err));
+  });
+
+  app.on(
+    // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+    'widevine-update-pending',
+    (currentVersion: string, pendingVersion: string) => {
+      log.debug('app.widevine-update-pending', {
+        currentVersion,
+        pendingVersion,
+      });
+    },
+  );
+
+  // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+  app.on('widevine-error', (error: any) => {
+    log.error('app.widevine-error', error);
+  });
+} else {
+  app.on('ready', () => {
+    log.debug('ready');
+    onReady().catch((err) => log.error('onReady ERROR', err));
+  });
+}
+
+app.on('activate', (event, hasVisibleWindows) => {
+  log.debug('app.activate', { event, hasVisibleWindows });
+  if (isOSX()) {
+    // this is called when the dock is clicked
+    if (!hasVisibleWindows) {
+      mainWindow.show();
+    }
+  }
+});
+
 // quit if singleInstance mode and there's already another instance running
 const shouldQuit = appArgs.singleInstance && !app.requestSingleInstanceLock();
 if (shouldQuit) {
@@ -231,43 +260,32 @@ if (shouldQuit) {
       mainWindow.focus();
     }
   });
-
-  if (appArgs.widevine) {
-    // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
-    app.on('widevine-ready', (version: string, lastVersion: string) => {
-      log.debug('app.widevine-ready', { version, lastVersion });
-      onReady().catch((err) => log.error('onReady ERROR', err));
-    });
-
-    app.on(
-      // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
-      'widevine-update-pending',
-      (currentVersion: string, pendingVersion: string) => {
-        log.debug('app.widevine-update-pending', {
-          currentVersion,
-          pendingVersion,
-        });
-      },
-    );
-
-    // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
-    app.on('widevine-error', (error: any) => {
-      log.error('app.widevine-error', error);
-    });
-  } else {
-    app.on('ready', () => {
-      log.debug('ready');
-      onReady().catch((err) => log.error('onReady ERROR', err));
-    });
-  }
 }
 
+app.on('new-window-for-tab', () => {
+  log.debug('app.new-window-for-tab');
+  if (mainWindow) {
+    mainWindow.emit('new-tab');
+  }
+});
+
+app.on('login', (event, webContents, request, authInfo, callback) => {
+  log.debug('app.login', { event, request });
+  // for http authentication
+  event.preventDefault();
+
+  if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
+    callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
+  } else {
+    createLoginWindow(callback, mainWindow).catch((err) =>
+      log.error('createLoginWindow ERROR', err),
+    );
+  }
+});
+
 async function onReady(): Promise<void> {
-  const mainWindow = await createMainWindow(
-    appArgs,
-    app.quit.bind(this),
-    setDockBadge,
-  );
+  // Warning: `mainWindow` below is the *global* unique `mainWindow`, created at init time
+  mainWindow = await createMainWindow(appArgs, setDockBadge);
 
   createTrayIcon(appArgs, mainWindow);
 
@@ -343,29 +361,6 @@ async function onReady(): Promise<void> {
       .catch((err) => log.error('dialog.showMessageBox ERROR', err));
   }
 }
-app.on('new-window-for-tab', () => {
-  log.debug('app.new-window-for-tab');
-  if (mainWindow) {
-    mainWindow.emit('new-tab');
-  }
-});
-
-app.on('login', (event, webContents, request, authInfo, callback) => {
-  log.debug('app.login', { event, request });
-  // for http authentication
-  event.preventDefault();
-
-  if (
-    appArgs.basicAuthUsername !== null &&
-    appArgs.basicAuthPassword !== null
-  ) {
-    callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
-  } else {
-    createLoginWindow(callback, mainWindow).catch((err) =>
-      log.error('createLoginWindow ERROR', err),
-    );
-  }
-});
 
 app.on(
   'accessibility-support-changed',
