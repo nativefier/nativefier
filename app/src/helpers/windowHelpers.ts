@@ -90,14 +90,16 @@ export function createNewTab(
   parent?: BrowserWindow,
 ): Promise<BrowserWindow> {
   log.debug('createNewTab', { url, foreground, parent });
-  return withFocusedWindow((focusedWindow) => {
-    const newTab = createNewWindow(options, setupWindow, url, parent);
-    focusedWindow.addTabbedWindow(newTab);
-    if (!foreground) {
-      focusedWindow.focus();
-    }
-    return newTab;
-  });
+  return Promise.resolve(
+    withFocusedWindow((focusedWindow) => {
+      const newTab = createNewWindow(options, setupWindow, url, parent);
+      focusedWindow.addTabbedWindow(newTab);
+      if (!foreground) {
+        focusedWindow.focus();
+      }
+      return newTab;
+    }),
+  );
 }
 
 export function createNewWindow(
@@ -275,7 +277,7 @@ export function setProxyRules(window: BrowserWindow, proxyRules): void {
     .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
-export function withFocusedWindow(block: (window: BrowserWindow) => any): any {
+export function withFocusedWindow<T>(block: (window: BrowserWindow) => T): T {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (focusedWindow) {
     return block(focusedWindow);

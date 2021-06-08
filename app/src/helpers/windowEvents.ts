@@ -1,4 +1,10 @@
-import { dialog, BrowserWindow, IpcMainEvent, WebContents } from 'electron';
+import {
+  dialog,
+  BrowserWindow,
+  IpcMainEvent,
+  NewWindowWebContentsEvent,
+  WebContents,
+} from 'electron';
 import log from 'loglevel';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
@@ -14,7 +20,7 @@ import {
 export function onNewWindow(
   options,
   setupWindow: (...args) => void,
-  event: Event & { newGuest?: any },
+  event: NewWindowWebContentsEvent,
   urlToGo: string,
   frameName: string,
   disposition:
@@ -33,7 +39,7 @@ export function onNewWindow(
     disposition,
     parent,
   });
-  const preventDefault = (newGuest: any): void => {
+  const preventDefault = (newGuest: BrowserWindow): void => {
     event.preventDefault();
     if (newGuest) {
       event.newGuest = newGuest;

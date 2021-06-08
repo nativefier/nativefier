@@ -147,7 +147,9 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   }
 
   if (options.nativefier.widevine) {
-    const widevineElectronVersion = `${options.packager.electronVersion}-wvvmp`;
+    const widevineElectronVersion = `${
+      options.packager.electronVersion as string
+    }-wvvmp`;
     try {
       await axios.get(
         `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,

@@ -20,7 +20,10 @@ async function checkApp(
   const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
   if (inputOptions.out !== undefined) {
     expect(
-      path.join(inputOptions.out, `Google-${inputOptions.platform}-${arch}`),
+      path.join(
+        inputOptions.out,
+        `Google-${inputOptions.platform as string}-${arch}`,
+      ),
     ).toBe(appRoot);
   }
 

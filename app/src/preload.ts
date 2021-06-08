@@ -36,10 +36,10 @@ export const INJECT_DIR = path.join(__dirname, '..', 'inject');
  */
 function setNotificationCallback(
   createCallback: {
-    (title: any, opt: any): void;
-    (arg0: any, arg1: any): void;
+    (title: string, opt: NotificationOptions): void;
+    (...args: unknown[]): void;
   },
-  clickCallback: { (): void; (this: Notification, ev: Event): any },
+  clickCallback: { (): void; (this: Notification, ev: Event): unknown },
 ): void {
   const OldNotify = window.Notification;
   const newNotify = function (
@@ -82,7 +82,10 @@ function injectScripts(): void {
   }
 }
 
-function notifyNotificationCreate(title: any, opt: any): void {
+function notifyNotificationCreate(
+  title: string,
+  opt: NotificationOptions,
+): void {
   ipcRenderer.send('notification', title, opt);
 }
 function notifyNotificationClick(): void {

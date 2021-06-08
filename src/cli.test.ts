@@ -147,7 +147,7 @@ describe('initArgs + parseArgs', () => {
 
     if (shortArg) {
       const argsShort = parseArgs(
-        initArgs(['https://google.com', `-${shortArg as string}`, value]),
+        initArgs(['https://google.com', `-${shortArg}`, value]),
       );
       if (!isJsonString) {
         expect(argsShort[arg]).toBe(value);

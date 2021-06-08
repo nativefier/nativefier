@@ -375,7 +375,7 @@ app.on(
 
 app.on(
   'activity-was-continued',
-  (event: IpcMainEvent, type: string, userInfo: any) => {
+  (event: IpcMainEvent, type: string, userInfo: unknown) => {
     log.debug('app.activity-was-continued', { event, type, userInfo });
   },
 );

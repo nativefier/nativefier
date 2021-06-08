@@ -168,7 +168,7 @@ export function getOptionsFromExecutable(
     );
   }
 
-  log.debug(`Executable path: ${executablePath}`);
+  log.debug(`Executable path: ${executablePath as string}`);
 
   if (newOptions.arch === undefined) {
     const executableInfo = getExecutableInfo(
@@ -176,7 +176,7 @@ export function getOptionsFromExecutable(
       newOptions.platform,
     );
     newOptions.arch = executableInfo.arch;
-    log.debug(`Extracted arch from executable: ${newOptions.arch}`);
+    log.debug(`Extracted arch from executable: ${newOptions.arch as string}`);
   }
   if (newOptions.platform === undefined || newOptions.arch == undefined) {
     throw Error(`Could not determine platform / arch of app in ${appRoot}`);

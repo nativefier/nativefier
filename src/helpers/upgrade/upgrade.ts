@@ -80,7 +80,9 @@ function getInfoPListOptions(
       'NSHumanReadableCopyright',
     );
     log.debug(
-      `Extracted app copyright from Info.plist: ${newOptions.appCopyright}`,
+      `Extracted app copyright from Info.plist: ${
+        newOptions.appCopyright as string
+      }`,
     );
   }
 
@@ -97,7 +99,9 @@ function getInfoPListOptions(
         ? undefined
         : newOptions.darwinDarkModeSupport === false),
       log.debug(
-        `Extracted app version from Info.plist: ${newOptions.appVersion}`,
+        `Extracted app version from Info.plist: ${
+          newOptions.appVersion as string
+        }`,
       );
   }
 
