@@ -96,7 +96,7 @@ export function onNewWindowHelper(
       }
     }
     return Promise.resolve(undefined);
-  } catch (err) {
+  } catch (err: unknown) {
     return Promise.reject(err);
   }
 }
@@ -161,7 +161,7 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
 
   sendParamsOnDidFinishLoad(options, window);
 
-  // @ts-ignore new-tab isn't in the type definition, but it does exist
+  // @ts-expect-error new-tab isn't in the type definition, but it does exist
   window.on('new-tab', () => {
     createNewTab(
       options,

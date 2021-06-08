@@ -22,13 +22,16 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
-    // TODO remove when done killing `any`s and making tsc strict
-    '@typescript-eslint/ban-ts-comment': 'error',
-    '@typescript-eslint/no-explicit-any': 'error',
-    '@typescript-eslint/no-unsafe-assignment': 'error',
-    '@typescript-eslint/no-unsafe-call': 'error',
-    '@typescript-eslint/no-unsafe-member-access': 'error',
-    '@typescript-eslint/no-unsafe-return': 'error',
+    '@typescript-eslint/explicit-function-return-type': 'warn',
+    '@typescript-eslint/no-confusing-non-null-assertion': 'warn',
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-extraneous-class': 'warn',
+    '@typescript-eslint/no-implicit-any-catch': 'warn',
+    '@typescript-eslint/no-invalid-void-type': 'warn',
+    '@typescript-eslint/prefer-ts-expect-error': 'warn',
+    '@typescript-eslint/type-annotation-spacing': 'warn',
+    '@typescript-eslint/typedef': 'warn',
+    '@typescript-eslint/unified-signatures': 'warn',
   },
   // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
   ignorePatterns: [

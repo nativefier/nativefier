@@ -115,10 +115,11 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
     log.setLevel('trace');
     try {
       debug.enable('electron-packager');
-    } catch (err) {
-      log.debug(
+    } catch (err: unknown) {
+      log.error(
         'Failed to enable electron-packager debug output. This should not happen,',
         'and suggests their internals changed. Please report an issue.',
+        err,
       );
     }
 
@@ -151,8 +152,10 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       await axios.get(
         `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,
       );
-    } catch (error) {
-      throw `\nERROR: castLabs Electron version "${widevineElectronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`;
+    } catch {
+      throw new Error(
+        `\nERROR: castLabs Electron version "${widevineElectronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`,
+      );
     }
 
     options.packager.electronVersion = widevineElectronVersion;

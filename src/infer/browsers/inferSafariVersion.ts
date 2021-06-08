@@ -66,7 +66,7 @@ export async function getLatestSafariVersion(
       version,
       webkitVersion,
     };
-  } catch (err) {
+  } catch (err: unknown) {
     log.error('getLatestSafariVersion ERROR', err);
     log.debug('Falling back to default Safari version', DEFAULT_SAFARI_VERSION);
     return DEFAULT_SAFARI_VERSION;

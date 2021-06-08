@@ -21,7 +21,7 @@ export async function icon(options: IconParams): Promise<string> {
       options.packager.targetUrl,
       options.packager.platform,
     );
-  } catch (err) {
+  } catch (err: unknown) {
     log.warn('Cannot automatically retrieve the app icon:', err);
     return null;
   }

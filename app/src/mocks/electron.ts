@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EventEmitter } from 'events';
 
@@ -26,7 +27,7 @@ class MockBrowserWindow extends EventEmitter {
     this.webContents = new MockWebContents();
   }
 
-  addTabbedWindow(tab: MockBrowserWindow) {
+  addTabbedWindow(tab: MockBrowserWindow): void {
     return;
   }
 

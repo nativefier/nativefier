@@ -17,11 +17,11 @@ async function tryToInferName(targetUrl: string): Promise<string> {
     log.debug('Inferring name for', targetUrl);
     const pageTitle = await inferTitle(targetUrl);
     return pageTitle || DEFAULT_APP_NAME;
-  } catch (err) {
+  } catch (err: unknown) {
     log.warn(
-      `Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${(
-        err as Error
-      ).toString()}`,
+      `Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${
+        (err as Error).message
+      }`,
     );
     return DEFAULT_APP_NAME;
   }

@@ -38,7 +38,7 @@ export async function getLatestFirefoxVersion(
       `Got latest Firefox version ${firefoxVersions.LATEST_FIREFOX_VERSION}`,
     );
     return firefoxVersions.LATEST_FIREFOX_VERSION;
-  } catch (err) {
+  } catch (err: unknown) {
     log.error('getLatestFirefoxVersion ERROR', err);
     log.debug(
       'Falling back to default Firefox version',

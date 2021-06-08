@@ -89,7 +89,7 @@ function getAppPath(appPath: string | string[]): string {
   return appPath[0];
 }
 
-function isUpgrade(rawOptions: RawOptions) {
+function isUpgrade(rawOptions: RawOptions): boolean {
   return (
     rawOptions.upgrade !== undefined &&
     typeof rawOptions.upgrade === 'string' &&

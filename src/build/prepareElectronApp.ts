@@ -174,10 +174,10 @@ export async function prepareElectronApp(
   log.debug(`Copying electron app from ${src} to ${dest}`);
   try {
     await copyFileOrDir(src, dest);
-  } catch (err) {
-    throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${(
-      err as Error
-    ).toString()}`;
+  } catch (err: unknown) {
+    throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${
+      (err as Error).message
+    }`;
   }
 
   const appJsonPath = path.join(dest, '/nativefier.json');
@@ -191,14 +191,14 @@ export async function prepareElectronApp(
     const bookmarksJsonPath = path.join(dest, '/bookmarks.json');
     try {
       await copyFileOrDir(options.nativefier.bookmarksMenu, bookmarksJsonPath);
-    } catch (err) {
+    } catch (err: unknown) {
       log.error('Error copying bookmarks menu config file.', err);
     }
   }
 
   try {
     await maybeCopyScripts(options.nativefier.inject, dest);
-  } catch (err) {
+  } catch (err: unknown) {
     log.error('Error copying injection files.', err);
   }
   changeAppPackageJsonName(

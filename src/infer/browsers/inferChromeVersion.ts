@@ -50,7 +50,7 @@ export async function getChromeVersionForElectronVersion(
       `Associated electron v${electronVersion} to chrome v${chromeVersion}`,
     );
     return chromeVersion;
-  } catch (err) {
+  } catch (err: unknown) {
     log.error('getChromeVersionForElectronVersion ERROR', err);
     log.debug('Falling back to default Chrome version', DEFAULT_CHROME_VERSION);
     return DEFAULT_CHROME_VERSION;

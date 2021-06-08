@@ -142,7 +142,7 @@ describe('injectCSS', () => {
     expect(mockGetCSSToInject).toHaveBeenCalled();
 
     window.webContents.emit('did-navigate');
-    // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
+    // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
     window.webContents.session.webRequest.send(
       'onHeadersReceived',
       { responseHeaders, webContents: window.webContents },
@@ -169,7 +169,7 @@ describe('injectCSS', () => {
     expect(mockGetCSSToInject).toHaveBeenCalled();
 
     window.webContents.emit('did-navigate');
-    // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
+    // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
     window.webContents.session.webRequest.send(
       'onHeadersReceived',
       { responseHeaders, webContents: window.webContents },

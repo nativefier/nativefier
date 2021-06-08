@@ -597,7 +597,7 @@ if (require.main === module) {
   try {
     args = initArgs(sanitizedArgs.slice(2));
     parsedArgs = parseArgs(args);
-  } catch (err) {
+  } catch (err: unknown) {
     if (args) {
       log.error(err);
       args.showHelp();
