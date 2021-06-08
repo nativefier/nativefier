@@ -241,7 +241,7 @@ async function injectCSSIntoResponse(
   details: OnHeadersReceivedListenerDetails,
   cssToInject: string,
 ): Promise<Record<string, string[]>> {
-  const nonInjectableMethods = ['DELETE', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
+  const nonInjectableMethods = ['DELETE', 'OPTIONS'];
   const nonInjectableResourceTypes = [
     'image',
     'other',
