@@ -179,11 +179,3 @@ export function removeUserAgentSpecifics(
     .replace(`Electron/${process.versions.electron} `, '')
     .replace(`${appName}/${appVersion} `, ' ');
 }
-
-export function shouldInjectCSS(): boolean {
-  try {
-    return fs.existsSync(INJECT_DIR);
-  } catch (e) {
-    return false;
-  }
-}

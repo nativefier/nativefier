@@ -10,12 +10,7 @@ import {
 
 import log from 'loglevel';
 import path from 'path';
-import {
-  getCSSToInject,
-  isOSX,
-  nativeTabsSupported,
-  shouldInjectCSS,
-} from './helpers';
+import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -198,11 +193,11 @@ export function hideWindow(
 }
 
 export function injectCSS(browserWindow: BrowserWindow): void {
-  if (!shouldInjectCSS()) {
+  const cssToInject = getCSSToInject();
+
+  if (!cssToInject) {
     return;
   }
-
-  const cssToInject = getCSSToInject();
 
   browserWindow.webContents.on('did-navigate', () => {
     log.debug(
@@ -226,7 +221,7 @@ export function injectCSS(browserWindow: BrowserWindow): void {
             });
           })
           .catch((err) => {
-            log.error('winjectCSSIntoResponse ERROR', err);
+            log.error('injectCSSIntoResponse ERROR', err);
             callback({
               cancel: false,
               responseHeaders: details.responseHeaders,
@@ -242,13 +237,7 @@ async function injectCSSIntoResponse(
   cssToInject: string,
 ): Promise<Record<string, string[]>> {
   const nonInjectableMethods = ['DELETE', 'OPTIONS'];
-  const nonInjectableResourceTypes = [
-    'image',
-    'other',
-    'script',
-    'stylesheet',
-    'xhr',
-  ];
+  const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
 
   if (
     nonInjectableMethods.includes(details.method) ||
