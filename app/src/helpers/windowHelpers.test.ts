@@ -8,7 +8,7 @@ jest.mock('loglevel');
 import { error } from 'loglevel';
 
 jest.mock('./helpers');
-import { getCSSToInject, shouldInjectCSS } from './helpers';
+import { getCSSToInject } from './helpers';
 jest.mock('./windowEvents');
 import { clearAppData, createNewTab, injectCSS } from './windowHelpers';
 
@@ -99,7 +99,6 @@ describe('createNewTab', () => {
 describe('injectCSS', () => {
   const mockGetCSSToInject: jest.SpyInstance = getCSSToInject as jest.Mock;
   const mockLogError: jest.SpyInstance = error as jest.Mock;
-  const mockShouldInjectCSS: jest.SpyInstance = shouldInjectCSS as jest.Mock;
   const mockWebContentsInsertCSS: jest.SpyInstance = jest.spyOn(
     WebContents.prototype,
     'insertCSS',
@@ -111,25 +110,21 @@ describe('injectCSS', () => {
   beforeEach(() => {
     mockGetCSSToInject.mockReset().mockReturnValue('');
     mockLogError.mockReset();
-    mockShouldInjectCSS.mockReset().mockReturnValue(true);
     mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
   });
 
   afterAll(() => {
     mockGetCSSToInject.mockRestore();
     mockLogError.mockRestore();
-    mockShouldInjectCSS.mockRestore();
     mockWebContentsInsertCSS.mockRestore();
   });
 
-  test('will not inject if shouldInjectCSS is false', () => {
-    mockShouldInjectCSS.mockReturnValue(false);
-
+  test('will not inject if getCSSToInject is empty', () => {
     const window = new BrowserWindow();
 
     injectCSS(window);
 
-    expect(mockGetCSSToInject).not.toHaveBeenCalled();
+    expect(mockGetCSSToInject).toHaveBeenCalled();
     expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
   });
 
@@ -176,7 +171,7 @@ describe('injectCSS', () => {
       (result: HeadersReceivedResponse) => {
         expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
         expect(mockLogError).toHaveBeenCalledWith(
-          'webContents.insertCSS ERROR',
+          'injectCSSIntoResponse ERROR',
           'css insertion error',
         );
         expect(result.cancel).toBe(false);
@@ -185,4 +180,109 @@ describe('injectCSS', () => {
       },
     );
   });
+
+  test.each<string | jest.DoneCallback>(['DELETE', 'OPTIONS'])(
+    'will not inject for method %s',
+    (method: string, done: jest.DoneCallback) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
+      window.webContents.session.webRequest.send(
+        'onHeadersReceived',
+        { responseHeaders, webContents: window.webContents, method },
+        (result: HeadersReceivedResponse) => {
+          expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
+          expect(result.cancel).toBe(false);
+          expect(result.responseHeaders).toBe(responseHeaders);
+          done();
+        },
+      );
+    },
+  );
+
+  test.each<string | jest.DoneCallback>(['GET', 'PATCH', 'POST', 'PUT'])(
+    'will inject for method %s',
+    (method: string, done: jest.DoneCallback) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
+      window.webContents.session.webRequest.send(
+        'onHeadersReceived',
+        { responseHeaders, webContents: window.webContents, method },
+        (result: HeadersReceivedResponse) => {
+          expect(mockWebContentsInsertCSS).toHaveBeenCalled();
+          expect(result.cancel).toBe(false);
+          expect(result.responseHeaders).toBe(responseHeaders);
+          done();
+        },
+      );
+    },
+  );
+
+  test.each<string | jest.DoneCallback>([
+    'image',
+    'script',
+    'stylesheet',
+    'xhr',
+  ])(
+    'will not inject for resource type %s',
+    (resourceType: string, done: jest.DoneCallback) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
+      window.webContents.session.webRequest.send(
+        'onHeadersReceived',
+        { responseHeaders, webContents: window.webContents, resourceType },
+        (result: HeadersReceivedResponse) => {
+          expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
+          expect(result.cancel).toBe(false);
+          expect(result.responseHeaders).toBe(responseHeaders);
+          done();
+        },
+      );
+    },
+  );
+
+  test.each<string | jest.DoneCallback>(['html', 'other'])(
+    'will inject for resource type %s',
+    (resourceType: string, done: jest.DoneCallback) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
+      window.webContents.session.webRequest.send(
+        'onHeadersReceived',
+        { responseHeaders, webContents: window.webContents, resourceType },
+        (result: HeadersReceivedResponse) => {
+          expect(mockWebContentsInsertCSS).toHaveBeenCalled();
+          expect(result.cancel).toBe(false);
+          expect(result.responseHeaders).toBe(responseHeaders);
+          done();
+        },
+      );
+    },
+  );
 });
