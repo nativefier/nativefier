@@ -11,6 +11,8 @@ app/dist/*
 built-tests
 
 # commit a placeholder to keep the app/lib directory
+app/inject
+!app/inject/_placeholder
 !app/lib/.placeholder
 
 dist

@@ -31,15 +31,23 @@ if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
+const IS_SPECTRON =
+  safeGetEnv('SPECTRON_TEST')?.toLowerCase() === 'true' ?? false;
+const SPECTRON_CONFIG = safeGetEnv('SPECTRON_CONFIG');
+
 if (process.argv.indexOf('--verbose') > -1) {
   log.setLevel('DEBUG');
   process.traceDeprecation = true;
   process.traceProcessWarnings = true;
+  process.argv.slice(1);
 }
 
 let mainWindow: BrowserWindow;
 
-const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+const appArgs =
+  IS_SPECTRON && SPECTRON_CONFIG
+    ? JSON.parse(SPECTRON_CONFIG)
+    : JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 log.debug('appArgs', appArgs);
 // Do this relatively early so that we can start storing appData with the app
@@ -165,7 +173,7 @@ const setDockBadge = isOSX()
 
 app.on('window-all-closed', () => {
   log.debug('app.window-all-closed');
-  if (!isOSX() || appArgs.fastQuit) {
+  if (!isOSX() || appArgs.fastQuit || IS_SPECTRON) {
     app.quit();
   }
 });
@@ -234,7 +242,7 @@ if (appArgs.widevine) {
 
 app.on('activate', (event: electron.Event, hasVisibleWindows: boolean) => {
   log.debug('app.activate', { event, hasVisibleWindows });
-  if (isOSX()) {
+  if (isOSX() && !IS_SPECTRON) {
     // this is called when the dock is clicked
     if (!hasVisibleWindows) {
       mainWindow.show();
@@ -395,3 +403,7 @@ app.on(
 app.on('browser-window-focus', (event: IpcMainEvent, window: BrowserWindow) => {
   log.debug('app.browser-window-focus', { event, window });
 });
+
+function safeGetEnv(key: string): string | undefined {
+  return key in process.env ? process.env[key] : undefined;
+}

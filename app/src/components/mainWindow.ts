@@ -72,6 +72,9 @@ export async function createMainWindow(
     ...getDefaultWindowOptions(options),
   });
 
+  // Just load about:blank to start, gives Spectron something to latch onto initially for testing.
+  await mainWindow.loadURL('about:blank');
+
   mainWindowState.manage(mainWindow);
 
   // after first run, no longer force maximize to be true

@@ -46,6 +46,7 @@
     "prepare": "cd app && npm install && cd .. && npm run build",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
+    "test:spectron": "jest  --testRegex '.*spectron-test.js'",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
@@ -94,6 +95,14 @@
   },
   "jest": {
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./lib/**/*.js",
+      "/app/dist/**/*.js",
+      "/app/lib/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "[.-]test.js$"
+    ],
     "moduleNameMapper": {
       "^electron$": "<rootDir>/app/dist/mocks/electron.js"
     },
