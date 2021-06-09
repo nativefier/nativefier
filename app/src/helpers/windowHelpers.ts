@@ -236,6 +236,8 @@ async function injectCSSIntoResponse(
   details: OnHeadersReceivedListenerDetails,
   cssToInject: string,
 ): Promise<Record<string, string[]>> {
+  // We go with a denylist rather than a whitelist (e.g. only GET/html)
+  // to avoid "whoops I didn't think this should have been CSS-injected" cases
   const nonInjectableMethods = ['DELETE', 'OPTIONS'];
   const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
 
