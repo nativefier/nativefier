@@ -71,12 +71,21 @@ describe('fields', () => {
   test('fully-defined async options are returned as-is', async () => {
     options.packager.icon = '/my/icon.png';
     options.packager.name = 'my beautiful app ';
+    options.packager.platform = 'darwin';
     options.nativefier.userAgent = 'random user agent';
     await processOptions(options);
 
     expect(options.packager.icon).toEqual('/my/icon.png');
     expect(options.packager.name).toEqual('my beautiful app');
     expect(options.nativefier.userAgent).toEqual('random user agent');
+  });
+
+  test('name has spaces stripped in linux', async () => {
+    options.packager.name = 'my beautiful app ';
+    options.packager.platform = 'linux';
+    await processOptions(options);
+
+    expect(options.packager.name).toEqual('mybeautifulapp');
   });
 
   test('user agent is ignored if not provided', async () => {

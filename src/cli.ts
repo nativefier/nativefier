@@ -113,7 +113,6 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'boolean',
     })
     .option('upgrade', {
-      alias: 'upgrade-from',
       description:
         'upgrade an app built by an older version of Nativefier\nYou must pass the full path to the existing app executable (app will be overwritten with upgraded version by default)',
       normalize: true,
@@ -534,7 +533,7 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
   parsed.targetUrl = parsed._.length > 0 ? parsed._[0].toString() : undefined;
   parsed.out = parsed._.length > 1 ? (parsed._[1] as string) : undefined;
 
-  if (parsed.upgradeFrom && parsed.targetUrl) {
+  if (parsed.upgrade && parsed.targetUrl) {
     let targetAndUpgrade = false;
     if (!parsed.out) {
       // If we're upgrading, the first positional args might be the outputDirectory, so swap these if we can
@@ -559,7 +558,7 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
     }
   }
 
-  if (!parsed.targetUrl && !parsed.upgradeFrom) {
+  if (!parsed.targetUrl && !parsed.upgrade) {
     throw new Error(
       'ERROR: Nativefier must be called with either a targetUrl or the --upgrade option.\n',
     );

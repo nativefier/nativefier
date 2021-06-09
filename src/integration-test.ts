@@ -145,7 +145,7 @@ describe('Nativefier upgrade', () => {
       await checkApp(appPath as string, options);
 
       const upgradeOptions = {
-        upgradeFrom: appPath,
+        upgrade: appPath,
         overwrite: true,
       };
 

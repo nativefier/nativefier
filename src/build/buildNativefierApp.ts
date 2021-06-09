@@ -90,11 +90,16 @@ function getAppPath(appPath: string | string[]): string | undefined {
 }
 
 function isUpgrade(rawOptions: RawOptions): boolean {
-  return (
+  if (
     rawOptions.upgrade !== undefined &&
     typeof rawOptions.upgrade === 'string' &&
     rawOptions.upgrade !== ''
-  );
+  ) {
+    rawOptions.upgradeFrom = rawOptions.upgrade;
+    rawOptions.upgrade = true;
+    return true;
+  }
+  return false;
 }
 
 function trimUnprocessableOptions(options: AppOptions): void {
@@ -127,8 +132,8 @@ export async function buildNativefierApp(
   log.info('\nProcessing options...');
 
   if (isUpgrade(rawOptions)) {
-    log.debug('Attempting to upgrade from', rawOptions.upgrade);
-    const oldApp = findUpgradeApp(rawOptions.upgrade as string);
+    log.debug('Attempting to upgrade from', rawOptions.upgradeFrom);
+    const oldApp = findUpgradeApp(rawOptions.upgradeFrom as string);
     if (oldApp === null) {
       throw new Error(
         `Could not find an old Nativfier app in "${

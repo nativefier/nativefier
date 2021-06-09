@@ -52,7 +52,9 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
           : normalizeUrl(rawOptions.targetUrl),
       tmpdir: false, // workaround for electron-packager#375
       upgrade: rawOptions.upgrade !== undefined ? true : false,
-      upgradeFrom: rawOptions.upgradeFrom,
+      upgradeFrom:
+        (rawOptions.upgradeFrom as string) ??
+        ((rawOptions.upgrade as string) || undefined),
       win32metadata: rawOptions.win32metadata ?? {
         ProductName: rawOptions.name,
         InternalName: rawOptions.name,
