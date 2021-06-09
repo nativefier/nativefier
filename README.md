@@ -30,7 +30,7 @@ through the numerous open tabs when I was using [Facebook Messenger](https://mes
 ## Installation
 
 - macOS 10.9+ / Windows / Linux
-- [Node.js](https://nodejs.org/) `>= 10` and npm `>= 6`
+- [Node.js](https://nodejs.org/) `>= 12.9` and npm `>= 6.9`
 - Optional dependencies:
     - [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) to convert icons.
       Make sure `convert` and `identify` or `gm` are in your system `$PATH`.
