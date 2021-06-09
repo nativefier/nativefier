@@ -10,12 +10,7 @@ import {
 
 import log from 'loglevel';
 import path from 'path';
-import {
-  getCSSToInject,
-  isOSX,
-  nativeTabsSupported,
-  shouldInjectCSS,
-} from './helpers';
+import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -88,7 +83,7 @@ export function createNewTab(
   url: string,
   foreground: boolean,
   parent?: BrowserWindow,
-): Promise<BrowserWindow> {
+): BrowserWindow {
   log.debug('createNewTab', { url, foreground, parent });
   return withFocusedWindow((focusedWindow) => {
     const newTab = createNewWindow(options, setupWindow, url, parent);
@@ -198,11 +193,11 @@ export function hideWindow(
 }
 
 export function injectCSS(browserWindow: BrowserWindow): void {
-  if (!shouldInjectCSS()) {
+  const cssToInject = getCSSToInject();
+
+  if (!cssToInject) {
     return;
   }
-
-  const cssToInject = getCSSToInject();
 
   browserWindow.webContents.on('did-navigate', () => {
     log.debug(
@@ -218,31 +213,52 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         details: OnHeadersReceivedListenerDetails,
         callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
       ) => {
-        log.debug(
-          'browserWindow.webContents.session.webRequest.onHeadersReceived',
-          { details, callback },
-        );
-        if (details.webContents) {
-          details.webContents
-            .insertCSS(cssToInject)
-            .catch((err) => {
-              log.error('webContents.insertCSS ERROR', err);
-            })
-            .finally(() =>
-              callback({
-                cancel: false,
-                responseHeaders: details.responseHeaders,
-              }),
-            );
-        } else {
-          callback({
-            cancel: false,
-            responseHeaders: details.responseHeaders,
+        injectCSSIntoResponse(details, cssToInject)
+          .then((responseHeaders) => {
+            callback({
+              cancel: false,
+              responseHeaders,
+            });
+          })
+          .catch((err) => {
+            log.error('injectCSSIntoResponse ERROR', err);
+            callback({
+              cancel: false,
+              responseHeaders: details.responseHeaders,
+            });
           });
-        }
       },
     );
   });
+}
+
+async function injectCSSIntoResponse(
+  details: OnHeadersReceivedListenerDetails,
+  cssToInject: string,
+): Promise<Record<string, string[]>> {
+  // We go with a denylist rather than a whitelist (e.g. only GET/html)
+  // to avoid "whoops I didn't think this should have been CSS-injected" cases
+  const nonInjectableMethods = ['DELETE', 'OPTIONS'];
+  const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
+
+  if (
+    nonInjectableMethods.includes(details.method) ||
+    nonInjectableResourceTypes.includes(details.resourceType) ||
+    !details.webContents
+  ) {
+    log.debug(
+      `Skipping CSS injection for:\n${details.url}\nwith method ${details.method} and resourceType ${details.resourceType} and content-type ${details.responseHeaders['content-type']}`,
+    );
+    return details.responseHeaders;
+  }
+
+  log.debug('browserWindow.webContents.session.webRequest.onHeadersReceived', {
+    details,
+    contentType: details.responseHeaders['content-type'],
+  });
+  await details.webContents.insertCSS(cssToInject);
+
+  return details.responseHeaders;
 }
 
 export function sendParamsOnDidFinishLoad(
@@ -275,7 +291,7 @@ export function setProxyRules(window: BrowserWindow, proxyRules): void {
     .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
-export function withFocusedWindow(block: (window: BrowserWindow) => any): any {
+export function withFocusedWindow<T>(block: (window: BrowserWindow) => T): T {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (focusedWindow) {
     return block(focusedWindow);

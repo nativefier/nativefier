@@ -31,7 +31,7 @@ export async function getChromeVersionForElectronVersion(
 
   try {
     log.debug('Grabbing electron<->chrome versions file from', url);
-    const response = await axios.get(url, { timeout: 5000 });
+    const response = await axios.get<ElectronRelease[]>(url, { timeout: 5000 });
     if (response.status !== 200) {
       throw new Error(`Bad request: Status code ${response.status}`);
     }
@@ -50,7 +50,7 @@ export async function getChromeVersionForElectronVersion(
       `Associated electron v${electronVersion} to chrome v${chromeVersion}`,
     );
     return chromeVersion;
-  } catch (err) {
+  } catch (err: unknown) {
     log.error('getChromeVersionForElectronVersion ERROR', err);
     log.debug('Falling back to default Chrome version', DEFAULT_CHROME_VERSION);
     return DEFAULT_CHROME_VERSION;

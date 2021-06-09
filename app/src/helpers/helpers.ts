@@ -141,7 +141,7 @@ export function linkIsInternal(
     // Only use the tld and the main domain for domain-ish test
     // Enables domain-ish equality for blog.foo.com and shop.foo.com
     return domainify(currentUrl) === domainify(newUrl);
-  } catch (err) {
+  } catch (err: unknown) {
     log.error(
       'Failed to parse domains as determining if link is internal. From:',
       currentUrl,
@@ -178,12 +178,4 @@ export function removeUserAgentSpecifics(
   return userAgentFallback
     .replace(`Electron/${process.versions.electron} `, '')
     .replace(`${appName}/${appVersion} `, ' ');
-}
-
-export function shouldInjectCSS(): boolean {
-  try {
-    return fs.existsSync(INJECT_DIR);
-  } catch (e) {
-    return false;
-  }
 }

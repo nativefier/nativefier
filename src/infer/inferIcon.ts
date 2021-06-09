@@ -2,11 +2,13 @@ import * as path from 'path';
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 
-import * as gitCloud from 'gitcloud';
+// @ts-expect-error No types defined until we merge https://github.com/nativefier/gitcloud-client/pull/3
+import * as gitcloud from 'gitcloud';
 import * as pageIcon from 'page-icon';
 
 import {
   downloadFile,
+  DownloadResult,
   getAllowedIconFormats,
   getTempDir,
 } from '../helpers/helpers';
@@ -17,7 +19,14 @@ const writeFileAsync = promisify(writeFile);
 const GITCLOUD_SPACE_DELIMITER = '-';
 const GITCLOUD_URL = 'https://nativefier.github.io/nativefier-icons/';
 
-function getMaxMatchScore(iconWithScores: any[]): number {
+type GitCloudIcon = {
+  ext: string;
+  name: string;
+  score: number;
+  url: string;
+};
+
+function getMaxMatchScore(iconWithScores: GitCloudIcon[]): number {
   const score = iconWithScores.reduce((maxScore, currentIcon) => {
     const currentScore = currentIcon.score;
     if (currentScore > maxScore) {
@@ -29,22 +38,31 @@ function getMaxMatchScore(iconWithScores: any[]): number {
   return score;
 }
 
-function getMatchingIcons(iconsWithScores: any[], maxScore: number): any[] {
+function getMatchingIcons(
+  iconsWithScores: GitCloudIcon[],
+  maxScore: number,
+): GitCloudIcon[] {
   return iconsWithScores
     .filter((item) => item.score === maxScore)
     .map((item) => ({ ...item, ext: path.extname(item.url) }));
 }
 
-function mapIconWithMatchScore(cloudIcons: any[], targetUrl: string): any {
+function mapIconWithMatchScore(
+  cloudIcons: GitCloudIcon[],
+  targetUrl: string,
+): GitCloudIcon[] {
   const normalisedTargetUrl = targetUrl.toLowerCase();
   return cloudIcons.map((item) => {
     const itemWords = item.name.split(GITCLOUD_SPACE_DELIMITER);
-    const score = itemWords.reduce((currentScore: number, word: string) => {
-      if (normalisedTargetUrl.includes(word)) {
-        return currentScore + 1;
-      }
-      return currentScore;
-    }, 0);
+    const score: number = itemWords.reduce(
+      (currentScore: number, word: string) => {
+        if (normalisedTargetUrl.includes(word)) {
+          return currentScore + 1;
+        }
+        return currentScore;
+      },
+      0,
+    );
 
     return { ...item, score };
   });
@@ -53,18 +71,22 @@ function mapIconWithMatchScore(cloudIcons: any[], targetUrl: string): any {
 async function inferIconFromStore(
   targetUrl: string,
   platform: string,
-): Promise<any> {
+): Promise<DownloadResult | undefined> {
   log.debug(`Inferring icon from store for ${targetUrl} on ${platform}`);
   const allowedFormats = new Set(getAllowedIconFormats(platform));
 
-  const cloudIcons: any[] = await gitCloud(GITCLOUD_URL);
+  // Unsafe call until we merge https://github.com/nativefier/gitcloud-client/pull/3
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  const cloudIcons: GitCloudIcon[] = (await gitcloud(
+    GITCLOUD_URL,
+  )) as GitCloudIcon[];
   log.debug(`Got ${cloudIcons.length} icons from gitcloud`);
   const iconWithScores = mapIconWithMatchScore(cloudIcons, targetUrl);
   const maxScore = getMaxMatchScore(iconWithScores);
 
   if (maxScore === 0) {
     log.debug('No relevant icon in store.');
-    return null;
+    return undefined;
   }
 
   const iconsMatchingScore = getMatchingIcons(iconWithScores, maxScore);
@@ -76,7 +98,7 @@ async function inferIconFromStore(
 
   if (!iconUrl) {
     log.debug('Could not infer icon from store');
-    return null;
+    return undefined;
   }
   return downloadFile(iconUrl);
 }
@@ -84,21 +106,19 @@ async function inferIconFromStore(
 export async function inferIcon(
   targetUrl: string,
   platform: string,
-): Promise<string> {
+): Promise<string | undefined> {
   log.debug(`Inferring icon for ${targetUrl} on ${platform}`);
   const tmpDirPath = getTempDir('iconinfer');
 
-  let icon: { ext: string; data: Buffer } = await inferIconFromStore(
-    targetUrl,
-    platform,
-  );
+  let icon: { ext: string; data: Buffer } | undefined =
+    await inferIconFromStore(targetUrl, platform);
   if (!icon) {
     const ext = platform === 'win32' ? '.ico' : '.png';
     log.debug(`Trying to extract a ${ext} icon from the page.`);
     icon = await pageIcon(targetUrl, { ext });
   }
   if (!icon) {
-    return null;
+    return undefined;
   }
   log.debug(`Got an icon from the page.`);
 
