@@ -13,17 +13,22 @@ import electron, {
   IpcMainEvent,
 } from 'electron';
 import electronDownload from 'electron-dl';
-import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
+  createMainWindow,
   saveAppArgs,
   APP_ARGS_FILE_PATH,
-  createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
 import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
+import * as log from './helpers/loggingHelper';
+import {
+  IS_PLAYWRIGHT,
+  PLAYWRIGHT_CONFIG,
+  safeGetEnv,
+} from './helpers/playwrightHelpers';
 import { setupNativefierWindow } from './helpers/windowEvents';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
@@ -31,11 +36,7 @@ if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
-const IS_SPECTRON =
-  safeGetEnv('SPECTRON_TEST')?.toLowerCase() === 'true' ?? false;
-const SPECTRON_CONFIG = safeGetEnv('SPECTRON_CONFIG');
-
-if (process.argv.indexOf('--verbose') > -1) {
+if (process.argv.indexOf('--verbose') > -1 || safeGetEnv('VERBOSE') === '1') {
   log.setLevel('DEBUG');
   process.traceDeprecation = true;
   process.traceProcessWarnings = true;
@@ -45,8 +46,8 @@ if (process.argv.indexOf('--verbose') > -1) {
 let mainWindow: BrowserWindow;
 
 const appArgs =
-  IS_SPECTRON && SPECTRON_CONFIG
-    ? JSON.parse(SPECTRON_CONFIG)
+  IS_PLAYWRIGHT && PLAYWRIGHT_CONFIG
+    ? JSON.parse(PLAYWRIGHT_CONFIG)
     : JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
 
 log.debug('appArgs', appArgs);
@@ -171,9 +172,24 @@ const setDockBadge = isOSX()
     }
   : (): void => undefined;
 
+// TODO: Insert CSS Here instead of using ugly onAfterHeadersReceived hack?
+// app.on('web-contents-created', (event: Event, webContents: WebContents) => {
+//   const cssToInject = getCSSToInject();
+
+//   log.debug('web-contents-created', { event, webContents, cssToInject });
+
+//   if (!cssToInject) {
+//     return;
+//   }
+
+//   webContents
+//     .insertCSS(cssToInject)
+//     .catch((err: unknown) => log.error('webContents.insertCSS ERROR', err));
+// });
+
 app.on('window-all-closed', () => {
   log.debug('app.window-all-closed');
-  if (!isOSX() || appArgs.fastQuit || IS_SPECTRON) {
+  if (!isOSX() || appArgs.fastQuit || IS_PLAYWRIGHT) {
     app.quit();
   }
 });
@@ -242,7 +258,7 @@ if (appArgs.widevine) {
 
 app.on('activate', (event: electron.Event, hasVisibleWindows: boolean) => {
   log.debug('app.activate', { event, hasVisibleWindows });
-  if (isOSX() && !IS_SPECTRON) {
+  if (isOSX() && !IS_PLAYWRIGHT) {
     // this is called when the dock is clicked
     if (!hasVisibleWindows) {
       mainWindow.show();
@@ -403,7 +419,3 @@ app.on(
 app.on('browser-window-focus', (event: IpcMainEvent, window: BrowserWindow) => {
   log.debug('app.browser-window-focus', { event, window });
 });
-
-function safeGetEnv(key: string): string | undefined {
-  return key in process.env ? process.env[key] : undefined;
-}

@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import * as log from 'loglevel';
-
 import { BrowserWindow, ipcMain } from 'electron';
+
+import * as log from '../helpers/loggingHelper';
 
 export async function createLoginWindow(
   loginCallback,

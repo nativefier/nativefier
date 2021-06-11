@@ -8,9 +8,9 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
 } from 'electron';
-import * as log from 'loglevel';
 
 import { isOSX, openExternal } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
 import {
   clearAppData,
   getCurrentURL,
@@ -130,7 +130,7 @@ export function generateMenu(
     submenu: [
       {
         label: 'Back',
-        accelerator: isOSX() ? 'CmdOrAlt+Left' : 'Alt+Left',
+        accelerator: isOSX() ? 'Cmd+Left' : 'Alt+Left',
         click: goBack,
       },
       {

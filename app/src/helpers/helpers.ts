@@ -3,7 +3,8 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { BrowserWindow, OpenExternalOptions, shell } from 'electron';
-import * as log from 'loglevel';
+
+import * as log from '../helpers/loggingHelper';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
 
