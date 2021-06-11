@@ -5,3 +5,6 @@ if (process.env.LOGLEVEL) {
 } else {
   log.disableAll();
 }
+
+process.traceDeprecation = true;
+process.traceProcessWarnings = true;

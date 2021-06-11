@@ -47,7 +47,7 @@
     "test": "jest --testRegex '[-.]test\\.js$'",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
-    "test:playwright": "jest  --testRegex '.*playwright-test.js'",
+    "test:playwright": "jest --testRegex '.*playwright-test.js'",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
