@@ -80,7 +80,7 @@ describe('Application launch', () => {
             log.log('window.console', args);
           }
         })
-        .catch((err: unknown) => log.error(err));
+        .catch(() => log.log('window.console', consoleMessage));
     });
     return window;
   };
@@ -146,49 +146,38 @@ describe('Application launch', () => {
   test('tries to open external links', async () => {
     const mainWindow = await spawnApp();
     await mainWindow.waitForLoadState('domcontentloaded');
-    const [openExternalUrl] = await Promise.all([
-      app.evaluate(async ({ shell }) => {
-        return new Promise((resolve) => {
-          shell.openExternal = (url: string): Promise<void> => {
-            resolve(url);
-            return Promise.resolve();
-          };
-        });
-      }),
-      mainWindow.click('#footer > div:nth-child(2) > ul > li:nth-child(2) > a'),
-    ]);
+
+    // Install the mock first
+    await app.evaluate(({ shell }) => {
+      // @ts-expect-error injecting into shell so that this promise
+      // can be accessed outside of this anonymous function's scope
+      // Not my favorite thing to do, but I could not find another way
+      process.openExternalPromise = new Promise((resolve) => {
+        shell.openExternal = async (url: string): Promise<void> => {
+          resolve(url);
+          return Promise.resolve();
+        };
+      });
+    });
+
+    // Click, but don't await it - Playwright waits for stuff that does not happen when Electron does openExternal.
+    mainWindow
+      .click('#footer > div:nth-child(2) > ul > li:nth-child(2) > a')
+      .catch((err: unknown) => {
+        expect(err).toBeUndefined();
+      });
+
+    // Go pull out our value returned by our hacky global promise
+    const openExternalUrl = await app.evaluate('process.openExternalPromise');
+    expect(openExternalUrl).not.toBe('https://www.npmjs.com/');
+
     expect(openExternalUrl).not.toBe(DEFAULT_CONFIG.targetUrl);
   });
 
+  // Currently disabled. Not working
   // test('keyboard shortcuts: back and forward', async () => {
   //   const mainWindow = await spawnApp();
   //   await mainWindow.waitForLoadState('domcontentloaded');
-
-  //   // // Go to a new page
-  //   // await Promise.all([
-  //   //   mainWindow.click('#nav-products-link'),
-  //   //   mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-  //   // ]);
-
-  //   // // Go back
-  //   // const [, , [backFrame]] = await Promise.all([
-  //   //   mainWindow.keyboard.press(`${metaOrAlt}+ArrowLeft`),
-  //   //   mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-  //   //   (await once(mainWindow, 'framenavigated')) as unknown as Promise<Frame[]>,
-  //   //   new Promise((resolve) => setTimeout(resolve, 3000)),
-  //   // ]);
-
-  //   // expect(backFrame.url()).toBe(DEFAULT_CONFIG.targetUrl);
-
-  //   // // Go forward
-  //   // const [, , [forwardFrame]] = await Promise.all([
-  //   //   mainWindow.keyboard.press(`${metaOrAlt}+ArrowRight`),
-  //   //   mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-  //   //   (await once(mainWindow, 'framenavigated')) as unknown as Promise<Frame[]>,
-  //   //   new Promise((resolve) => setTimeout(resolve, 3000)),
-  //   // ]);
-
-  //   // expect(forwardFrame.url()).not.toBe(DEFAULT_CONFIG.targetUrl);
 
   //   await Promise.all([
   //     mainWindow.click('#nav-products-link'),
@@ -196,20 +185,26 @@ describe('Application launch', () => {
   //   ]);
 
   //   // Go back
-  //   console.log(`${metaOrAlt}+ArrowLeft`);
-  //   await mainWindow.keyboard.press(`${metaOrAlt}+ArrowLeft`);
-  //   await mainWindow.waitForLoadState('domcontentloaded');
-  //   await new Promise((resolve) => setTimeout(resolve, 3000));
+  //   // console.log(`${metaOrAlt}+ArrowLeft`);
+  //   mainWindow.keyboard
+  //     .press(`${metaOrAlt}+ArrowLeft`)
+  //     .catch((err: unknown) => {
+  //       expect(err).toBeUndefined();
+  //     });
+  //   await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
   //   const backUrl = await mainWindow.evaluate(() => window.location.href);
 
   //   expect(backUrl).toBe(DEFAULT_CONFIG.targetUrl);
 
   //   // Go forward
-  //   console.log(`${metaOrAlt}+ArrowRight`);
-  //   await mainWindow.keyboard.press(`${metaOrAlt}+ArrowRight`);
-  //   await mainWindow.waitForLoadState('domcontentloaded');
-  //   await new Promise((resolve) => setTimeout(resolve, 3000));
+  //   // console.log(`${metaOrAlt}+ArrowRight`);
+  //   mainWindow.keyboard
+  //     .press(`${metaOrAlt}+ArrowRight`)
+  //     .catch((err: unknown) => {
+  //       expect(err).toBeUndefined();
+  //     });
+  //   await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
   //   const forwardUrl = await mainWindow.evaluate(() => window.location.href);
 
