@@ -2,7 +2,7 @@ import * as path from 'path';
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 
-import * as gitCloud from 'gitcloud';
+import gitCloud = require('gitcloud');
 import * as pageIcon from 'page-icon';
 
 import {
@@ -35,7 +35,10 @@ function getMatchingIcons(iconsWithScores: any[], maxScore: number): any[] {
     .map((item) => ({ ...item, ext: path.extname(item.url) }));
 }
 
-function mapIconWithMatchScore(cloudIcons: any[], targetUrl: string): any {
+function mapIconWithMatchScore(
+  cloudIcons: { name: string; url: string }[],
+  targetUrl: string,
+): any {
   const normalisedTargetUrl = targetUrl.toLowerCase();
   return cloudIcons.map((item) => {
     const itemWords = item.name.split(GITCLOUD_SPACE_DELIMITER);
@@ -57,7 +60,7 @@ async function inferIconFromStore(
   log.debug(`Inferring icon from store for ${targetUrl} on ${platform}`);
   const allowedFormats = new Set(getAllowedIconFormats(platform));
 
-  const cloudIcons: any[] = await gitCloud(GITCLOUD_URL);
+  const cloudIcons = await gitCloud(GITCLOUD_URL);
   log.debug(`Got ${cloudIcons.length} icons from gitcloud`);
   const iconWithScores = mapIconWithMatchScore(cloudIcons, targetUrl);
   const maxScore = getMaxMatchScore(iconWithScores);
