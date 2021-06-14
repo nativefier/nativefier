@@ -30,8 +30,8 @@ describe('Application launch', () => {
 
   const logFileDir = getTempDir('playwright');
 
-  const metaOrAlt = process.platform === 'darwin' ? 'Meta' : 'Alt';
-  const metaOrCtrl = process.platform === 'darwin' ? 'Meta' : 'Control';
+  // const metaOrAlt = process.platform === 'darwin' ? 'Meta' : 'Alt';
+  // const metaOrCtrl = process.platform === 'darwin' ? 'Meta' : 'Control';
 
   // Create a reporter that only displays the log on failure
   const logReporter = {
@@ -48,7 +48,8 @@ describe('Application launch', () => {
 
   const spawnApp = async (
     playwrightConfig: NativefierOptions = { ...DEFAULT_CONFIG },
-  ): Promise<Page> => {
+    awaitFirstWindow = true,
+  ): Promise<Page | undefined> => {
     app = await electron.launch({
       args: [appMainJSPath],
       env: {
@@ -61,6 +62,9 @@ describe('Application launch', () => {
     });
     app.on('close', () => (appClosed = true));
     appClosed = false;
+    if (!awaitFirstWindow) {
+      return undefined;
+    }
     const window = await app.firstWindow();
     window.addListener('console', (consoleMessage: ConsoleMessage) => {
       const consoleMethods: Record<string, (...args: unknown[]) => unknown> = {
@@ -97,7 +101,7 @@ describe('Application launch', () => {
   });
 
   test('shows an initial window', async () => {
-    const mainWindow = await spawnApp();
+    const mainWindow = (await spawnApp()) as Page;
     await mainWindow.waitForLoadState('domcontentloaded');
     expect(app.windows()).toHaveLength(1);
     expect(await mainWindow.title()).toBe('npm');
@@ -109,7 +113,7 @@ describe('Application launch', () => {
       'inject.css',
       `* { background-color: ${fuschia} !important; }`,
     );
-    const mainWindow = await spawnApp();
+    const mainWindow = (await spawnApp()) as Page;
     await mainWindow.waitForLoadState('domcontentloaded');
     expect(await mainWindow.isVisible('header')).toBe(true);
     const headerStyle = await mainWindow.$eval('header', (el) =>
@@ -124,7 +128,7 @@ describe('Application launch', () => {
       'inject.js',
       `setTimeout(() => {alert("${alertMsg}"); }, 2000);`, // Buy ourselves 2 seconds to get the dialog handler setup
     );
-    const mainWindow = await spawnApp();
+    const mainWindow = (await spawnApp()) as Page;
     const [dialogPromise] = (await once(
       mainWindow,
       'dialog',
@@ -136,7 +140,7 @@ describe('Application launch', () => {
   });
 
   test('can open internal links', async () => {
-    const mainWindow = await spawnApp();
+    const mainWindow = (await spawnApp()) as Page;
     await mainWindow.waitForLoadState('domcontentloaded');
     await mainWindow.click('#nav-products-link');
     await mainWindow.waitForLoadState('domcontentloaded');
@@ -144,7 +148,7 @@ describe('Application launch', () => {
   });
 
   test('tries to open external links', async () => {
-    const mainWindow = await spawnApp();
+    const mainWindow = (await spawnApp()) as Page;
     await mainWindow.waitForLoadState('domcontentloaded');
 
     // Install the mock first
@@ -174,7 +178,51 @@ describe('Application launch', () => {
     expect(openExternalUrl).not.toBe(DEFAULT_CONFIG.targetUrl);
   });
 
-  // Currently disabled. Not working
+  // Currently disabled. Playwright doesn't seem to support app keypress events
+  // only browser keypress events. Will fix
+  // test('keyboard shortcuts: zoom', async () => {
+  //   const mainWindow = await spawnApp();
+  //   await mainWindow.waitForLoadState('domcontentloaded');
+
+  //   const defaultZoom = await app.evaluate(
+  //     ({ BrowserWindow }): number | undefined =>
+  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+  //   );
+
+  //   expect(defaultZoom).toBeDefined();
+
+  //   if (defaultZoom === undefined) {
+  //     // Won't actually be hit, but lets TypeScript know it won't be undefined at this point.
+  //     return;
+  //   }
+
+  //   await mainWindow.keyboard.press(`${metaOrCtrl}+Equal`);
+  //   const postZoomIn = await app.evaluate(
+  //     ({ BrowserWindow }): number | undefined =>
+  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+  //   );
+
+  //   expect(postZoomIn).toBeGreaterThan(defaultZoom);
+
+  //   await mainWindow.keyboard.press(`${metaOrCtrl}+0`);
+  //   const postZoomReset = await app.evaluate(
+  //     ({ BrowserWindow }): number | undefined =>
+  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+  //   );
+
+  //   expect(postZoomReset).toEqual(defaultZoom);
+
+  //   await mainWindow.keyboard.press(`${metaOrCtrl}+Minus`);
+  //   const postZoomOut = await app.evaluate(
+  //     ({ BrowserWindow }): number | undefined =>
+  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+  //   );
+
+  //   expect(postZoomOut).toBeLessThan(defaultZoom);
+  // });
+
+  // Currently disabled. Playwright doesn't seem to support app keypress events
+  // only browser keypress events.
   // test('keyboard shortcuts: back and forward', async () => {
   //   const mainWindow = await spawnApp();
   //   await mainWindow.waitForLoadState('domcontentloaded');
@@ -186,11 +234,8 @@ describe('Application launch', () => {
 
   //   // Go back
   //   // console.log(`${metaOrAlt}+ArrowLeft`);
-  //   mainWindow.keyboard
-  //     .press(`${metaOrAlt}+ArrowLeft`)
-  //     .catch((err: unknown) => {
-  //       expect(err).toBeUndefined();
-  //     });
+  //   await mainWindow.keyboard
+  //     .press(`${metaOrAlt}+ArrowLeft`);
   //   await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
   //   const backUrl = await mainWindow.evaluate(() => window.location.href);
@@ -199,17 +244,107 @@ describe('Application launch', () => {
 
   //   // Go forward
   //   // console.log(`${metaOrAlt}+ArrowRight`);
-  //   mainWindow.keyboard
-  //     .press(`${metaOrAlt}+ArrowRight`)
-  //     .catch((err: unknown) => {
-  //       expect(err).toBeUndefined();
-  //     });
+  //   await mainWindow.keyboard
+  //     .press(`${metaOrAlt}+ArrowRight`);
   //   await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
   //   const forwardUrl = await mainWindow.evaluate(() => window.location.href);
 
   //   expect(forwardUrl).not.toBe(DEFAULT_CONFIG.targetUrl);
   // });
+
+  test('no errors thrown in console', async () => {
+    await spawnApp({ ...DEFAULT_CONFIG }, false);
+    const mainWindow = await app.firstWindow();
+    mainWindow.addListener('console', (consoleMessage: ConsoleMessage) => {
+      try {
+        expect(consoleMessage.type()).not.toBe('error');
+      } catch {
+        // Do it this way so we'll see the whole message, not just
+        // expect('error').not.toBe('error')
+        // which isn't particularly useful
+        expect({
+          message: 'console.error called unexpectedly with',
+          consoleMessage,
+        }).toBeUndefined();
+      }
+    });
+    // Give the app 5 seconds to spin up and ensure no errors happened
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  });
+
+  test('basic auth', async () => {
+    const mainWindow = (await spawnApp({
+      targetUrl: 'http://httpbin.org/basic-auth/foo/bar',
+      basicAuthUsername: 'foo',
+      basicAuthPassword: 'bar',
+    })) as Page;
+    await mainWindow.waitForLoadState('networkidle');
+
+    const documentText = await mainWindow.evaluate<string>(
+      'document.documentElement.innerText',
+    );
+
+    const documentJSON = JSON.parse(documentText) as {
+      authenticated: boolean;
+      user: string;
+    };
+
+    expect(documentJSON).toEqual({
+      authenticated: true,
+      user: 'foo',
+    });
+  });
+
+  test('basic auth without pre-providing', async () => {
+    const mainWindow = (await spawnApp({
+      targetUrl: 'http://httpbin.org/basic-auth/foo/bar',
+    })) as Page;
+    await mainWindow.waitForLoadState('load');
+
+    // Give the app a second to open the login window
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const appWindows = app.windows();
+
+    expect(appWindows).toHaveLength(2);
+
+    const loginWindow = appWindows.filter((x) => x !== mainWindow)[0];
+
+    await loginWindow.waitForLoadState('domcontentloaded');
+
+    const usernameField = await loginWindow.$('#username-input');
+
+    expect(usernameField).not.toBeNull();
+
+    const passwordField = await loginWindow.$('#password-input');
+
+    expect(passwordField).not.toBeNull();
+
+    const submitButton = await loginWindow.$('#submit-form-button');
+
+    expect(submitButton).not.toBeNull();
+
+    await usernameField?.fill('foo');
+    await passwordField?.fill('bar');
+    await submitButton?.click();
+
+    await mainWindow.waitForLoadState('networkidle');
+
+    const documentText = await mainWindow.evaluate<string>(
+      'document.documentElement.innerText',
+    );
+
+    const documentJSON = JSON.parse(documentText) as {
+      authenticated: boolean;
+      user: string;
+    };
+
+    expect(documentJSON).toEqual({
+      authenticated: true,
+      user: 'foo',
+    });
+  });
 });
 
 function createInject(filename: string, contents: string): void {

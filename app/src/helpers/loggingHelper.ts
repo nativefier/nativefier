@@ -18,13 +18,17 @@ function _logger(
 ): void {
   if (USE_LOG_FILE && loglevel.getLevel() >= level) {
     for (const arg of args) {
-      const lines =
-        JSON.stringify(arg, null, 2)?.split('\n') ?? `${arg}`.split('\n');
-      for (const line of lines) {
-        fs.appendFileSync(
-          LOG_FILENAME,
-          `${new Date().getTime()} ${logLevelNames[level]} ${line}\n`,
-        );
+      try {
+        const lines =
+          JSON.stringify(arg, null, 2)?.split('\n') ?? `${arg}`.split('\n');
+        for (const line of lines) {
+          fs.appendFileSync(
+            LOG_FILENAME,
+            `${new Date().getTime()} ${logLevelNames[level]} ${line}\n`,
+          );
+        }
+      } catch {
+        fs.appendFileSync(LOG_FILENAME, `${logLevelNames[level]} ${arg}\n`);
       }
     }
   } else {
