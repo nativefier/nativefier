@@ -33,7 +33,7 @@ describe('Application launch', () => {
   // const metaOrAlt = process.platform === 'darwin' ? 'Meta' : 'Alt';
   // const metaOrCtrl = process.platform === 'darwin' ? 'Meta' : 'Control';
 
-  // Create a reporter that only displays the log on failure
+  // Create a reporter that only displays the log from electron on failure
   const logReporter = {
     specDone: function (result: { status: string }): void {
       if (result.status === 'failed') {
@@ -120,6 +120,14 @@ describe('Application launch', () => {
       window.getComputedStyle(el),
     );
     expect(headerStyle.backgroundColor).toBe(fuschia);
+
+    await mainWindow.click('#nav-products-link');
+    await mainWindow.waitForLoadState('domcontentloaded');
+    expect(await mainWindow.isVisible('header')).toBe(true);
+    const headerStylePostNavigate = await mainWindow.$eval('header', (el) =>
+      window.getComputedStyle(el),
+    );
+    expect(headerStylePostNavigate.backgroundColor).toBe(fuschia);
   });
 
   test('can inject some JS', async () => {
