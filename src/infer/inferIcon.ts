@@ -2,8 +2,7 @@ import * as path from 'path';
 import { writeFile } from 'fs';
 import { promisify } from 'util';
 
-// @ts-expect-error No types defined until we merge https://github.com/nativefier/gitcloud-client/pull/3
-import * as gitcloud from 'gitcloud';
+import gitCloud = require('gitcloud');
 import * as pageIcon from 'page-icon';
 
 import {
@@ -20,16 +19,16 @@ const GITCLOUD_SPACE_DELIMITER = '-';
 const GITCLOUD_URL = 'https://nativefier.github.io/nativefier-icons/';
 
 type GitCloudIcon = {
-  ext: string;
-  name: string;
-  score: number;
-  url: string;
+  ext?: string;
+  name?: string;
+  score?: number;
+  url?: string;
 };
 
 function getMaxMatchScore(iconWithScores: GitCloudIcon[]): number {
   const score = iconWithScores.reduce((maxScore, currentIcon) => {
     const currentScore = currentIcon.score;
-    if (currentScore > maxScore) {
+    if (currentScore && currentScore > maxScore) {
       return currentScore;
     }
     return maxScore;
@@ -42,13 +41,11 @@ function getMatchingIcons(
   iconsWithScores: GitCloudIcon[],
   maxScore: number,
 ): GitCloudIcon[] {
-  return iconsWithScores
-    .filter((item) => item.score === maxScore)
-    .map((item) => ({ ...item, ext: path.extname(item.url) }));
+  return iconsWithScores.filter((item) => item.score === maxScore);
 }
 
 function mapIconWithMatchScore(
-  cloudIcons: GitCloudIcon[],
+  cloudIcons: { name: string; url: string }[],
   targetUrl: string,
 ): GitCloudIcon[] {
   const normalisedTargetUrl = targetUrl.toLowerCase();
@@ -64,7 +61,7 @@ function mapIconWithMatchScore(
       0,
     );
 
-    return { ...item, score };
+    return { ...item, ext: path.extname(item.url), score };
   });
 }
 
@@ -73,13 +70,11 @@ async function inferIconFromStore(
   platform: string,
 ): Promise<DownloadResult | undefined> {
   log.debug(`Inferring icon from store for ${targetUrl} on ${platform}`);
-  const allowedFormats = new Set(getAllowedIconFormats(platform));
+  const allowedFormats = new Set<string | undefined>(
+    getAllowedIconFormats(platform),
+  );
 
-  // Unsafe call until we merge https://github.com/nativefier/gitcloud-client/pull/3
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  const cloudIcons: GitCloudIcon[] = (await gitcloud(
-    GITCLOUD_URL,
-  )) as GitCloudIcon[];
+  const cloudIcons = await gitCloud(GITCLOUD_URL);
   log.debug(`Got ${cloudIcons.length} icons from gitcloud`);
   const iconWithScores = mapIconWithMatchScore(cloudIcons, targetUrl);
   const maxScore = getMaxMatchScore(iconWithScores);
@@ -91,7 +86,7 @@ async function inferIconFromStore(
 
   const iconsMatchingScore = getMatchingIcons(iconWithScores, maxScore);
   const iconsMatchingExt = iconsMatchingScore.filter((icon) =>
-    allowedFormats.has(icon.ext),
+    allowedFormats.has(icon.ext ?? path.extname(icon.url as string)),
   );
   const matchingIcon = iconsMatchingExt[0];
   const iconUrl = matchingIcon && matchingIcon.url;

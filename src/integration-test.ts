@@ -51,28 +51,28 @@ async function checkApp(
   const nativefierConfig: NativefierOptions | undefined =
     parseJson<NativefierOptions>(fs.readFileSync(configPath).toString());
   expect(nativefierConfig).not.toBeUndefined();
-  if (!nativefierConfig) return;
-  expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
+
+  expect(inputOptions.targetUrl).toBe(nativefierConfig?.targetUrl);
 
   // Test name inferring
-  expect(nativefierConfig.name).toBe('Google');
+  expect(nativefierConfig?.name).toBe('Google');
 
   // Test icon writing
   const iconFile =
     inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
   const iconPath = path.join(appPath, iconFile);
-  expect(fs.existsSync(iconPath)).toBe(true);
+  expect(fs.existsSync(iconPath)).toEqual(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
 
   // Test arch
   if (inputOptions.arch !== undefined) {
-    expect(inputOptions.arch).toBe(nativefierConfig.arch);
+    expect(inputOptions.arch).toEqual(nativefierConfig?.arch);
   } else {
-    expect(os.arch()).toBe(nativefierConfig.arch);
+    expect(os.arch()).toEqual(nativefierConfig?.arch);
   }
 
   // Test electron version
-  expect(nativefierConfig.electronVersionUsed).toBe(
+  expect(nativefierConfig?.electronVersionUsed).toBe(
     inputOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
   );
 
@@ -88,10 +88,11 @@ async function checkApp(
     });
     inputOptions.userAgent = translatedUserAgent || inputOptions.userAgent;
   }
-  expect(nativefierConfig.userAgent).toBe(inputOptions.userAgent);
+
+  expect(nativefierConfig?.userAgent).toEqual(inputOptions.userAgent);
 
   // Test lang
-  expect(nativefierConfig.lang).toBe(inputOptions.lang);
+  expect(nativefierConfig?.lang).toEqual(inputOptions.lang);
 }
 
 describe('Nativefier', () => {
