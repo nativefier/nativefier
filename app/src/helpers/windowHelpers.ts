@@ -204,6 +204,13 @@ export function injectCSS(browserWindow: BrowserWindow): void {
       'browserWindow.webContents.did-navigate',
       browserWindow.webContents.getURL(),
     );
+
+    browserWindow.webContents
+      .insertCSS(cssToInject)
+      .catch((err: unknown) =>
+        log.error('browserWindow.webContents.insertCSS', err),
+      );
+
     // We must inject css early enough; so onHeadersReceived is a good place.
     // Will run multiple times, see `did-finish-load` event on the window
     // that unsets this handler.
@@ -213,7 +220,18 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         details: OnHeadersReceivedListenerDetails,
         callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
       ) => {
-        injectCSSIntoResponse(details, cssToInject)
+        const contentType =
+          'content-type' in details.responseHeaders
+            ? details.responseHeaders['content-type'][0]
+            : undefined;
+
+        log.debug('onHeadersReceived', {
+          contentType,
+          resourceType: details.resourceType,
+          url: details.url,
+        });
+
+        injectCSSIntoResponse(details, contentType, cssToInject)
           .then((responseHeaders) => {
             callback({
               cancel: false,
@@ -234,28 +252,33 @@ export function injectCSS(browserWindow: BrowserWindow): void {
 
 async function injectCSSIntoResponse(
   details: OnHeadersReceivedListenerDetails,
+  contentType: string,
   cssToInject: string,
 ): Promise<Record<string, string[]>> {
-  // We go with a denylist rather than a whitelist (e.g. only GET/html)
+  // We go with a denylist rather than a whitelist (e.g. only text/html)
   // to avoid "whoops I didn't think this should have been CSS-injected" cases
-  const nonInjectableMethods = ['DELETE', 'OPTIONS'];
+  const nonInjectableContentTypes = [
+    /application\/.*/,
+    /font\/.*/,
+    /image\/.*/,
+  ];
   const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
 
   if (
-    nonInjectableMethods.includes(details.method) ||
+    nonInjectableContentTypes.filter((x) => x.exec(contentType)?.length > 0)
+      ?.length > 0 ||
     nonInjectableResourceTypes.includes(details.resourceType) ||
     !details.webContents
   ) {
     log.debug(
-      `Skipping CSS injection for:\n${details.url}\nwith method ${details.method} and resourceType ${details.resourceType} and content-type ${details.responseHeaders['content-type']}`,
+      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
     );
     return details.responseHeaders;
   }
 
-  log.debug('browserWindow.webContents.session.webRequest.onHeadersReceived', {
-    details,
-    contentType: details.responseHeaders['content-type'],
-  });
+  log.debug(
+    `Injecting CSS for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
+  );
   await details.webContents.insertCSS(cssToInject);
 
   return details.responseHeaders;
