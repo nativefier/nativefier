@@ -61,7 +61,7 @@ function mapIconWithMatchScore(
       0,
     );
 
-    return { ...item, score };
+    return { ...item, ext: path.extname(item.url), score };
   });
 }
 
@@ -86,7 +86,7 @@ async function inferIconFromStore(
 
   const iconsMatchingScore = getMatchingIcons(iconWithScores, maxScore);
   const iconsMatchingExt = iconsMatchingScore.filter((icon) =>
-    allowedFormats.has(icon.ext),
+    allowedFormats.has(icon.ext ?? path.extname(icon.url as string)),
   );
   const matchingIcon = iconsMatchingExt[0];
   const iconUrl = matchingIcon && matchingIcon.url;
