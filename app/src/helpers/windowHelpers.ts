@@ -271,13 +271,13 @@ async function injectCSSIntoResponse(
     !details.webContents
   ) {
     log.debug(
-      `Skipping CSS injection for:\n${details.url}\nwith method ${details.method} and resourceType ${details.resourceType} and content-type ${contentType}`,
+      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
     );
     return details.responseHeaders;
   }
 
   log.debug(
-    `Injecting CSS for:\n${details.url}\nwith method ${details.method} and resourceType ${details.resourceType} and content-type ${contentType}`,
+    `Injecting CSS for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
   );
   await details.webContents.insertCSS(cssToInject);
 
