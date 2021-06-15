@@ -1,4 +1,10 @@
 
+44.0.3 / 2021-06-15
+===================
+
+  * Make CSS injection less brutal (#1222, #1227)
+  * Maintenance: README nits, Fix gitcloud 0.2.3 import
+
 44.0.2 / 2021-06-07
 ===================
 

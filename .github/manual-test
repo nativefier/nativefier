@@ -9,9 +9,11 @@ if ! command -v node > /dev/null; then echo "Missing node"; missingDeps=true; fi
 if [ "$missingDeps" = true ]; then exit 1; fi
 
 function launch_app() {
-  printf '\n*** Running appn'
+  printf '\n*** Running app\n'
   if [ "$(uname -s)" = "Darwin" ]; then
     open -a "$1/$2-darwin-x64/$2.app"
+  elif [ "$(uname -o)" = "Msys" ]; then
+    "$1/$2-win32-x64/$2.exe" --verbose
   else
     "$1/$2-linux-x64/$2"
   fi
