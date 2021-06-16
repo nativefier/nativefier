@@ -229,10 +229,10 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'boolean',
     })
     .option('tray', {
-      default: false,
+      default: 'false',
       description:
         "allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
-      type: 'boolean',
+      type: 'string',
     })
     .option('width', {
       defaultDescription: '1280',
@@ -578,8 +578,11 @@ if (require.main === module) {
         `Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "nativefier --help" for help.\nAborting`,
       );
     }
+    const isLastArg = sanitizedArgs.length + 1 === process.argv.length;
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
+
+      console.log({ arg, previousArg, isLastArg });
 
       // Work around commander.js not supporting default argument for options
       if (
@@ -590,6 +593,10 @@ if (require.main === module) {
       }
     }
     sanitizedArgs.push(arg);
+
+    if (arg === '--tray' && isLastArg) {
+      isLastArg;
+    }
   });
 
   let args: yargs.Argv<RawOptions> | undefined = undefined;
