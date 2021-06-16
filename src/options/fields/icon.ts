@@ -10,10 +10,15 @@ type IconParams = {
   };
 };
 
-export async function icon(options: IconParams): Promise<string> {
+export async function icon(options: IconParams): Promise<string | undefined> {
   if (options.packager.icon) {
     log.debug('Got icon from options. Using it, no inferring needed');
-    return null;
+    return undefined;
+  }
+
+  if (!options.packager.platform) {
+    log.error('No platform specified. Icon can not be inferrerd.');
+    return undefined;
   }
 
   try {
@@ -21,11 +26,8 @@ export async function icon(options: IconParams): Promise<string> {
       options.packager.targetUrl,
       options.packager.platform,
     );
-  } catch (error) {
-    log.warn(
-      'Cannot automatically retrieve the app icon:',
-      error.message || '',
-    );
-    return null;
+  } catch (err: unknown) {
+    log.warn('Cannot automatically retrieve the app icon:', err);
+    return undefined;
   }
 }

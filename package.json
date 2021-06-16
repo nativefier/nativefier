@@ -37,8 +37,8 @@
     "build:watch": "npm run clean && tsc --build . app --watch",
     "changelog": "./.github/generate-changelog",
     "ci": "npm run lint && npm test",
-    "clean": "rimraf lib/ app/lib/ app/dist/",
-    "clean:full": "rimraf lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
+    "clean": "rimraf coverage/ lib/ app/lib/ app/dist/",
+    "clean:full": "rimraf coverage/ lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
     "lint:fix": "eslint . --ext .ts --fix",
     "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts'",
     "lint": "eslint . --ext .ts",
@@ -66,7 +66,10 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@types/electron-packager": "^15.0.1",
+    "@types/hasbin": "^1.2.0",
     "@types/jest": "^26.0.23",
+    "@types/loglevel": "^1.6.3",
     "@types/ncp": "^2.0.4",
     "@types/node": "^12.20.15",
     "@types/page-icon": "^0.3.3",

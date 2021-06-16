@@ -10,9 +10,14 @@ import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { userAgent } from './options/fields/userAgent';
+import { NativefierOptions } from './options/model';
+import { parseJson } from './utils/parseUtils';
 
-async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
-  const arch = (inputOptions.arch as string) || inferArch();
+async function checkApp(
+  appRoot: string,
+  inputOptions: NativefierOptions,
+): Promise<void> {
+  const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
   if (inputOptions.out !== undefined) {
     expect(
       path.join(
@@ -43,28 +48,31 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
   const appPath = path.join(appRoot, relativeAppFolder);
 
   const configPath = path.join(appPath, 'nativefier.json');
-  const nativefierConfig = JSON.parse(fs.readFileSync(configPath).toString());
-  expect(inputOptions.targetUrl).toBe(nativefierConfig.targetUrl);
+  const nativefierConfig: NativefierOptions | undefined =
+    parseJson<NativefierOptions>(fs.readFileSync(configPath).toString());
+  expect(nativefierConfig).not.toBeUndefined();
+
+  expect(inputOptions.targetUrl).toBe(nativefierConfig?.targetUrl);
 
   // Test name inferring
-  expect(nativefierConfig.name).toBe('Google');
+  expect(nativefierConfig?.name).toBe('Google');
 
   // Test icon writing
   const iconFile =
     inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
   const iconPath = path.join(appPath, iconFile);
-  expect(fs.existsSync(iconPath)).toBe(true);
+  expect(fs.existsSync(iconPath)).toEqual(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
 
   // Test arch
   if (inputOptions.arch !== undefined) {
-    expect(inputOptions.arch).toBe(nativefierConfig.arch);
+    expect(inputOptions.arch).toEqual(nativefierConfig?.arch);
   } else {
-    expect(os.arch()).toBe(nativefierConfig.arch);
+    expect(os.arch()).toEqual(nativefierConfig?.arch);
   }
 
   // Test electron version
-  expect(nativefierConfig.electronVersionUsed).toBe(
+  expect(nativefierConfig?.electronVersionUsed).toBe(
     inputOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
   );
 
@@ -80,10 +88,11 @@ async function checkApp(appRoot: string, inputOptions: any): Promise<void> {
     });
     inputOptions.userAgent = translatedUserAgent || inputOptions.userAgent;
   }
-  expect(nativefierConfig.userAgent).toBe(inputOptions.userAgent);
+
+  expect(nativefierConfig?.userAgent).toEqual(inputOptions.userAgent);
 
   // Test lang
-  expect(nativefierConfig.lang).toBe(inputOptions.lang);
+  expect(nativefierConfig?.lang).toEqual(inputOptions.lang);
 }
 
 describe('Nativefier', () => {
@@ -101,7 +110,8 @@ describe('Nativefier', () => {
         lang: 'en-US',
       };
       const appPath = await buildNativefierApp(options);
-      await checkApp(appPath, options);
+      expect(appPath).not.toBeUndefined();
+      await checkApp(appPath as string, options);
     },
   );
 });
@@ -132,7 +142,8 @@ describe('Nativefier upgrade', () => {
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
-      await checkApp(appPath, options);
+      expect(appPath).not.toBeUndefined();
+      await checkApp(appPath as string, options);
 
       const upgradeOptions = {
         upgrade: appPath,
@@ -142,7 +153,8 @@ describe('Nativefier upgrade', () => {
       const upgradeAppPath = await buildNativefierApp(upgradeOptions);
       options.electronVersion = DEFAULT_ELECTRON_VERSION;
       options.userAgent = baseAppOptions.userAgent;
-      await checkApp(upgradeAppPath, options);
+      expect(upgradeAppPath).not.toBeUndefined();
+      await checkApp(upgradeAppPath as string, options);
     },
   );
 });

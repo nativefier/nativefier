@@ -4,7 +4,7 @@ import sanitize = require('sanitize-filename');
 import { DEFAULT_APP_NAME } from '../constants';
 
 export function sanitizeFilename(
-  platform: string,
+  platform: string | undefined,
   filenameToSanitize: string,
 ): string {
   let result: string = sanitize(filenameToSanitize);

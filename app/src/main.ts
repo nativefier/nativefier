@@ -3,7 +3,7 @@ import 'source-map-support/register';
 import fs from 'fs';
 import * as path from 'path';
 
-import {
+import electron, {
   app,
   crashReporter,
   dialog,
@@ -67,10 +67,11 @@ if (process.argv.length > 1) {
     new URL(maybeUrl);
     appArgs.targetUrl = maybeUrl;
     log.info('Loading override URL passed as argument:', maybeUrl);
-  } catch (err) {
+  } catch (err: unknown) {
     log.error(
       'Not loading override URL passed as argument, because failed to parse:',
       maybeUrl,
+      err,
     );
   }
 }
@@ -155,12 +156,12 @@ if (appArgs.lang) {
 
 let currentBadgeCount = 0;
 const setDockBadge = isOSX()
-  ? (count: number, bounce = false) => {
+  ? (count: number, bounce = false): void => {
       app.dock.setBadge(count.toString());
       if (bounce && count > currentBadgeCount) app.dock.bounce();
       currentBadgeCount = count;
     }
-  : () => undefined;
+  : (): void => undefined;
 
 app.on('window-all-closed', () => {
   log.debug('app.window-all-closed');
@@ -203,14 +204,14 @@ if (appArgs.crashReporter) {
 }
 
 if (appArgs.widevine) {
-  // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+  // @ts-expect-error This event only appears on the widevine version of electron, which we'd see at runtime
   app.on('widevine-ready', (version: string, lastVersion: string) => {
     log.debug('app.widevine-ready', { version, lastVersion });
     onReady().catch((err) => log.error('onReady ERROR', err));
   });
 
   app.on(
-    // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
+    // @ts-expect-error This event only appears on the widevine version of electron, which we'd see at runtime
     'widevine-update-pending',
     (currentVersion: string, pendingVersion: string) => {
       log.debug('app.widevine-update-pending', {
@@ -220,8 +221,8 @@ if (appArgs.widevine) {
     },
   );
 
-  // @ts-ignore This event only appears on the widevine version of electron, which we'd see at runtime
-  app.on('widevine-error', (error: any) => {
+  // @ts-expect-error This event only appears on the widevine version of electron, which we'd see at runtime
+  app.on('widevine-error', (error: Error) => {
     log.error('app.widevine-error', error);
   });
 } else {
@@ -231,7 +232,7 @@ if (appArgs.widevine) {
   });
 }
 
-app.on('activate', (event, hasVisibleWindows) => {
+app.on('activate', (event: electron.Event, hasVisibleWindows: boolean) => {
   log.debug('app.activate', { event, hasVisibleWindows });
   if (isOSX()) {
     // this is called when the dock is clicked
@@ -374,7 +375,7 @@ app.on(
 
 app.on(
   'activity-was-continued',
-  (event: IpcMainEvent, type: string, userInfo: any) => {
+  (event: IpcMainEvent, type: string, userInfo: unknown) => {
     log.debug('app.activity-was-continued', { event, type, userInfo });
   },
 );

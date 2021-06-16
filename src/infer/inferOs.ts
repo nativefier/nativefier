@@ -19,13 +19,7 @@ export const supportedPlatforms = [
 
 export function inferPlatform(): string {
   const platform = os.platform();
-  if (
-    platform === 'darwin' ||
-    // @ts-ignore
-    platform === 'mas' ||
-    platform === 'win32' ||
-    platform === 'linux'
-  ) {
+  if (['darwin', 'linux', 'win32'].includes(platform)) {
     log.debug('Inferred platform', platform);
     return platform;
   }
