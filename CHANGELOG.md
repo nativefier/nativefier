@@ -1,4 +1,13 @@
 
+44.0.4 / 2021-06-15
+===================
+
+This release only contains one behind-the-scenes TS change with no user-visible changes.
+It is here to let us narrow down on potential regressions that may have crept in.
+It isn't especially scary, though. Do test it, use it, and report regressions!
+
+  * Enable TypeScript `strict:true`, and more typescript-eslint rules (#1223)
+
 44.0.3 / 2021-06-15
 ===================
 
