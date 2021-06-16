@@ -582,8 +582,6 @@ if (require.main === module) {
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
 
-      console.log({ arg, previousArg, isLastArg });
-
       // Work around commander.js not supporting default argument for options
       if (
         previousArg === '--tray' &&
