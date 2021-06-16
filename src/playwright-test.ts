@@ -18,7 +18,7 @@ const INJECT_DIR = path.join(__dirname, '..', 'app', 'inject');
 const log = console;
 
 describe('Application launch', () => {
-  jest.setTimeout(10000);
+  jest.setTimeout(20000);
 
   let app: ElectronApplication;
   let appClosed = true;
@@ -134,7 +134,7 @@ describe('Application launch', () => {
     const alertMsg = 'hello world from inject';
     createInject(
       'inject.js',
-      `setTimeout(() => {alert("${alertMsg}"); }, 2000);`, // Buy ourselves 2 seconds to get the dialog handler setup
+      `setTimeout(() => {alert("${alertMsg}"); }, 5000);`, // Buy ourselves 5 seconds to get the dialog handler setup
     );
     const mainWindow = (await spawnApp()) as Page;
     const [dialogPromise] = (await once(
@@ -310,8 +310,8 @@ describe('Application launch', () => {
     })) as Page;
     await mainWindow.waitForLoadState('load');
 
-    // Give the app a second to open the login window
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // Give the app a few seconds to open the login window
+    await new Promise((resolve) => setTimeout(resolve, 5000));
 
     const appWindows = app.windows();
 
@@ -360,6 +360,9 @@ function createInject(filename: string, contents: string): void {
 }
 
 function nukeInjects(): void {
+  if (!fs.existsSync(INJECT_DIR)) {
+    return;
+  }
   const injected = fs
     .readdirSync(INJECT_DIR)
     .filter((x) => x !== '_placeholder');
