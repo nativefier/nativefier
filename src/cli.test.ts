@@ -51,22 +51,22 @@ describe('initArgs + parseArgs', () => {
   test('upgrade arg', () => {
     const args = parseArgs(initArgs(['--upgrade', 'pathToUpgrade']));
     expect(args.upgrade).toBe('pathToUpgrade');
-    expect(args.targetUrl).toBe('');
+    expect(args.targetUrl).toBeUndefined();
   });
 
   test('upgrade arg with out dir', () => {
     const args = parseArgs(initArgs(['tmp', '--upgrade', 'pathToUpgrade']));
     expect(args.upgrade).toBe('pathToUpgrade');
     expect(args.out).toBe('tmp');
-    expect(args.targetUrl).toBe('');
+    expect(args.targetUrl).toBeUndefined();
   });
 
   test('upgrade arg with targetUrl', () => {
-    expect(() => {
+    expect(() =>
       parseArgs(
         initArgs(['https://www.google.com', '--upgrade', 'path/to/upgrade']),
-      );
-    }).toThrow();
+      ),
+    ).toThrow();
   });
 
   test('multi-inject', () => {
@@ -92,53 +92,55 @@ describe('initArgs + parseArgs', () => {
   });
 
   test.each([
-    { arg: 'app-copyright', shortArg: null, value: '(c) Nativefier' },
-    { arg: 'app-version', shortArg: null, value: '2.0.0' },
-    { arg: 'background-color', shortArg: null, value: '#FFAA88' },
-    { arg: 'basic-auth-username', shortArg: null, value: 'user' },
-    { arg: 'basic-auth-password', shortArg: null, value: 'p@ssw0rd' },
-    { arg: 'bookmarks-menu', shortArg: null, value: 'bookmarks.json' },
+    { arg: 'app-copyright', shortArg: '', value: '(c) Nativefier' },
+    { arg: 'app-version', shortArg: '', value: '2.0.0' },
+    { arg: 'background-color', shortArg: '', value: '#FFAA88' },
+    { arg: 'basic-auth-username', shortArg: '', value: 'user' },
+    { arg: 'basic-auth-password', shortArg: '', value: 'p@ssw0rd' },
+    { arg: 'bookmarks-menu', shortArg: '', value: 'bookmarks.json' },
     {
       arg: 'browserwindow-options',
-      shortArg: null,
+      shortArg: '',
       value: '{"test": 456}',
       isJsonString: true,
     },
-    { arg: 'build-version', shortArg: null, value: '3.0.0' },
+    { arg: 'build-version', shortArg: '', value: '3.0.0' },
     {
       arg: 'crash-reporter',
-      shortArg: null,
+      shortArg: '',
       value: 'https://crash-reporter.com',
     },
     { arg: 'electron-version', shortArg: 'e', value: '1.0.0' },
     {
       arg: 'file-download-options',
-      shortArg: null,
+      shortArg: '',
       value: '{"test": 789}',
       isJsonString: true,
     },
-    { arg: 'flash-path', shortArg: null, value: 'pathToFlash' },
-    { arg: 'global-shortcuts', shortArg: null, value: 'shortcuts.json' },
+    { arg: 'flash-path', shortArg: '', value: 'pathToFlash' },
+    { arg: 'global-shortcuts', shortArg: '', value: 'shortcuts.json' },
     { arg: 'icon', shortArg: 'i', value: 'icon.png' },
-    { arg: 'internal-urls', shortArg: null, value: '.*' },
-    { arg: 'lang', shortArg: null, value: 'fr' },
+    { arg: 'internal-urls', shortArg: '', value: '.*' },
+    { arg: 'lang', shortArg: '', value: 'fr' },
     { arg: 'name', shortArg: 'n', value: 'Google' },
     {
       arg: 'process-envs',
-      shortArg: null,
+      shortArg: '',
       value: '{"test": 123}',
       isJsonString: true,
     },
-    { arg: 'proxy-rules', shortArg: null, value: 'RULE: PROXY' },
+    { arg: 'proxy-rules', shortArg: '', value: 'RULE: PROXY' },
     { arg: 'user-agent', shortArg: 'u', value: 'FIREFOX' },
     {
       arg: 'win32metadata',
-      shortArg: null,
+      shortArg: '',
       value: '{"ProductName": "Google"}',
       isJsonString: true,
     },
   ])('test string arg %s', ({ arg, shortArg, value, isJsonString }) => {
-    const args = parseArgs(initArgs(['https://google.com', `--${arg}`, value]));
+    const args = parseArgs(
+      initArgs(['https://google.com', `--${arg}`, value]),
+    ) as Record<string, string>;
     if (!isJsonString) {
       expect(args[arg]).toBe(value);
     } else {
@@ -147,8 +149,8 @@ describe('initArgs + parseArgs', () => {
 
     if (shortArg) {
       const argsShort = parseArgs(
-        initArgs(['https://google.com', `-${shortArg as string}`, value]),
-      );
+        initArgs(['https://google.com', `-${shortArg}`, value]),
+      ) as Record<string, string>;
       if (!isJsonString) {
         expect(argsShort[arg]).toBe(value);
       } else {
@@ -162,12 +164,14 @@ describe('initArgs + parseArgs', () => {
     { arg: 'platform', shortArg: 'p', value: 'mac', badValue: 'os2' },
     {
       arg: 'title-bar-style',
-      shortArg: null,
+      shortArg: '',
       value: 'hidden',
       badValue: 'cool',
     },
   ])('limited choice arg %s', ({ arg, shortArg, value, badValue }) => {
-    const args = parseArgs(initArgs(['https://google.com', `--${arg}`, value]));
+    const args = parseArgs(
+      initArgs(['https://google.com', `--${arg}`, value]),
+    ) as Record<string, string>;
     expect(args[arg]).toBe(value);
 
     // Mock console.error to not pollute the log with the yargs help text
@@ -181,7 +185,7 @@ describe('initArgs + parseArgs', () => {
     if (shortArg) {
       const argsShort = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`, value]),
-      );
+      ) as Record<string, string>;
       expect(argsShort[arg]).toBe(value);
 
       initArgs(['https://google.com', `-${shortArg}`, badValue]);
@@ -192,64 +196,74 @@ describe('initArgs + parseArgs', () => {
   });
 
   test.each([
-    { arg: 'always-on-top', shortArg: null },
-    { arg: 'block-external-urls', shortArg: null },
-    { arg: 'bounce', shortArg: null },
-    { arg: 'clear-cache', shortArg: null },
+    { arg: 'always-on-top', shortArg: '' },
+    { arg: 'block-external-urls', shortArg: '' },
+    { arg: 'bounce', shortArg: '' },
+    { arg: 'clear-cache', shortArg: '' },
     { arg: 'conceal', shortArg: 'c' },
-    { arg: 'counter', shortArg: null },
-    { arg: 'darwin-dark-mode-support', shortArg: null },
-    { arg: 'disable-context-menu', shortArg: null },
-    { arg: 'disable-dev-tools', shortArg: null },
-    { arg: 'disable-gpu', shortArg: null },
-    { arg: 'disable-old-build-warning-yesiknowitisinsecure', shortArg: null },
-    { arg: 'enable-es3-apis', shortArg: null },
+    { arg: 'counter', shortArg: '' },
+    { arg: 'darwin-dark-mode-support', shortArg: '' },
+    { arg: 'disable-context-menu', shortArg: '' },
+    { arg: 'disable-dev-tools', shortArg: '' },
+    { arg: 'disable-gpu', shortArg: '' },
+    { arg: 'disable-old-build-warning-yesiknowitisinsecure', shortArg: '' },
+    { arg: 'enable-es3-apis', shortArg: '' },
     { arg: 'fast-quit', shortArg: 'f' },
-    { arg: 'flash', shortArg: null },
-    { arg: 'full-screen', shortArg: null },
-    { arg: 'hide-window-frame', shortArg: null },
-    { arg: 'honest', shortArg: null },
-    { arg: 'ignore-certificate', shortArg: null },
-    { arg: 'ignore-gpu-blacklist', shortArg: null },
-    { arg: 'insecure', shortArg: null },
-    { arg: 'maximize', shortArg: null },
-    { arg: 'portable', shortArg: null },
+    { arg: 'flash', shortArg: '' },
+    { arg: 'full-screen', shortArg: '' },
+    { arg: 'hide-window-frame', shortArg: '' },
+    { arg: 'honest', shortArg: '' },
+    { arg: 'ignore-certificate', shortArg: '' },
+    { arg: 'ignore-gpu-blacklist', shortArg: '' },
+    { arg: 'insecure', shortArg: '' },
+    { arg: 'maximize', shortArg: '' },
+    { arg: 'portable', shortArg: '' },
     { arg: 'show-menu-bar', shortArg: 'm' },
-    { arg: 'single-instance', shortArg: null },
-    { arg: 'tray', shortArg: null },
-    { arg: 'verbose', shortArg: null },
-    { arg: 'widevine', shortArg: null },
+    { arg: 'single-instance', shortArg: '' },
+    { arg: 'tray', shortArg: '' },
+    { arg: 'verbose', shortArg: '' },
+    { arg: 'widevine', shortArg: '' },
   ])('test boolean arg %s', ({ arg, shortArg }) => {
-    const defaultArgs = parseArgs(initArgs(['https://google.com']));
+    const defaultArgs = parseArgs(initArgs(['https://google.com'])) as Record<
+      string,
+      boolean
+    >;
     expect(defaultArgs[arg]).toBe(false);
 
-    const args = parseArgs(initArgs(['https://google.com', `--${arg}`]));
+    const args = parseArgs(
+      initArgs(['https://google.com', `--${arg}`]),
+    ) as Record<string, boolean>;
     expect(args[arg]).toBe(true);
     if (shortArg) {
       const argsShort = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`]),
-      );
+      ) as Record<string, boolean>;
       expect(argsShort[arg]).toBe(true);
     }
   });
 
-  test.each([{ arg: 'no-overwrite', shortArg: null }])(
+  test.each([{ arg: 'no-overwrite', shortArg: '' }])(
     'test inversible boolean arg %s',
     ({ arg, shortArg }) => {
       const inverse = arg.startsWith('no-') ? arg.substr(3) : `no-${arg}`;
 
-      const defaultArgs = parseArgs(initArgs(['https://google.com']));
+      const defaultArgs = parseArgs(initArgs(['https://google.com'])) as Record<
+        string,
+        boolean
+      >;
       expect(defaultArgs[arg]).toBe(false);
       expect(defaultArgs[inverse]).toBe(true);
 
-      const args = parseArgs(initArgs(['https://google.com', `--${arg}`]));
+      const args = parseArgs(
+        initArgs(['https://google.com', `--${arg}`]),
+      ) as Record<string, boolean>;
       expect(args[arg]).toBe(true);
       expect(args[inverse]).toBe(false);
 
       if (shortArg) {
         const argsShort = parseArgs(
-          initArgs(['https://google.com', `-${shortArg as string}`]),
-        );
+          initArgs(['https://google.com', `-${shortArg}`]),
+        ) as Record<string, boolean>;
         expect(argsShort[arg]).toBe(true);
         expect(argsShort[inverse]).toBe(true);
       }
@@ -257,35 +271,35 @@ describe('initArgs + parseArgs', () => {
   );
 
   test.each([
-    { arg: 'disk-cache-size', shortArg: null, value: 100 },
-    { arg: 'height', shortArg: null, value: 200 },
-    { arg: 'max-height', shortArg: null, value: 300 },
-    { arg: 'max-width', shortArg: null, value: 400 },
-    { arg: 'min-height', shortArg: null, value: 500 },
-    { arg: 'min-width', shortArg: null, value: 600 },
-    { arg: 'width', shortArg: null, value: 700 },
-    { arg: 'x', shortArg: null, value: 800 },
-    { arg: 'y', shortArg: null, value: 900 },
+    { arg: 'disk-cache-size', shortArg: '', value: 100 },
+    { arg: 'height', shortArg: '', value: 200 },
+    { arg: 'max-height', shortArg: '', value: 300 },
+    { arg: 'max-width', shortArg: '', value: 400 },
+    { arg: 'min-height', shortArg: '', value: 500 },
+    { arg: 'min-width', shortArg: '', value: 600 },
+    { arg: 'width', shortArg: '', value: 700 },
+    { arg: 'x', shortArg: '', value: 800 },
+    { arg: 'y', shortArg: '', value: 900 },
   ])('test numeric arg %s', ({ arg, shortArg, value }) => {
     const args = parseArgs(
       initArgs(['https://google.com', `--${arg}`, `${value}`]),
-    );
+    ) as Record<string, number>;
     expect(args[arg]).toBe(value);
 
     const badArgs = parseArgs(
       initArgs(['https://google.com', `--${arg}`, 'abcd']),
-    );
+    ) as Record<string, number>;
     expect(badArgs[arg]).toBeNaN();
 
     if (shortArg) {
       const shortArgs = parseArgs(
-        initArgs(['https://google.com', `-${shortArg as string}`, `${value}`]),
-      );
+        initArgs(['https://google.com', `-${shortArg}`, `${value}`]),
+      ) as Record<string, number>;
       expect(shortArgs[arg]).toBe(value);
 
       const badShortArgs = parseArgs(
-        initArgs(['https://google.com', `-${shortArg as string}`, 'abcd']),
-      );
+        initArgs(['https://google.com', `-${shortArg}`, 'abcd']),
+      ) as Record<string, number>;
       expect(badShortArgs[arg]).toBeNaN();
     }
   });

@@ -1,4 +1,10 @@
-import { dialog, BrowserWindow, IpcMainEvent, WebContents } from 'electron';
+import {
+  dialog,
+  BrowserWindow,
+  IpcMainEvent,
+  NewWindowWebContentsEvent,
+  WebContents,
+} from 'electron';
 import log from 'loglevel';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
@@ -14,7 +20,7 @@ import {
 export function onNewWindow(
   options,
   setupWindow: (...args) => void,
-  event: Event & { newGuest?: any },
+  event: NewWindowWebContentsEvent,
   urlToGo: string,
   frameName: string,
   disposition:
@@ -33,7 +39,7 @@ export function onNewWindow(
     disposition,
     parent,
   });
-  const preventDefault = (newGuest: any): void => {
+  const preventDefault = (newGuest: BrowserWindow): void => {
     event.preventDefault();
     if (newGuest) {
       event.newGuest = newGuest;
@@ -96,7 +102,7 @@ export function onNewWindowHelper(
       }
     }
     return Promise.resolve(undefined);
-  } catch (err) {
+  } catch (err: unknown) {
     return Promise.reject(err);
   }
 }
@@ -151,29 +157,9 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
 
   injectCSS(window);
 
-  // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
-  // We can't quite cut over to that yet for a few reasons:
-  // 1. Our version of Electron does not yet support a parameter to
-  //    setWindowOpenHandler that contains `disposition', which we need.
-  //    See https://github.com/electron/electron/issues/28380
-  // 2. setWindowOpenHandler doesn't support newGuest as well
-  // Though at this point, 'new-window' bugs seem to be coming up and downstream
-  // users are being pointed to use setWindowOpenHandler.
-  // E.g., https://github.com/electron/electron/issues/28374
-
-  window.webContents.on('new-window', (event, url, frameName, disposition) => {
-    onNewWindow(
-      options,
-      setupNativefierWindow,
-      event,
-      url,
-      frameName,
-      disposition,
-    ).catch((err) => log.error('onNewWindow ERROR', err));
-  });
   window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) => {
     onWillNavigate(options, event, url).catch((err) => {
-      log.error(' window.webContents.on.will-navigate ERROR', err);
+      log.error('window.webContents.on.will-navigate ERROR', err);
       event.preventDefault();
     });
   });
@@ -181,14 +167,14 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
 
   sendParamsOnDidFinishLoad(options, window);
 
-  // @ts-ignore new-tab isn't in the type definition, but it does exist
-  window.on('new-tab', () => {
+  // @ts-expect-error new-tab isn't in the type definition, but it does exist
+  window.on('new-tab', () =>
     createNewTab(
       options,
       setupNativefierWindow,
       options.targetUrl,
       true,
       window,
-    ).catch((err) => log.error('new-tab ERROR', err));
-  });
+    ),
+  );
 }

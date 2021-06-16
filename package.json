@@ -1,6 +1,6 @@
 {
   "name": "nativefier",
-  "version": "43.1.3",
+  "version": "44.0.4",
   "description": "Wrap web apps natively",
   "license": "MIT",
   "author": "Goh Jia Hao",
@@ -34,20 +34,20 @@
     "build-app": "cd app && webpack",
     "build-app-static": "ncp app/src/static/ app/lib/static/ && ncp app/dist/preload.js app/lib/preload.js && ncp app/dist/preload.js.map app/lib/preload.js.map",
     "build": "npm run clean && tsc --build . app && npm run build-app && npm run build-app-static",
-    "build:watch": "tsc --build . app --watch",
+    "build:watch": "npm run clean && tsc --build . app --watch",
     "changelog": "./.github/generate-changelog",
     "ci": "npm run lint && npm test",
-    "clean": "rimraf lib/ app/lib/ app/dist/",
-    "clean:full": "rimraf lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
+    "clean": "rimraf coverage/ lib/ app/lib/ app/dist/",
+    "clean:full": "rimraf coverage/ lib/ app/lib/ app/dist/ app/node_modules/ node_modules/",
     "lint:fix": "eslint . --ext .ts --fix",
-    "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
+    "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts'",
     "lint": "eslint . --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
     "prepare": "cd app && npm install && cd .. && npm run build",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
     "test:unit": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest --testRegex '[-.]test\\.js$'",
     "watch": "npx concurrently \"npm:*:watch\""
@@ -55,7 +55,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "electron-packager": "^15.2.0",
-    "gitcloud": "^0.2.0",
+    "gitcloud": "^0.2.3",
     "hasbin": "^1.2.3",
     "loglevel": "^1.7.1",
     "ncp": "^2.0.0",
@@ -66,23 +66,30 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.20",
+    "@types/electron-packager": "^15.0.1",
+    "@types/hasbin": "^1.2.0",
+    "@types/jest": "^26.0.23",
+    "@types/loglevel": "^1.6.3",
     "@types/ncp": "^2.0.4",
-    "@types/node": "^12.12.6",
+    "@types/node": "^12.20.15",
     "@types/page-icon": "^0.3.3",
     "@types/tmp": "^0.2.0",
-    "@typescript-eslint/eslint-plugin": "^4.17.0",
-    "@typescript-eslint/parser": "^4.17.0",
-    "eslint": "^7.10.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "jest": "^26.6.3",
-    "prettier": "^2.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "eslint": "^7.28.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^27.0.4",
+    "prettier": "^2.3.1",
     "rimraf": "^3.0.2",
-    "ts-loader": "^9.2.1",
-    "typescript": "^4.2.3",
-    "webpack": "^5.24.4",
-    "webpack-cli": "^4.5.0"
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "jest_COMMENTS": {
+    "testPathIgnorePatterns": "See https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring . We set it to 1. ignore coverage for deps, and 2. be sure we test the compiled JS, which is in `lib`, not `src` or `dist`",
+    "watchPathIgnorePatterns": "See https://jestjs.io/docs/configuration#watchpathignorepatterns-arraystring . We set it for `jest --watch` (a.k.a. `npm run test:watch`) to trigger only after `tsc --watch` (a.k.a. `npm run build:watch`) completes its incremental compilation. Else, jest will pick up immediately on changes in `src` when TSC is barely running, hence testing not-recompiled-yet code and being super confusing, as 1. your changes won't be taken during this first run, and 2. the *next* run (e.g. after a second 'Save' in your editor) will actually have the new code :D"
   },
   "jest": {
     "collectCoverage": true,
@@ -94,9 +101,18 @@
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "/node_modules/",
+      "<rootDir>/src.*",
+      "<rootDir>/node_modules.*",
       "<rootDir>/app/src.*",
-      "<rootDir>/src.*"
+      "<rootDir>/app/lib.*",
+      "<rootDir>/app/node_modules.*"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/src.*",
+      "<rootDir>/tsconfig.json",
+      "<rootDir>/app/src.*",
+      "<rootDir>/app/lib.*",
+      "<rootDir>/app/tsconfig.json"
     ]
   },
   "prettier": {

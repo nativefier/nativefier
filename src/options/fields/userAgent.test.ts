@@ -12,7 +12,7 @@ test('when a userAgent parameter is passed', async () => {
     packager: {},
     nativefier: { userAgent: 'valid user agent' },
   };
-  await expect(userAgent(params)).resolves.toBeNull();
+  await expect(userAgent(params)).resolves.toBeUndefined();
 });
 
 test('no userAgent parameter is passed', async () => {
@@ -20,7 +20,7 @@ test('no userAgent parameter is passed', async () => {
     packager: { platform: 'mac' },
     nativefier: {},
   };
-  await expect(userAgent(params)).resolves.toBeNull();
+  await expect(userAgent(params)).resolves.toBeUndefined();
 });
 
 test('edge userAgent parameter is passed', async () => {

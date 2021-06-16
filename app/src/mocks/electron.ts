@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-extraneous-class */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EventEmitter } from 'events';
 
@@ -21,12 +22,12 @@ import { EventEmitter } from 'events';
 class MockBrowserWindow extends EventEmitter {
   webContents: MockWebContents;
 
-  constructor(options?: any) {
+  constructor(options?: unknown) {
     super(options);
     this.webContents = new MockWebContents();
   }
 
-  addTabbedWindow(tab: MockBrowserWindow) {
+  addTabbedWindow(tab: MockBrowserWindow): void {
     return;
   }
 
@@ -42,22 +43,42 @@ class MockBrowserWindow extends EventEmitter {
     return window ?? new MockBrowserWindow();
   }
 
-  loadURL(url: string, options?: any): Promise<void> {
+  isSimpleFullScreen(): boolean {
+    return undefined;
+  }
+
+  isFullScreen(): boolean {
+    return undefined;
+  }
+
+  isFullScreenable(): boolean {
+    return undefined;
+  }
+
+  loadURL(url: string, options?: unknown): Promise<void> {
     return Promise.resolve(undefined);
+  }
+
+  setFullScreen(flag: boolean): void {
+    return;
+  }
+
+  setSimpleFullScreen(flag: boolean): void {
+    return;
   }
 }
 
 class MockDialog {
   static showMessageBox(
     browserWindow: MockBrowserWindow,
-    options: any,
+    options: unknown,
   ): Promise<number> {
     return Promise.resolve(undefined);
   }
 
   static showMessageBoxSync(
     browserWindow: MockBrowserWindow,
-    options: any,
+    options: unknown,
   ): number {
     return undefined;
   }
@@ -92,7 +113,7 @@ class MockWebContents extends EventEmitter {
     return undefined;
   }
 
-  insertCSS(css: string, options?: any): Promise<string> {
+  insertCSS(css: string, options?: unknown): Promise<string> {
     return Promise.resolve(undefined);
   }
 }
@@ -105,22 +126,24 @@ class MockWebRequest {
   }
 
   onHeadersReceived(
-    filter: any,
+    filter: unknown,
     listener:
       | ((
-          details: any,
-          callback: (headersReceivedResponse: any) => void,
+          details: unknown,
+          callback: (headersReceivedResponse: unknown) => void,
         ) => void)
       | null,
   ): void {
     this.emitter.addListener(
       'onHeadersReceived',
-      (details: any, callback: (headersReceivedResponse: any) => void) =>
-        listener(details, callback),
+      (
+        details: unknown,
+        callback: (headersReceivedResponse: unknown) => void,
+      ) => listener(details, callback),
     );
   }
 
-  send(event: string, ...args: any[]): void {
+  send(event: string, ...args: unknown[]): void {
     this.emitter.emit(event, ...args);
   }
 }

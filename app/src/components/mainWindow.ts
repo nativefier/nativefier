@@ -10,21 +10,12 @@ import {
   getCounterValue,
   isOSX,
   nativeTabsSupported,
-  openExternal,
 } from '../helpers/helpers';
-import { setupNativefierWindow } from '../helpers/windowEvents';
+import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
-  clearAppData,
   clearCache,
-  getCurrentURL,
   getDefaultWindowOptions,
-  goBack,
-  goForward,
-  goToURL,
   hideWindow,
-  zoomIn,
-  zoomOut,
-  zoomReset,
 } from '../helpers/windowHelpers';
 import { initContextMenu } from './contextMenu';
 import { createMenu } from './menu';
@@ -34,25 +25,23 @@ export const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 type SessionInteractionRequest = {
   id?: string;
   func?: string;
-  funcArgs?: any[];
+  funcArgs?: unknown[];
   property?: string;
-  propertyValue?: any;
+  propertyValue?: unknown;
 };
 
 type SessionInteractionResult = {
   id?: string;
-  value?: any;
+  value?: unknown;
   error?: Error;
 };
 
 /**
  * @param {{}} nativefierOptions AppArgs from nativefier.json
- * @param {function} onAppQuit
  * @param {function} setDockBadge
  */
 export async function createMainWindow(
   nativefierOptions,
-  onAppQuit: () => void,
   setDockBadge: (value: number | string, bounce?: boolean) => void,
 ): Promise<BrowserWindow> {
   const options = { ...nativefierOptions };
@@ -74,8 +63,7 @@ export async function createMainWindow(
     y: options.y,
     autoHideMenuBar: !options.showMenuBar,
     icon: getAppIcon(),
-    // set to undefined and not false because explicitly setting to false will disable full screen
-    fullscreen: options.fullScreen ?? undefined,
+    fullscreen: options.fullScreen,
     // Whether the window should always stay on top of other windows. Default is false.
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle,
@@ -96,10 +84,35 @@ export async function createMainWindow(
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
   }
-
-  createMainMenu(options, mainWindow, onAppQuit);
+  createMenu(options, mainWindow);
   createContextMenu(options, mainWindow);
   setupNativefierWindow(options, mainWindow);
+
+  // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
+  // We can't quite cut over to that yet for a few reasons:
+  // 1. Our version of Electron does not yet support a parameter to
+  //    setWindowOpenHandler that contains `disposition', which we need.
+  //    See https://github.com/electron/electron/issues/28380
+  // 2. setWindowOpenHandler doesn't support newGuest as well
+  // Though at this point, 'new-window' bugs seem to be coming up and downstream
+  // users are being pointed to use setWindowOpenHandler.
+  // E.g., https://github.com/electron/electron/issues/28374
+
+  // Note it is important to add this handler only to the *main* window,
+  // else we run into weird behavior like opening tabs twice
+  mainWindow.webContents.on(
+    'new-window',
+    (event, url, frameName, disposition) => {
+      onNewWindow(
+        options,
+        setupNativefierWindow,
+        event,
+        url,
+        frameName,
+        disposition,
+      ).catch((err) => log.error('onNewWindow ERROR', err));
+    },
+  );
 
   if (options.counter) {
     setupCounter(options, mainWindow, setDockBadge);
@@ -131,20 +144,17 @@ function createContextMenu(options, window: BrowserWindow): void {
   }
 }
 
-export function saveAppArgs(newAppArgs: any) {
+export function saveAppArgs(newAppArgs: any): void {
   try {
     fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs));
-  } catch (err) {
-    // eslint-disable-next-line no-console
+  } catch (err: unknown) {
     log.warn(
-      `WARNING: Ignored nativefier.json rewrital (${(
-        err as Error
-      ).toString()})`,
+      `WARNING: Ignored nativefier.json rewrital (${(err as Error).message})`,
     );
   }
 }
 
-function setupCloseEvent(options, window: BrowserWindow) {
+function setupCloseEvent(options, window: BrowserWindow): void {
   window.on('close', (event: IpcMainEvent) => {
     log.debug('mainWindow.close', event);
     if (window.isFullScreen()) {
@@ -168,7 +178,7 @@ function setupCounter(
   options,
   window: BrowserWindow,
   setDockBadge: (value: number | string, bounce?: boolean) => void,
-) {
+): void {
   window.on('page-title-updated', (event, title) => {
     log.debug('mainWindow.page-title-updated', { event, title });
     const counterValue = getCounterValue(title);
@@ -178,30 +188,6 @@ function setupCounter(
       setDockBadge('');
     }
   });
-}
-
-function createMainMenu(
-  options: any,
-  window: BrowserWindow,
-  onAppQuit: () => void,
-) {
-  const menuOptions = {
-    nativefierVersion: options.nativefierVersion,
-    appQuit: onAppQuit,
-    clearAppData: () => clearAppData(window),
-    disableDevTools: options.disableDevTools,
-    getCurrentURL,
-    goBack,
-    goForward,
-    goToURL,
-    openExternal,
-    zoomBuildTimeValue: options.zoom,
-    zoomIn,
-    zoomOut,
-    zoomReset,
-  };
-
-  createMenu(menuOptions);
 }
 
 function setupNotificationBadge(
@@ -253,7 +239,7 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
             typeof result.value['then'] === 'function'
           ) {
             // This is a promise. We'll resolve it here otherwise it will blow up trying to serialize it in the reply
-            result.value
+            (result.value as Promise<unknown>)
               .then((trueResultValue) => {
                 result.value = trueResultValue;
                 log.debug('ipcMain.session-interaction:result', result);
@@ -275,7 +261,7 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
           result.value = window.webContents.session[request.property];
         } else {
           // Why even send the event if you're going to do this? You're just wasting time! ;)
-          throw Error(
+          throw new Error(
             'Received neither a func nor a property in the request. Unable to process.',
           );
         }
@@ -285,9 +271,9 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
           log.debug('session-interaction:result', result);
           event.reply('session-interaction-reply', result);
         }
-      } catch (error) {
-        log.error('session-interaction:error', error, event, request);
-        result.error = error;
+      } catch (err: unknown) {
+        log.error('session-interaction:error', err, event, request);
+        result.error = err as Error;
         result.value = undefined; // Clear out the value in case serializing the value is what got us into this mess in the first place
         event.reply('session-interaction-reply', result);
       }

@@ -3,10 +3,11 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { NativefierOptions } from '../../options/model';
+import { NativefierOptions, RawOptions } from '../../options/model';
 import { dirExists, fileExists } from '../fsHelpers';
 import { extractBoolean, extractString } from './plistInfoXMLHelpers';
 import { getOptionsFromExecutable } from './executableHelpers';
+import { parseJson } from '../../utils/parseUtils';
 
 export type UpgradeAppInfo = {
   appResourcesDir: string;
@@ -79,7 +80,9 @@ function getInfoPListOptions(
       'NSHumanReadableCopyright',
     );
     log.debug(
-      `Extracted app copyright from Info.plist: ${newOptions.appCopyright}`,
+      `Extracted app copyright from Info.plist: ${
+        newOptions.appCopyright as string
+      }`,
     );
   }
 
@@ -96,7 +99,9 @@ function getInfoPListOptions(
         ? undefined
         : newOptions.darwinDarkModeSupport === false),
       log.debug(
-        `Extracted app version from Info.plist: ${newOptions.appVersion}`,
+        `Extracted app version from Info.plist: ${
+          newOptions.appVersion as string
+        }`,
       );
   }
 
@@ -152,10 +157,18 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
     return null;
   }
 
-  log.debug(`Loading ${path.join(appResourcesDir, 'nativefier.json')}`);
-  const options: NativefierOptions = JSON.parse(
-    fs.readFileSync(path.join(appResourcesDir, 'nativefier.json'), 'utf8'),
+  const nativefierJSONPath = path.join(appResourcesDir, 'nativefier.json');
+
+  log.debug(`Loading ${nativefierJSONPath}`);
+  const options = parseJson<NativefierOptions>(
+    fs.readFileSync(nativefierJSONPath, 'utf8'),
   );
+
+  if (!options) {
+    throw new Error(
+      `Could not read Nativefier options from ${nativefierJSONPath}`,
+    );
+  }
 
   options.electronVersion = undefined;
 
@@ -173,9 +186,9 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
 }
 
 export function useOldAppOptions(
-  rawOptions: NativefierOptions,
+  rawOptions: RawOptions,
   oldApp: UpgradeAppInfo,
-): NativefierOptions {
+): RawOptions {
   if (rawOptions.targetUrl !== undefined && dirExists(rawOptions.targetUrl)) {
     // You got your ouput dir in my targetUrl!
     rawOptions.out = rawOptions.targetUrl;

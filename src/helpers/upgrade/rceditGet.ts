@@ -8,7 +8,7 @@ import { spawnSync } from 'child_process';
 export function getVersionString(
   executablePath: string,
   versionString: string,
-): string {
+): string | undefined {
   let rcedit = path.resolve(
     __dirname,
     '..',

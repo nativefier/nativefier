@@ -10,12 +10,7 @@ import {
 
 import log from 'loglevel';
 import path from 'path';
-import {
-  getCSSToInject,
-  isOSX,
-  nativeTabsSupported,
-  shouldInjectCSS,
-} from './helpers';
+import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -88,7 +83,7 @@ export function createNewTab(
   url: string,
   foreground: boolean,
   parent?: BrowserWindow,
-): Promise<BrowserWindow> {
+): BrowserWindow {
   log.debug('createNewTab', { url, foreground, parent });
   return withFocusedWindow((focusedWindow) => {
     const newTab = createNewWindow(options, setupWindow, url, parent);
@@ -137,16 +132,16 @@ export function getDefaultWindowOptions(
     ...(options.browserwindowOptions?.webPreferences ?? {}),
   };
 
-  const defaultOptions = {
-    // Convert dashes to spaces because on linux the app name is joined with dashes
-    title: options.name,
+  const defaultOptions: BrowserWindowConstructorOptions = {
+    fullscreenable: true,
     tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
+    title: options.name,
     webPreferences: {
       javascript: true,
-      plugins: true,
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
-      webSecurity: !options.insecure,
       preload: path.join(__dirname, 'preload.js'),
+      plugins: true,
+      webSecurity: !options.insecure,
       zoomFactor: options.zoom,
       ...webPreferences,
     },
@@ -198,17 +193,24 @@ export function hideWindow(
 }
 
 export function injectCSS(browserWindow: BrowserWindow): void {
-  if (!shouldInjectCSS()) {
+  const cssToInject = getCSSToInject();
+
+  if (!cssToInject) {
     return;
   }
-
-  const cssToInject = getCSSToInject();
 
   browserWindow.webContents.on('did-navigate', () => {
     log.debug(
       'browserWindow.webContents.did-navigate',
       browserWindow.webContents.getURL(),
     );
+
+    browserWindow.webContents
+      .insertCSS(cssToInject)
+      .catch((err: unknown) =>
+        log.error('browserWindow.webContents.insertCSS', err),
+      );
+
     // We must inject css early enough; so onHeadersReceived is a good place.
     // Will run multiple times, see `did-finish-load` event on the window
     // that unsets this handler.
@@ -218,31 +220,68 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         details: OnHeadersReceivedListenerDetails,
         callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
       ) => {
-        log.debug(
-          'browserWindow.webContents.session.webRequest.onHeadersReceived',
-          { details, callback },
-        );
-        if (details.webContents) {
-          details.webContents
-            .insertCSS(cssToInject)
-            .catch((err) => {
-              log.error('webContents.insertCSS ERROR', err);
-            })
-            .finally(() =>
-              callback({
-                cancel: false,
-                responseHeaders: details.responseHeaders,
-              }),
-            );
-        } else {
-          callback({
-            cancel: false,
-            responseHeaders: details.responseHeaders,
+        const contentType =
+          'content-type' in details.responseHeaders
+            ? details.responseHeaders['content-type'][0]
+            : undefined;
+
+        log.debug('onHeadersReceived', {
+          contentType,
+          resourceType: details.resourceType,
+          url: details.url,
+        });
+
+        injectCSSIntoResponse(details, contentType, cssToInject)
+          .then((responseHeaders) => {
+            callback({
+              cancel: false,
+              responseHeaders,
+            });
+          })
+          .catch((err) => {
+            log.error('injectCSSIntoResponse ERROR', err);
+            callback({
+              cancel: false,
+              responseHeaders: details.responseHeaders,
+            });
           });
-        }
       },
     );
   });
+}
+
+async function injectCSSIntoResponse(
+  details: OnHeadersReceivedListenerDetails,
+  contentType: string,
+  cssToInject: string,
+): Promise<Record<string, string[]>> {
+  // We go with a denylist rather than a whitelist (e.g. only text/html)
+  // to avoid "whoops I didn't think this should have been CSS-injected" cases
+  const nonInjectableContentTypes = [
+    /application\/.*/,
+    /font\/.*/,
+    /image\/.*/,
+  ];
+  const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
+
+  if (
+    nonInjectableContentTypes.filter((x) => x.exec(contentType)?.length > 0)
+      ?.length > 0 ||
+    nonInjectableResourceTypes.includes(details.resourceType) ||
+    !details.webContents
+  ) {
+    log.debug(
+      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
+    );
+    return details.responseHeaders;
+  }
+
+  log.debug(
+    `Injecting CSS for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
+  );
+  await details.webContents.insertCSS(cssToInject);
+
+  return details.responseHeaders;
 }
 
 export function sendParamsOnDidFinishLoad(
@@ -275,7 +314,7 @@ export function setProxyRules(window: BrowserWindow, proxyRules): void {
     .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
-export function withFocusedWindow(block: (window: BrowserWindow) => any): any {
+export function withFocusedWindow<T>(block: (window: BrowserWindow) => T): T {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (focusedWindow) {
     return block(focusedWindow);

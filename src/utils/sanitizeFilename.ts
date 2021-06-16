@@ -1,26 +1,24 @@
 import * as log from 'loglevel';
+import sanitize = require('sanitize-filename');
 
 import { DEFAULT_APP_NAME } from '../constants';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const sanitize = require('sanitize-filename');
-
 export function sanitizeFilename(
-  platform: string,
+  platform: string | undefined,
   filenameToSanitize: string,
 ): string {
   let result: string = sanitize(filenameToSanitize);
 
-  // remove all non ascii / file-problematic chars, or use default app name
-  /* eslint-disable no-control-regex */
-  result =
-    result.replace(/[^\x00-\x7F]/g, '').replace(/[/,;.\\]/g, '') ||
-    DEFAULT_APP_NAME;
-  /* eslint-enable no-control-regex */
-
   // spaces will cause problems with Ubuntu when pinned to the dock
   if (platform === 'linux') {
     result = result.replace(/\s/g, '');
+  }
+
+  if (!result || result === '') {
+    result = DEFAULT_APP_NAME;
+    log.warn(
+      'Falling back to default app name as result of filename sanitization. Use flag "--name" to set a name',
+    );
   }
   log.debug(`Sanitized filename for ${filenameToSanitize} : ${result}`);
   return result;
