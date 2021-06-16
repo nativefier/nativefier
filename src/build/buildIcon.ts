@@ -45,8 +45,8 @@ export function convertIconIfNecessary(options: AppOptions): void {
       const iconPath = convertToIco(options.packager.icon);
       options.packager.icon = iconPath;
       return;
-    } catch (error) {
-      log.warn('Failed to convert icon to .ico, skipping.', error);
+    } catch (err: unknown) {
+      log.warn('Failed to convert icon to .ico, skipping.', err);
       return;
     }
   }
@@ -63,8 +63,8 @@ export function convertIconIfNecessary(options: AppOptions): void {
       const iconPath = convertToPng(options.packager.icon);
       options.packager.icon = iconPath;
       return;
-    } catch (error) {
-      log.warn('Failed to convert icon to .png, skipping.', error);
+    } catch (err: unknown) {
+      log.warn('Failed to convert icon to .png, skipping.', err);
       return;
     }
   }
@@ -90,8 +90,8 @@ export function convertIconIfNecessary(options: AppOptions): void {
     if (options.nativefier.tray) {
       convertToTrayIcon(options.packager.icon);
     }
-  } catch (error) {
-    log.warn('Failed to convert icon to .icns, skipping.', error);
+  } catch (err: unknown) {
+    log.warn('Failed to convert icon to .icns, skipping.', err);
     options.packager.icon = undefined;
   }
 }

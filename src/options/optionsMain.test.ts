@@ -1,9 +1,71 @@
 import { getOptions, normalizePlatform } from './optionsMain';
 import * as asyncConfig from './asyncConfig';
 import { inferPlatform } from '../infer/inferOs';
+import { AppOptions } from './model';
 
-const mockedAsyncConfig = { some: 'options' };
 let asyncConfigMock: jest.SpyInstance;
+const mockedAsyncConfig: AppOptions = {
+  nativefier: {
+    accessibilityPrompt: false,
+    alwaysOnTop: false,
+    backgroundColor: undefined,
+    basicAuthPassword: undefined,
+    basicAuthUsername: undefined,
+    blockExternalUrls: false,
+    bookmarksMenu: undefined,
+    bounce: false,
+    browserwindowOptions: undefined,
+    clearCache: false,
+    counter: false,
+    crashReporter: undefined,
+    disableContextMenu: false,
+    disableDevTools: false,
+    disableGpu: false,
+    disableOldBuildWarning: false,
+    diskCacheSize: undefined,
+    enableEs3Apis: false,
+    fastQuit: true,
+    fileDownloadOptions: undefined,
+    flashPluginDir: undefined,
+    fullScreen: false,
+    globalShortcuts: undefined,
+    height: undefined,
+    hideWindowFrame: false,
+    ignoreCertificate: false,
+    ignoreGpuBlacklist: false,
+    inject: [],
+    insecure: false,
+    internalUrls: undefined,
+    maximize: false,
+    maxHeight: undefined,
+    minWidth: undefined,
+    minHeight: undefined,
+    maxWidth: undefined,
+    nativefierVersion: '1.0.0',
+    processEnvs: undefined,
+    proxyRules: undefined,
+    showMenuBar: false,
+    singleInstance: false,
+    titleBarStyle: undefined,
+    tray: false,
+    userAgent: undefined,
+    userAgentHonest: false,
+    verbose: false,
+    versionString: '1.0.0',
+    width: undefined,
+    widevine: false,
+    x: undefined,
+    y: undefined,
+    zoom: 1,
+  },
+  packager: {
+    dir: '',
+    platform: process.platform,
+    portable: false,
+    targetUrl: '',
+    upgrade: false,
+  },
+};
 
 beforeAll(() => {
   asyncConfigMock = jest
@@ -18,8 +80,8 @@ test('it should call the async config', async () => {
   const result = await getOptions(params);
   expect(asyncConfigMock).toHaveBeenCalledWith(
     expect.objectContaining({
-      packager: expect.anything(),
-      nativefier: expect.anything(),
+      packager: expect.anything() as AppOptions['packager'],
+      nativefier: expect.anything() as AppOptions['nativefier'],
     }),
   );
   expect(result.packager.targetUrl).toEqual(params.targetUrl);
@@ -34,7 +96,7 @@ test('it should set the accessibility prompt option to true by default', async (
     expect.objectContaining({
       nativefier: expect.objectContaining({
         accessibilityPrompt: true,
-      }),
+      }) as AppOptions['nativefier'],
     }),
   );
   expect(result.nativefier.accessibilityPrompt).toEqual(true);

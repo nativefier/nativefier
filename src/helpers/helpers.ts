@@ -17,10 +17,16 @@ tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception o
 const now = new Date();
 const TMP_TIME = `${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
 
-type DownloadResult = {
+export type DownloadResult = {
   data: Buffer;
   ext: string;
 };
+
+type ProcessEnvs = Record<string, unknown>;
+
+export function hasWine(): boolean {
+  return hasbin.sync('wine');
+}
 
 export function isOSX(): boolean {
   return os.platform() === 'darwin';
@@ -57,7 +63,7 @@ export async function copyFileOrDir(
   dest: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    ncp(sourceFileOrDir, dest, (error: any) => {
+    ncp(sourceFileOrDir, dest, (error: Error[] | null): void => {
       if (error) {
         reject(error);
       }
@@ -66,15 +72,17 @@ export async function copyFileOrDir(
   });
 }
 
-export function downloadFile(fileUrl: string): Promise<DownloadResult> {
+export function downloadFile(
+  fileUrl: string,
+): Promise<DownloadResult | undefined> {
   log.debug(`Downloading ${fileUrl}`);
   return axios
-    .get(fileUrl, {
+    .get<Buffer>(fileUrl, {
       responseType: 'arraybuffer',
     })
     .then((response) => {
       if (!response.data) {
-        return null;
+        return undefined;
       }
       return {
         data: response.data,
@@ -97,7 +105,7 @@ export function getAllowedIconFormats(platform: string): string[] {
   const icnsToPng = false;
   const icnsToIco = false;
 
-  const formats = [];
+  const formats: string[] = [];
 
   // Shell scripting is not supported on windows, temporary override
   if (isWindows()) {
@@ -175,11 +183,11 @@ export function generateRandomSuffix(length = 6): string {
   return hash.digest('hex').substring(0, length);
 }
 
-export function getProcessEnvs(val: string): any {
+export function getProcessEnvs(val: string): ProcessEnvs | undefined {
   if (!val) {
-    return {};
+    return undefined;
   }
-  return parseJson(val);
+  return parseJson<ProcessEnvs>(val);
 }
 
 export function checkInternet(): void {

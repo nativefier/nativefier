@@ -34,9 +34,18 @@ export const INJECT_DIR = path.join(__dirname, '..', 'inject');
  * @param createCallback
  * @param clickCallback
  */
-function setNotificationCallback(createCallback, clickCallback) {
+function setNotificationCallback(
+  createCallback: {
+    (title: string, opt: NotificationOptions): void;
+    (...args: unknown[]): void;
+  },
+  clickCallback: { (): void; (this: Notification, ev: Event): unknown },
+): void {
   const OldNotify = window.Notification;
-  const newNotify = function (title, opt) {
+  const newNotify = function (
+    title: string,
+    opt: NotificationOptions,
+  ): Notification {
     createCallback(title, opt);
     const instance = new OldNotify(title, opt);
     instance.addEventListener('click', clickCallback);
@@ -47,11 +56,11 @@ function setNotificationCallback(createCallback, clickCallback) {
     get: () => OldNotify.permission,
   });
 
-  // @ts-ignore
+  // @ts-expect-error
   window.Notification = newNotify;
 }
 
-function injectScripts() {
+function injectScripts(): void {
   const needToInject = fs.existsSync(INJECT_DIR);
   if (!needToInject) {
     return;
@@ -68,15 +77,18 @@ function injectScripts() {
       log.debug('Injecting JS file', jsFile);
       require(jsFile);
     }
-  } catch (error) {
-    log.error('Error encoutered injecting JS files', error);
+  } catch (err: unknown) {
+    log.error('Error encoutered injecting JS files', err);
   }
 }
 
-function notifyNotificationCreate(title, opt) {
+function notifyNotificationCreate(
+  title: string,
+  opt: NotificationOptions,
+): void {
   ipcRenderer.send('notification', title, opt);
 }
-function notifyNotificationClick() {
+function notifyNotificationClick(): void {
   ipcRenderer.send('notification-click');
 }
 

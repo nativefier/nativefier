@@ -1,11 +1,17 @@
 import * as fs from 'fs';
 
 import axios from 'axios';
+import * as debug from 'debug';
 import * as log from 'loglevel';
 
 // package.json is `require`d to let tsc strip the `src` folder by determining
 // baseUrl=src. A static import would prevent that and cause an ugly extra `src` folder in `lib`
-const packageJson = require('../../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const packageJson: {
+  name: string;
+  version: string;
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+} = require('../../package.json');
 import {
   DEFAULT_ELECTRON_VERSION,
   PLACEHOLDER_APP_DIR,
@@ -13,8 +19,9 @@ import {
 } from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
-import { AppOptions } from './model';
+import { AppOptions, GlobalShortcut, RawOptions } from './model';
 import { normalizeUrl } from './normalizeUrl';
+import { parseJson } from '../utils/parseUtils';
 
 const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
 
@@ -22,31 +29,33 @@ const SEMVER_VERSION_NUMBER_REGEX = /\d+\.\d+\.\d+[-_\w\d.]*/;
  * Process and validate raw user arguments
  */
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getOptions(rawOptions: any): Promise<AppOptions> {
+export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   const options: AppOptions = {
     packager: {
       appCopyright: rawOptions.appCopyright,
       appVersion: rawOptions.appVersion,
-      arch: rawOptions.arch || inferArch(),
-      asar: rawOptions.asar || rawOptions.conceal || false,
+      arch: rawOptions.arch ?? inferArch(),
+      asar: rawOptions.asar ?? rawOptions.conceal ?? false,
       buildVersion: rawOptions.buildVersion,
-      darwinDarkModeSupport: rawOptions.darwinDarkModeSupport || false,
+      darwinDarkModeSupport: rawOptions.darwinDarkModeSupport ?? false,
       dir: PLACEHOLDER_APP_DIR,
-      electronVersion: rawOptions.electronVersion || DEFAULT_ELECTRON_VERSION,
+      electronVersion: rawOptions.electronVersion ?? DEFAULT_ELECTRON_VERSION,
       icon: rawOptions.icon,
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
-      out: rawOptions.out || process.cwd(),
+      out: rawOptions.out ?? process.cwd(),
       overwrite: rawOptions.overwrite,
       platform: rawOptions.platform,
-      portable: rawOptions.portable || false,
+      portable: rawOptions.portable ?? false,
       targetUrl:
         rawOptions.targetUrl === undefined
           ? '' // We'll plug this in later via upgrade
           : normalizeUrl(rawOptions.targetUrl),
       tmpdir: false, // workaround for electron-packager#375
       upgrade: rawOptions.upgrade !== undefined ? true : false,
-      upgradeFrom: rawOptions.upgrade,
-      win32metadata: rawOptions.win32metadata || {
+      upgradeFrom:
+        (rawOptions.upgradeFrom as string) ??
+        ((rawOptions.upgrade as string) || undefined),
+      win32metadata: rawOptions.win32metadata ?? {
         ProductName: rawOptions.name,
         InternalName: rawOptions.name,
         FileDescription: rawOptions.name,
@@ -54,70 +63,70 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
     },
     nativefier: {
       accessibilityPrompt: true,
-      alwaysOnTop: rawOptions.alwaysOnTop || false,
-      backgroundColor: rawOptions.backgroundColor || null,
-      basicAuthPassword: rawOptions.basicAuthPassword || null,
-      basicAuthUsername: rawOptions.basicAuthUsername || null,
-      blockExternalUrls: rawOptions.blockExternalUrls || false,
-      bookmarksMenu: rawOptions.bookmarksMenu || null,
-      bounce: rawOptions.bounce || false,
+      alwaysOnTop: rawOptions.alwaysOnTop ?? false,
+      backgroundColor: rawOptions.backgroundColor,
+      basicAuthPassword: rawOptions.basicAuthPassword,
+      basicAuthUsername: rawOptions.basicAuthUsername,
+      blockExternalUrls: rawOptions.blockExternalUrls ?? false,
+      bookmarksMenu: rawOptions.bookmarksMenu,
+      bounce: rawOptions.bounce ?? false,
       browserwindowOptions: rawOptions.browserwindowOptions,
-      clearCache: rawOptions.clearCache || false,
-      counter: rawOptions.counter || false,
+      clearCache: rawOptions.clearCache ?? false,
+      counter: rawOptions.counter ?? false,
       crashReporter: rawOptions.crashReporter,
-      disableContextMenu: rawOptions.disableContextMenu,
-      disableDevTools: rawOptions.disableDevTools,
-      disableGpu: rawOptions.disableGpu || false,
-      diskCacheSize: rawOptions.diskCacheSize || null,
+      disableContextMenu: rawOptions.disableContextMenu ?? false,
+      disableDevTools: rawOptions.disableDevTools ?? false,
+      disableGpu: rawOptions.disableGpu ?? false,
+      diskCacheSize: rawOptions.diskCacheSize,
       disableOldBuildWarning:
-        rawOptions.disableOldBuildWarningYesiknowitisinsecure || false,
-      enableEs3Apis: rawOptions.enableEs3Apis || false,
-      fastQuit: rawOptions.fastQuit || false,
+        rawOptions.disableOldBuildWarningYesiknowitisinsecure ?? false,
+      enableEs3Apis: rawOptions.enableEs3Apis ?? false,
+      fastQuit: rawOptions.fastQuit ?? false,
       fileDownloadOptions: rawOptions.fileDownloadOptions,
-      flashPluginDir: rawOptions.flashPath || rawOptions.flash || null,
-      fullScreen: rawOptions.fullScreen || false,
-      globalShortcuts: null,
-      hideWindowFrame: rawOptions.hideWindowFrame,
-      ignoreCertificate: rawOptions.ignoreCertificate || false,
-      ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist || false,
-      inject: rawOptions.inject || [],
-      insecure: rawOptions.insecure || false,
-      internalUrls: rawOptions.internalUrls || null,
-      lang: rawOptions.lang || undefined,
-      maximize: rawOptions.maximize || false,
+      flashPluginDir: rawOptions.flashPath,
+      fullScreen: rawOptions.fullScreen ?? false,
+      globalShortcuts: undefined,
+      hideWindowFrame: rawOptions.hideWindowFrame ?? false,
+      ignoreCertificate: rawOptions.ignoreCertificate ?? false,
+      ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist ?? false,
+      inject: rawOptions.inject ?? [],
+      insecure: rawOptions.insecure ?? false,
+      internalUrls: rawOptions.internalUrls,
+      lang: rawOptions.lang,
+      maximize: rawOptions.maximize ?? false,
       nativefierVersion: packageJson.version,
       processEnvs: rawOptions.processEnvs,
-      proxyRules: rawOptions.proxyRules || null,
-      showMenuBar: rawOptions.showMenuBar || false,
-      singleInstance: rawOptions.singleInstance || false,
-      titleBarStyle: rawOptions.titleBarStyle || null,
-      tray: rawOptions.tray || false,
+      proxyRules: rawOptions.proxyRules,
+      showMenuBar: rawOptions.showMenuBar ?? false,
+      singleInstance: rawOptions.singleInstance ?? false,
+      titleBarStyle: rawOptions.titleBarStyle,
+      tray: rawOptions.tray ?? false,
       userAgent: rawOptions.userAgent,
-      userAgentHonest: rawOptions.userAgentHonest || false,
-      verbose: rawOptions.verbose,
+      userAgentHonest: rawOptions.userAgentHonest ?? false,
+      verbose: rawOptions.verbose ?? false,
       versionString: rawOptions.versionString,
-      width: rawOptions.width || 1280,
-      height: rawOptions.height || 800,
+      width: rawOptions.width ?? 1280,
+      height: rawOptions.height ?? 800,
       minWidth: rawOptions.minWidth,
       minHeight: rawOptions.minHeight,
       maxWidth: rawOptions.maxWidth,
       maxHeight: rawOptions.maxHeight,
-      widevine: rawOptions.widevine || false,
+      widevine: rawOptions.widevine ?? false,
       x: rawOptions.x,
       y: rawOptions.y,
-      zoom: rawOptions.zoom || 1.0,
+      zoom: rawOptions.zoom ?? 1.0,
     },
   };
 
   if (options.nativefier.verbose) {
     log.setLevel('trace');
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      require('debug').enable('electron-packager');
-    } catch (err) {
-      log.debug(
+      debug.enable('electron-packager');
+    } catch (err: unknown) {
+      log.error(
         'Failed to enable electron-packager debug output. This should not happen,',
         'and suggests their internals changed. Please report an issue.',
+        err,
       );
     }
 
@@ -145,13 +154,17 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   }
 
   if (options.nativefier.widevine) {
-    const widevineElectronVersion = `${options.packager.electronVersion}-wvvmp`;
+    const widevineElectronVersion = `${
+      options.packager.electronVersion as string
+    }-wvvmp`;
     try {
       await axios.get(
         `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,
       );
-    } catch (error) {
-      throw `\nERROR: castLabs Electron version "${widevineElectronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`;
+    } catch {
+      throw new Error(
+        `\nERROR: castLabs Electron version "${widevineElectronVersion}" does not exist. \nVerify versions at https://github.com/castlabs/electron-releases/releases. \nAborting.`,
+      );
     }
 
     options.packager.electronVersion = widevineElectronVersion;
@@ -173,7 +186,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   }
 
   if (options.nativefier.userAgentHonest && options.nativefier.userAgent) {
-    options.nativefier.userAgent = null;
+    options.nativefier.userAgent = undefined;
     log.warn(
       `\nATTENTION: user-agent AND user-agent-honest/honest were provided. In this case, honesty wins. user-agent will be ignored`,
     );
@@ -181,11 +194,19 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
 
   options.packager.platform = normalizePlatform(options.packager.platform);
 
-  if (options.nativefier.width > options.nativefier.maxWidth) {
+  if (
+    options.nativefier.maxWidth &&
+    options.nativefier.width &&
+    options.nativefier.width > options.nativefier.maxWidth
+  ) {
     options.nativefier.width = options.nativefier.maxWidth;
   }
 
-  if (options.nativefier.height > options.nativefier.maxHeight) {
+  if (
+    options.nativefier.maxHeight &&
+    options.nativefier.height &&
+    options.nativefier.height > options.nativefier.maxHeight
+  ) {
     options.nativefier.height = options.nativefier.maxHeight;
   }
 
@@ -202,8 +223,8 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
 
   if (rawOptions.globalShortcuts) {
     log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
-    const globalShortcuts = JSON.parse(
-      fs.readFileSync(rawOptions.globalShortcuts).toString(),
+    const globalShortcuts = parseJson<GlobalShortcut[]>(
+      fs.readFileSync(rawOptions.globalShortcuts as string).toString(),
     );
     options.nativefier.globalShortcuts = globalShortcuts;
   }
@@ -213,7 +234,7 @@ export async function getOptions(rawOptions: any): Promise<AppOptions> {
   return options;
 }
 
-export function normalizePlatform(platform: string): string {
+export function normalizePlatform(platform: string | undefined): string {
   if (!platform) {
     return inferPlatform();
   }

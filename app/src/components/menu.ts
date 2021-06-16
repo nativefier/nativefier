@@ -89,9 +89,7 @@ export function generateMenu(
       {
         label: 'Copy Current URL',
         accelerator: 'CmdOrCtrl+L',
-        click: () => {
-          clipboard.writeText(getCurrentURL());
-        },
+        click: (): void => clipboard.writeText(getCurrentURL()),
       },
       {
         label: 'Paste',
@@ -110,7 +108,7 @@ export function generateMenu(
       },
       {
         label: 'Clear App Data',
-        click: (item: MenuItem, focusedWindow: BrowserWindow) => {
+        click: (item: MenuItem, focusedWindow: BrowserWindow): void => {
           log.debug('Clear App Data.click', {
             item,
             focusedWindow,
@@ -166,7 +164,7 @@ export function generateMenu(
         accelerator: isOSX() ? 'Ctrl+Cmd+F' : 'F11',
         enabled: mainWindow.isFullScreenable() || isOSX(),
         visible: mainWindow.isFullScreenable() || isOSX(),
-        click: (item: MenuItem, focusedWindow: BrowserWindow) => {
+        click: (item: MenuItem, focusedWindow: BrowserWindow): void => {
           log.debug('Toggle Full Screen.click()', {
             item,
             focusedWindow,
@@ -266,9 +264,9 @@ export function generateMenu(
     submenu: [
       {
         label: `Built with Nativefier v${nativefierVersion}`,
-        click: () => {
+        click: (): void => {
           openExternal('https://github.com/nativefier/nativefier').catch(
-            (err) =>
+            (err: unknown): void =>
               log.error(
                 'Built with Nativefier v${nativefierVersion}.click ERROR',
                 err,
@@ -278,9 +276,10 @@ export function generateMenu(
       },
       {
         label: 'Report an Issue',
-        click: () => {
+        click: (): void => {
           openExternal('https://github.com/nativefier/nativefier/issues').catch(
-            (err) => log.error('Report an Issue.click ERROR', err),
+            (err: unknown): void =>
+              log.error('Report an Issue.click ERROR', err),
           );
         },
       },
@@ -370,8 +369,8 @@ function injectBookmarks(menuTemplate: MenuItemConstructorOptions[]): void {
             }
             return {
               label: bookmark.title,
-              click: () => {
-                goToURL(bookmark.url).catch((err) =>
+              click: (): void => {
+                goToURL(bookmark.url).catch((err: unknown): void =>
                   log.error(`${bookmark.title}.click ERROR`, err),
                 );
               },
@@ -390,7 +389,7 @@ function injectBookmarks(menuTemplate: MenuItemConstructorOptions[]): void {
     };
     // Insert custom bookmarks menu between menus "View" and "Window"
     menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
-  } catch (err) {
+  } catch (err: unknown) {
     log.error('Failed to load & parse bookmarks configuration JSON file.', err);
   }
 }

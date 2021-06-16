@@ -1,11 +1,12 @@
 import * as log from 'loglevel';
+import { DEFAULT_ELECTRON_VERSION } from '../../constants';
 
 import { getChromeVersionForElectronVersion } from '../../infer/browsers/inferChromeVersion';
 import { getLatestFirefoxVersion } from '../../infer/browsers/inferFirefoxVersion';
 import { getLatestSafariVersion } from '../../infer/browsers/inferSafariVersion';
 import { normalizePlatform } from '../optionsMain';
 
-type UserAgentOpts = {
+export type UserAgentOpts = {
   packager: {
     electronVersion?: string;
     platform?: string;
@@ -15,22 +16,27 @@ type UserAgentOpts = {
   };
 };
 
-const USER_AGENT_PLATFORM_MAPS = {
+const USER_AGENT_PLATFORM_MAPS: Record<string, string> = {
   darwin: 'Macintosh; Intel Mac OS X 10_15_7',
   linux: 'X11; Linux x86_64',
   win32: 'Windows NT 10.0; Win64; x64',
 };
 
-const USER_AGENT_SHORT_CODE_MAPS = {
+const USER_AGENT_SHORT_CODE_MAPS: Record<
+  string,
+  (platform: string, electronVersion: string) => Promise<string>
+> = {
   edge: edgeUserAgent,
   firefox: firefoxUserAgent,
   safari: safariUserAgent,
 };
 
-export async function userAgent(options: UserAgentOpts): Promise<string> {
+export async function userAgent(
+  options: UserAgentOpts,
+): Promise<string | undefined> {
   if (!options.nativefier.userAgent) {
     // No user agent got passed. Let's handle it with the app.userAgentFallback
-    return null;
+    return undefined;
   }
 
   if (
@@ -43,19 +49,22 @@ export async function userAgent(options: UserAgentOpts): Promise<string> {
       `${options.nativefier.userAgent.toLowerCase()} not found in`,
       Object.keys(USER_AGENT_SHORT_CODE_MAPS),
     );
-    return null;
+    return undefined;
   }
 
   options.packager.platform = normalizePlatform(options.packager.platform);
 
-  const userAgentPlatform =
+  const userAgentPlatform: string =
     USER_AGENT_PLATFORM_MAPS[
       options.packager.platform === 'mas' ? 'darwin' : options.packager.platform
     ];
 
   const mapFunction = USER_AGENT_SHORT_CODE_MAPS[options.nativefier.userAgent];
 
-  return await mapFunction(userAgentPlatform, options.packager.electronVersion);
+  return await mapFunction(
+    userAgentPlatform,
+    options.packager.electronVersion ?? DEFAULT_ELECTRON_VERSION,
+  );
 }
 
 async function edgeUserAgent(

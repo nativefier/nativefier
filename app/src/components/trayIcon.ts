@@ -23,7 +23,7 @@ export function createTrayIcon(
       appIcon.setImage(nimage);
     }
 
-    const onClick = () => {
+    const onClick = (): void => {
       log.debug('onClick');
       if (mainWindow.isVisible()) {
         mainWindow.hide();

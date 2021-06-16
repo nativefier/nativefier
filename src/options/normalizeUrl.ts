@@ -22,8 +22,9 @@ export function normalizeUrl(urlToNormalize: string): string {
   let parsedUrl: url.URL;
   try {
     parsedUrl = new url.URL(urlWithProtocol);
-  } catch (err) {
-    throw `Your url "${urlWithProtocol}" is invalid`;
+  } catch (err: unknown) {
+    log.error('normalizeUrl ERROR', err);
+    throw new Error(`Your url "${urlWithProtocol}" is invalid`);
   }
   const normalizedUrl = parsedUrl.toString();
   log.debug(`Normalized URL ${urlToNormalize} to:`, normalizedUrl);

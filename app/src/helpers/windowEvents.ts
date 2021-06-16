@@ -1,4 +1,10 @@
-import { dialog, BrowserWindow, IpcMainEvent, WebContents } from 'electron';
+import {
+  dialog,
+  BrowserWindow,
+  IpcMainEvent,
+  NewWindowWebContentsEvent,
+  WebContents,
+} from 'electron';
 import log from 'loglevel';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
@@ -14,7 +20,7 @@ import {
 export function onNewWindow(
   options,
   setupWindow: (...args) => void,
-  event: Event & { newGuest?: any },
+  event: NewWindowWebContentsEvent,
   urlToGo: string,
   frameName: string,
   disposition:
@@ -96,7 +102,7 @@ export function onNewWindowHelper(
       );
     }
     return Promise.resolve(undefined);
-  } catch (err) {
+  } catch (err: unknown) {
     return Promise.reject(err);
   }
 }
@@ -153,7 +159,7 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
 
   window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) => {
     onWillNavigate(options, event, url).catch((err) => {
-      log.error(' window.webContents.on.will-navigate ERROR', err);
+      log.error('window.webContents.on.will-navigate ERROR', err);
       event.preventDefault();
     });
   });
@@ -161,7 +167,7 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
 
   sendParamsOnDidFinishLoad(options, window);
 
-  // @ts-ignore new-tab isn't in the type definition, but it does exist
+  // @ts-expect-error new-tab isn't in the type definition, but it does exist
   window.on('new-tab', () => {
     createNewTab(
       options,
@@ -169,6 +175,6 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
       options.targetUrl,
       true,
       window,
-    ).catch((err) => log.error('new-tab ERROR', err));
+    );
   });
 }

@@ -141,7 +141,7 @@ export function linkIsInternal(
     // Only use the tld and the main domain for domain-ish test
     // Enables domain-ish equality for blog.foo.com and shop.foo.com
     return domainify(currentUrl) === domainify(newUrl);
-  } catch (err) {
+  } catch (err: unknown) {
     log.error(
       'Failed to parse domains as determining if link is internal. From:',
       currentUrl,

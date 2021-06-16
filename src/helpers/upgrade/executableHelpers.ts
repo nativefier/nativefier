@@ -65,9 +65,9 @@ function getExecutableArch(
 function getExecutableInfo(
   executablePath: string,
   platform: string,
-): ExecutableInfo {
+): ExecutableInfo | undefined {
   if (!fileExists(executablePath)) {
-    return {};
+    return undefined;
   }
 
   const exeBytes = getExecutableBytes(executablePath);
@@ -81,6 +81,12 @@ export function getOptionsFromExecutable(
   priorOptions: NativefierOptions,
 ): NativefierOptions {
   const newOptions: NativefierOptions = { ...priorOptions };
+  if (!newOptions.name) {
+    throw new Error(
+      'Can not extract options from executable with no name specified.',
+    );
+  }
+  const name: string = newOptions.name;
   let executablePath: string | undefined = undefined;
 
   const appRoot = path.resolve(path.join(appResourcesDir, '..', '..'));
@@ -118,8 +124,7 @@ export function getOptionsFromExecutable(
       appRoot,
       children.filter(
         (c) =>
-          c.name.toLowerCase() === `${newOptions.name.toLowerCase()}.exe` &&
-          c.isFile(),
+          c.name.toLowerCase() === `${name.toLowerCase()}.exe` && c.isFile(),
       )[0].name,
     );
 
@@ -130,7 +135,9 @@ export function getOptionsFromExecutable(
         'ProductVersion',
       );
       log.debug(
-        `Extracted app version from executable: ${newOptions.appVersion}`,
+        `Extracted app version from executable: ${
+          newOptions.appVersion as string
+        }`,
       );
     }
 
@@ -142,7 +149,9 @@ export function getOptionsFromExecutable(
         newOptions.buildVersion = undefined;
       } else {
         log.debug(
-          `Extracted build version from executable: ${newOptions.buildVersion}`,
+          `Extracted build version from executable: ${
+            newOptions.buildVersion as string
+          }`,
         );
       }
     }
@@ -154,7 +163,9 @@ export function getOptionsFromExecutable(
         'LegalCopyright',
       );
       log.debug(
-        `Extracted app copyright from executable: ${newOptions.appCopyright}`,
+        `Extracted app copyright from executable: ${
+          newOptions.appCopyright as string
+        }`,
       );
     }
   } else if (looksLikeLinux) {
@@ -164,7 +175,13 @@ export function getOptionsFromExecutable(
     }
     executablePath = path.join(
       appRoot,
-      children.filter((c) => c.name == newOptions.name && c.isFile())[0].name,
+      children.filter((c) => c.name == name && c.isFile())[0].name,
+    );
+  }
+
+  if (!executablePath || !newOptions.platform) {
+    throw Error(
+      `Could not find executablePath or platform of app in ${appRoot}`,
     );
   }
 
@@ -175,8 +192,14 @@ export function getOptionsFromExecutable(
       executablePath,
       newOptions.platform,
     );
+    if (!executableInfo) {
+      throw new Error(
+        `Could not get executable info for executable path: ${executablePath}`,
+      );
+    }
+
     newOptions.arch = executableInfo.arch;
-    log.debug(`Extracted arch from executable: ${newOptions.arch}`);
+    log.debug(`Extracted arch from executable: ${newOptions.arch as string}`);
   }
   if (newOptions.platform === undefined || newOptions.arch == undefined) {
     throw Error(`Could not determine platform / arch of app in ${appRoot}`);

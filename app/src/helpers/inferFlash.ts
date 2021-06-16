@@ -4,6 +4,8 @@ import * as path from 'path';
 
 import { isOSX, isWindows, isLinux } from './helpers';
 
+type fsError = Error & { code: string };
+
 /**
  * Find a file or directory
  */
@@ -14,12 +16,12 @@ function findSync(
 ): string[] {
   const matches: string[] = [];
 
-  (function findSyncRecurse(base) {
+  (function findSyncRecurse(base): void {
     let children: string[];
     try {
       children = fs.readdirSync(base);
-    } catch (err) {
-      if (err.code === 'ENOENT') {
+    } catch (err: unknown) {
+      if ((err as fsError).code === 'ENOENT') {
         return;
       }
       throw err;
@@ -51,18 +53,18 @@ function findSync(
   return matches;
 }
 
-function findFlashOnLinux() {
+function findFlashOnLinux(): string {
   return findSync(/libpepflashplayer\.so/, '/opt/google/chrome')[0];
 }
 
-function findFlashOnWindows() {
+function findFlashOnWindows(): string {
   return findSync(
     /pepflashplayer\.dll/,
     'C:\\Program Files (x86)\\Google\\Chrome',
   )[0];
 }
 
-function findFlashOnMac() {
+function findFlashOnMac(): string {
   return findSync(
     /PepperFlashPlayer.plugin/,
     '/Applications/Google Chrome.app/',
@@ -70,7 +72,7 @@ function findFlashOnMac() {
   )[0];
 }
 
-export function inferFlashPath() {
+export function inferFlashPath(): string {
   if (isOSX()) {
     return findFlashOnMac();
   }
