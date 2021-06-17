@@ -146,7 +146,7 @@ function createContextMenu(options, window: BrowserWindow): void {
 
 export function saveAppArgs(newAppArgs: any): void {
   try {
-    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs));
+    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs, null, 2));
   } catch (err: unknown) {
     log.warn(
       `WARNING: Ignored nativefier.json rewrital (${(err as Error).message})`,
