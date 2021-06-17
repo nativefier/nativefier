@@ -37,4 +37,6 @@ jobs:
     # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
     - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '16.x'
       run: npm run lint
-    - run: npm test
+      # Run playwright first to work out the kinks separately
+    - run: npm run test:playwright
+    - run: npm run test
