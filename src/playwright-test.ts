@@ -115,7 +115,6 @@ describe('Application launch', () => {
     );
     const mainWindow = (await spawnApp()) as Page;
     await mainWindow.waitForLoadState('domcontentloaded');
-    expect(await mainWindow.isVisible('header')).toBe(true);
     const headerStyle = await mainWindow.$eval('header', (el) =>
       window.getComputedStyle(el),
     );
@@ -123,7 +122,6 @@ describe('Application launch', () => {
 
     await mainWindow.click('#nav-products-link');
     await mainWindow.waitForLoadState('domcontentloaded');
-    expect(await mainWindow.isVisible('header')).toBe(true);
     const headerStylePostNavigate = await mainWindow.$eval('header', (el) =>
       window.getComputedStyle(el),
     );
