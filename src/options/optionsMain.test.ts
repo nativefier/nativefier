@@ -1,7 +1,7 @@
 import { getOptions, normalizePlatform } from './optionsMain';
 import * as asyncConfig from './asyncConfig';
 import { inferPlatform } from '../infer/inferOs';
-import { AppOptions } from './model';
+import { AppOptions } from '../../shared/src/options/model';
 
 let asyncConfigMock: jest.SpyInstance;
 const mockedAsyncConfig: AppOptions = {

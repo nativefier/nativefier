@@ -10,7 +10,7 @@ import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { userAgent } from './options/fields/userAgent';
-import { NativefierOptions } from './options/model';
+import { NativefierOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
 
 async function checkApp(

@@ -1,4 +1,4 @@
-import { AppOptions } from '../model';
+import { AppOptions } from '../../../shared/src/options/model';
 import { processOptions } from './fields';
 describe('fields', () => {
   let options: AppOptions;

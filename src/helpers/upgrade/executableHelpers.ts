@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { NativefierOptions } from '../../options/model';
+import { NativefierOptions } from '../../../shared/src/options/model';
 import { getVersionString } from './rceditGet';
 import { fileExists } from '../fsHelpers';
 type ExecutableInfo = {

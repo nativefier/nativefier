@@ -1,19 +1,23 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, ContextMenuParams } from 'electron';
+import contextMenu from 'electron-context-menu';
 import log from 'loglevel';
 import { nativeTabsSupported, openExternal } from '../helpers/helpers';
 import { setupNativefierWindow } from '../helpers/windowEvents';
 import { createNewTab, createNewWindow } from '../helpers/windowHelpers';
+import {
+  OutputOptions,
+  outputOptionsToWindowOptions,
+} from '../../../shared/src/options/model';
 
-export function initContextMenu(options, window?: BrowserWindow): void {
-  // Require this at runtime, otherwise its child dependency 'electron-is-dev'
-  // throws an error during unit testing.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const contextMenu = require('electron-context-menu');
-
+export function initContextMenu(
+  options: OutputOptions,
+  window?: BrowserWindow,
+): void {
   log.debug('initContextMenu', { options, window });
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   contextMenu({
-    prepend: (actions, params) => {
+    prepend: (actions: contextMenu.Actions, params: ContextMenuParams) => {
       log.debug('contextMenu.prepend', { actions, params });
       const items = [];
       if (params.linkURL) {
@@ -29,7 +33,7 @@ export function initContextMenu(options, window?: BrowserWindow): void {
           label: 'Open Link in New Window',
           click: () =>
             createNewWindow(
-              options,
+              outputOptionsToWindowOptions(options),
               setupNativefierWindow,
               params.linkURL,
               window,
@@ -40,7 +44,7 @@ export function initContextMenu(options, window?: BrowserWindow): void {
             label: 'Open Link in New Tab',
             click: () =>
               createNewTab(
-                options,
+                outputOptionsToWindowOptions(options),
                 setupNativefierWindow,
                 params.linkURL,
                 true,

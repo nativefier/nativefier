@@ -3,7 +3,7 @@ import { writeFile } from 'fs';
 import { promisify } from 'util';
 
 import gitCloud = require('gitcloud');
-import * as pageIcon from 'page-icon';
+import pageIcon from 'page-icon';
 
 import {
   downloadFile,

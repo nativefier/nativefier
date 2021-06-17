@@ -1,5 +1,6 @@
 // # https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md
 module.exports = {
+  root: true,
   parser: '@typescript-eslint/parser',
   parserOptions: {
     tsconfigRootDir: __dirname,
@@ -35,8 +36,9 @@ module.exports = {
   // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
   ignorePatterns: [
     'node_modules/**',
+    'app/node_modules/**',
+    'app/lib/**',
     'lib/**',
-    'dist/**',
     'built-tests/**',
     'coverage/**',
   ],

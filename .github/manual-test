@@ -13,7 +13,7 @@ function launch_app() {
   if [ "$(uname -s)" = "Darwin" ]; then
     open -a "$1/$2-darwin-x64/$2.app"
   elif [ "$(uname -o)" = "Msys" ]; then
-    "$1/$2-win32-x64/$2.exe" --verbose
+    "$1/$2-win32-x64/$2.exe"
   else
     "$1/$2-linux-x64/$2"
   fi

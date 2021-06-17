@@ -23,6 +23,7 @@ class MockBrowserWindow extends EventEmitter {
   webContents: MockWebContents;
 
   constructor(options?: unknown) {
+    // @ts-expect-error options is really EventEmitterOptions, but events.d.ts doesn't expose it...
     super(options);
     this.webContents = new MockWebContents();
   }
@@ -44,15 +45,15 @@ class MockBrowserWindow extends EventEmitter {
   }
 
   isSimpleFullScreen(): boolean {
-    return undefined;
+    throw new Error('Not implemented');
   }
 
   isFullScreen(): boolean {
-    return undefined;
+    throw new Error('Not implemented');
   }
 
   isFullScreenable(): boolean {
-    return undefined;
+    throw new Error('Not implemented');
   }
 
   loadURL(url: string, options?: unknown): Promise<void> {
@@ -73,14 +74,14 @@ class MockDialog {
     browserWindow: MockBrowserWindow,
     options: unknown,
   ): Promise<number> {
-    return Promise.resolve(undefined);
+    throw new Error('Not implemented');
   }
 
   static showMessageBoxSync(
     browserWindow: MockBrowserWindow,
     options: unknown,
   ): number {
-    return undefined;
+    throw new Error('Not implemented');
   }
 }
 
@@ -110,11 +111,11 @@ class MockWebContents extends EventEmitter {
   }
 
   getURL(): string {
-    return undefined;
+    throw new Error('Not implemented');
   }
 
   insertCSS(css: string, options?: unknown): Promise<string> {
-    return Promise.resolve(undefined);
+    throw new Error('Not implemented');
   }
 }
 
@@ -134,13 +135,15 @@ class MockWebRequest {
         ) => void)
       | null,
   ): void {
-    this.emitter.addListener(
-      'onHeadersReceived',
-      (
-        details: unknown,
-        callback: (headersReceivedResponse: unknown) => void,
-      ) => listener(details, callback),
-    );
+    if (listener) {
+      this.emitter.addListener(
+        'onHeadersReceived',
+        (
+          details: unknown,
+          callback: (headersReceivedResponse: unknown) => void,
+        ) => listener(details, callback),
+      );
+    }
   }
 
   send(event: string, ...args: unknown[]): void {

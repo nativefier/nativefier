@@ -2,15 +2,19 @@ import { app, Tray, Menu, ipcMain, nativeImage, BrowserWindow } from 'electron';
 import log from 'loglevel';
 
 import { getAppIcon, getCounterValue, isOSX } from '../helpers/helpers';
+import { OutputOptions } from '../../../shared/src/options/model';
 
 export function createTrayIcon(
-  nativefierOptions,
+  nativefierOptions: OutputOptions,
   mainWindow: BrowserWindow,
-): Tray {
+): Tray | undefined {
   const options = { ...nativefierOptions };
 
   if (options.tray) {
     const iconPath = getAppIcon();
+    if (!iconPath) {
+      throw new Error('Icon path not found found to use with tray option.');
+    }
     const nimage = nativeImage.createFromPath(iconPath);
     const appIcon = new Tray(nativeImage.createEmpty());
 
@@ -39,7 +43,7 @@ export function createTrayIcon(
       },
       {
         label: 'Quit',
-        click: app.exit.bind(this),
+        click: (): void => app.exit(0),
       },
     ]);
 
@@ -50,9 +54,9 @@ export function createTrayIcon(
         log.debug('mainWindow.page-title-updated', { event, title });
         const counterValue = getCounterValue(title);
         if (counterValue) {
-          appIcon.setToolTip(`(${counterValue})  ${options.name}`);
+          appIcon.setToolTip(`(${counterValue})  ${options.name ?? ''}`);
         } else {
-          appIcon.setToolTip(options.name);
+          appIcon.setToolTip(options.name ?? '');
         }
       });
     } else {
@@ -61,20 +65,22 @@ export function createTrayIcon(
         if (mainWindow.isFocused()) {
           return;
         }
-        appIcon.setToolTip(`•  ${options.name}`);
+        if (options.name) {
+          appIcon.setToolTip(`•  ${options.name}`);
+        }
       });
 
       mainWindow.on('focus', () => {
         log.debug('mainWindow.focus');
-        appIcon.setToolTip(options.name);
+        appIcon.setToolTip(options.name ?? '');
       });
     }
 
-    appIcon.setToolTip(options.name);
+    appIcon.setToolTip(options.name ?? '');
     appIcon.setContextMenu(contextMenu);
 
     return appIcon;
   }
 
-  return null;
+  return undefined;
 }

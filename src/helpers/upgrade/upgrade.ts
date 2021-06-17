@@ -3,7 +3,10 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { NativefierOptions, RawOptions } from '../../options/model';
+import {
+  NativefierOptions,
+  RawOptions,
+} from '../../../shared/src/options/model';
 import { dirExists, fileExists } from '../fsHelpers';
 import { extractBoolean, extractString } from './plistInfoXMLHelpers';
 import { getOptionsFromExecutable } from './executableHelpers';

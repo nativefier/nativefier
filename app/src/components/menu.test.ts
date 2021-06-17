@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, MenuItemConstructorOptions } from 'electron';
 
 jest.mock('../helpers/helpers');
 import { isOSX } from '../helpers/helpers';
@@ -16,9 +16,15 @@ describe('generateMenu', () => {
   beforeEach(() => {
     window = new BrowserWindow();
     mockIsOSX.mockReset();
-    mockIsFullScreen = jest.spyOn(window, 'isFullScreen');
-    mockIsFullScreenable = jest.spyOn(window, 'isFullScreenable');
-    mockIsSimpleFullScreen = jest.spyOn(window, 'isSimpleFullScreen');
+    mockIsFullScreen = jest
+      .spyOn(window, 'isFullScreen')
+      .mockReturnValue(false);
+    mockIsFullScreenable = jest
+      .spyOn(window, 'isFullScreenable')
+      .mockReturnValue(true);
+    mockIsSimpleFullScreen = jest
+      .spyOn(window, 'isSimpleFullScreen')
+      .mockReturnValue(false);
     mockSetFullScreen = jest.spyOn(window, 'setFullScreen');
     mockSetSimpleFullScreen = jest.spyOn(window, 'setSimpleFullScreen');
   });
@@ -46,9 +52,9 @@ describe('generateMenu', () => {
 
     const editMenu = menu.filter((item) => item.label === '&View');
 
-    const fullscreen = (editMenu[0].submenu as any[]).filter(
-      (item) => item.label === 'Toggle Full Screen',
-    );
+    const fullscreen = (
+      editMenu[0].submenu as MenuItemConstructorOptions[]
+    ).filter((item) => item.label === 'Toggle Full Screen');
 
     expect(fullscreen).toHaveLength(1);
     expect(fullscreen[0].enabled).toBe(false);
@@ -73,9 +79,9 @@ describe('generateMenu', () => {
 
     const editMenu = menu.filter((item) => item.label === '&View');
 
-    const fullscreen = (editMenu[0].submenu as any[]).filter(
-      (item) => item.label === 'Toggle Full Screen',
-    );
+    const fullscreen = (
+      editMenu[0].submenu as MenuItemConstructorOptions[]
+    ).filter((item) => item.label === 'Toggle Full Screen');
 
     expect(fullscreen).toHaveLength(1);
     expect(fullscreen[0].enabled).toBe(true);
@@ -103,9 +109,9 @@ describe('generateMenu', () => {
 
       const editMenu = menu.filter((item) => item.label === '&View');
 
-      const fullscreen = (editMenu[0].submenu as any[]).filter(
-        (item) => item.label === 'Toggle Full Screen',
-      );
+      const fullscreen = (
+        editMenu[0].submenu as MenuItemConstructorOptions[]
+      ).filter((item) => item.label === 'Toggle Full Screen');
 
       expect(fullscreen).toHaveLength(1);
       expect(fullscreen[0].enabled).toBe(true);
@@ -114,6 +120,7 @@ describe('generateMenu', () => {
       expect(mockIsOSX).toHaveBeenCalled();
       expect(mockIsFullScreenable).toHaveBeenCalled();
 
+      // @ts-expect-error click is here TypeScript...
       fullscreen[0].click(null, window);
 
       expect(mockSetFullScreen).toHaveBeenCalledWith(!isFullScreen);
@@ -139,9 +146,9 @@ describe('generateMenu', () => {
 
       const editMenu = menu.filter((item) => item.label === '&View');
 
-      const fullscreen = (editMenu[0].submenu as any[]).filter(
-        (item) => item.label === 'Toggle Full Screen',
-      );
+      const fullscreen = (
+        editMenu[0].submenu as MenuItemConstructorOptions[]
+      ).filter((item) => item.label === 'Toggle Full Screen');
 
       expect(fullscreen).toHaveLength(1);
       expect(fullscreen[0].enabled).toBe(true);
@@ -150,6 +157,7 @@ describe('generateMenu', () => {
       expect(mockIsOSX).toHaveBeenCalled();
       expect(mockIsFullScreenable).toHaveBeenCalled();
 
+      // @ts-expect-error click is here TypeScript...
       fullscreen[0].click(null, window);
 
       expect(mockSetSimpleFullScreen).toHaveBeenCalledWith(!isFullScreen);

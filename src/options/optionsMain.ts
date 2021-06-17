@@ -19,7 +19,11 @@ import {
 } from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
-import { AppOptions, GlobalShortcut, RawOptions } from './model';
+import {
+  AppOptions,
+  GlobalShortcut,
+  RawOptions,
+} from '../../shared/src/options/model';
 import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
 

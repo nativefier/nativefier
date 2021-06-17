@@ -1,7 +1,8 @@
 {
   "extends": "../tsconfig-base.json",
   "compilerOptions": {
-    "outDir": "./dist",
+    "composite": true,
+    "outDir": "./lib",
     // Here in app/tsconfig.json, we want to set the `target` and `lib` keys to
     // the "best" values for the version of Node **coming with the chosen Electron**.
     // Careful: we're *not* talking about Nativefier's (CLI) required Node version,
@@ -28,9 +29,4 @@
   "include": [
     "./src/**/*"
   ],
-  "references": [
-    {
-      "path": "../shared"
-    }
-  ]
 }

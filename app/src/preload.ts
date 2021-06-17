@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { ipcRenderer } from 'electron';
+import { OutputOptions } from '../../shared/src/options/model';
 
 // Do *NOT* add 3rd-party imports here in preload (except for webpack `externals` like electron).
 // They will work during development, but break in the prod build :-/ .
@@ -56,7 +57,7 @@ function setNotificationCallback(
     get: () => OldNotify.permission,
   });
 
-  // @ts-expect-error
+  // @ts-expect-error TypeScript says its not compatible, but it works?
   window.Notification = newNotify;
 }
 
@@ -92,14 +93,15 @@ function notifyNotificationClick(): void {
   ipcRenderer.send('notification-click');
 }
 
+// @ts-expect-error TypeScript thinks these are incompatible but they aren't
 setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
 
-ipcRenderer.on('params', (event, message) => {
+ipcRenderer.on('params', (event, message: string) => {
   log.debug('ipcRenderer.params', { event, message });
-  const appArgs = JSON.parse(message);
+  const appArgs = JSON.parse(message) as OutputOptions;
   log.info('nativefier.json', appArgs);
 });
 
-ipcRenderer.on('debug', (event, message) => {
+ipcRenderer.on('debug', (event, message: string) => {
   log.debug('ipcRenderer.debug', { event, message });
 });
