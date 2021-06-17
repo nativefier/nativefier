@@ -595,7 +595,8 @@ if (require.main === module) {
     sanitizedArgs.push(arg);
 
     if (arg === '--tray' && isLastArg) {
-      isLastArg;
+      // Add a true if --tray is last so it gets enabled
+      sanitizedArgs.push('true');
     }
   });
 
