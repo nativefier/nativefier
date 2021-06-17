@@ -85,12 +85,8 @@ describe('onNewWindowHelper', () => {
   });
 
   test('internal urls should not be handled', async () => {
-    const options = {
-      ...baseOptions,
-    };
-
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       undefined,
@@ -106,11 +102,9 @@ describe('onNewWindowHelper', () => {
 
   test('external urls should be opened externally', async () => {
     mockLinkIsInternal.mockReturnValue(false);
-    const options = {
-      ...baseOptions,
-    };
+
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       externalURL,
       undefined,
@@ -146,9 +140,8 @@ describe('onNewWindowHelper', () => {
   });
 
   test('tab disposition should be ignored if tabs are not enabled', async () => {
-    const options = { ...baseOptions };
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       foregroundDisposition,
@@ -164,9 +157,9 @@ describe('onNewWindowHelper', () => {
 
   test('tab disposition should be ignored if url is external', async () => {
     mockLinkIsInternal.mockReturnValue(false);
-    const options = { ...baseOptions };
+
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       externalURL,
       foregroundDisposition,
@@ -183,9 +176,8 @@ describe('onNewWindowHelper', () => {
   test('foreground tabs with internal urls should be opened in the foreground', async () => {
     mockNativeTabsSupported.mockReturnValue(true);
 
-    const options = { ...baseOptions };
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       foregroundDisposition,
@@ -195,7 +187,7 @@ describe('onNewWindowHelper', () => {
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).toHaveBeenCalledWith(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       true,
@@ -209,9 +201,8 @@ describe('onNewWindowHelper', () => {
   test('background tabs with internal urls should be opened in background tabs', async () => {
     mockNativeTabsSupported.mockReturnValue(true);
 
-    const options = { ...baseOptions };
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       backgroundDisposition,
@@ -221,7 +212,7 @@ describe('onNewWindowHelper', () => {
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).toHaveBeenCalledWith(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       false,
@@ -233,9 +224,8 @@ describe('onNewWindowHelper', () => {
   });
 
   test('about:blank urls should be handled', async () => {
-    const options = { ...baseOptions };
     await onNewWindowHelper(
-      options,
+      baseOptions,
       setupWindow,
       'about:blank',
       undefined,
@@ -249,13 +239,9 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('about:blank#blocked urls should be handled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+  test('about:blank#blocked urls should be handled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       'about:blank#blocked',
       undefined,
@@ -269,13 +255,9 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('about:blank#other urls should not be handled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+  test('about:blank#other urls should not be handled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       'about:blank#other',
       undefined,
