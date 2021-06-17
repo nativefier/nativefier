@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 
+import electronPackager = require('electron-packager');
 import * as log from 'loglevel';
 import * as yargs from 'yargs';
 
+import { DEFAULT_ELECTRON_VERSION } from './constants';
 import {
   checkInternet,
   getProcessEnvs,
@@ -13,11 +15,10 @@ import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { RawOptions } from './options/model';
 import { parseJson } from './utils/parseUtils';
-import { DEFAULT_ELECTRON_VERSION } from './constants';
-import electronPackager = require('electron-packager');
 
 export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
-  const args = yargs(argv)
+  const sanitizedArgs = sanitizeArgs(argv);
+  const args = yargs(sanitizedArgs)
     .scriptName('nativefier')
     .usage(
       '$0 <targetUrl> [outputDirectory] [other options]\nor\n$0 --upgrade <pathToExistingApp> [other options]',
@@ -569,16 +570,15 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
   return parsed;
 }
 
-if (require.main === module) {
-  // Not sure if we still need this with yargs. Keeping for now.
+function sanitizeArgs(argv: string[]): string[] {
   const sanitizedArgs: string[] = [];
-  process.argv.forEach((arg) => {
+  argv.forEach((arg) => {
     if (isArgFormatInvalid(arg)) {
       throw new Error(
         `Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "nativefier --help" for help.\nAborting`,
       );
     }
-    const isLastArg = sanitizedArgs.length + 1 === process.argv.length;
+    const isLastArg = sanitizedArgs.length + 1 === argv.length;
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
 
@@ -600,10 +600,14 @@ if (require.main === module) {
     }
   });
 
+  return sanitizedArgs;
+}
+
+if (require.main === module) {
   let args: yargs.Argv<RawOptions> | undefined = undefined;
   let parsedArgs: RawOptions;
   try {
-    args = initArgs(sanitizedArgs.slice(2));
+    args = initArgs(process.argv.slice(2));
     parsedArgs = parseArgs(args);
   } catch (err: unknown) {
     if (args) {
