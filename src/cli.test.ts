@@ -305,12 +305,12 @@ describe('initArgs + parseArgs', () => {
   });
 
   test.each([
-    { arg: 'tray', shortArg: '', value: 'true' },
-    { arg: 'tray', shortArg: '', value: 'false' },
-    { arg: 'tray', shortArg: '', value: 'start-in-tray' },
-    { arg: 'tray', shortArg: '', value: '' },
-    { arg: 'tray', shortArg: '', value: undefined },
-  ])('test tray valyue %s', ({ arg, shortArg, value }) => {
+    { arg: 'tray', value: 'true' },
+    { arg: 'tray', value: 'false' },
+    { arg: 'tray', value: 'start-in-tray' },
+    { arg: 'tray', value: '' },
+    { arg: 'tray', value: undefined },
+  ])('test tray valyue %s', ({ arg, value }) => {
     if (value !== undefined) {
       const args = parseArgs(
         initArgs(['https://google.com', `--${arg}`, `${value}`]),
