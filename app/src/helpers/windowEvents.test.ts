@@ -235,6 +235,46 @@ describe('onNewWindowHelper', () => {
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
+
+  test('about:blank#blocked urls should be handled', () => {
+    const options = {
+      blockExternalUrls: false,
+      targetUrl: originalURL,
+    };
+    onNewWindowHelper(
+      options,
+      setupWindow,
+      'about:blank#blocked',
+      undefined,
+      preventDefault,
+    );
+
+    expect(mockCreateAboutBlank).toHaveBeenCalledTimes(1);
+    expect(mockCreateNewTab).not.toHaveBeenCalled();
+    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockOpenExternal).not.toHaveBeenCalled();
+    expect(preventDefault).toHaveBeenCalledTimes(1);
+  });
+
+  test('about:blank#other urls should not be handled', () => {
+    const options = {
+      blockExternalUrls: false,
+      targetUrl: originalURL,
+    };
+    onNewWindowHelper(
+      options,
+      setupWindow,
+      'about:blank#other',
+      undefined,
+      preventDefault,
+    );
+
+    expect(mockCreateAboutBlank).not.toHaveBeenCalled();
+    expect(mockCreateNewTab).not.toHaveBeenCalled();
+    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockOpenExternal).not.toHaveBeenCalled();
+    expect(preventDefault).not.toHaveBeenCalled();
+  });
 });
 
 describe('onWillNavigate', () => {

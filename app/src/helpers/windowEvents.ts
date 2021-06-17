@@ -40,6 +40,7 @@ export function onNewWindow(
     parent,
   });
   const preventDefault = (newGuest: BrowserWindow): void => {
+    log.debug('onNewWindow.preventDefault', { newGuest, event });
     event.preventDefault();
     if (newGuest) {
       event.newGuest = newGuest;
@@ -77,29 +78,28 @@ export function onNewWindowHelper(
       } else {
         return openExternal(urlToGo);
       }
-    } else if (urlToGo === 'about:blank') {
-      const newWindow = createAboutBlankWindow(options, setupWindow, parent);
-      return Promise.resolve(preventDefault(newWindow));
+    }
+    // Normally the following would be:
+    // if (urlToGo.startsWith('about:blank'))...
+    // But due to a bug we resolved in https://github.com/nativefier/nativefier/issues/1197
+    // Some sites use about:blank#something to use as placeholder windows to fill
+    // with content via JavaScript. So we'll stay specific for now...
+    else if (['about:blank', 'about:blank#blocked'].includes(urlToGo)) {
+      return Promise.resolve(
+        preventDefault(createAboutBlankWindow(options, setupWindow, parent)),
+      );
     } else if (nativeTabsSupported()) {
-      if (disposition === 'background-tab') {
-        const newTab = createNewTab(
-          options,
-          setupWindow,
-          urlToGo,
-          false,
-          parent,
-        );
-        return Promise.resolve(preventDefault(newTab));
-      } else if (disposition === 'foreground-tab') {
-        const newTab = createNewTab(
-          options,
-          setupWindow,
-          urlToGo,
-          true,
-          parent,
-        );
-        return Promise.resolve(preventDefault(newTab));
-      }
+      return Promise.resolve(
+        preventDefault(
+          createNewTab(
+            options,
+            setupWindow,
+            urlToGo,
+            disposition === 'foreground-tab',
+            parent,
+          ),
+        ),
+      );
     }
     return Promise.resolve(undefined);
   } catch (err: unknown) {
