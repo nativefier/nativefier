@@ -18,7 +18,7 @@ const INJECT_DIR = path.join(__dirname, '..', 'app', 'inject');
 const log = console;
 
 describe('Application launch', () => {
-  jest.setTimeout(20000);
+  jest.setTimeout(60000);
 
   let app: ElectronApplication;
   let appClosed = true;
