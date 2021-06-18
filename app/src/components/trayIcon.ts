@@ -54,7 +54,7 @@ export function createTrayIcon(
         log.debug('mainWindow.page-title-updated', { event, title });
         const counterValue = getCounterValue(title);
         if (counterValue) {
-          appIcon.setToolTip(`(${counterValue})  ${options.name ?? ''}`);
+          appIcon.setToolTip(`(${counterValue})  ${options.name ?? 'Nativefier'}`);
         } else {
           appIcon.setToolTip(options.name ?? '');
         }
