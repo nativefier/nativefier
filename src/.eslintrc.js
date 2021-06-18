@@ -33,13 +33,4 @@ module.exports = {
     '@typescript-eslint/typedef': 'error',
     '@typescript-eslint/unified-signatures': 'error',
   },
-  // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
-  ignorePatterns: [
-    'node_modules/**',
-    'app/node_modules/**',
-    'app/lib/**',
-    'lib/**',
-    'built-tests/**',
-    'coverage/**',
-  ],
 };
