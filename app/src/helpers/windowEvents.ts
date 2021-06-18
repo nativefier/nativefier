@@ -2,7 +2,6 @@ import {
   dialog,
   BrowserWindow,
   Event,
-  // IpcMainEvent,
   NewWindowWebContentsEvent,
   WebContents,
 } from 'electron';
