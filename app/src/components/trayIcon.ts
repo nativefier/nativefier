@@ -9,7 +9,7 @@ export function createTrayIcon(
 ): Tray {
   const options = { ...nativefierOptions };
 
-  if (options.tray) {
+  if (options.tray && options.tray !== 'false') {
     const iconPath = getAppIcon();
     const nimage = nativeImage.createFromPath(iconPath);
     const appIcon = new Tray(nativeImage.createEmpty());

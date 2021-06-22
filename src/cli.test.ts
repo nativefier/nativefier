@@ -309,23 +309,22 @@ describe('initArgs + parseArgs', () => {
     { arg: 'tray', value: 'false' },
     { arg: 'tray', value: 'start-in-tray' },
     { arg: 'tray', value: '' },
-    { arg: 'tray', value: undefined },
   ])('test tray valyue %s', ({ arg, value }) => {
-    if (value !== undefined) {
-      const args = parseArgs(
-        initArgs(['https://google.com', `--${arg}`, `${value}`]),
-      ) as Record<string, number>;
-      if (value !== '') {
-        expect(args[arg]).toBe(value);
-      } else {
-        expect(args[arg]).toBe('true');
-      }
+    const args = parseArgs(
+      initArgs(['https://google.com', `--${arg}`, `${value}`]),
+    ) as Record<string, number>;
+    if (value !== '') {
+      expect(args[arg]).toBe(value);
     } else {
-      const args = parseArgs(initArgs(['https://google.com'])) as Record<
-        string,
-        number
-      >;
-      expect(args[arg]).toBe('false');
+      expect(args[arg]).toBe('true');
     }
+  });
+
+  test('test tray value defaults to false', () => {
+    const args = parseArgs(initArgs(['https://google.com'])) as Record<
+      string,
+      number
+    >;
+    expect(args.tray).toBe('false');
   });
 });
