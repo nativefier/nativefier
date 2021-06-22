@@ -130,6 +130,7 @@ describe('initArgs + parseArgs', () => {
       isJsonString: true,
     },
     { arg: 'proxy-rules', shortArg: '', value: 'RULE: PROXY' },
+    { arg: 'tray', shortArg: '', value: 'true' },
     { arg: 'user-agent', shortArg: 'u', value: 'FIREFOX' },
     {
       arg: 'win32metadata',
@@ -220,7 +221,6 @@ describe('initArgs + parseArgs', () => {
     { arg: 'portable', shortArg: '' },
     { arg: 'show-menu-bar', shortArg: 'm' },
     { arg: 'single-instance', shortArg: '' },
-    { arg: 'tray', shortArg: '' },
     { arg: 'verbose', shortArg: '' },
     { arg: 'widevine', shortArg: '' },
   ])('test boolean arg %s', ({ arg, shortArg }) => {
@@ -301,6 +301,31 @@ describe('initArgs + parseArgs', () => {
         initArgs(['https://google.com', `-${shortArg}`, 'abcd']),
       ) as Record<string, number>;
       expect(badShortArgs[arg]).toBeNaN();
+    }
+  });
+
+  test.each([
+    { arg: 'tray', value: 'true' },
+    { arg: 'tray', value: 'false' },
+    { arg: 'tray', value: 'start-in-tray' },
+    { arg: 'tray', value: '' },
+    { arg: 'tray', value: undefined },
+  ])('test tray valyue %s', ({ arg, value }) => {
+    if (value !== undefined) {
+      const args = parseArgs(
+        initArgs(['https://google.com', `--${arg}`, `${value}`]),
+      ) as Record<string, number>;
+      if (value !== '') {
+        expect(args[arg]).toBe(value);
+      } else {
+        expect(args[arg]).toBe('true');
+      }
+    } else {
+      const args = parseArgs(initArgs(['https://google.com'])) as Record<
+        string,
+        number
+      >;
+      expect(args[arg]).toBe('false');
     }
   });
 });
