@@ -21,6 +21,7 @@ import {
   zoomOut,
   zoomReset,
 } from '../helpers/windowHelpers';
+
 type BookmarksLink = {
   type: 'link';
   title: string;
