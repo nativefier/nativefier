@@ -10,12 +10,12 @@ import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { userAgent } from './options/fields/userAgent';
-import { NativefierOptions } from './options/model';
+import { NativefierOptions, RawOptions } from './options/model';
 import { parseJson } from './utils/parseUtils';
 
 async function checkApp(
   appRoot: string,
-  inputOptions: NativefierOptions,
+  inputOptions: RawOptions,
 ): Promise<void> {
   const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
   if (inputOptions.out !== undefined) {
@@ -102,12 +102,13 @@ describe('Nativefier', () => {
     'builds a Nativefier app for platform %s',
     async (platform) => {
       const tempDirectory = getTempDir('integtest');
-      const options = {
-        platform,
-        targetUrl: 'https://google.com/',
+      const options: RawOptions = {
+        lang: 'en-US',
         out: tempDirectory,
         overwrite: true,
-        lang: 'en-US',
+        platform,
+        targetUrl: 'https://google.com/',
+        tray: 'false',
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
@@ -134,20 +135,22 @@ describe('Nativefier upgrade', () => {
     'can upgrade a Nativefier app for platform/arch: %s',
     async (baseAppOptions) => {
       const tempDirectory = getTempDir('integtestUpgrade1');
-      const options = {
-        targetUrl: 'https://google.com/',
+      const options: RawOptions = {
+        electronVersion: '11.2.3',
         out: tempDirectory,
         overwrite: true,
-        electronVersion: '11.2.3',
+        targetUrl: 'https://google.com/',
+        tray: 'false',
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
       await checkApp(appPath as string, options);
 
-      const upgradeOptions = {
+      const upgradeOptions: RawOptions = {
         upgrade: appPath,
         overwrite: true,
+        tray: 'false',
       };
 
       const upgradeAppPath = await buildNativefierApp(upgradeOptions);

@@ -100,7 +100,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       showMenuBar: rawOptions.showMenuBar ?? false,
       singleInstance: rawOptions.singleInstance ?? false,
       titleBarStyle: rawOptions.titleBarStyle,
-      tray: rawOptions.tray ?? false,
+      tray: rawOptions.tray ?? 'false',
       userAgent: rawOptions.userAgent,
       userAgentHonest: rawOptions.userAgentHonest ?? false,
       verbose: rawOptions.verbose ?? false,
