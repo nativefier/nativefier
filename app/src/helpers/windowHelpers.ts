@@ -1,7 +1,7 @@
 import {
+  dialog,
   BrowserWindow,
   BrowserWindowConstructorOptions,
-  dialog,
   HeadersReceivedResponse,
   IpcMainEvent,
   MessageBoxReturnValue,
@@ -331,7 +331,7 @@ export function zoomOut(): void {
 export function zoomReset(options): void {
   log.debug('zoomReset');
   withFocusedWindow((focusedWindow) => {
-    focusedWindow.webContents.zoomFactor = options.zoom;
+    focusedWindow.webContents.zoomFactor = options.zoom ?? 1.0;
   });
 }
 
