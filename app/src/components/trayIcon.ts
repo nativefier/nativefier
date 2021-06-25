@@ -10,7 +10,7 @@ export function createTrayIcon(
 ): Tray | undefined {
   const options = { ...nativefierOptions };
 
-  if (options.tray) {
+  if (options.tray && options.tray !== 'false') {
     const iconPath = getAppIcon();
     if (!iconPath) {
       throw new Error('Icon path not found found to use with tray option.');

@@ -44,7 +44,7 @@ async function copyIconsIfNecessary(
     options.packager.platform === 'darwin' ||
     options.packager.platform === 'mas'
   ) {
-    if (options.nativefier.tray) {
+    if (options.nativefier.tray !== 'false') {
       //tray icon needs to be .png
       log.debug('Copying icon for tray application');
       const trayIconFileName = `tray-icon.png`;

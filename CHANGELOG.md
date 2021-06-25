@@ -1,4 +1,14 @@
 
+44.0.5 / 2021-06-25
+===================
+
+  * Fix "Reset Zoom" menu item (#1241, PR #1243)
+  * Fix `--tray start-in-tray` (#1225, PR #1235)
+  * Fix external URLs opening in a new Nativefier tab (#1228, PR #1229)
+  * Bump default Electron from 12.0.11 to 12.0.12. See changelog:
+    [Electron 12.0.12](https://github.com/electron/electron/releases/tag/v12.0.12)
+  * Maintenance: documentation
+
 44.0.4 / 2021-06-15
 ===================
 

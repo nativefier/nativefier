@@ -44,7 +44,7 @@ describe('generateMenu', () => {
     const menu = generateMenu(
       {
         nativefierVersion: '1.0.0',
-        zoomBuildTimeValue: 1.0,
+        zoom: 1.0,
         disableDevTools: false,
       },
       window,
@@ -71,7 +71,7 @@ describe('generateMenu', () => {
     const menu = generateMenu(
       {
         nativefierVersion: '1.0.0',
-        zoomBuildTimeValue: 1.0,
+        zoom: 1.0,
         disableDevTools: false,
       },
       window,
@@ -101,7 +101,7 @@ describe('generateMenu', () => {
       const menu = generateMenu(
         {
           nativefierVersion: '1.0.0',
-          zoomBuildTimeValue: 1.0,
+          zoom: 1.0,
           disableDevTools: false,
         },
         window,
@@ -138,7 +138,7 @@ describe('generateMenu', () => {
       const menu = generateMenu(
         {
           nativefierVersion: '1.0.0',
-          zoomBuildTimeValue: 1.0,
+          zoom: 1.0,
           disableDevTools: false,
         },
         window,

@@ -1,7 +1,7 @@
 import {
+  dialog,
   BrowserWindow,
   BrowserWindowConstructorOptions,
-  dialog,
   Event,
   HeadersReceivedResponse,
   MessageBoxReturnValue,
@@ -181,13 +181,13 @@ export function hideWindow(
   window: BrowserWindow,
   event: Event,
   fastQuit: boolean,
-  tray: string | boolean,
+  tray: 'true' | 'false' | 'start-in-tray',
 ): void {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
     event.preventDefault();
     window.hide();
-  } else if (!fastQuit && tray) {
+  } else if (!fastQuit && tray !== 'false') {
     event.preventDefault();
     window.hide();
   }

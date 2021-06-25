@@ -62,13 +62,11 @@ export function generateMenu(
   },
   mainWindow: BrowserWindow,
 ): MenuItemConstructorOptions[] {
-  const { nativefierVersion, zoomBuildTimeValue, disableDevTools } = options;
+  const { nativefierVersion, zoom, disableDevTools } = options;
   const zoomResetLabel =
-    zoomBuildTimeValue === 1.0
+    !zoom || zoom === 1.0
       ? 'Reset Zoom'
-      : `Reset Zoom (to ${
-          zoomBuildTimeValue ?? 1.0 * 100
-        }%, set at build time)`;
+      : `Reset Zoom (to ${(zoom * 100).toFixed(1)}%, set at build time)`;
 
   const editMenu: MenuItemConstructorOptions = {
     label: '&Edit',
@@ -226,16 +224,14 @@ export function generateMenu(
       {
         label: zoomResetLabel,
         accelerator: 'CmdOrCtrl+0',
-        click: (): void =>
-          zoomReset({ zoom: options.zoomBuildTimeValue ?? 1.0 }),
+        click: (): void => zoomReset(options),
       },
       {
         label: 'ZoomResetAdditionalShortcut',
         visible: false,
         acceleratorWorksWhenHidden: true,
         accelerator: 'CmdOrCtrl+num0',
-        click: (): void =>
-          zoomReset({ zoom: options.zoomBuildTimeValue ?? 1.0 }),
+        click: (): void => zoomReset(options),
       },
     ],
   };

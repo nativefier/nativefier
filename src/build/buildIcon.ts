@@ -87,7 +87,7 @@ export function convertIconIfNecessary(options: AppOptions): void {
       const iconPath = convertToIcns(options.packager.icon);
       options.packager.icon = iconPath;
     }
-    if (options.nativefier.tray) {
+    if (options.nativefier.tray !== 'false') {
       convertToTrayIcon(options.packager.icon);
     }
   } catch (err: unknown) {
