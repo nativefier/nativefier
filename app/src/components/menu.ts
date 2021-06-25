@@ -58,7 +58,7 @@ export function generateMenu(
   options: {
     disableDevTools: boolean;
     nativefierVersion: string;
-    zoomBuildTimeValue?: number;
+    zoom?: number;
   },
   mainWindow: BrowserWindow,
 ): MenuItemConstructorOptions[] {

@@ -1,7 +1,11 @@
 import { CreateOptions } from 'asar';
 import * as electronPackager from 'electron-packager';
 
-export type TitleBarValue = 'default' | 'hidden' | 'hiddenInset' | 'customButtonsOnHover';
+export type TitleBarValue =
+  | 'default'
+  | 'hidden'
+  | 'hiddenInset'
+  | 'customButtonsOnHover';
 export type TrayValue = 'true' | 'false' | 'start-in-tray';
 
 export interface ElectronPackagerOptions extends electronPackager.Options {
@@ -178,7 +182,7 @@ export type RawOptions = {
   showMenuBar?: boolean;
   singleInstance?: boolean;
   targetUrl?: string;
-  titleBarStyle?: ;
+  titleBarStyle?: TitleBarValue;
   tray: TrayValue;
   upgrade?: string | boolean;
   upgradeFrom?: string;

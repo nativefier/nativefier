@@ -176,11 +176,16 @@ function setupCloseEvent(options: OutputOptions, window: BrowserWindow): void {
           window,
           event,
           options.fastQuit ?? false,
-          options.tray ?? false,
+          options.tray ?? 'false',
         ),
       );
     }
-    hideWindow(window, event, options.fastQuit ?? false, options.tray ?? false);
+    hideWindow(
+      window,
+      event,
+      options.fastQuit ?? false,
+      options.tray ?? 'false',
+    );
 
     if (options.clearCache) {
       clearCache(window).catch((err) => log.error('clearCache ERROR', err));

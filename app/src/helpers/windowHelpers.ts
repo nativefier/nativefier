@@ -11,7 +11,7 @@ import {
 
 import log from 'loglevel';
 import path from 'path';
-import { WindowOptions } from '../../../shared/src/options/model';
+import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
 import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 
 const ZOOM_INTERVAL = 0.1;
@@ -181,7 +181,7 @@ export function hideWindow(
   window: BrowserWindow,
   event: Event,
   fastQuit: boolean,
-  tray: 'true' | 'false' | 'start-in-tray',
+  tray: TrayValue,
 ): void {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
@@ -342,7 +342,7 @@ export function zoomOut(): void {
   adjustWindowZoom(-ZOOM_INTERVAL);
 }
 
-export function zoomReset(options: { zoom: number }): void {
+export function zoomReset(options: { zoom?: number }): void {
   log.debug('zoomReset');
   withFocusedWindow((focusedWindow) => {
     focusedWindow.webContents.zoomFactor = options.zoom ?? 1.0;
