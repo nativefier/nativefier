@@ -1,6 +1,8 @@
 import { CreateOptions } from 'asar';
 import * as electronPackager from 'electron-packager';
 
+export type TrayValue = 'true' | 'false' | 'start-in-tray';
+
 export interface ElectronPackagerOptions extends electronPackager.Options {
   portable: boolean;
   platform?: string;
@@ -50,7 +52,7 @@ export interface AppOptions {
     showMenuBar: boolean;
     singleInstance: boolean;
     titleBarStyle?: string;
-    tray: string | boolean;
+    tray: TrayValue;
     userAgent?: string;
     userAgentHonest: boolean;
     verbose: boolean;
@@ -149,7 +151,7 @@ export type RawOptions = {
   singleInstance?: boolean;
   targetUrl?: string;
   titleBarStyle?: string;
-  tray?: string | boolean;
+  tray: TrayValue;
   upgrade?: string | boolean;
   upgradeFrom?: string;
   userAgent?: string;

@@ -233,7 +233,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       default: 'false',
       description:
         "allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
-      type: 'string',
+      choices: ['true', 'false', 'start-in-tray'],
     })
     .option('width', {
       defaultDescription: '1280',
@@ -519,7 +519,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   // Do this now to go ahead and get any errors out of the way
   args.argv;
 
-  return args;
+  return args as yargs.Argv<RawOptions>;
 }
 
 function decorateYargOptionGroup(value: string): string {

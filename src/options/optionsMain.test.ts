@@ -1,7 +1,7 @@
 import { getOptions, normalizePlatform } from './optionsMain';
 import * as asyncConfig from './asyncConfig';
 import { inferPlatform } from '../infer/inferOs';
-import { AppOptions } from './model';
+import { AppOptions, RawOptions } from './model';
 
 let asyncConfigMock: jest.SpyInstance;
 const mockedAsyncConfig: AppOptions = {
@@ -47,7 +47,7 @@ const mockedAsyncConfig: AppOptions = {
     showMenuBar: false,
     singleInstance: false,
     titleBarStyle: undefined,
-    tray: false,
+    tray: 'false',
     userAgent: undefined,
     userAgentHonest: false,
     verbose: false,
@@ -74,8 +74,9 @@ beforeAll(() => {
 });
 
 test('it should call the async config', async () => {
-  const params = {
+  const params: RawOptions = {
     targetUrl: 'https://example.com/',
+    tray: 'false',
   };
   const result = await getOptions(params);
   expect(asyncConfigMock).toHaveBeenCalledWith(
@@ -88,8 +89,9 @@ test('it should call the async config', async () => {
 });
 
 test('it should set the accessibility prompt option to true by default', async () => {
-  const params = {
+  const params: RawOptions = {
     targetUrl: 'https://example.com/',
+    tray: 'false',
   };
   const result = await getOptions(params);
   expect(asyncConfigMock).toHaveBeenCalledWith(

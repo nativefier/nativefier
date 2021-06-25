@@ -141,7 +141,7 @@ describe('initArgs + parseArgs', () => {
   ])('test string arg %s', ({ arg, shortArg, value, isJsonString }) => {
     const args = parseArgs(
       initArgs(['https://google.com', `--${arg}`, value]),
-    ) as Record<string, string>;
+    ) as unknown as Record<string, string>;
     if (!isJsonString) {
       expect(args[arg]).toBe(value);
     } else {
@@ -151,7 +151,7 @@ describe('initArgs + parseArgs', () => {
     if (shortArg) {
       const argsShort = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`, value]),
-      ) as Record<string, string>;
+      ) as unknown as Record<string, string>;
       if (!isJsonString) {
         expect(argsShort[arg]).toBe(value);
       } else {
@@ -172,7 +172,7 @@ describe('initArgs + parseArgs', () => {
   ])('limited choice arg %s', ({ arg, shortArg, value, badValue }) => {
     const args = parseArgs(
       initArgs(['https://google.com', `--${arg}`, value]),
-    ) as Record<string, string>;
+    ) as unknown as Record<string, string>;
     expect(args[arg]).toBe(value);
 
     // Mock console.error to not pollute the log with the yargs help text
@@ -186,7 +186,7 @@ describe('initArgs + parseArgs', () => {
     if (shortArg) {
       const argsShort = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`, value]),
-      ) as Record<string, string>;
+      ) as unknown as Record<string, string>;
       expect(argsShort[arg]).toBe(value);
 
       initArgs(['https://google.com', `-${shortArg}`, badValue]);
@@ -224,20 +224,19 @@ describe('initArgs + parseArgs', () => {
     { arg: 'verbose', shortArg: '' },
     { arg: 'widevine', shortArg: '' },
   ])('test boolean arg %s', ({ arg, shortArg }) => {
-    const defaultArgs = parseArgs(initArgs(['https://google.com'])) as Record<
-      string,
-      boolean
-    >;
+    const defaultArgs = parseArgs(
+      initArgs(['https://google.com']),
+    ) as unknown as Record<string, boolean>;
     expect(defaultArgs[arg]).toBe(false);
 
     const args = parseArgs(
       initArgs(['https://google.com', `--${arg}`]),
-    ) as Record<string, boolean>;
+    ) as unknown as Record<string, boolean>;
     expect(args[arg]).toBe(true);
     if (shortArg) {
       const argsShort = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`]),
-      ) as Record<string, boolean>;
+      ) as unknown as Record<string, boolean>;
       expect(argsShort[arg]).toBe(true);
     }
   });
@@ -247,23 +246,22 @@ describe('initArgs + parseArgs', () => {
     ({ arg, shortArg }) => {
       const inverse = arg.startsWith('no-') ? arg.substr(3) : `no-${arg}`;
 
-      const defaultArgs = parseArgs(initArgs(['https://google.com'])) as Record<
-        string,
-        boolean
-      >;
+      const defaultArgs = parseArgs(
+        initArgs(['https://google.com']),
+      ) as unknown as Record<string, boolean>;
       expect(defaultArgs[arg]).toBe(false);
       expect(defaultArgs[inverse]).toBe(true);
 
       const args = parseArgs(
         initArgs(['https://google.com', `--${arg}`]),
-      ) as Record<string, boolean>;
+      ) as unknown as Record<string, boolean>;
       expect(args[arg]).toBe(true);
       expect(args[inverse]).toBe(false);
 
       if (shortArg) {
         const argsShort = parseArgs(
           initArgs(['https://google.com', `-${shortArg}`]),
-        ) as Record<string, boolean>;
+        ) as unknown as Record<string, boolean>;
         expect(argsShort[arg]).toBe(true);
         expect(argsShort[inverse]).toBe(true);
       }
@@ -283,23 +281,23 @@ describe('initArgs + parseArgs', () => {
   ])('test numeric arg %s', ({ arg, shortArg, value }) => {
     const args = parseArgs(
       initArgs(['https://google.com', `--${arg}`, `${value}`]),
-    ) as Record<string, number>;
+    ) as unknown as Record<string, number>;
     expect(args[arg]).toBe(value);
 
     const badArgs = parseArgs(
       initArgs(['https://google.com', `--${arg}`, 'abcd']),
-    ) as Record<string, number>;
+    ) as unknown as Record<string, number>;
     expect(badArgs[arg]).toBeNaN();
 
     if (shortArg) {
       const shortArgs = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`, `${value}`]),
-      ) as Record<string, number>;
+      ) as unknown as Record<string, number>;
       expect(shortArgs[arg]).toBe(value);
 
       const badShortArgs = parseArgs(
         initArgs(['https://google.com', `-${shortArg}`, 'abcd']),
-      ) as Record<string, number>;
+      ) as unknown as Record<string, number>;
       expect(badShortArgs[arg]).toBeNaN();
     }
   });
@@ -312,7 +310,7 @@ describe('initArgs + parseArgs', () => {
   ])('test tray valyue %s', ({ arg, value }) => {
     const args = parseArgs(
       initArgs(['https://google.com', `--${arg}`, `${value}`]),
-    ) as Record<string, number>;
+    ) as unknown as Record<string, number>;
     if (value !== '') {
       expect(args[arg]).toBe(value);
     } else {
@@ -321,10 +319,7 @@ describe('initArgs + parseArgs', () => {
   });
 
   test('test tray value defaults to false', () => {
-    const args = parseArgs(initArgs(['https://google.com'])) as Record<
-      string,
-      number
-    >;
+    const args = parseArgs(initArgs(['https://google.com']));
     expect(args.tray).toBe('false');
   });
 });

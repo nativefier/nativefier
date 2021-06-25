@@ -47,7 +47,7 @@ describe('fields', () => {
         showMenuBar: false,
         singleInstance: false,
         titleBarStyle: undefined,
-        tray: false,
+        tray: 'false',
         userAgent: undefined,
         userAgentHonest: false,
         verbose: false,
