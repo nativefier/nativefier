@@ -1,0 +1,18 @@
+{
+  "extends": "../tsconfig-base.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./lib",
+    // Here we want to set target and lib to the *worst* of app/tsconfig.json and src/tsconfig.json
+    // (plus "dom"), because shared code will run both in CLI Node and app Node.
+    // See comments in app/tsconfig.json and src/tsconfig.json
+    "target": "es2018",
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "include": [
+    "./src/**/*"
+  ],
+}

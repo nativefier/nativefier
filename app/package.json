@@ -12,8 +12,8 @@
   ],
   "scripts": {},
   "dependencies": {
-    "electron-context-menu": "^2.5.0",
-    "electron-dl": "^3.2.0",
+    "electron-context-menu": "^3.1.0",
+    "electron-dl": "^3.2.1",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
     "loglevel": "^1.7.1",

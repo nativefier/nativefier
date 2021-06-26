@@ -5,7 +5,7 @@ import * as log from 'loglevel';
 import { BrowserWindow, ipcMain } from 'electron';
 
 export async function createLoginWindow(
-  loginCallback,
+  loginCallback: (username?: string, password?: string) => void,
   parent?: BrowserWindow,
 ): Promise<BrowserWindow> {
   log.debug('createLoginWindow', { loginCallback, parent });
@@ -25,7 +25,7 @@ export async function createLoginWindow(
     `file://${path.join(__dirname, 'static/login.html')}`,
   );
 
-  ipcMain.once('login-message', (event, usernameAndPassword) => {
+  ipcMain.once('login-message', (event, usernameAndPassword: string[]) => {
     log.debug('login-message', { event, username: usernameAndPassword[0] });
     loginCallback(usernameAndPassword[0], usernameAndPassword[1]);
     loginWindow.close();

@@ -9,7 +9,7 @@ import {
   convertToIcns,
   convertToTrayIcon,
 } from '../helpers/iconShellHelpers';
-import { AppOptions } from '../options/model';
+import { AppOptions } from '../../shared/src/options/model';
 
 function iconIsIco(iconPath: string): boolean {
   return path.extname(iconPath) === '.ico';
@@ -87,7 +87,7 @@ export function convertIconIfNecessary(options: AppOptions): void {
       const iconPath = convertToIcns(options.packager.icon);
       options.packager.icon = iconPath;
     }
-    if (options.nativefier.tray) {
+    if (options.nativefier.tray !== 'false') {
       convertToTrayIcon(options.packager.icon);
     }
   } catch (err: unknown) {

@@ -72,7 +72,7 @@ function findFlashOnMac(): string {
   )[0];
 }
 
-export function inferFlashPath(): string {
+export function inferFlashPath(): string | undefined {
   if (isOSX()) {
     return findFlashOnMac();
   }
@@ -86,5 +86,5 @@ export function inferFlashPath(): string {
   }
 
   log.warn('Unable to determine OS to infer flash player');
-  return null;
+  return undefined;
 }

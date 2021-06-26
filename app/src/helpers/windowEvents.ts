@@ -1,11 +1,12 @@
 import {
   dialog,
   BrowserWindow,
-  IpcMainEvent,
+  Event,
   NewWindowWebContentsEvent,
   WebContents,
 } from 'electron';
 import log from 'loglevel';
+import { WindowOptions } from '../../../shared/src/options/model';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
 import {
@@ -18,8 +19,8 @@ import {
 } from './windowHelpers';
 
 export function onNewWindow(
-  options,
-  setupWindow: (...args) => void,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   event: NewWindowWebContentsEvent,
   urlToGo: string,
   frameName: string,
@@ -39,7 +40,8 @@ export function onNewWindow(
     disposition,
     parent,
   });
-  const preventDefault = (newGuest: BrowserWindow): void => {
+  const preventDefault = (newGuest?: BrowserWindow): void => {
+    log.debug('onNewWindow.preventDefault', { newGuest, event });
     event.preventDefault();
     if (newGuest) {
       event.newGuest = newGuest;
@@ -56,14 +58,15 @@ export function onNewWindow(
 }
 
 export function onNewWindowHelper(
-  options,
-  setupWindow: (...args) => void,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   urlToGo: string,
-  disposition: string,
-  preventDefault,
+  disposition: string | undefined,
+  preventDefault: (newGuest?: BrowserWindow) => void,
   parent?: BrowserWindow,
 ): Promise<void> {
   log.debug('onNewWindowHelper', {
+    options,
     urlToGo,
     disposition,
     preventDefault,
@@ -73,33 +76,38 @@ export function onNewWindowHelper(
     if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
       preventDefault();
       if (options.blockExternalUrls) {
-        return blockExternalURL(urlToGo).then(() => null);
+        return new Promise((resolve) => {
+          blockExternalURL(urlToGo)
+            .then(() => resolve())
+            .catch((err: unknown) => {
+              throw err;
+            });
+        });
       } else {
         return openExternal(urlToGo);
       }
-    } else if (urlToGo === 'about:blank') {
-      const newWindow = createAboutBlankWindow(options, setupWindow, parent);
-      return Promise.resolve(preventDefault(newWindow));
+    }
+    // Normally the following would be:
+    // if (urlToGo.startsWith('about:blank'))...
+    // But due to a bug we resolved in https://github.com/nativefier/nativefier/issues/1197
+    // Some sites use about:blank#something to use as placeholder windows to fill
+    // with content via JavaScript. So we'll stay specific for now...
+    else if (['about:blank', 'about:blank#blocked'].includes(urlToGo)) {
+      return Promise.resolve(
+        preventDefault(createAboutBlankWindow(options, setupWindow, parent)),
+      );
     } else if (nativeTabsSupported()) {
-      if (disposition === 'background-tab') {
-        const newTab = createNewTab(
-          options,
-          setupWindow,
-          urlToGo,
-          false,
-          parent,
-        );
-        return Promise.resolve(preventDefault(newTab));
-      } else if (disposition === 'foreground-tab') {
-        const newTab = createNewTab(
-          options,
-          setupWindow,
-          urlToGo,
-          true,
-          parent,
-        );
-        return Promise.resolve(preventDefault(newTab));
-      }
+      return Promise.resolve(
+        preventDefault(
+          createNewTab(
+            options,
+            setupWindow,
+            urlToGo,
+            disposition === 'foreground-tab',
+            parent,
+          ),
+        ),
+      );
     }
     return Promise.resolve(undefined);
   } catch (err: unknown) {
@@ -108,15 +116,21 @@ export function onNewWindowHelper(
 }
 
 export function onWillNavigate(
-  options,
-  event: IpcMainEvent,
+  options: WindowOptions,
+  event: Event,
   urlToGo: string,
 ): Promise<void> {
   log.debug('onWillNavigate', { options, event, urlToGo });
   if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
     event.preventDefault();
     if (options.blockExternalUrls) {
-      return blockExternalURL(urlToGo).then(() => null);
+      return new Promise((resolve) => {
+        blockExternalURL(urlToGo)
+          .then(() => resolve())
+          .catch((err: unknown) => {
+            throw err;
+          });
+      });
     } else {
       return openExternal(urlToGo);
     }
@@ -124,29 +138,39 @@ export function onWillNavigate(
   return Promise.resolve(undefined);
 }
 
-export function onWillPreventUnload(event: IpcMainEvent): void {
+export function onWillPreventUnload(
+  event: Event & { sender?: WebContents },
+): void {
   log.debug('onWillPreventUnload', event);
 
-  const webContents: WebContents = event.sender;
-  if (webContents === undefined) {
+  const webContents = event.sender;
+  if (!webContents) {
     return;
   }
 
-  const browserWindow = BrowserWindow.fromWebContents(webContents);
-  const choice = dialog.showMessageBoxSync(browserWindow, {
-    type: 'question',
-    buttons: ['Proceed', 'Stay'],
-    message: 'You may have unsaved changes, are you sure you want to proceed?',
-    title: 'Changes you made may not be saved.',
-    defaultId: 0,
-    cancelId: 1,
-  });
-  if (choice === 0) {
-    event.preventDefault();
+  const browserWindow =
+    BrowserWindow.fromWebContents(webContents) ??
+    BrowserWindow.getFocusedWindow();
+  if (browserWindow) {
+    const choice = dialog.showMessageBoxSync(browserWindow, {
+      type: 'question',
+      buttons: ['Proceed', 'Stay'],
+      message:
+        'You may have unsaved changes, are you sure you want to proceed?',
+      title: 'Changes you made may not be saved.',
+      defaultId: 0,
+      cancelId: 1,
+    });
+    if (choice === 0) {
+      event.preventDefault();
+    }
   }
 }
 
-export function setupNativefierWindow(options, window: BrowserWindow): void {
+export function setupNativefierWindow(
+  options: WindowOptions,
+  window: BrowserWindow,
+): void {
   if (options.userAgent) {
     window.webContents.userAgent = options.userAgent;
   }
@@ -157,7 +181,7 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
 
   injectCSS(window);
 
-  window.webContents.on('will-navigate', (event: IpcMainEvent, url: string) => {
+  window.webContents.on('will-navigate', (event: Event, url: string) => {
     onWillNavigate(options, event, url).catch((err) => {
       log.error('window.webContents.on.will-navigate ERROR', err);
       event.preventDefault();
@@ -168,13 +192,13 @@ export function setupNativefierWindow(options, window: BrowserWindow): void {
   sendParamsOnDidFinishLoad(options, window);
 
   // @ts-expect-error new-tab isn't in the type definition, but it does exist
-  window.on('new-tab', () =>
+  window.on('new-tab', () => {
     createNewTab(
       options,
       setupNativefierWindow,
       options.targetUrl,
       true,
       window,
-    ),
-  );
+    );
+  });
 }

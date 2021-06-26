@@ -13,7 +13,7 @@ function launch_app() {
   if [ "$(uname -s)" = "Darwin" ]; then
     open -a "$1/$2-darwin-x64/$2.app"
   elif [ "$(uname -o)" = "Msys" ]; then
-    "$1/$2-win32-x64/$2.exe" --verbose
+    "$1/$2-win32-x64/$2.exe"
   else
     "$1/$2-linux-x64/$2"
   fi
@@ -100,6 +100,41 @@ printf '\n***** SMOKE TEST 3: Test checklist *****
 - Should get a login window. Log in with username="foo" and password="bar".
 - Post login, you should see:
   { "authenticated": true,  "user": "foo" }
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 4: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-tray-XXXXX)
+name='nativefier-smoke-test-4'
+node ./lib/cli.js 'https://google.com/' \
+  --name "$name" \
+  --tray \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 4: Test checklist *****
+- Should have an app with a tray icon
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 5: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-start-in-tray-XXXXX)
+name='nativefier-smoke-test-5'
+node ./lib/cli.js 'https://google.com/' \
+  --name "$name" \
+  --tray start-in-tray \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 5: Test checklist *****
+- Should have an app that does not show a window initially,
+  but will have a tray icon that will show the window.
 - Console: no Electron runtime deprecation warnings/error logged'
 
 launch_app "$tmp_dir" "$name"

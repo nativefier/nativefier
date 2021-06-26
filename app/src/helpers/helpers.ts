@@ -39,7 +39,7 @@ function domainify(url: string): string {
   return domain;
 }
 
-export function getAppIcon(): string {
+export function getAppIcon(): string | undefined {
   // Prefer ICO under Windows, see
   // https://www.electronjs.org/docs/api/browser-window#new-browserwindowoptions
   // https://www.electronjs.org/docs/api/native-image#supported-formats
@@ -55,7 +55,7 @@ export function getAppIcon(): string {
   }
 }
 
-export function getCounterValue(title: string): string {
+export function getCounterValue(title: string): string | undefined {
   const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
   const match = itemCountRegex.exec(title);
   return match ? match[1] : undefined;
@@ -74,7 +74,7 @@ export function getCSSToInject(): string {
   for (const cssFile of cssFiles) {
     log.debug('Injecting CSS file', cssFile);
     const cssFileData = fs.readFileSync(cssFile);
-    cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
+    cssToInject += `/* ${cssFile} */\n\n ${cssFileData.toString()}\n\n`;
   }
   return cssToInject;
 }
@@ -114,7 +114,7 @@ function isInternalLoginPage(url: string): boolean {
 export function linkIsInternal(
   currentUrl: string,
   newUrl: string,
-  internalUrlRegex: string | RegExp,
+  internalUrlRegex: string | RegExp | undefined,
 ): boolean {
   log.debug('linkIsInternal', { currentUrl, newUrl, internalUrlRegex });
   if (newUrl.split('#')[0] === 'about:blank') {

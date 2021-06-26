@@ -19,7 +19,11 @@ import {
 } from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
-import { AppOptions, GlobalShortcut, RawOptions } from './model';
+import {
+  AppOptions,
+  GlobalShortcut,
+  RawOptions,
+} from '../../shared/src/options/model';
 import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
 
@@ -100,7 +104,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       showMenuBar: rawOptions.showMenuBar ?? false,
       singleInstance: rawOptions.singleInstance ?? false,
       titleBarStyle: rawOptions.titleBarStyle,
-      tray: rawOptions.tray ?? false,
+      tray: rawOptions.tray ?? 'false',
       userAgent: rawOptions.userAgent,
       userAgentHonest: rawOptions.userAgentHonest ?? false,
       verbose: rawOptions.verbose ?? false,

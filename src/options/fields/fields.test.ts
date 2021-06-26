@@ -1,4 +1,4 @@
-import { AppOptions } from '../model';
+import { AppOptions } from '../../../shared/src/options/model';
 import { processOptions } from './fields';
 describe('fields', () => {
   let options: AppOptions;
@@ -47,7 +47,7 @@ describe('fields', () => {
         showMenuBar: false,
         singleInstance: false,
         titleBarStyle: undefined,
-        tray: false,
+        tray: 'false',
         userAgent: undefined,
         userAgentHonest: false,
         verbose: false,

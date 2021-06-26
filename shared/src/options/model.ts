@@ -1,6 +1,13 @@
 import { CreateOptions } from 'asar';
 import * as electronPackager from 'electron-packager';
 
+export type TitleBarValue =
+  | 'default'
+  | 'hidden'
+  | 'hiddenInset'
+  | 'customButtonsOnHover';
+export type TrayValue = 'true' | 'false' | 'start-in-tray';
+
 export interface ElectronPackagerOptions extends electronPackager.Options {
   portable: boolean;
   platform?: string;
@@ -32,7 +39,7 @@ export interface AppOptions {
     electronVersionUsed?: string;
     enableEs3Apis: boolean;
     fastQuit: boolean;
-    fileDownloadOptions: unknown;
+    fileDownloadOptions?: Record<string, unknown>;
     flashPluginDir?: string;
     fullScreen: boolean;
     globalShortcuts?: GlobalShortcut[];
@@ -44,13 +51,13 @@ export interface AppOptions {
     internalUrls?: string;
     lang?: string;
     maximize: boolean;
-    nativefierVersion?: string;
+    nativefierVersion: string;
     processEnvs?: string;
     proxyRules?: string;
     showMenuBar: boolean;
     singleInstance: boolean;
-    titleBarStyle?: string;
-    tray: string | boolean;
+    titleBarStyle?: TitleBarValue;
+    tray: TrayValue;
     userAgent?: string;
     userAgentHonest: boolean;
     verbose: boolean;
@@ -68,10 +75,26 @@ export interface AppOptions {
   };
 }
 
-export type BrowserWindowOptions = Record<string, unknown>;
+export type BrowserWindowOptions = Record<string, unknown> & {
+  webPreferences?: Record<string, unknown>;
+};
 
 export type GlobalShortcut = {
   key: string;
+  inputEvents: {
+    type:
+      | 'mouseDown'
+      | 'mouseUp'
+      | 'mouseEnter'
+      | 'mouseLeave'
+      | 'contextMenu'
+      | 'mouseWheel'
+      | 'mouseMove'
+      | 'keyDown'
+      | 'keyUp'
+      | 'char';
+    keyCode: string;
+  }[];
 };
 
 export type NativefierOptions = Partial<
@@ -79,9 +102,20 @@ export type NativefierOptions = Partial<
 >;
 
 export type OutputOptions = NativefierOptions & {
+  blockExternalUrls: boolean;
+  browserwindowOptions?: BrowserWindowOptions;
   buildDate: number;
+  companyName?: string;
+  disableDevTools: boolean;
+  fileDownloadOptions?: Record<string, unknown>;
+  internalUrls: string | RegExp | undefined;
   isUpgrade: boolean;
+  name: string;
+  nativefierVersion: string;
   oldBuildWarningText: string;
+  targetUrl: string;
+  userAgent?: string;
+  zoom?: number;
 };
 
 export type PackageJSON = {
@@ -118,7 +152,7 @@ export type RawOptions = {
   electronVersionUsed?: string;
   enableEs3Apis?: boolean;
   fastQuit?: boolean;
-  fileDownloadOptions?: unknown;
+  fileDownloadOptions?: Record<string, unknown>;
   flashPath?: string;
   flashPluginDir?: string;
   fullScreen?: boolean;
@@ -148,8 +182,8 @@ export type RawOptions = {
   showMenuBar?: boolean;
   singleInstance?: boolean;
   targetUrl?: string;
-  titleBarStyle?: string;
-  tray?: string | boolean;
+  titleBarStyle?: TitleBarValue;
+  tray: TrayValue;
   upgrade?: string | boolean;
   upgradeFrom?: string;
   userAgent?: string;
@@ -163,3 +197,25 @@ export type RawOptions = {
   y?: number;
   zoom?: number;
 };
+
+export type WindowOptions = {
+  blockExternalUrls: boolean;
+  browserwindowOptions?: BrowserWindowOptions;
+  insecure: boolean;
+  internalUrls?: string | RegExp;
+  name: string;
+  proxyRules?: string;
+  targetUrl: string;
+  userAgent?: string;
+  zoom: number;
+};
+
+export function outputOptionsToWindowOptions(
+  options: OutputOptions,
+): WindowOptions {
+  return {
+    ...options,
+    insecure: options.insecure ?? false,
+    zoom: options.zoom ?? 1.0,
+  };
+}

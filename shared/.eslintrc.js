@@ -10,12 +10,5 @@ module.exports = {
   plugins: base.plugins,
   extends: base.extends,
   rules: base.rules,
-  // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
-  ignorePatterns: [
-    'node_modules/**',
-    'lib/**',
-    'dist/**',
-    'built-tests/**',
-    'coverage/**',
-  ],
+  ignorePatterns: ['lib/**'],
 };

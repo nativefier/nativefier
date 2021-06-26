@@ -1,11 +1,6 @@
 // # https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md
 module.exports = {
-  root: true,
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    tsconfigRootDir: __dirname,
-    project: ['./tsconfig.json'],
-  },
   plugins: ['@typescript-eslint', 'prettier'],
   extends: [
     'eslint:recommended',
