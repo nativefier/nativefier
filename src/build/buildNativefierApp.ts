@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
-import * as electronPackager from 'electron-packager';
+import electronPackager from 'electron-packager';
 import * as log from 'loglevel';
 
 import { convertIconIfNecessary } from './buildIcon';
@@ -13,7 +13,7 @@ import {
   isWindowsAdmin,
 } from '../helpers/helpers';
 import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
-import { AppOptions, RawOptions } from '../options/model';
+import { AppOptions, RawOptions } from '../../shared/src/options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
 

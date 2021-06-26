@@ -3,9 +3,33 @@ jest.mock('./windowEvents');
 jest.mock('./windowHelpers');
 
 import { dialog, BrowserWindow, WebContents } from 'electron';
+import { WindowOptions } from '../../../shared/src/options/model';
 import { linkIsInternal, openExternal, nativeTabsSupported } from './helpers';
-const { onNewWindowHelper, onWillNavigate, onWillPreventUnload } =
-  jest.requireActual('./windowEvents');
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const {
+  onNewWindowHelper,
+  onWillNavigate,
+  onWillPreventUnload,
+}: {
+  onNewWindowHelper: (
+    options: WindowOptions,
+    setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
+    urlToGo: string,
+    disposition: string | undefined,
+    preventDefault: (newGuest: BrowserWindow) => void,
+    parent?: BrowserWindow,
+  ) => Promise<void>;
+  onWillNavigate: (
+    options: {
+      blockExternalUrls: boolean;
+      internalUrls?: string | RegExp;
+      targetUrl: string;
+    },
+    event: unknown,
+    urlToGo: string,
+  ) => Promise<void>;
+  onWillPreventUnload: (event: unknown) => void;
+} = jest.requireActual('./windowEvents');
 import {
   blockExternalURL,
   createAboutBlankWindow,
@@ -18,7 +42,13 @@ describe('onNewWindowHelper', () => {
   const externalURL = 'https://www.wikipedia.org/wiki/Electron';
   const foregroundDisposition = 'foreground-tab';
   const backgroundDisposition = 'background-tab';
-
+  const baseOptions = {
+    blockExternalUrls: false,
+    insecure: false,
+    name: 'TEST_APP',
+    targetUrl: originalURL,
+    zoom: 1.0,
+  };
   const mockBlockExternalURL: jest.SpyInstance = blockExternalURL as jest.Mock;
   const mockCreateAboutBlank: jest.SpyInstance =
     createAboutBlankWindow as jest.Mock;
@@ -54,14 +84,9 @@ describe('onNewWindowHelper', () => {
     mockOpenExternal.mockRestore();
   });
 
-  test('internal urls should not be handled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-
-    onNewWindowHelper(
-      options,
+  test('internal urls should not be handled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       internalURL,
       undefined,
@@ -75,14 +100,11 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).not.toHaveBeenCalled();
   });
 
-  test('external urls should be opened externally', () => {
+  test('external urls should be opened externally', async () => {
     mockLinkIsInternal.mockReturnValue(false);
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       externalURL,
       undefined,
@@ -96,13 +118,13 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('external urls should be ignored if blockExternalUrls is true', () => {
+  test('external urls should be ignored if blockExternalUrls is true', async () => {
     mockLinkIsInternal.mockReturnValue(false);
     const options = {
+      ...baseOptions,
       blockExternalUrls: true,
-      targetUrl: originalURL,
     };
-    onNewWindowHelper(
+    await onNewWindowHelper(
       options,
       setupWindow,
       externalURL,
@@ -117,13 +139,9 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('tab disposition should be ignored if tabs are not enabled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+  test('tab disposition should be ignored if tabs are not enabled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       internalURL,
       foregroundDisposition,
@@ -137,14 +155,11 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).not.toHaveBeenCalled();
   });
 
-  test('tab disposition should be ignored if url is external', () => {
+  test('tab disposition should be ignored if url is external', async () => {
     mockLinkIsInternal.mockReturnValue(false);
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       externalURL,
       foregroundDisposition,
@@ -158,15 +173,11 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('foreground tabs with internal urls should be opened in the foreground', () => {
+  test('foreground tabs with internal urls should be opened in the foreground', async () => {
     mockNativeTabsSupported.mockReturnValue(true);
 
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       internalURL,
       foregroundDisposition,
@@ -176,7 +187,7 @@ describe('onNewWindowHelper', () => {
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).toHaveBeenCalledWith(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       true,
@@ -187,15 +198,11 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('background tabs with internal urls should be opened in background tabs', () => {
+  test('background tabs with internal urls should be opened in background tabs', async () => {
     mockNativeTabsSupported.mockReturnValue(true);
 
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       internalURL,
       backgroundDisposition,
@@ -205,7 +212,7 @@ describe('onNewWindowHelper', () => {
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).toHaveBeenCalledWith(
-      options,
+      baseOptions,
       setupWindow,
       internalURL,
       false,
@@ -216,13 +223,9 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('about:blank urls should be handled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+  test('about:blank urls should be handled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       'about:blank',
       undefined,
@@ -236,13 +239,9 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('about:blank#blocked urls should be handled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+  test('about:blank#blocked urls should be handled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       'about:blank#blocked',
       undefined,
@@ -256,13 +255,9 @@ describe('onNewWindowHelper', () => {
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('about:blank#other urls should not be handled', () => {
-    const options = {
-      blockExternalUrls: false,
-      targetUrl: originalURL,
-    };
-    onNewWindowHelper(
-      options,
+  test('about:blank#other urls should not be handled', async () => {
+    await onNewWindowHelper(
+      baseOptions,
       setupWindow,
       'about:blank#other',
       undefined,
@@ -302,40 +297,40 @@ describe('onWillNavigate', () => {
     mockOpenExternal.mockRestore();
   });
 
-  test('internal urls should not be handled', () => {
+  test('internal urls should not be handled', async () => {
     mockLinkIsInternal.mockReturnValue(true);
     const options = {
       blockExternalUrls: false,
       targetUrl: originalURL,
     };
     const event = { preventDefault };
-    onWillNavigate(options, event, internalURL);
+    await onWillNavigate(options, event, internalURL);
 
     expect(mockBlockExternalURL).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
 
-  test('external urls should be opened externally', () => {
+  test('external urls should be opened externally', async () => {
     const options = {
       blockExternalUrls: false,
       targetUrl: originalURL,
     };
     const event = { preventDefault };
-    onWillNavigate(options, event, externalURL);
+    await onWillNavigate(options, event, externalURL);
 
     expect(mockBlockExternalURL).not.toHaveBeenCalled();
     expect(mockOpenExternal).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('external urls should be ignored if blockExternalUrls is true', () => {
+  test('external urls should be ignored if blockExternalUrls is true', async () => {
     const options = {
       blockExternalUrls: true,
       targetUrl: originalURL,
     };
     const event = { preventDefault };
-    onWillNavigate(options, event, externalURL);
+    await onWillNavigate(options, event, externalURL);
 
     expect(mockBlockExternalURL).toHaveBeenCalledTimes(1);
     expect(mockOpenExternal).not.toHaveBeenCalled();

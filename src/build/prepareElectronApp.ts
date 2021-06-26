@@ -6,8 +6,13 @@ import { promisify } from 'util';
 import * as log from 'loglevel';
 
 import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
-import { AppOptions, OutputOptions, PackageJSON } from '../options/model';
+import {
+  AppOptions,
+  OutputOptions,
+  PackageJSON,
+} from '../../shared/src/options/model';
 import { parseJson } from '../utils/parseUtils';
+import { DEFAULT_APP_NAME } from '../constants';
 
 const writeFileAsync = promisify(fs.writeFile);
 
@@ -66,7 +71,7 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     maxWidth: options.nativefier.maxWidth,
     minHeight: options.nativefier.minHeight,
     minWidth: options.nativefier.minWidth,
-    name: options.packager.name,
+    name: options.packager.name ?? DEFAULT_APP_NAME,
     nativefierVersion: options.nativefier.nativefierVersion,
     osxNotarize: options.packager.osxNotarize,
     osxSign: options.packager.osxSign,

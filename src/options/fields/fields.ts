@@ -1,6 +1,6 @@
 import { icon } from './icon';
 import { userAgent } from './userAgent';
-import { AppOptions } from '../model';
+import { AppOptions } from '../../../shared/src/options/model';
 import { name } from './name';
 
 type OptionPostprocessor = {

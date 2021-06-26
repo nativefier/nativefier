@@ -2,14 +2,16 @@ import {
   dialog,
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  Event,
   HeadersReceivedResponse,
-  IpcMainEvent,
   MessageBoxReturnValue,
   OnHeadersReceivedListenerDetails,
+  WebPreferences,
 } from 'electron';
 
 import log from 'loglevel';
 import path from 'path';
+import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
 import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 
 const ZOOM_INTERVAL = 0.1;
@@ -61,8 +63,8 @@ export async function clearCache(window: BrowserWindow): Promise<void> {
 }
 
 export function createAboutBlankWindow(
-  options,
-  setupWindow: (...args) => void,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   parent?: BrowserWindow,
 ): BrowserWindow {
   const window = createNewWindow(options, setupWindow, 'about:blank', parent);
@@ -78,12 +80,12 @@ export function createAboutBlankWindow(
 }
 
 export function createNewTab(
-  options,
-  setupWindow,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   url: string,
   foreground: boolean,
   parent?: BrowserWindow,
-): BrowserWindow {
+): BrowserWindow | undefined {
   log.debug('createNewTab', { url, foreground, parent });
   return withFocusedWindow((focusedWindow) => {
     const newTab = createNewWindow(options, setupWindow, url, parent);
@@ -96,8 +98,8 @@ export function createNewTab(
 }
 
 export function createNewWindow(
-  options,
-  setupWindow: (...args) => void,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   url: string,
   parent?: BrowserWindow,
 ): BrowserWindow {
@@ -118,7 +120,7 @@ export function getCurrentURL(): string {
 }
 
 export function getDefaultWindowOptions(
-  options,
+  options: WindowOptions,
 ): BrowserWindowConstructorOptions {
   const browserwindowOptions: BrowserWindowConstructorOptions = {
     ...options.browserwindowOptions,
@@ -128,7 +130,7 @@ export function getDefaultWindowOptions(
   // webPreferences specified in the DEFAULT_WINDOW_OPTIONS with itself
   delete browserwindowOptions.webPreferences;
 
-  const webPreferences = {
+  const webPreferences: WebPreferences = {
     ...(options.browserwindowOptions?.webPreferences ?? {}),
   };
 
@@ -171,15 +173,15 @@ export function goForward(): void {
   });
 }
 
-export function goToURL(url: string): Promise<void> {
+export function goToURL(url: string): Promise<void> | undefined {
   return withFocusedWindow((focusedWindow) => focusedWindow.loadURL(url));
 }
 
 export function hideWindow(
   window: BrowserWindow,
-  event: IpcMainEvent,
+  event: Event,
   fastQuit: boolean,
-  tray: 'true' | 'false' | 'start-in-tray',
+  tray: TrayValue,
 ): void {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
@@ -221,7 +223,7 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
       ) => {
         const contentType =
-          'content-type' in details.responseHeaders
+          details.responseHeaders && 'content-type' in details.responseHeaders
             ? details.responseHeaders['content-type'][0]
             : undefined;
 
@@ -252,9 +254,9 @@ export function injectCSS(browserWindow: BrowserWindow): void {
 
 async function injectCSSIntoResponse(
   details: OnHeadersReceivedListenerDetails,
-  contentType: string,
+  contentType: string | undefined,
   cssToInject: string,
-): Promise<Record<string, string[]>> {
+): Promise<Record<string, string[]> | undefined> {
   // We go with a denylist rather than a whitelist (e.g. only text/html)
   // to avoid "whoops I didn't think this should have been CSS-injected" cases
   const nonInjectableContentTypes = [
@@ -265,19 +267,26 @@ async function injectCSSIntoResponse(
   const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
 
   if (
-    nonInjectableContentTypes.filter((x) => x.exec(contentType)?.length > 0)
-      ?.length > 0 ||
+    (contentType &&
+      nonInjectableContentTypes.filter((x) => {
+        const matches = x.exec(contentType);
+        return matches && matches?.length > 0;
+      })?.length > 0) ||
     nonInjectableResourceTypes.includes(details.resourceType) ||
     !details.webContents
   ) {
     log.debug(
-      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
+      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${
+        details.resourceType
+      } and content-type ${contentType as string}`,
     );
     return details.responseHeaders;
   }
 
   log.debug(
-    `Injecting CSS for:\n${details.url}\nwith resourceType ${details.resourceType} and content-type ${contentType}`,
+    `Injecting CSS for:\n${details.url}\nwith resourceType ${
+      details.resourceType
+    } and content-type ${contentType as string}`,
   );
   await details.webContents.insertCSS(cssToInject);
 
@@ -285,7 +294,7 @@ async function injectCSSIntoResponse(
 }
 
 export function sendParamsOnDidFinishLoad(
-  options,
+  options: WindowOptions,
   window: BrowserWindow,
 ): void {
   window.webContents.on('did-finish-load', () => {
@@ -304,7 +313,10 @@ export function sendParamsOnDidFinishLoad(
   });
 }
 
-export function setProxyRules(window: BrowserWindow, proxyRules): void {
+export function setProxyRules(
+  window: BrowserWindow,
+  proxyRules?: string,
+): void {
   window.webContents.session
     .setProxy({
       proxyRules,
@@ -314,13 +326,15 @@ export function setProxyRules(window: BrowserWindow, proxyRules): void {
     .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
-export function withFocusedWindow<T>(block: (window: BrowserWindow) => T): T {
+export function withFocusedWindow<T>(
+  block: (window: BrowserWindow) => T,
+): T | undefined {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (focusedWindow) {
     return block(focusedWindow);
   }
 
-  return null;
+  return undefined;
 }
 
 export function zoomOut(): void {
@@ -328,7 +342,7 @@ export function zoomOut(): void {
   adjustWindowZoom(-ZOOM_INTERVAL);
 }
 
-export function zoomReset(options): void {
+export function zoomReset(options: { zoom?: number }): void {
   log.debug('zoomReset');
   withFocusedWindow((focusedWindow) => {
     focusedWindow.webContents.zoomFactor = options.zoom ?? 1.0;

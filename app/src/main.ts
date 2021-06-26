@@ -10,7 +10,7 @@ import electron, {
   globalShortcut,
   systemPreferences,
   BrowserWindow,
-  IpcMainEvent,
+  Event,
 } from 'electron';
 import electronDownload from 'electron-dl';
 import * as log from 'loglevel';
@@ -25,6 +25,10 @@ import { createTrayIcon } from './components/trayIcon';
 import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 import { setupNativefierWindow } from './helpers/windowEvents';
+import {
+  OutputOptions,
+  outputOptionsToWindowOptions,
+} from '../../shared/src/options/model';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
 if (require('electron-squirrel-startup')) {
@@ -39,7 +43,9 @@ if (process.argv.indexOf('--verbose') > -1) {
 
 let mainWindow: BrowserWindow;
 
-const appArgs = JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+const appArgs = JSON.parse(
+  fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
+) as OutputOptions;
 
 log.debug('appArgs', appArgs);
 // Do this relatively early so that we can start storing appData with the app
@@ -94,10 +100,13 @@ if (appArgs.processEnvs) {
   if (typeof appArgs.processEnvs === 'string') {
     process.env.processEnvs = appArgs.processEnvs;
   } else {
-    Object.keys(appArgs.processEnvs).forEach((key) => {
-      /* eslint-env node */
-      process.env[key] = appArgs.processEnvs[key];
-    });
+    Object.keys(appArgs.processEnvs)
+      .filter((key) => key !== undefined)
+      .forEach((key) => {
+        // @ts-expect-error TS will complain this could be undefined, but we filtered those out
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        process.env[key] = appArgs.processEnvs[key];
+      });
   }
 }
 
@@ -125,7 +134,10 @@ if (appArgs.enableEs3Apis) {
 }
 
 if (appArgs.diskCacheSize) {
-  app.commandLine.appendSwitch('disk-cache-size', appArgs.diskCacheSize);
+  app.commandLine.appendSwitch(
+    'disk-cache-size',
+    appArgs.diskCacheSize.toString(),
+  );
 }
 
 if (appArgs.basicAuthUsername) {
@@ -143,7 +155,7 @@ if (appArgs.basicAuthPassword) {
 }
 
 if (appArgs.lang) {
-  const langParts = (appArgs.lang as string).split(',');
+  const langParts = appArgs.lang.split(',');
   // Convert locales to languages, because for some reason locales don't work. Stupid Chromium
   const langPartsParsed = Array.from(
     // Convert to set to dedupe in case something like "en-GB,en-US" was passed
@@ -156,10 +168,12 @@ if (appArgs.lang) {
 
 let currentBadgeCount = 0;
 const setDockBadge = isOSX()
-  ? (count: number, bounce = false): void => {
-      app.dock.setBadge(count.toString());
-      if (bounce && count > currentBadgeCount) app.dock.bounce();
-      currentBadgeCount = count;
+  ? (count?: number | string, bounce = false): void => {
+      if (count) {
+        app.dock.setBadge(count.toString());
+        if (bounce && count > currentBadgeCount) app.dock.bounce();
+        currentBadgeCount = typeof count === 'number' ? count : 0;
+      }
     }
   : (): void => undefined;
 
@@ -191,17 +205,17 @@ app.on('quit', (event, exitCode) => {
   log.debug('app.quit', { event, exitCode });
 });
 
-if (appArgs.crashReporter) {
-  app.on('will-finish-launching', () => {
-    log.debug('app.will-finish-launching');
+app.on('will-finish-launching', () => {
+  log.debug('app.will-finish-launching');
+  if (appArgs.crashReporter) {
     crashReporter.start({
-      companyName: appArgs.companyName || '',
+      companyName: appArgs.companyName ?? '',
       productName: appArgs.name,
       submitURL: appArgs.crashReporter,
       uploadToServer: true,
     });
-  });
-}
+  }
+});
 
 if (appArgs.widevine) {
   // @ts-expect-error This event only appears on the widevine version of electron, which we'd see at runtime
@@ -270,19 +284,28 @@ app.on('new-window-for-tab', () => {
   }
 });
 
-app.on('login', (event, webContents, request, authInfo, callback) => {
-  log.debug('app.login', { event, request });
-  // for http authentication
-  event.preventDefault();
+app.on(
+  'login',
+  (
+    event,
+    webContents,
+    request,
+    authInfo,
+    callback: (username?: string, password?: string) => void,
+  ) => {
+    log.debug('app.login', { event, request });
+    // for http authentication
+    event.preventDefault();
 
-  if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
-    callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
-  } else {
-    createLoginWindow(callback, mainWindow).catch((err) =>
-      log.error('createLoginWindow ERROR', err),
-    );
-  }
-});
+    if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
+      callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
+    } else {
+      createLoginWindow(callback, mainWindow).catch((err) =>
+        log.error('createLoginWindow ERROR', err),
+      );
+    }
+  },
+);
 
 async function onReady(): Promise<void> {
   // Warning: `mainWindow` below is the *global* unique `mainWindow`, created at init time
@@ -295,6 +318,7 @@ async function onReady(): Promise<void> {
     appArgs.globalShortcuts.forEach((shortcut) => {
       globalShortcut.register(shortcut.key, () => {
         shortcut.inputEvents.forEach((inputEvent) => {
+          // @ts-expect-error without including electron in our models, these will never match
           mainWindow.webContents.sendInputEvent(inputEvent);
         });
       });
@@ -319,16 +343,19 @@ async function onReady(): Promise<void> {
         // the user for permission on Mac.
         // For reference:
         // https://www.electronjs.org/docs/api/global-shortcut?q=MediaPlayPause#globalshortcutregisteraccelerator-callback
-        const accessibilityPromptResult = dialog.showMessageBoxSync(null, {
-          type: 'question',
-          message: 'Accessibility Permissions Needed',
-          buttons: ['Yes', 'No', 'No and never ask again'],
-          defaultId: 0,
-          detail:
-            `${appArgs.name} would like to use one or more of your keyboard's media keys (start, stop, next track, or previous track) to control it.\n\n` +
-            `Would you like Mac OS to ask for your permission to do so?\n\n` +
-            `If so, you will need to restart ${appArgs.name} after granting permissions for these keyboard shortcuts to begin working.`,
-        });
+        const accessibilityPromptResult = dialog.showMessageBoxSync(
+          mainWindow,
+          {
+            type: 'question',
+            message: 'Accessibility Permissions Needed',
+            buttons: ['Yes', 'No', 'No and never ask again'],
+            defaultId: 0,
+            detail:
+              `${appArgs.name} would like to use one or more of your keyboard's media keys (start, stop, next track, or previous track) to control it.\n\n` +
+              `Would you like Mac OS to ask for your permission to do so?\n\n` +
+              `If so, you will need to restart ${appArgs.name} after granting permissions for these keyboard shortcuts to begin working.`,
+          },
+        );
         switch (accessibilityPromptResult) {
           // User clicked Yes, prompt for accessibility
           case 0:
@@ -354,7 +381,7 @@ async function onReady(): Promise<void> {
       appArgs.oldBuildWarningText ||
       'This app was built a long time ago. Nativefier uses the Chrome browser (through Electron), and it is insecure to keep using an old version of it. Please upgrade Nativefier and rebuild this app.';
     dialog
-      .showMessageBox(null, {
+      .showMessageBox(mainWindow, {
         type: 'warning',
         message: 'Old build detected',
         detail: oldBuildWarningText,
@@ -365,7 +392,7 @@ async function onReady(): Promise<void> {
 
 app.on(
   'accessibility-support-changed',
-  (event: IpcMainEvent, accessibilitySupportEnabled: boolean) => {
+  (event: Event, accessibilitySupportEnabled: boolean) => {
     log.debug('app.accessibility-support-changed', {
       event,
       accessibilitySupportEnabled,
@@ -375,23 +402,20 @@ app.on(
 
 app.on(
   'activity-was-continued',
-  (event: IpcMainEvent, type: string, userInfo: unknown) => {
+  (event: Event, type: string, userInfo: unknown) => {
     log.debug('app.activity-was-continued', { event, type, userInfo });
   },
 );
 
-app.on('browser-window-blur', (event: IpcMainEvent, window: BrowserWindow) => {
+app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
   log.debug('app.browser-window-blur', { event, window });
 });
 
-app.on(
-  'browser-window-created',
-  (event: IpcMainEvent, window: BrowserWindow) => {
-    log.debug('app.browser-window-created', { event, window });
-    setupNativefierWindow(appArgs, window);
-  },
-);
+app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
+  log.debug('app.browser-window-created', { event, window });
+  setupNativefierWindow(outputOptionsToWindowOptions(appArgs), window);
+});
 
-app.on('browser-window-focus', (event: IpcMainEvent, window: BrowserWindow) => {
+app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
   log.debug('app.browser-window-focus', { event, window });
 });

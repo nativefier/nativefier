@@ -3,7 +3,7 @@ import 'source-map-support/register';
 
 import electronPackager = require('electron-packager');
 import * as log from 'loglevel';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 
 import { DEFAULT_ELECTRON_VERSION } from './constants';
 import {
@@ -13,7 +13,7 @@ import {
 } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
-import { RawOptions } from './options/model';
+import { RawOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
 
 export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
