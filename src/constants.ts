@@ -4,17 +4,17 @@ export const DEFAULT_APP_NAME = 'APP';
 
 // Update both DEFAULT_ELECTRON_VERSION and DEFAULT_CHROME_VERSION together,
 // and update app / package.json / devDeps / electron to value of DEFAULT_ELECTRON_VERSION
-export const DEFAULT_ELECTRON_VERSION = '13.1.2';
-export const DEFAULT_CHROME_VERSION = '89.0.4389.128';
+export const DEFAULT_ELECTRON_VERSION = '13.1.4';
+export const DEFAULT_CHROME_VERSION = '91.0.4472.106';
 
 // Update each of these periodically
 // https://product-details.mozilla.org/1.0/firefox_versions.json
-export const DEFAULT_FIREFOX_VERSION = '89.0';
+export const DEFAULT_FIREFOX_VERSION = '89.0.2';
 
 // https://en.wikipedia.org/wiki/Safari_version_history
 export const DEFAULT_SAFARI_VERSION = {
   majorVersion: 14,
-  version: '14.0.3',
+  version: '14.1.1',
   webkitVersion: '610.4.3.1.7',
 };
 
