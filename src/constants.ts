@@ -15,7 +15,7 @@ export const DEFAULT_FIREFOX_VERSION = '89.0.2';
 export const DEFAULT_SAFARI_VERSION = {
   majorVersion: 14,
   version: '14.1.1',
-  webkitVersion: '610.4.3.1.7',
+  webkitVersion: '611.2.7.1.4',
 };
 
 export const ELECTRON_MAJOR_VERSION = parseInt(
