@@ -16,7 +16,21 @@
 
 set -eo pipefail
 
-echo 'HEY YOU. Did you run the quick pre-release smoke test? ( npm run test:manual )'
+echo 'HEY YOU. Before you release, here is a report of outdated dependencies.'
+echo ' - Red upgrades fulfill semver and do *not* need any action'
+echo ' - Yellow upgrades *do* need looking at changelogs for breaking changes, and updating package.json'
+echo
+echo 'CLI:'
+npm out
+echo
+echo 'App:'
+cd app && npm out; cd ..
+echo
+echo 'Okay with this, or care to do/plan a few upgrades?'
+echo 'Press any key to continue, or Ctrl+C to abort'
+read -r
+
+echo 'HEY YOU, again. Did you run the quick pre-release smoke test? ( npm run test:manual )'
 echo 'Press any key to continue, or Ctrl+C to abort'
 read -r
 
