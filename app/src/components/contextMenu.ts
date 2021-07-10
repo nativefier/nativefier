@@ -55,5 +55,8 @@ export function initContextMenu(
       }
       return items;
     },
+    showCopyImage: true,
+    showCopyImageAddress: true,
+    showSaveImage: true,
   });
 }
