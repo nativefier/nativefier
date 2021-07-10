@@ -1,4 +1,14 @@
 
+44.0.7 / 2021-07-10
+===================
+
+  * Fix badge/counter icon not being removed correctly (#1251, PR #1252)
+  * App context menu: add "Save Image", "Copy Image", "Copy Image Address" (PR #1256)
+  * Bump default Electron from 12.0.12 to 12.0.14. Changelogs:
+    [Electron 12.0.13](https://github.com/electron/electron/releases/tag/v12.0.13)
+    [Electron 12.0.14](https://github.com/electron/electron/releases/tag/v12.0.14)
+  * Maintenance: {API.md, HACKING.md} documentation, improve `generate-changelog`
+
 44.0.6 / 2021-06-26
 ===================
 
