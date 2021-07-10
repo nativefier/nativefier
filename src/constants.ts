@@ -4,7 +4,7 @@ export const DEFAULT_APP_NAME = 'APP';
 
 // Update both DEFAULT_ELECTRON_VERSION and DEFAULT_CHROME_VERSION together,
 // and update app / package.json / devDeps / electron to value of DEFAULT_ELECTRON_VERSION
-export const DEFAULT_ELECTRON_VERSION = '12.0.12';
+export const DEFAULT_ELECTRON_VERSION = '12.0.14';
 export const DEFAULT_CHROME_VERSION = '89.0.4389.128';
 
 // Update each of these periodically
