@@ -1,18 +1,20 @@
 # Development Guide
 
-Welcome, soon-to-be contributor 🙂! This document sums up what you
-need to know to get started hacking on Nativefier.
+Welcome, soon-to-be contributor 🙂! This document sums up
+what you need to know to get started hacking on Nativefier.
 
 ## Guidelines
 
 1. **Before starting work on a huge change, gauge the interest**
-   of community & maintainers through a GitHub issue.
-   For big changes, create a **[RFC](https://en.wikipedia.org/wiki/Request_for_Comments)**
+   of community & maintainers through a GitHub issue. For big changes,
+   create a **[RFC](https://en.wikipedia.org/wiki/Request_for_Comments)**
    issue to enable a good peer review.
+
 2. Do your best to **avoid adding new Nativefier command-line options**.
    If a new option is inevitable for what you want to do, sure,
    but as much as possible try to see if you change works without.
    Nativefier already has a ton of them, making it hard to use.
+
 3. Do your best to **limit breaking changes**.
    Only introduce breaking changes when necessary, when required by deps, or when
    not breaking would be unreasonable. When you can, support the old thing forever.
@@ -24,6 +26,7 @@ need to know to get started hacking on Nativefier.
    Introducing breaking changes willy nilly is a comfort to us developers, but is
    disrespectful to end users who must constantly bend to the flow of breaking changes
    pushed by _all their software_ who think it's "just one breaking change".
+
 4. **Avoid adding npm dependencies**. Each new dep is a complexity & security liability.
    You might be thinking your extra dep is _"just a little extra dep"_, and maybe
    you found one that is high-quality & dependency-less. Still, it's an extra dep,
@@ -34,8 +37,11 @@ need to know to get started hacking on Nativefier.
    little helper function saving us a dep for a mundane task, go for the helper :) .
    Also, an in-tree helper will always be less complex than a dep, as inherently
    more tailored to our use case, and less complexity is good.
+
 5. Use **types**, avoid `any`, write **tests**.
+
 6. **Document for users** in `API.md`
+
 7. **Document for other devs** in comments, jsdoc, commits, PRs.
    Say _why_ more than _what_, the _what_ is your code!
 
@@ -109,7 +115,9 @@ but is painful to do manually. Do yourself a favor and install a
   3. Here is [a screencast of how the live-reload experience should look like](https://user-images.githubusercontent.com/522085/120407694-abdf3f00-c31b-11eb-9ab5-a531a929adb9.mp4)
 - Alternatively, you can run both test processes in the same terminal by running: `npm run watch`
 
-## Major-updating Electron
+## Maintainers corner
+
+### Deps: major-updating Electron
 
 When a new major [Electron release](https://github.com/electron/electron/releases) occurs,
 
@@ -126,13 +134,54 @@ When a new major [Electron release](https://github.com/electron/electron/release
     1. If `master` has unreleased commits, make a patch/minor release with them, but without the major Electron bump.
     2. Commit your Electron major bump and release it as a major new Nativefier version. Help users identify the breaking change by using a bold **[BREAKING]** marker in `CHANGELOG.md` and in the GitHub release.
 
-## Release
+### Deps updates
+
+It is important to stay afloat of dependencies upgrades.
+In packages ecosystems like npm, there's only one way: forward.
+The best time to do package upgrades is now / progressively, because:
+
+1. Slacking on doing these upgrades means you stay behind, and it becomes
+   risky to do them. Upgrading a woefully out-of-date dep from 3.x to 9.x is
+   scarier than 3.x to 4.x, release, then 4.x to 5.x, release, etc... to 9.x.
+
+2. Also, dependencies applying security patches to old major versions are rare
+   in npm. So, by slacking on upgrades, it becomes more and more probable that
+   we get impacted by a vulnerability. And when this happens, it then becomes
+   urgent & stressful to A. fix the vulnerability, B. do the required major upgrades.
+
+So: do upgrade CLI & App deps regularly! Our release script will remind you about it.
+
+### Deps lockfile
+
+Although there are benefits to a package lock (reproducible builds, install speed),
+as of writing, Nativefier doesn't use one. We tried it, and removed it after seeing
+it confused novice devs sending PRs. They don't know how to manage it, they update
+the package.json but not the lock, it's a hassle, they get discouraged.
+
+At time of writing, maximizing simplicity and ease of contribution
+seems preferable over reproducible builds and install speed.
+
+Also, practically, the npm ecosystem today is stable enough that non-reproducible
+builds never caused any trouble in years (zero issues/complaints related to it).
+Semantic versioning is well respected, our users get patch/minor upgrades,
+a build at time T1 works, and a different build at time T2 > T1 works too 🙂.
+
+Finally, it's not a problem for distributions / user repositories wishing to
+provide reproducible builds, because if a repo (say, AUR) wants to make *their*
+build reproducible, they can: the packager can add a lockfile to their PKGBUILD
+associated files, and it will be reproducible for them.
+
+This is of course debatable and may change in the future based on bugs,
+user feedback, or future maintainers preference.
+
+### Release
 
 While on `master`, with no uncommitted changes, run:
 
 ```bash
 npm run changelog -- $VERSION
-# With no 'v'. For example: npm run changelog -- 42.5.0
+# With no 'v'. For example: npm run changelog -- '42.5.0'
 ```
 
-Do follow semantic versioning, and give visibility to breaking changes by prefixing their line with **[BREAKING]**.
+Do follow semantic versioning, and give visibility to breaking changes
+in release notes by prefixing their line with **[BREAKING]**.

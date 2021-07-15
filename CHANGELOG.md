@@ -1,4 +1,23 @@
 
+44.0.7 / 2021-07-10
+===================
+
+  * Fix badge/counter icon not being removed correctly (#1251, PR #1252)
+  * App context menu: add "Save Image", "Copy Image", "Copy Image Address" (PR #1256)
+  * Bump default Electron from 12.0.12 to 12.0.14. Changelogs:
+    [Electron 12.0.13](https://github.com/electron/electron/releases/tag/v12.0.13)
+    [Electron 12.0.14](https://github.com/electron/electron/releases/tag/v12.0.14)
+  * Maintenance: {API.md, HACKING.md} documentation, improve `generate-changelog`
+
+44.0.6 / 2021-06-26
+===================
+
+Like 44.0.4, this release only contains one behind-the-scenes TS change with no user-visible changes.
+It is here to let us narrow down on potential regressions that may have crept in.
+It isn't especially scary, though. Do test it, use it, and report regressions!
+
+  * App: Enable TypeScript `strict:true`, more typescript-eslint rules, shared TS project (#1231)
+
 44.0.5 / 2021-06-25
 ===================
 
