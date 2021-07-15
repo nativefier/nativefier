@@ -66,6 +66,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.6",
     "@types/electron-packager": "^15.0.1",
     "@types/hasbin": "^1.2.0",
     "@types/jest": "^26.0.23",
