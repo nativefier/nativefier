@@ -1,4 +1,11 @@
 
+45.0.0 / 2021-07-19
+===================
+
+  * **[BREAKING]** Bump default Electron to 13.1.7 with Chrome 91 (PR #1230)
+    See https://www.electronjs.org/blog/electron-13-0
+    and https://www.electronjs.org/blog/electron-13-0#breaking-changes
+
 44.0.7 / 2021-07-10
 ===================
 
