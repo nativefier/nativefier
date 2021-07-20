@@ -155,6 +155,7 @@ function createContextMenu(
 
 export function saveAppArgs(newAppArgs: OutputOptions): void {
   try {
+    fs.chmodSync(APP_ARGS_FILE_PATH, 0o700);
     fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs, null, 2));
   } catch (err: unknown) {
     log.warn(

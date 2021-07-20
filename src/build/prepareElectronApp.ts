@@ -1,7 +1,6 @@
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
-import { promisify } from 'util';
 
 import * as log from 'loglevel';
 
@@ -13,8 +12,6 @@ import {
 } from '../../shared/src/options/model';
 import { parseJson } from '../utils/parseUtils';
 import { DEFAULT_APP_NAME } from '../constants';
-
-const writeFileAsync = promisify(fs.writeFile);
 
 /**
  * Only picks certain app args to pass to nativefier.json
@@ -170,6 +167,7 @@ function changeAppPackageJsonName(
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
+  fs.chmodSync(packageJsonPath, 0o700);
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 }
 
@@ -190,10 +188,12 @@ export async function prepareElectronApp(
       (err as Error).message
     }`;
   }
+  fs.chmodSync(dest, 0o700);
 
   const appJsonPath = path.join(dest, '/nativefier.json');
   log.debug(`Writing app config to ${appJsonPath}`);
-  await writeFileAsync(
+  fs.chmodSync(appJsonPath, 0o700);
+  fs.writeFileSync(
     appJsonPath,
     JSON.stringify(pickElectronAppArgs(options), null, 2),
   );

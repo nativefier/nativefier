@@ -1,6 +1,5 @@
 import * as path from 'path';
-import { writeFile } from 'fs';
-import { promisify } from 'util';
+import { writeFileSync } from 'fs';
 
 import gitCloud = require('gitcloud');
 import pageIcon from 'page-icon';
@@ -12,8 +11,6 @@ import {
   getTempDir,
 } from '../helpers/helpers';
 import * as log from 'loglevel';
-
-const writeFileAsync = promisify(writeFile);
 
 const GITCLOUD_SPACE_DELIMITER = '-';
 const GITCLOUD_URL = 'https://nativefier.github.io/nativefier-icons/';
@@ -121,6 +118,6 @@ export async function inferIcon(
   log.debug(
     `Writing ${(icon.data.length / 1024).toFixed(1)} kb icon to ${iconPath}`,
   );
-  await writeFileAsync(iconPath, icon.data);
+  writeFileSync(iconPath, icon.data);
   return iconPath;
 }
