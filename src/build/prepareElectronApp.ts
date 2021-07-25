@@ -4,7 +4,11 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
+import {
+  copyFileOrDir,
+  generateRandomSuffix,
+  makeFileTreeWriteable,
+} from '../helpers/helpers';
 import {
   AppOptions,
   OutputOptions,
@@ -167,7 +171,6 @@ function changeAppPackageJsonName(
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
-  fs.chmodSync(packageJsonPath, 0o700);
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 }
 
@@ -183,16 +186,15 @@ export async function prepareElectronApp(
   log.debug(`Copying electron app from ${src} to ${dest}`);
   try {
     await copyFileOrDir(src, dest);
+    await makeFileTreeWriteable(dest);
   } catch (err: unknown) {
     throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${
       (err as Error).message
     }`;
   }
-  fs.chmodSync(dest, 0o700);
 
   const appJsonPath = path.join(dest, '/nativefier.json');
   log.debug(`Writing app config to ${appJsonPath}`);
-  fs.chmodSync(appJsonPath, 0o700);
   fs.writeFileSync(
     appJsonPath,
     JSON.stringify(pickElectronAppArgs(options), null, 2),

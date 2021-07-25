@@ -65,6 +65,29 @@ export async function copyFileOrDir(
   return fs_extra.copy(sourceFileOrDir, dest);
 }
 
+export async function makeFileTreeWriteable(fileOrDir: string): Promise<void> {
+  const mode = 0o755;
+
+  return fs_extra.lstat(fileOrDir).then((stats) => {
+    if (stats.isFile()) {
+      return fs_extra.chmod(fileOrDir, mode);
+    } else if (stats.isDirectory()) {
+      return fs_extra
+        .readdir(fileOrDir, { withFileTypes: true })
+        .then((children) =>
+          Promise.all(
+            children.map((child) =>
+              makeFileTreeWriteable(path.resolve(fileOrDir, child.name)),
+            ),
+          ),
+        )
+        .then(() => fs_extra.chmod(fileOrDir, mode));
+    } else {
+      return Promise.resolve();
+    }
+  });
+}
+
 export function downloadFile(
   fileUrl: string,
 ): Promise<DownloadResult | undefined> {
