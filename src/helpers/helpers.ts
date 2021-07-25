@@ -66,7 +66,7 @@ export async function copyFileOrDir(
 }
 
 export async function makeFileTreeWriteable(fileOrDir: string): Promise<void> {
-  const mode = 0o755;
+  const mode = 0o755; // read & execute for anyone, plus write for owner
 
   return fs_extra.lstat(fileOrDir).then((stats) => {
     if (stats.isFile()) {
