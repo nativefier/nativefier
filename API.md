@@ -659,9 +659,11 @@ Example `shortcuts.json` for `https://deezer.com` & `https://soundcloud.com` to 
 --inject <value>
 ```
 
-Allows you to inject javascript or css files. This command can be repeated multiple times to inject multiple files.
+Allows you to inject JavaScript or CSS files. This command can be repeated multiple times to inject multiple files.
 
-_Note:_ The javascript file is loaded _after_ `DOMContentLoaded`, so you can assume the DOM is complete & available.
+_Note about JS injection:_ injected JS is loaded _after_ `DOMContentLoaded`, so you can assume the DOM is complete & available.
+
+_Note about CSS injection:_ to override existing CSS rules, you need to use the `!important` CSS keyword. Example: `#id_to_hide { display: none !important; }` , not just `#id_to_hide { display: none; }` .
 
 Example:
 
