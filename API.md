@@ -775,17 +775,15 @@ change it but it might be unnecessary.
 
 Current known internal login pages:
 - `amazon.com/signin`
+- `appleid.apple.com/auth/authorize`
+- `id.atlassian.com` , `auth.atlassian.com`
 - `facebook.com/login`
-- `github.com/login`
-- `github.com/session`
-- `accounts.google.com`
-- `mail.google.com/accounts/SetOSID`
+- `github.com/login` , `github.com/session`
+- `accounts.google.com` , `mail.google.com/accounts/SetOSID`
 - `linkedin.com/uas/login`
-- `login.live.com`
-- `login.microsoftonline.com`
+- `login.live.com` , `login.microsoftonline.com`
 - `okta.com`
 - `twitter.com/oauth/authenticate`
-- `appleid.apple.com/auth/authorize`
 
 Note: While .com is specified, for most of these we try to match even on non-US
 based domains such as `.co.uk` as well

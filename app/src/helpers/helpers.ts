@@ -105,6 +105,7 @@ function isInternalLoginPage(url: string): boolean {
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
+    '(?:id|auth)\\.atlassian\\.[a-zA-Z]+', // Atlassian
   ];
   // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const regex = RegExp(internalLoginPagesArray.join('|'));
