@@ -68,24 +68,19 @@ export async function copyFileOrDir(
 export async function makeFileTreeWriteable(fileOrDir: string): Promise<void> {
   const mode = 0o755; // read & execute for anyone, plus write for owner
 
-  return fs_extra.lstat(fileOrDir).then((stats) => {
-    if (stats.isFile()) {
-      return fs_extra.chmod(fileOrDir, mode);
-    } else if (stats.isDirectory()) {
-      return fs_extra
-        .readdir(fileOrDir, { withFileTypes: true })
-        .then((children) =>
-          Promise.all(
-            children.map((child) =>
-              makeFileTreeWriteable(path.resolve(fileOrDir, child.name)),
-            ),
-          ),
-        )
-        .then(() => fs_extra.chmod(fileOrDir, mode));
-    } else {
-      return Promise.resolve();
+  const stats = await fs_extra.lstat(fileOrDir);
+
+  if (stats.isFile()) {
+    await fs_extra.chmod(fileOrDir, mode);
+  } else if (stats.isDirectory()) {
+    const children = await fs_extra.readdir(fileOrDir, { withFileTypes: true });
+
+    for (const child of children) {
+      await makeFileTreeWriteable(path.resolve(fileOrDir, child.name));
     }
-  });
+
+    await fs_extra.chmod(fileOrDir, mode);
+  }
 }
 
 export function downloadFile(
