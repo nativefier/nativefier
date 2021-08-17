@@ -1,0 +1,62 @@
+name: mac
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version:
+        # Align the top Node version here with: 1. linter conditions later below, 2. publish.yml.
+        - 16.x
+        # Bumping the minimum required Node version? You must bump:
+        #   1. package.json -> engines.node
+        #   2. package.json -> devDependencies.@types/node
+        #   3. tsconfig.json -> {target, lib}
+        #   4. .github/workflows/ci.yml -> node-version
+        #
+        # Here in ci.yml, we want to always run the oldest version we require in
+        # package.json -> engines.node, to be sure Nativefier runs on this minimum
+        - 12.x
+        platform: [macos-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    # Will also (through `prepare` hook): 1. install ./app, and 2. build
+    - run: pip3 install screenshot
+    - run: npm install --no-fund
+    - run: npm run build
+    - run: npm link
+    - run: |
+          tmp_dir="/tmp/nativefier-test-${{ matrix.node-version }}"
+          mkdir -p $tmp_dir
+          name="nativefier-smoke-test-1"
+          resources_dir="$tmp_dir/resources"
+          mkdir "$resources_dir"
+          injected_css="$resources_dir/inject.css"
+          injected_js="$resources_dir/inject.js"
+          echo '* { background-color: blue; }' > "$injected_css"
+          echo 'alert("hello world from inject");' > "$injected_js"
+          nativefier 'https://npmjs.com/' \
+            --inject "$injected_css" \
+            --inject "$injected_js" \
+            --name "$name" \
+            "$tmp_dir"
+    - run: open -a /tmp/nativefier-test-${{ matrix.node-version }}/nativefier-smoke-test-1-darwin-x64/nativefier-smoke-test-1.app & sleep 15
+    - run: screenshot nativefier-smoke-test-1 -f test.png 
+    - name: Upload screenshot
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshot
+        path: /Users/runner/work/nativefier/nativefier/*.png
+        
+
+
+
