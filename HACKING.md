@@ -57,10 +57,10 @@ cd nativefier
 Install dependencies (for both the CLI and the Electron app):
 
 ```bash
-npm install
+npm ci
 ```
 
-The above `npm install` will build automatically (through the `prepare` hook).
+The above `npm ci` will build automatically (through the `prepare` hook).
 When you need to re-build Nativefier,
 
 ```bash
@@ -153,26 +153,14 @@ So: do upgrade CLI & App deps regularly! Our release script will remind you abou
 
 ### Deps lockfile
 
-Although there are benefits to a package lock (reproducible builds, install speed),
-as of writing, Nativefier doesn't use one. We tried it, and removed it after seeing
-it confused novice devs sending PRs. They don't know how to manage it, they update
-the package.json but not the lock, it's a hassle, they get discouraged.
+We do use lockfiles (`package-lock.json` & `app/package-lock.json`), for:
 
-At time of writing, maximizing simplicity and ease of contribution
-seems preferable over reproducible builds and install speed.
+1. Security (avoiding supply chain attacks)
+2. Reproducibility
+3. Performance
 
-Also, practically, the npm ecosystem today is stable enough that non-reproducible
-builds never caused any trouble in years (zero issues/complaints related to it).
-Semantic versioning is well respected, our users get patch/minor upgrades,
-a build at time T1 works, and a different build at time T2 > T1 works too 🙂.
-
-Finally, it's not a problem for distributions / user repositories wishing to
-provide reproducible builds, because if a repo (say, AUR) wants to make *their*
-build reproducible, they can: the packager can add a lockfile to their PKGBUILD
-associated files, and it will be reproducible for them.
-
-This is of course debatable and may change in the future based on bugs,
-user feedback, or future maintainers preference.
+It means you might have to update these lockfiles when adding a dependency.
+`npm run relock` will help you with that.
 
 ### Release
 

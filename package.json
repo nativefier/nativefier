@@ -36,14 +36,14 @@
     "build": "npm run clean && tsc --build shared src app && npm run build-app && npm run build-app-static",
     "build:watch": "npm run clean && tsc --build shared src app --watch",
     "changelog": "./.github/generate-changelog",
-    "ci": "npm run lint && npm test",
     "clean": "rimraf coverage/ lib/ app/lib/ app/dist/ shared/lib",
     "clean:full": "npm run clean && rimraf app/node_modules/ node_modules/",
     "lint:fix": "cd src && eslint . --ext .ts --fix && cd ../shared && eslint src --ext .ts --fix && cd ../app && eslint src --ext .ts --fix",
     "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts' 'shared/src/**/*.ts'",
     "lint": "eslint shared app src --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
-    "prepare": "cd app && npm install && cd .. && npm run build",
+    "prepare": "cd app && npm ci && cd .. && npm run build",
+    "relock": "rm -rf ./node_modules/ ./app/node_modules/ ./package-lock.json ./app/package-lock.json; npm install --package-lock --ignore-scripts && npm out; cd app && npm install --package-lock --ignore-scripts && npm out; cd .. && true",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
     "test:unit": "jest",
@@ -63,7 +63,7 @@
     "sanitize-filename": "^1.6.3",
     "source-map-support": "^0.5.19",
     "tmp": "^0.2.1",
-    "yargs": "^17.0.1"
+    "yargs": "17.0.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.6",

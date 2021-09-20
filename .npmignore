@@ -6,7 +6,6 @@ src/
 *eslintrc.js
 *eslintrc.yml
 *tsconfig.tsbuildinfo
-*package-lock.json
 *tsconfig.json
 *jestSetupFiles*
 *-test.js

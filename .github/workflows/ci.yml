@@ -33,7 +33,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     # Will also (through `prepare` hook): 1. install ./app, and 2. build
-    - run: npm install --no-fund
+    - run: npm ci --no-fund
     # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
     - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '16.x'
       run: npm run lint
