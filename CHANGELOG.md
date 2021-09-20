@@ -1,4 +1,12 @@
 
+45.0.1 / 2021-09-20
+===================
+
+  * Auto-internal login pages: add `(id|auth).atlassian.com` (fix #1265)
+  * API.md: document need to use CSS `!important` keyword (fix #1264)
+  * Bump default Electron to 13.4.0 with security fixes
+  * Maintenance: deps bumps, fix build:watch script, re-introduce a lockfile
+
 45.0.0 / 2021-07-19
 ===================
 
