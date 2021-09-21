@@ -567,6 +567,21 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
 
   parsed.noOverwrite = parsed['no-overwrite'] = !parsed.overwrite;
 
+  // Since coerce in yargs seems to have broken since
+  // https://github.com/yargs/yargs/pull/1978
+  for (const arg of [
+    'win32metadata',
+    'browserwindow-options',
+    'file-download-options',
+  ]) {
+    if (parsed[arg] && typeof parsed[arg] === 'string') {
+      parsed[arg] = parseJson(parsed[arg] as string);
+    }
+  }
+  if (parsed['process-envs'] && typeof parsed['process-envs'] === 'string') {
+    parsed['process-envs'] = getProcessEnvs(parsed['process-envs']);
+  }
+
   return parsed;
 }
 
