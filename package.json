@@ -63,7 +63,7 @@
     "sanitize-filename": "^1.6.3",
     "source-map-support": "^0.5.19",
     "tmp": "^0.2.1",
-    "yargs": "17.0.1"
+    "yargs": "^17.1.1"
   },
   "devDependencies": {
     "@types/debug": "^4.1.6",
