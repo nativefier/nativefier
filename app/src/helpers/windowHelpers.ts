@@ -3,10 +3,9 @@ import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
   Event,
-  HeadersReceivedResponse,
   MessageBoxReturnValue,
-  OnHeadersReceivedListenerDetails,
   WebPreferences,
+  OnResponseStartedListenerDetails,
 } from 'electron';
 
 import log from 'loglevel';
@@ -220,21 +219,15 @@ export function injectCSS(browserWindow: BrowserWindow): void {
     // We must inject css early enough; so onHeadersReceived is a good place.
     // Will run multiple times, see `did-finish-load` event on the window
     // that unsets this handler.
-    browserWindow.webContents.session.webRequest.onHeadersReceived(
+    browserWindow.webContents.session.webRequest.onResponseStarted(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
-      (
-        details: OnHeadersReceivedListenerDetails,
-        callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
-      ) => {
-        log.debug('onHeadersReceived', {
+      (details: OnResponseStartedListenerDetails): void => {
+        log.debug('onResponseStarted', {
           resourceType: details.resourceType,
           url: details.url,
         });
         injectCSSIntoResponse(details, cssToInject).catch((err: unknown) => {
           log.error('injectCSSIntoResponse ERROR', err);
-        });
-        callback({
-          cancel: false,
         });
       },
     );
@@ -242,7 +235,7 @@ export function injectCSS(browserWindow: BrowserWindow): void {
 }
 
 function injectCSSIntoResponse(
-  details: OnHeadersReceivedListenerDetails,
+  details: OnResponseStartedListenerDetails,
   cssToInject: string,
 ): Promise<string | undefined> {
   const contentType =

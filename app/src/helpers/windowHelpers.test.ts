@@ -1,9 +1,4 @@
-import {
-  dialog,
-  BrowserWindow,
-  HeadersReceivedResponse,
-  WebContents,
-} from 'electron';
+import { dialog, BrowserWindow, WebContents } from 'electron';
 jest.mock('loglevel');
 import { error } from 'loglevel';
 import { WindowOptions } from '../../../shared/src/options/model';
@@ -143,7 +138,7 @@ describe('injectCSS', () => {
     expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
   });
 
-  test('will inject on did-navigate + onHeadersReceived', (done) => {
+  test('will inject on did-navigate + onResponseStarted', () => {
     mockGetCSSToInject.mockReturnValue(css);
     const window = new BrowserWindow();
 
@@ -154,30 +149,17 @@ describe('injectCSS', () => {
     window.webContents.emit('did-navigate');
     // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    window.webContents.session.webRequest.send(
-      'onHeadersReceived',
-      { responseHeaders, webContents: window.webContents },
-      (result: HeadersReceivedResponse) => {
-        expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
-        expect(result.cancel).toBe(false);
-        expect(result.responseHeaders).toBe(undefined);
-        done();
-      },
-    );
+    window.webContents.session.webRequest.send('onResponseStarted', {
+      responseHeaders,
+      webContents: window.webContents,
+    });
+
+    expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
   });
 
-  test.each<string | jest.DoneCallback>([
-    'application/json',
-    'font/woff2',
-    'image/png',
-  ])(
+  test.each<string>(['application/json', 'font/woff2', 'image/png'])(
     'will not inject for content-type %s',
-    // @ts-expect-error because TypeScript can't recognize that
-    // '(contentType: string, done: jest.DoneCallback) => void'
-    // and
-    // '(...args: (string | DoneCallback)[]) => any'
-    // are actually compatible.
-    (contentType: string, done: jest.DoneCallback) => {
+    (contentType: string) => {
       mockGetCSSToInject.mockReturnValue(css);
       const window = new BrowserWindow();
 
@@ -191,32 +173,19 @@ describe('injectCSS', () => {
       mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
       // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      window.webContents.session.webRequest.send(
-        'onHeadersReceived',
-        {
-          responseHeaders,
-          webContents: window.webContents,
-          url: `test-${contentType}`,
-        },
-        (result: HeadersReceivedResponse) => {
-          // insertCSS will still run once for the did-navigate
-          expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
-          expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(undefined);
-          done();
-        },
-      );
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        url: `test-${contentType}`,
+      });
+      // insertCSS will still run once for the did-navigate
+      expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
     },
   );
 
-  test.each<string | jest.DoneCallback>(['text/html'])(
+  test.each<string>(['text/html'])(
     'will inject for content-type %s',
-    // @ts-expect-error because TypeScript can't recognize that
-    // '(contentType: string, done: jest.DoneCallback) => void'
-    // and
-    // '(...args: (string | DoneCallback)[]) => any'
-    // are actually compatible.
-    (contentType: string, done: jest.DoneCallback) => {
+    (contentType: string) => {
       mockGetCSSToInject.mockReturnValue(css);
       const window = new BrowserWindow();
 
@@ -230,36 +199,19 @@ describe('injectCSS', () => {
       mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
       // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      window.webContents.session.webRequest.send(
-        'onHeadersReceived',
-        {
-          responseHeaders,
-          webContents: window.webContents,
-          url: `test-${contentType}`,
-        },
-        (result: HeadersReceivedResponse) => {
-          expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
-          expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(undefined);
-          done();
-        },
-      );
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        url: `test-${contentType}`,
+      });
+
+      expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
     },
   );
 
-  test.each<string | jest.DoneCallback>([
-    'image',
-    'script',
-    'stylesheet',
-    'xhr',
-  ])(
+  test.each<string>(['image', 'script', 'stylesheet', 'xhr'])(
     'will not inject for resource type %s',
-    // @ts-expect-error because TypeScript can't recognize that
-    // '(contentType: string, done: jest.DoneCallback) => void'
-    // and
-    // '(...args: (string | DoneCallback)[]) => any'
-    // are actually compatible.
-    (resourceType: string, done: jest.DoneCallback) => {
+    (resourceType: string) => {
       mockGetCSSToInject.mockReturnValue(css);
       const window = new BrowserWindow();
 
@@ -271,33 +223,20 @@ describe('injectCSS', () => {
       mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
       // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      window.webContents.session.webRequest.send(
-        'onHeadersReceived',
-        {
-          responseHeaders,
-          webContents: window.webContents,
-          resourceType,
-          url: `test-${resourceType}`,
-        },
-        (result: HeadersReceivedResponse) => {
-          // insertCSS will still run once for the did-navigate
-          expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
-          expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(undefined);
-          done();
-        },
-      );
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        resourceType,
+        url: `test-${resourceType}`,
+      });
+      // insertCSS will still run once for the did-navigate
+      expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
     },
   );
 
-  test.each<string | jest.DoneCallback>(['html', 'other'])(
+  test.each<string>(['html', 'other'])(
     'will inject for resource type %s',
-    // @ts-expect-error because TypeScript can't recognize that
-    // '(contentType: string, done: jest.DoneCallback) => void'
-    // and
-    // '(...args: (string | DoneCallback)[]) => any'
-    // are actually compatible.
-    (resourceType: string, done: jest.DoneCallback) => {
+    (resourceType: string) => {
       mockGetCSSToInject.mockReturnValue(css);
       const window = new BrowserWindow();
 
@@ -309,20 +248,13 @@ describe('injectCSS', () => {
       mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
       // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      window.webContents.session.webRequest.send(
-        'onHeadersReceived',
-        {
-          responseHeaders,
-          webContents: window.webContents,
-          resourceType,
-          url: `test-${resourceType}`,
-        },
-        (result: HeadersReceivedResponse) => {
-          expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
-          expect(result.cancel).toBe(false);
-          done();
-        },
-      );
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        resourceType,
+        url: `test-${resourceType}`,
+      });
+      expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
     },
   );
 });

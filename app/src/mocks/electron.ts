@@ -126,22 +126,13 @@ class MockWebRequest {
     this.emitter = new InternalEmitter();
   }
 
-  onHeadersReceived(
+  onResponseStarted(
     filter: unknown,
-    listener:
-      | ((
-          details: unknown,
-          callback: (headersReceivedResponse: unknown) => void,
-        ) => void)
-      | null,
+    listener: ((details: unknown) => void) | null,
   ): void {
     if (listener) {
-      this.emitter.addListener(
-        'onHeadersReceived',
-        (
-          details: unknown,
-          callback: (headersReceivedResponse: unknown) => void,
-        ) => listener(details, callback),
+      this.emitter.addListener('onResponseStarted', (details: unknown) =>
+        listener(details),
       );
     }
   }
