@@ -222,31 +222,16 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         details: OnHeadersReceivedListenerDetails,
         callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
       ) => {
-        const contentType =
-          details.responseHeaders && 'content-type' in details.responseHeaders
-            ? details.responseHeaders['content-type'][0]
-            : undefined;
-
         log.debug('onHeadersReceived', {
-          contentType,
           resourceType: details.resourceType,
           url: details.url,
         });
-
-        injectCSSIntoResponse(details, contentType, cssToInject)
-          .then((responseHeaders) => {
-            callback({
-              cancel: false,
-              responseHeaders,
-            });
-          })
-          .catch((err) => {
-            log.error('injectCSSIntoResponse ERROR', err);
-            callback({
-              cancel: false,
-              responseHeaders: details.responseHeaders,
-            });
-          });
+        injectCSSIntoResponse(details, cssToInject).catch((err: unknown) => {
+          log.error('injectCSSIntoResponse ERROR', err);
+        });
+        callback({
+          cancel: false,
+        });
       },
     );
   });
@@ -254,9 +239,15 @@ export function injectCSS(browserWindow: BrowserWindow): void {
 
 async function injectCSSIntoResponse(
   details: OnHeadersReceivedListenerDetails,
-  contentType: string | undefined,
   cssToInject: string,
-): Promise<Record<string, string[]> | undefined> {
+): Promise<void> {
+  const contentType =
+    details.responseHeaders && 'content-type' in details.responseHeaders
+      ? details.responseHeaders['content-type'][0]
+      : undefined;
+
+  log.debug('injectCSSIntoResponse', { details, cssToInject, contentType });
+
   // We go with a denylist rather than a whitelist (e.g. only text/html)
   // to avoid "whoops I didn't think this should have been CSS-injected" cases
   const nonInjectableContentTypes = [
@@ -280,7 +271,7 @@ async function injectCSSIntoResponse(
         details.resourceType
       } and content-type ${contentType as string}`,
     );
-    return details.responseHeaders;
+    return;
   }
 
   log.debug(
@@ -289,8 +280,6 @@ async function injectCSSIntoResponse(
     } and content-type ${contentType as string}`,
   );
   await details.webContents.insertCSS(cssToInject);
-
-  return details.responseHeaders;
 }
 
 export function sendParamsOnDidFinishLoad(
