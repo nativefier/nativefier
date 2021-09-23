@@ -160,39 +160,7 @@ describe('injectCSS', () => {
       (result: HeadersReceivedResponse) => {
         expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
         expect(result.cancel).toBe(false);
-        expect(result.responseHeaders).toBe(responseHeaders);
-        done();
-      },
-    );
-  });
-
-  test('will catch errors inserting CSS', (done) => {
-    mockGetCSSToInject.mockReturnValue(css);
-
-    mockWebContentsInsertCSS.mockReturnValue(
-      Promise.reject('css insertion error'),
-    );
-
-    const window = new BrowserWindow();
-
-    injectCSS(window);
-
-    expect(mockGetCSSToInject).toHaveBeenCalled();
-
-    window.webContents.emit('did-navigate');
-    // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    window.webContents.session.webRequest.send(
-      'onHeadersReceived',
-      { responseHeaders, webContents: window.webContents },
-      (result: HeadersReceivedResponse) => {
-        expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
-        expect(mockLogError).toHaveBeenCalledWith(
-          'injectCSSIntoResponse ERROR',
-          'css insertion error',
-        );
-        expect(result.cancel).toBe(false);
-        expect(result.responseHeaders).toBe(responseHeaders);
+        expect(result.responseHeaders).toBe(undefined);
         done();
       },
     );
@@ -234,7 +202,7 @@ describe('injectCSS', () => {
           // insertCSS will still run once for the did-navigate
           expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
           expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(responseHeaders);
+          expect(result.responseHeaders).toBe(undefined);
           done();
         },
       );
@@ -272,7 +240,7 @@ describe('injectCSS', () => {
         (result: HeadersReceivedResponse) => {
           expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
           expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(responseHeaders);
+          expect(result.responseHeaders).toBe(undefined);
           done();
         },
       );
@@ -315,7 +283,7 @@ describe('injectCSS', () => {
           // insertCSS will still run once for the did-navigate
           expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
           expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(responseHeaders);
+          expect(result.responseHeaders).toBe(undefined);
           done();
         },
       );
@@ -352,7 +320,6 @@ describe('injectCSS', () => {
         (result: HeadersReceivedResponse) => {
           expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
           expect(result.cancel).toBe(false);
-          expect(result.responseHeaders).toBe(responseHeaders);
           done();
         },
       );

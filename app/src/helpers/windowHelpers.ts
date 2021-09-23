@@ -241,10 +241,10 @@ export function injectCSS(browserWindow: BrowserWindow): void {
   });
 }
 
-async function injectCSSIntoResponse(
+function injectCSSIntoResponse(
   details: OnHeadersReceivedListenerDetails,
   cssToInject: string,
-): Promise<void> {
+): Promise<string | undefined> {
   const contentType =
     details.responseHeaders && 'content-type' in details.responseHeaders
       ? details.responseHeaders['content-type'][0]
@@ -275,7 +275,7 @@ async function injectCSSIntoResponse(
         details.resourceType
       } and content-type ${contentType as string}`,
     );
-    return;
+    return Promise.resolve(undefined);
   }
 
   log.debug(
@@ -283,7 +283,7 @@ async function injectCSSIntoResponse(
       details.resourceType
     } and content-type ${contentType as string}`,
   );
-  await details.webContents.insertCSS(cssToInject);
+  return details.webContents.insertCSS(cssToInject);
 }
 
 export function sendParamsOnDidFinishLoad(
