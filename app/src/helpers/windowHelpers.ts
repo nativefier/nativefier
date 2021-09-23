@@ -216,9 +216,7 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         log.error('browserWindow.webContents.insertCSS', err),
       );
 
-    // We must inject css early enough; so onHeadersReceived is a good place.
-    // Will run multiple times, see `did-finish-load` event on the window
-    // that unsets this handler.
+    // We must inject css early enough; so onResponseStarted is a good place.
     browserWindow.webContents.session.webRequest.onResponseStarted(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
       (details: OnResponseStartedListenerDetails): void => {
