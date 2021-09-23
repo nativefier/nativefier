@@ -67,8 +67,12 @@ export function createAboutBlankWindow(
   setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   parent?: BrowserWindow,
 ): BrowserWindow {
-  const window = createNewWindow(options, setupWindow, 'about:blank', parent);
-  window.hide();
+  const window = createNewWindow(
+    { ...options, show: false },
+    setupWindow,
+    'about:blank',
+    parent,
+  );
   window.webContents.once('did-stop-loading', () => {
     if (window.webContents.getURL() === 'about:blank') {
       window.close();
