@@ -1,4 +1,9 @@
 
+45.0.3 / 2021-09-24
+===================
+
+  * Actually include package-lock.json in npm artifacts, duh
+
 45.0.2 / 2021-09-24
 ===================
 
