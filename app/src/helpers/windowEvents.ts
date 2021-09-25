@@ -190,15 +190,4 @@ export function setupNativefierWindow(
   window.webContents.on('will-prevent-unload', onWillPreventUnload);
 
   sendParamsOnDidFinishLoad(options, window);
-
-  // @ts-expect-error new-tab isn't in the type definition, but it does exist
-  window.on('new-tab', () => {
-    createNewTab(
-      options,
-      setupNativefierWindow,
-      options.targetUrl,
-      true,
-      window,
-    );
-  });
 }

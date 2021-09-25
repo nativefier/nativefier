@@ -205,6 +205,7 @@ export type WindowOptions = {
   internalUrls?: string | RegExp;
   name: string;
   proxyRules?: string;
+  show?: boolean;
   targetUrl: string;
   userAgent?: string;
   zoom: number;

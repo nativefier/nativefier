@@ -64,6 +64,8 @@ printf '\n***** SMOKE TEST 1: Test checklist *****
 - Injected css: should make npmjs all blue
 - Internal links open internally
 - External links open in browser
+- Context menu -> Open Link In New Window works
+- MAC ONLY: Context menu -> Open Link In New Tab works
 - Keyboard shortcuts: {back, forward, zoom in/out/zero} work
 - Console: no Electron runtime deprecation warnings/error logged'
 launch_app "$tmp_dir" "$name"

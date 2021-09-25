@@ -3,10 +3,9 @@ import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
   Event,
-  HeadersReceivedResponse,
   MessageBoxReturnValue,
-  OnHeadersReceivedListenerDetails,
   WebPreferences,
+  OnResponseStartedListenerDetails,
 } from 'electron';
 
 import log from 'loglevel';
@@ -67,8 +66,12 @@ export function createAboutBlankWindow(
   setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   parent?: BrowserWindow,
 ): BrowserWindow {
-  const window = createNewWindow(options, setupWindow, 'about:blank', parent);
-  window.hide();
+  const window = createNewWindow(
+    { ...options, show: false },
+    setupWindow,
+    'about:blank',
+    parent,
+  );
   window.webContents.once('did-stop-loading', () => {
     if (window.webContents.getURL() === 'about:blank') {
       window.close();
@@ -213,50 +216,33 @@ export function injectCSS(browserWindow: BrowserWindow): void {
         log.error('browserWindow.webContents.insertCSS', err),
       );
 
-    // We must inject css early enough; so onHeadersReceived is a good place.
-    // Will run multiple times, see `did-finish-load` event on the window
-    // that unsets this handler.
-    browserWindow.webContents.session.webRequest.onHeadersReceived(
+    // We must inject css early enough; so onResponseStarted is a good place.
+    browserWindow.webContents.session.webRequest.onResponseStarted(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
-      (
-        details: OnHeadersReceivedListenerDetails,
-        callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
-      ) => {
-        const contentType =
-          details.responseHeaders && 'content-type' in details.responseHeaders
-            ? details.responseHeaders['content-type'][0]
-            : undefined;
-
-        log.debug('onHeadersReceived', {
-          contentType,
+      (details: OnResponseStartedListenerDetails): void => {
+        log.debug('onResponseStarted', {
           resourceType: details.resourceType,
           url: details.url,
         });
-
-        injectCSSIntoResponse(details, contentType, cssToInject)
-          .then((responseHeaders) => {
-            callback({
-              cancel: false,
-              responseHeaders,
-            });
-          })
-          .catch((err) => {
-            log.error('injectCSSIntoResponse ERROR', err);
-            callback({
-              cancel: false,
-              responseHeaders: details.responseHeaders,
-            });
-          });
+        injectCSSIntoResponse(details, cssToInject).catch((err: unknown) => {
+          log.error('injectCSSIntoResponse ERROR', err);
+        });
       },
     );
   });
 }
 
-async function injectCSSIntoResponse(
-  details: OnHeadersReceivedListenerDetails,
-  contentType: string | undefined,
+function injectCSSIntoResponse(
+  details: OnResponseStartedListenerDetails,
   cssToInject: string,
-): Promise<Record<string, string[]> | undefined> {
+): Promise<string | undefined> {
+  const contentType =
+    details.responseHeaders && 'content-type' in details.responseHeaders
+      ? details.responseHeaders['content-type'][0]
+      : undefined;
+
+  log.debug('injectCSSIntoResponse', { details, cssToInject, contentType });
+
   // We go with a denylist rather than a whitelist (e.g. only text/html)
   // to avoid "whoops I didn't think this should have been CSS-injected" cases
   const nonInjectableContentTypes = [
@@ -280,7 +266,7 @@ async function injectCSSIntoResponse(
         details.resourceType
       } and content-type ${contentType as string}`,
     );
-    return details.responseHeaders;
+    return Promise.resolve(undefined);
   }
 
   log.debug(
@@ -288,9 +274,7 @@ async function injectCSSIntoResponse(
       details.resourceType
     } and content-type ${contentType as string}`,
   );
-  await details.webContents.insertCSS(cssToInject);
-
-  return details.responseHeaders;
+  return details.webContents.insertCSS(cssToInject);
 }
 
 export function sendParamsOnDidFinishLoad(

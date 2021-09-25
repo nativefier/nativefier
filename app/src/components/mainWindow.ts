@@ -14,6 +14,7 @@ import {
 import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearCache,
+  createNewTab,
   getDefaultWindowOptions,
   hideWindow,
 } from '../helpers/windowHelpers';
@@ -88,9 +89,11 @@ export async function createMainWindow(
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
   }
+
+  const windowOptions = outputOptionsToWindowOptions(options);
   createMenu(options, mainWindow);
   createContextMenu(options, mainWindow);
-  setupNativefierWindow(outputOptionsToWindowOptions(options), mainWindow);
+  setupNativefierWindow(windowOptions, mainWindow);
 
   // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
   // We can't quite cut over to that yet for a few reasons:
@@ -102,13 +105,13 @@ export async function createMainWindow(
   // users are being pointed to use setWindowOpenHandler.
   // E.g., https://github.com/electron/electron/issues/28374
 
-  // Note it is important to add this handler only to the *main* window,
+  // Note it is important to add these handlers only to the *main* window,
   // else we run into weird behavior like opening tabs twice
   mainWindow.webContents.on(
     'new-window',
     (event, url, frameName, disposition) => {
       onNewWindow(
-        outputOptionsToWindowOptions(options),
+        windowOptions,
         setupNativefierWindow,
         event,
         url,
@@ -117,6 +120,16 @@ export async function createMainWindow(
       ).catch((err) => log.error('onNewWindow ERROR', err));
     },
   );
+  // @ts-expect-error new-tab isn't in the type definition, but it does exist
+  mainWindow.on('new-tab', () => {
+    createNewTab(
+      windowOptions,
+      setupNativefierWindow,
+      options.targetUrl,
+      true,
+      mainWindow,
+    );
+  });
 
   if (options.counter) {
     setupCounter(options, mainWindow, setDockBadge);
