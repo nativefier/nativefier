@@ -1,4 +1,11 @@
 
+45.0.2 / 2021-09-24
+===================
+
+  * Fix regressions in opening windows/tabs, update browser versions (PR #1284)
+  * Make macOS "bundle identifier" mention Nativefier (fix #866) (PR #1259)
+  * Maintenance: Work around yargs coerce issue (PR #1283)
+
 45.0.1 / 2021-09-20
 ===================
 
