@@ -151,9 +151,9 @@ The best time to do package upgrades is now / progressively, because:
 
 So: do upgrade CLI & App deps regularly! Our release script will remind you about it.
 
-### Deps lockfile
+### Deps lockfile / shrinkwrap
 
-We do use lockfiles (`package-lock.json` & `app/package-lock.json`), for:
+We do use lockfiles (`npm-shrinkwrap.json` & `app/npm-shrinkwrap.json`), for:
 
 1. Security (avoiding supply chain attacks)
 2. Reproducibility
@@ -161,6 +161,11 @@ We do use lockfiles (`package-lock.json` & `app/package-lock.json`), for:
 
 It means you might have to update these lockfiles when adding a dependency.
 `npm run relock` will help you with that.
+
+Note: we do use `npm-shrinkwrap.json` rather than `package-lock.json` because
+the latter is tailored to libraries, and is not publishable.
+As [documented](https://docs.npmjs.com/cli/v6/configuring-npm/shrinkwrap-json),
+CLI tools like Nativefier should use shrinkwrap.
 
 ### Release
 

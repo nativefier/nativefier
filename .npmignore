@@ -1,7 +1,7 @@
 /*
 !lib/
 !icon-scripts
-!package-lock.json
+!npm-shrinkwrap.json
 .DS_Store
 src/
 *eslintrc.js
@@ -19,5 +19,5 @@ app/*
 !app/inject/
 !app/nativefier.json
 !app/package.json
-!app/package-lock.json
+!app/npm-shrinkwrap.json
 .vscode/

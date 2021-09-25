@@ -11,6 +11,8 @@ built-tests
 !app/lib/.placeholder
 
 dist
+package-lock.json
+app/package-lock.json
 
 # Logs
 logs
