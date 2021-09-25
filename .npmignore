@@ -1,6 +1,7 @@
 /*
 !lib/
 !icon-scripts
+!package-lock.json
 .DS_Store
 src/
 *eslintrc.js
@@ -18,4 +19,5 @@ app/*
 !app/inject/
 !app/nativefier.json
 !app/package.json
+!app/package-lock.json
 .vscode/
