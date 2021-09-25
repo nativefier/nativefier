@@ -1,4 +1,9 @@
 
+45.0.4 / 2021-09-24
+===================
+
+  * Actually actually (TM) include lockfile in npm artifacts, duuuuuh
+
 45.0.3 / 2021-09-24
 ===================
 
