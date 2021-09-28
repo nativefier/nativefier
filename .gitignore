@@ -1,9 +1,6 @@
 # OSX
 .DS_Store
 
-# Node.js
-package-lock.json
-
 # ignore compiled lib files
 lib*
 app/lib/*
@@ -14,6 +11,8 @@ built-tests
 !app/lib/.placeholder
 
 dist
+package-lock.json
+app/package-lock.json
 
 # Logs
 logs
@@ -43,6 +42,8 @@ build/Release
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+.nvmrc
+
 # Python virtual environment in case it's created for the Castlabs code signing tool
 venv
 
@@ -60,3 +61,5 @@ nativefier*.tgz
 
 # https://github.com/nektos/act
 .actrc
+
+tsconfig.tsbuildinfo

@@ -39,7 +39,7 @@ function domainify(url: string): string {
   return domain;
 }
 
-export function getAppIcon(): string {
+export function getAppIcon(): string | undefined {
   // Prefer ICO under Windows, see
   // https://www.electronjs.org/docs/api/browser-window#new-browserwindowoptions
   // https://www.electronjs.org/docs/api/native-image#supported-formats
@@ -55,7 +55,7 @@ export function getAppIcon(): string {
   }
 }
 
-export function getCounterValue(title: string): string {
+export function getCounterValue(title: string): string | undefined {
   const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
   const match = itemCountRegex.exec(title);
   return match ? match[1] : undefined;
@@ -74,7 +74,7 @@ export function getCSSToInject(): string {
   for (const cssFile of cssFiles) {
     log.debug('Injecting CSS file', cssFile);
     const cssFileData = fs.readFileSync(cssFile);
-    cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
+    cssToInject += `/* ${cssFile} */\n\n ${cssFileData.toString()}\n\n`;
   }
   return cssToInject;
 }
@@ -105,6 +105,7 @@ function isInternalLoginPage(url: string): boolean {
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
+    '(?:id|auth)\\.atlassian\\.[a-zA-Z]+', // Atlassian
   ];
   // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const regex = RegExp(internalLoginPagesArray.join('|'));
@@ -114,7 +115,7 @@ function isInternalLoginPage(url: string): boolean {
 export function linkIsInternal(
   currentUrl: string,
   newUrl: string,
-  internalUrlRegex: string | RegExp,
+  internalUrlRegex: string | RegExp | undefined,
 ): boolean {
   log.debug('linkIsInternal', { currentUrl, newUrl, internalUrlRegex });
   if (newUrl.split('#')[0] === 'about:blank') {
@@ -141,7 +142,7 @@ export function linkIsInternal(
     // Only use the tld and the main domain for domain-ish test
     // Enables domain-ish equality for blog.foo.com and shop.foo.com
     return domainify(currentUrl) === domainify(newUrl);
-  } catch (err) {
+  } catch (err: unknown) {
     log.error(
       'Failed to parse domains as determining if link is internal. From:',
       currentUrl,
@@ -178,12 +179,4 @@ export function removeUserAgentSpecifics(
   return userAgentFallback
     .replace(`Electron/${process.versions.electron} `, '')
     .replace(`${appName}/${appVersion} `, ' ');
-}
-
-export function shouldInjectCSS(): boolean {
-  try {
-    return fs.existsSync(INJECT_DIR);
-  } catch (e) {
-    return false;
-  }
 }

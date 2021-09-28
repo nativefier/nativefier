@@ -112,6 +112,8 @@ const testLoginPages = [
   'https://twitter.com/oauth/authenticate',
   'https://twitter.de/oauth/authenticate',
   'https://appleid.apple.com/auth/authorize',
+  'https://id.atlassian.com',
+  'https://auth.atlassian.com',
 ];
 
 test.each(testLoginPages)(
@@ -131,6 +133,7 @@ const testNonLoginPages = [
   'https://twitter.com/marcoroth_/status/1325938620906287104',
   'https://appleid.apple.com/account',
   'https://mail.google.com/',
+  'https://atlassian.com',
 ];
 
 test.each(testNonLoginPages)(

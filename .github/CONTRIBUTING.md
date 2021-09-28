@@ -20,9 +20,6 @@ We follow the [Airbnb Style Guide](https://github.com/airbnb/javascript), please
 The following commands might be helpful:
 
 ```bash
-# Run specs and lint
-npm run ci
-
 # Run specs only
 npm run test
 

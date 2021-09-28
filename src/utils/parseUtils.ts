@@ -3,9 +3,12 @@ import * as log from 'loglevel';
 import { isWindows } from '../helpers/helpers';
 
 export function parseBoolean(
-  val: boolean | string | number,
+  val: boolean | string | number | undefined,
   _default: boolean,
 ): boolean {
+  if (val === undefined) {
+    return _default;
+  }
   try {
     if (typeof val === 'boolean') {
       return val;
@@ -23,7 +26,7 @@ export function parseBoolean(
       default:
         return _default;
     }
-  } catch (_) {
+  } catch {
     return _default;
   }
 }
@@ -39,11 +42,11 @@ export function parseBooleanOrString(val: string): boolean | string {
   }
 }
 
-export function parseJson(val: string): any {
-  if (!val) return {};
+export function parseJson<Type>(val: string): Type | undefined {
+  if (!val) return undefined;
   try {
-    return JSON.parse(val);
-  } catch (err) {
+    return JSON.parse(val) as Type;
+  } catch (err: unknown) {
     const windowsShellHint = isWindows()
       ? `\n   In particular, Windows cmd doesn't have single quotes, so you have to use only double-quotes plus escaping: "{\\"someKey\\": \\"someValue\\"}"`
       : '';

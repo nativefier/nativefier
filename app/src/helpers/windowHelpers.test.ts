@@ -1,14 +1,10 @@
-import {
-  dialog,
-  BrowserWindow,
-  HeadersReceivedResponse,
-  WebContents,
-} from 'electron';
+import { dialog, BrowserWindow, WebContents } from 'electron';
 jest.mock('loglevel');
 import { error } from 'loglevel';
+import { WindowOptions } from '../../../shared/src/options/model';
 
 jest.mock('./helpers');
-import { getCSSToInject, shouldInjectCSS } from './helpers';
+import { getCSSToInject } from './helpers';
 jest.mock('./windowEvents');
 import { clearAppData, createNewTab, injectCSS } from './windowHelpers';
 
@@ -57,7 +53,13 @@ describe('clearAppData', () => {
 
 describe('createNewTab', () => {
   const window = new BrowserWindow();
-  const options = {};
+  const options: WindowOptions = {
+    blockExternalUrls: false,
+    insecure: false,
+    name: 'Test App',
+    targetUrl: 'https://github.com/nativefier/natifefier',
+    zoom: 1.0,
+  };
   const setupWindow = jest.fn();
   const url = 'https://github.com/nativefier/nativefier';
   const mockAddTabbedWindow: jest.SpyInstance = jest.spyOn(
@@ -97,43 +99,46 @@ describe('createNewTab', () => {
 });
 
 describe('injectCSS', () => {
+  jest.setTimeout(10000);
+
   const mockGetCSSToInject: jest.SpyInstance = getCSSToInject as jest.Mock;
+  let mockGetURL: jest.SpyInstance;
   const mockLogError: jest.SpyInstance = error as jest.Mock;
-  const mockShouldInjectCSS: jest.SpyInstance = shouldInjectCSS as jest.Mock;
   const mockWebContentsInsertCSS: jest.SpyInstance = jest.spyOn(
     WebContents.prototype,
     'insertCSS',
   );
 
   const css = 'body { color: white; }';
-  const responseHeaders = { 'x-header': 'value' };
+  let responseHeaders: Record<string, string[]>;
 
   beforeEach(() => {
     mockGetCSSToInject.mockReset().mockReturnValue('');
+    mockGetURL = jest
+      .spyOn(WebContents.prototype, 'getURL')
+      .mockReturnValue('https://example.com');
     mockLogError.mockReset();
-    mockShouldInjectCSS.mockReset().mockReturnValue(true);
     mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
+    responseHeaders = { 'x-header': ['value'], 'content-type': ['test/other'] };
   });
 
   afterAll(() => {
     mockGetCSSToInject.mockRestore();
+    mockGetURL.mockRestore();
     mockLogError.mockRestore();
-    mockShouldInjectCSS.mockRestore();
     mockWebContentsInsertCSS.mockRestore();
   });
 
-  test('will not inject if shouldInjectCSS is false', () => {
-    mockShouldInjectCSS.mockReturnValue(false);
-
+  test('will not inject if getCSSToInject is empty', () => {
     const window = new BrowserWindow();
 
     injectCSS(window);
 
-    expect(mockGetCSSToInject).not.toHaveBeenCalled();
+    expect(mockGetCSSToInject).toHaveBeenCalled();
     expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
   });
 
-  test('will inject on did-navigate + onHeadersReceived', (done) => {
+  test('will inject on did-navigate + onResponseStarted', () => {
     mockGetCSSToInject.mockReturnValue(css);
     const window = new BrowserWindow();
 
@@ -142,47 +147,114 @@ describe('injectCSS', () => {
     expect(mockGetCSSToInject).toHaveBeenCalled();
 
     window.webContents.emit('did-navigate');
-    // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
-    window.webContents.session.webRequest.send(
-      'onHeadersReceived',
-      { responseHeaders, webContents: window.webContents },
-      (result: HeadersReceivedResponse) => {
-        expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
-        expect(result.cancel).toBe(false);
-        expect(result.responseHeaders).toBe(responseHeaders);
-        done();
-      },
-    );
+    // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    window.webContents.session.webRequest.send('onResponseStarted', {
+      responseHeaders,
+      webContents: window.webContents,
+    });
+
+    expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
   });
 
-  test('will catch errors inserting CSS', (done) => {
-    mockGetCSSToInject.mockReturnValue(css);
+  test.each<string>(['application/json', 'font/woff2', 'image/png'])(
+    'will not inject for content-type %s',
+    (contentType: string) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
 
-    mockWebContentsInsertCSS.mockReturnValue(
-      Promise.reject('css insertion error'),
-    );
+      responseHeaders['content-type'] = [contentType];
 
-    const window = new BrowserWindow();
+      injectCSS(window);
 
-    injectCSS(window);
+      expect(mockGetCSSToInject).toHaveBeenCalled();
 
-    expect(mockGetCSSToInject).toHaveBeenCalled();
+      expect(window.webContents.emit('did-navigate')).toBe(true);
+      mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
+      // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        url: `test-${contentType}`,
+      });
+      // insertCSS will still run once for the did-navigate
+      expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
+    },
+  );
 
-    window.webContents.emit('did-navigate');
-    // @ts-ignore this function doesn't exist in the actual electron version, but will in our mock
-    window.webContents.session.webRequest.send(
-      'onHeadersReceived',
-      { responseHeaders, webContents: window.webContents },
-      (result: HeadersReceivedResponse) => {
-        expect(mockWebContentsInsertCSS).toHaveBeenCalledWith(css);
-        expect(mockLogError).toHaveBeenCalledWith(
-          'webContents.insertCSS ERROR',
-          'css insertion error',
-        );
-        expect(result.cancel).toBe(false);
-        expect(result.responseHeaders).toBe(responseHeaders);
-        done();
-      },
-    );
-  });
+  test.each<string>(['text/html'])(
+    'will inject for content-type %s',
+    (contentType: string) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      responseHeaders['content-type'] = [contentType];
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
+      // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        url: `test-${contentType}`,
+      });
+
+      expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
+    },
+  );
+
+  test.each<string>(['image', 'script', 'stylesheet', 'xhr'])(
+    'will not inject for resource type %s',
+    (resourceType: string) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
+      // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        resourceType,
+        url: `test-${resourceType}`,
+      });
+      // insertCSS will still run once for the did-navigate
+      expect(mockWebContentsInsertCSS).not.toHaveBeenCalled();
+    },
+  );
+
+  test.each<string>(['html', 'other'])(
+    'will inject for resource type %s',
+    (resourceType: string) => {
+      mockGetCSSToInject.mockReturnValue(css);
+      const window = new BrowserWindow();
+
+      injectCSS(window);
+
+      expect(mockGetCSSToInject).toHaveBeenCalled();
+
+      window.webContents.emit('did-navigate');
+      mockWebContentsInsertCSS.mockReset().mockResolvedValue(undefined);
+      // @ts-expect-error this function doesn't exist in the actual electron version, but will in our mock
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      window.webContents.session.webRequest.send('onResponseStarted', {
+        responseHeaders,
+        webContents: window.webContents,
+        resourceType,
+        url: `test-${resourceType}`,
+      });
+      expect(mockWebContentsInsertCSS).toHaveBeenCalledTimes(1);
+    },
+  );
 });

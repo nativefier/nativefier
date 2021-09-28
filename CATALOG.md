@@ -58,13 +58,13 @@ Note: as for Udemy, `--widevine` + [app signing](https://github.com/nativefier/n
 ```sh
 nativefier 'https://open.spotify.com/'
   --widevine
-  --user-agent firefox
   --inject spotify.js
   --inject spotify.css
 ```
 
 Notes:
 
+- You might have to pass `--user-agent firefox` to circumvent Spotify's detection that your browser isn't a real Chrome. But [maybe not](https://github.com/nativefier/nativefier/issues/1195#issuecomment-855003776).
 - [Inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
 ```javascript
 function dontShowBrowserNoticePage() {

@@ -14,8 +14,12 @@ test.each([
   [undefined, true, true],
   [undefined, false, false],
 ])(
-  'parseBoolean("%s") === %s',
-  (testString: string, expectedResult: boolean, _default: boolean) => {
-    expect(parseBoolean(testString, _default)).toBe(expectedResult);
+  'parseBoolean("%s") === %s (default = %s)',
+  (
+    testValue: boolean | string | number | undefined,
+    expectedResult: boolean,
+    _default: boolean,
+  ) => {
+    expect(parseBoolean(testValue, _default)).toBe(expectedResult);
   },
 );

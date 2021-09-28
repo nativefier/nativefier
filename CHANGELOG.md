@@ -1,4 +1,113 @@
 
+45.0.4 / 2021-09-24
+===================
+
+  * Actually actually (TM) include lockfile in npm artifacts, duuuuuh
+
+45.0.3 / 2021-09-24
+===================
+
+  * Actually include package-lock.json in npm artifacts, duh
+
+45.0.2 / 2021-09-24
+===================
+
+  * Fix regressions in opening windows/tabs, update browser versions (PR #1284)
+  * Make macOS "bundle identifier" mention Nativefier (fix #866) (PR #1259)
+  * Maintenance: Work around yargs coerce issue (PR #1283)
+
+45.0.1 / 2021-09-20
+===================
+
+  * Auto-internal login pages: add `(id|auth).atlassian.com` (fix #1265)
+  * API.md: document need to use CSS `!important` keyword (fix #1264)
+  * Bump default Electron to 13.4.0 with security fixes
+  * Maintenance: deps bumps, fix build:watch script, re-introduce a lockfile
+
+45.0.0 / 2021-07-19
+===================
+
+  * **[BREAKING]** Bump default Electron to 13.1.7 with Chrome 91 (PR #1230)
+    See https://www.electronjs.org/blog/electron-13-0
+    and https://www.electronjs.org/blog/electron-13-0#breaking-changes
+
+44.0.7 / 2021-07-10
+===================
+
+  * Fix badge/counter icon not being removed correctly (#1251, PR #1252)
+  * App context menu: add "Save Image", "Copy Image", "Copy Image Address" (PR #1256)
+  * Bump default Electron from 12.0.12 to 12.0.14. Changelogs:
+    [Electron 12.0.13](https://github.com/electron/electron/releases/tag/v12.0.13)
+    [Electron 12.0.14](https://github.com/electron/electron/releases/tag/v12.0.14)
+  * Maintenance: {API.md, HACKING.md} documentation, improve `generate-changelog`
+
+44.0.6 / 2021-06-26
+===================
+
+Like 44.0.4, this release only contains one behind-the-scenes TS change with no user-visible changes.
+It is here to let us narrow down on potential regressions that may have crept in.
+It isn't especially scary, though. Do test it, use it, and report regressions!
+
+  * App: Enable TypeScript `strict:true`, more typescript-eslint rules, shared TS project (#1231)
+
+44.0.5 / 2021-06-25
+===================
+
+  * Fix "Reset Zoom" menu item (#1241, PR #1243)
+  * Fix `--tray start-in-tray` (#1225, PR #1235)
+  * Fix external URLs opening in a new Nativefier tab (#1228, PR #1229)
+  * Bump default Electron from 12.0.11 to 12.0.12. See changelog:
+    [Electron 12.0.12](https://github.com/electron/electron/releases/tag/v12.0.12)
+  * Maintenance: documentation
+
+44.0.4 / 2021-06-15
+===================
+
+This release only contains one behind-the-scenes TS change with no user-visible changes.
+It is here to let us narrow down on potential regressions that may have crept in.
+It isn't especially scary, though. Do test it, use it, and report regressions!
+
+  * Enable TypeScript `strict:true`, and more typescript-eslint rules (#1223)
+
+44.0.3 / 2021-06-15
+===================
+
+  * Make CSS injection less brutal (#1222, #1227)
+  * Maintenance: README nits, Fix gitcloud 0.2.3 import
+
+44.0.2 / 2021-06-07
+===================
+
+  * Fix HTTP basic auth broken since 44.0.1 (fix #1219) (#1220)
+  * Fix tabs opening twice since 44.0.0 (fix #1209) (#1221)
+
+44.0.1 / 2021-06-07
+===================
+
+  * macOS: fix crash on activating main window (fix #1212) (PR #1213)
+  * macOS: fix fullscreen not working + menu refactor (fix #1206) (PR #1210)
+
+44.0.0 / 2021-06-04
+===================
+
+  * **[BREAKING]** Nativefier now requires node>=12.9 and npm>=6.9 (#1192)
+    We do our best to support the oldest Node we can (what Debian stable ships),
+    but we are also constrained by what our _own_ Node dependencies require.
+    Now is the time for a bump.
+
+  * Feature: Provide easy-to-use user-agent shortcodes (e.g. `firefox`) (#1198)
+  * Feature: Organize CLI flags into groups (for better `--help` usability) (#1191)
+
+  * Fix broken window popups (fix #1197, PR #1203)
+  * Fix allowing non-ascii app names like 微信读书 (fix #1056, PR #1207)
+  * Fix considering `login.microsoftonline.com` as internal login page (#1205)
+  * Bump default Electron from 12.0.7 to 12.0.10 with a couple of fixes. See changelogs for:
+    [12.0.8](https://github.com/electron/electron/releases/tag/v12.0.8),
+    [12.0.9](https://github.com/electron/electron/releases/tag/v12.0.9),
+    [12.0.10](https://github.com/electron/electron/releases/tag/v12.0.10).
+
+  * Maintenance: docs, tests tooling, deps bumps
+
 43.1.3 / 2021-05-15
 ===================
 

@@ -1,21 +1,17 @@
 import {
+  dialog,
   BrowserWindow,
   BrowserWindowConstructorOptions,
-  dialog,
-  HeadersReceivedResponse,
-  IpcMainEvent,
+  Event,
   MessageBoxReturnValue,
-  OnHeadersReceivedListenerDetails,
+  WebPreferences,
+  OnResponseStartedListenerDetails,
 } from 'electron';
 
 import log from 'loglevel';
 import path from 'path';
-import {
-  getCSSToInject,
-  isOSX,
-  nativeTabsSupported,
-  shouldInjectCSS,
-} from './helpers';
+import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
+import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -66,12 +62,16 @@ export async function clearCache(window: BrowserWindow): Promise<void> {
 }
 
 export function createAboutBlankWindow(
-  options,
-  setupWindow: (...args) => void,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   parent?: BrowserWindow,
 ): BrowserWindow {
-  const window = createNewWindow(options, setupWindow, 'about:blank', parent);
-  window.hide();
+  const window = createNewWindow(
+    { ...options, show: false },
+    setupWindow,
+    'about:blank',
+    parent,
+  );
   window.webContents.once('did-stop-loading', () => {
     if (window.webContents.getURL() === 'about:blank') {
       window.close();
@@ -83,12 +83,12 @@ export function createAboutBlankWindow(
 }
 
 export function createNewTab(
-  options,
-  setupWindow,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   url: string,
   foreground: boolean,
   parent?: BrowserWindow,
-): Promise<BrowserWindow> {
+): BrowserWindow | undefined {
   log.debug('createNewTab', { url, foreground, parent });
   return withFocusedWindow((focusedWindow) => {
     const newTab = createNewWindow(options, setupWindow, url, parent);
@@ -101,8 +101,8 @@ export function createNewTab(
 }
 
 export function createNewWindow(
-  options,
-  setupWindow: (...args) => void,
+  options: WindowOptions,
+  setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   url: string,
   parent?: BrowserWindow,
 ): BrowserWindow {
@@ -123,7 +123,7 @@ export function getCurrentURL(): string {
 }
 
 export function getDefaultWindowOptions(
-  options,
+  options: WindowOptions,
 ): BrowserWindowConstructorOptions {
   const browserwindowOptions: BrowserWindowConstructorOptions = {
     ...options.browserwindowOptions,
@@ -133,20 +133,20 @@ export function getDefaultWindowOptions(
   // webPreferences specified in the DEFAULT_WINDOW_OPTIONS with itself
   delete browserwindowOptions.webPreferences;
 
-  const webPreferences = {
+  const webPreferences: WebPreferences = {
     ...(options.browserwindowOptions?.webPreferences ?? {}),
   };
 
-  const defaultOptions = {
-    // Convert dashes to spaces because on linux the app name is joined with dashes
-    title: options.name,
+  const defaultOptions: BrowserWindowConstructorOptions = {
+    fullscreenable: true,
     tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
+    title: options.name,
     webPreferences: {
       javascript: true,
-      plugins: true,
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
-      webSecurity: !options.insecure,
       preload: path.join(__dirname, 'preload.js'),
+      plugins: true,
+      webSecurity: !options.insecure,
       zoomFactor: options.zoom,
       ...webPreferences,
     },
@@ -176,21 +176,21 @@ export function goForward(): void {
   });
 }
 
-export function goToURL(url: string): Promise<void> {
+export function goToURL(url: string): Promise<void> | undefined {
   return withFocusedWindow((focusedWindow) => focusedWindow.loadURL(url));
 }
 
 export function hideWindow(
   window: BrowserWindow,
-  event: IpcMainEvent,
+  event: Event,
   fastQuit: boolean,
-  tray,
+  tray: TrayValue,
 ): void {
   if (isOSX() && !fastQuit) {
     // this is called when exiting from clicking the cross button on the window
     event.preventDefault();
     window.hide();
-  } else if (!fastQuit && tray) {
+  } else if (!fastQuit && tray !== 'false') {
     event.preventDefault();
     window.hide();
   }
@@ -198,55 +198,87 @@ export function hideWindow(
 }
 
 export function injectCSS(browserWindow: BrowserWindow): void {
-  if (!shouldInjectCSS()) {
+  const cssToInject = getCSSToInject();
+
+  if (!cssToInject) {
     return;
   }
-
-  const cssToInject = getCSSToInject();
 
   browserWindow.webContents.on('did-navigate', () => {
     log.debug(
       'browserWindow.webContents.did-navigate',
       browserWindow.webContents.getURL(),
     );
-    // We must inject css early enough; so onHeadersReceived is a good place.
-    // Will run multiple times, see `did-finish-load` event on the window
-    // that unsets this handler.
-    browserWindow.webContents.session.webRequest.onHeadersReceived(
+
+    browserWindow.webContents
+      .insertCSS(cssToInject)
+      .catch((err: unknown) =>
+        log.error('browserWindow.webContents.insertCSS', err),
+      );
+
+    // We must inject css early enough; so onResponseStarted is a good place.
+    browserWindow.webContents.session.webRequest.onResponseStarted(
       { urls: [] }, // Pass an empty filter list; null will not match _any_ urls
-      (
-        details: OnHeadersReceivedListenerDetails,
-        callback: (headersReceivedResponse: HeadersReceivedResponse) => void,
-      ) => {
-        log.debug(
-          'browserWindow.webContents.session.webRequest.onHeadersReceived',
-          { details, callback },
-        );
-        if (details.webContents) {
-          details.webContents
-            .insertCSS(cssToInject)
-            .catch((err) => {
-              log.error('webContents.insertCSS ERROR', err);
-            })
-            .finally(() =>
-              callback({
-                cancel: false,
-                responseHeaders: details.responseHeaders,
-              }),
-            );
-        } else {
-          callback({
-            cancel: false,
-            responseHeaders: details.responseHeaders,
-          });
-        }
+      (details: OnResponseStartedListenerDetails): void => {
+        log.debug('onResponseStarted', {
+          resourceType: details.resourceType,
+          url: details.url,
+        });
+        injectCSSIntoResponse(details, cssToInject).catch((err: unknown) => {
+          log.error('injectCSSIntoResponse ERROR', err);
+        });
       },
     );
   });
 }
 
+function injectCSSIntoResponse(
+  details: OnResponseStartedListenerDetails,
+  cssToInject: string,
+): Promise<string | undefined> {
+  const contentType =
+    details.responseHeaders && 'content-type' in details.responseHeaders
+      ? details.responseHeaders['content-type'][0]
+      : undefined;
+
+  log.debug('injectCSSIntoResponse', { details, cssToInject, contentType });
+
+  // We go with a denylist rather than a whitelist (e.g. only text/html)
+  // to avoid "whoops I didn't think this should have been CSS-injected" cases
+  const nonInjectableContentTypes = [
+    /application\/.*/,
+    /font\/.*/,
+    /image\/.*/,
+  ];
+  const nonInjectableResourceTypes = ['image', 'script', 'stylesheet', 'xhr'];
+
+  if (
+    (contentType &&
+      nonInjectableContentTypes.filter((x) => {
+        const matches = x.exec(contentType);
+        return matches && matches?.length > 0;
+      })?.length > 0) ||
+    nonInjectableResourceTypes.includes(details.resourceType) ||
+    !details.webContents
+  ) {
+    log.debug(
+      `Skipping CSS injection for:\n${details.url}\nwith resourceType ${
+        details.resourceType
+      } and content-type ${contentType as string}`,
+    );
+    return Promise.resolve(undefined);
+  }
+
+  log.debug(
+    `Injecting CSS for:\n${details.url}\nwith resourceType ${
+      details.resourceType
+    } and content-type ${contentType as string}`,
+  );
+  return details.webContents.insertCSS(cssToInject);
+}
+
 export function sendParamsOnDidFinishLoad(
-  options,
+  options: WindowOptions,
   window: BrowserWindow,
 ): void {
   window.webContents.on('did-finish-load', () => {
@@ -265,7 +297,10 @@ export function sendParamsOnDidFinishLoad(
   });
 }
 
-export function setProxyRules(window: BrowserWindow, proxyRules): void {
+export function setProxyRules(
+  window: BrowserWindow,
+  proxyRules?: string,
+): void {
   window.webContents.session
     .setProxy({
       proxyRules,
@@ -275,13 +310,15 @@ export function setProxyRules(window: BrowserWindow, proxyRules): void {
     .catch((err) => log.error('session.setProxy ERROR', err));
 }
 
-export function withFocusedWindow(block: (window: BrowserWindow) => any): any {
+export function withFocusedWindow<T>(
+  block: (window: BrowserWindow) => T,
+): T | undefined {
   const focusedWindow = BrowserWindow.getFocusedWindow();
   if (focusedWindow) {
     return block(focusedWindow);
   }
 
-  return null;
+  return undefined;
 }
 
 export function zoomOut(): void {
@@ -289,10 +326,10 @@ export function zoomOut(): void {
   adjustWindowZoom(-ZOOM_INTERVAL);
 }
 
-export function zoomReset(options): void {
+export function zoomReset(options: { zoom?: number }): void {
   log.debug('zoomReset');
   withFocusedWindow((focusedWindow) => {
-    focusedWindow.webContents.zoomFactor = options.zoom;
+    focusedWindow.webContents.zoomFactor = options.zoom ?? 1.0;
   });
 }
 
