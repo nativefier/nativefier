@@ -134,8 +134,6 @@ export async function buildNativefierApp(
 ): Promise<string | undefined> {
   log.info('\nProcessing options...');
 
-  const tmpUpgradePath = getTempDir('upgrade', 0o755);
-
   if (isUpgrade(rawOptions)) {
     log.debug('Attempting to upgrade from', rawOptions.upgradeFrom);
     const oldApp = findUpgradeApp(rawOptions.upgradeFrom as string);
@@ -147,8 +145,6 @@ export async function buildNativefierApp(
       );
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
-    // if (!rawOptions.out && rawOptions.overwrite) {
-    //   rawOptions.out = tmpUpgradePath;
     if (rawOptions.out === undefined && rawOptions.overwrite) {
       rawOptions.out = path.dirname(rawOptions.upgradeFrom as string);
     }

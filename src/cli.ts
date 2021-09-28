@@ -641,9 +641,9 @@ if (require.main === module) {
   if (options.verbose) {
     log.setLevel('trace');
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       require('debug').enable('electron-packager');
-    } catch (err) {
+    } catch (err: unknown) {
       log.debug(
         'Failed to enable electron-packager debug output. This should not happen,',
         'and suggests their internals changed. Please report an issue.',
