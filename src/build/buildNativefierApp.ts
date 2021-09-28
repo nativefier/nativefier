@@ -194,14 +194,15 @@ export async function buildNativefierApp(
   let appPath = getAppPath(appPathArray);
 
   if (!appPath) {
-    throw new Error('App Path could not be determinged.');
+    throw new Error('App Path could not be determined.');
   }
 
   if (
     options.packager.upgrade &&
     options.packager.upgradeFrom &&
-    options.packager.overwrite !== undefined &&
-    rawOptions.out == tmpUpgradePath
+    options.packager.overwrite &&
+    rawOptions.out ==
+      path.resolve(path.join(options.packager.upgradeFrom, '..'))
   ) {
     let newPath = path.dirname(options.packager.upgradeFrom);
     const syncNcp = promisify(ncp);
@@ -218,7 +219,7 @@ export async function buildNativefierApp(
       const ncpPromises = fs.readdirSync(appPath).map(() =>
         syncNcp(
           // @ts-expect-error appPath won't be undefined, we checked
-          path.join(appPath, `${options.packager.name ?? ''}.app`),
+          path.join(appPath, `${options.packager.name ?? ''}`),
           newPath,
           { clobber: options.packager.overwrite },
         ),
