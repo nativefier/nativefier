@@ -215,7 +215,7 @@ export async function buildNativefierApp(
         preserveTimestamps: true,
       });
     }
-    fs.rmdirSync(appPath, { recursive: true });
+    await fs.rm(appPath, { recursive: true });
     appPath = finalOutDirectory;
   }
 
