@@ -215,7 +215,7 @@ export async function buildNativefierApp(
         preserveTimestamps: true,
       });
     }
-    await fs.rm(appPath, { recursive: true });
+    await fs.remove(appPath);
     appPath = finalOutDirectory;
   }
 
