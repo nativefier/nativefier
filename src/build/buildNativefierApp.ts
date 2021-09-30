@@ -1,8 +1,9 @@
-import * as fs from 'fs-extra';
+import * as os from 'os';
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
 import electronPackager from 'electron-packager';
+import * as fs from 'fs-extra';
 import * as log from 'loglevel';
 
 import { convertIconIfNecessary } from './buildIcon';
@@ -203,14 +204,14 @@ export async function buildNativefierApp(
         path.join(appPath, `${options.packager.name ?? ''}.app`),
         path.join(finalOutDirectory, `${options.packager.name ?? ''}.app`),
         {
-          dereference: true,
+          dereference: os.platform() !== 'win32',
           overwrite: options.packager.overwrite,
           preserveTimestamps: true,
         },
       );
     } else {
       await fs.copy(appPath, finalOutDirectory, {
-        dereference: true,
+        dereference: os.platform() !== 'win32',
         overwrite: options.packager.overwrite,
         preserveTimestamps: true,
       });
