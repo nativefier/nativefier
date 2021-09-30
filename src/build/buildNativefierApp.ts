@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
@@ -7,7 +7,6 @@ import * as log from 'loglevel';
 
 import { convertIconIfNecessary } from './buildIcon';
 import {
-  copyFileOrDir,
   getTempDir,
   hasWine,
   isWindows,
@@ -17,8 +16,6 @@ import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
 import { AppOptions, RawOptions } from '../../shared/src/options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
-import ncp = require('ncp');
-import { promisify } from 'util';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -52,7 +49,7 @@ async function copyIconsIfNecessary(
       log.debug('Copying icon for tray application');
       const trayIconFileName = `tray-icon.png`;
       const destIconPath = path.join(appPath, 'icon.png');
-      await copyFileOrDir(
+      await fs.copy(
         `${path.dirname(options.packager.icon)}/${trayIconFileName}`,
         destIconPath,
       );
@@ -67,7 +64,7 @@ async function copyIconsIfNecessary(
   const destIconPath = path.join(appPath, destFileName);
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
-  await copyFileOrDir(options.packager.icon, destIconPath);
+  await fs.copy(options.packager.icon, destIconPath);
 }
 
 /**
@@ -134,10 +131,12 @@ export async function buildNativefierApp(
 ): Promise<string | undefined> {
   log.info('\nProcessing options...');
 
+  let finalOutDirectory = rawOptions.out ?? process.cwd();
+
   if (isUpgrade(rawOptions)) {
     log.debug('Attempting to upgrade from', rawOptions.upgradeFrom);
     const oldApp = findUpgradeApp(rawOptions.upgradeFrom as string);
-    if (oldApp === null) {
+    if (!oldApp) {
       throw new Error(
         `Could not find an old Nativfier app in "${
           rawOptions.upgradeFrom as string
@@ -146,7 +145,8 @@ export async function buildNativefierApp(
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
     if (rawOptions.out === undefined && rawOptions.overwrite) {
-      rawOptions.out = path.dirname(rawOptions.upgradeFrom as string);
+      finalOutDirectory = oldApp.appRoot;
+      rawOptions.out = getTempDir('appUpgrade', 0o755);
     }
   }
   log.debug('rawOptions', rawOptions);
@@ -175,7 +175,7 @@ export async function buildNativefierApp(
   await prepareElectronApp(options.packager.dir, tmpPath, options);
 
   log.info('\nConverting icons...');
-  options.packager.dir = tmpPath; // const optionsWithTmpPath = { ...options, dir: tmpPath };
+  options.packager.dir = tmpPath;
   convertIconIfNecessary(options);
   await copyIconsIfNecessary(options, tmpPath);
 
@@ -196,34 +196,27 @@ export async function buildNativefierApp(
   if (
     options.packager.upgrade &&
     options.packager.upgradeFrom &&
-    options.packager.overwrite &&
-    rawOptions.out ==
-      path.resolve(path.join(options.packager.upgradeFrom, '..'))
+    options.packager.overwrite
   ) {
-    let newPath = path.dirname(options.packager.upgradeFrom);
-    const syncNcp = promisify(ncp);
     if (options.packager.platform === 'darwin') {
-      await syncNcp(
+      await fs.copy(
         path.join(appPath, `${options.packager.name ?? ''}.app`),
-        newPath,
-        { clobber: options.packager.overwrite },
+        path.join(finalOutDirectory, `${options.packager.name ?? ''}.app`),
+        {
+          dereference: true,
+          overwrite: options.packager.overwrite,
+          preserveTimestamps: true,
+        },
       );
-      newPath = newPath.endsWith('.app')
-        ? newPath
-        : path.join(newPath, `${options.packager.name ?? ''}.app`);
     } else {
-      const ncpPromises = fs.readdirSync(appPath).map(() =>
-        syncNcp(
-          // @ts-expect-error appPath won't be undefined, we checked
-          path.join(appPath, `${options.packager.name ?? ''}`),
-          newPath,
-          { clobber: options.packager.overwrite },
-        ),
-      );
-      await Promise.all(ncpPromises);
+      await fs.copy(appPath, finalOutDirectory, {
+        dereference: true,
+        overwrite: options.packager.overwrite,
+        preserveTimestamps: true,
+      });
     }
     fs.rmdirSync(appPath, { recursive: true });
-    appPath = newPath;
+    appPath = finalOutDirectory;
   }
 
   let osRunHelp = '';

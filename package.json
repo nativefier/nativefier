@@ -55,6 +55,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "electron-packager": "^15.2.0",
+    "fs-extra": "^10.0.0",
     "gitcloud": "^0.2.3",
     "hasbin": "^1.2.3",
     "loglevel": "^1.7.1",
@@ -67,6 +68,7 @@
   },
   "devDependencies": {
     "@types/debug": "^4.1.6",
+    "@types/fs-extra": "^9.0.13",
     "@types/hasbin": "^1.2.0",
     "@types/jest": "^27.0.1",
     "@types/ncp": "^2.0.5",

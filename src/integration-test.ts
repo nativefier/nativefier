@@ -27,25 +27,13 @@ async function checkApp(
     ).toBe(appRoot);
   }
 
-  let relativeAppFolder: string;
+  let relativeResourcesDir = 'resources';
 
-  switch (inputOptions.platform) {
-    case 'darwin':
-      relativeAppFolder = path.join('Google.app', 'Contents/Resources/app');
-      break;
-    case 'linux':
-      relativeAppFolder = 'resources/app';
-      break;
-    case 'win32':
-      relativeAppFolder = 'resources/app';
-      break;
-    default:
-      throw new Error(
-        `Unknown app platform: ${new String(inputOptions.platform).toString()}`,
-      );
+  if (inputOptions.platform === 'darwin') {
+    relativeResourcesDir = path.join('Google.app', 'Contents', 'Resources');
   }
 
-  const appPath = path.join(appRoot, relativeAppFolder);
+  const appPath = path.join(appRoot, relativeResourcesDir, 'app');
 
   const configPath = path.join(appPath, 'nativefier.json');
   const nativefierConfig: NativefierOptions | undefined =
@@ -59,7 +47,11 @@ async function checkApp(
 
   // Test icon writing
   const iconFile =
-    inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
+    inputOptions.platform === 'darwin'
+      ? path.join('..', 'electron.icns')
+      : inputOptions.platform === 'linux'
+      ? 'icon.png'
+      : 'icon.ico';
   const iconPath = path.join(appPath, iconFile);
   expect(fs.existsSync(iconPath)).toEqual(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
@@ -108,7 +100,6 @@ describe('Nativefier', () => {
         overwrite: true,
         platform,
         targetUrl: 'https://google.com/',
-        tray: 'false',
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
@@ -140,7 +131,6 @@ describe('Nativefier upgrade', () => {
         out: tempDirectory,
         overwrite: true,
         targetUrl: 'https://google.com/',
-        tray: 'false',
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
@@ -148,9 +138,8 @@ describe('Nativefier upgrade', () => {
       await checkApp(appPath as string, options);
 
       const upgradeOptions: RawOptions = {
-        upgrade: appPath,
+        upgrade: appPath as string,
         overwrite: true,
-        tray: 'false',
       };
 
       const upgradeAppPath = await buildNativefierApp(upgradeOptions);

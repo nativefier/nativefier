@@ -14,6 +14,7 @@ export const supportedPlatforms = [
   'mac',
   'mas',
   'osx',
+  'win32',
   'windows',
 ];
 

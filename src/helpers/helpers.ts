@@ -7,7 +7,6 @@ import axios from 'axios';
 import * as dns from 'dns';
 import * as hasbin from 'hasbin';
 import * as log from 'loglevel';
-import { ncp } from 'ncp';
 import * as tmp from 'tmp';
 
 import { parseJson } from '../utils/parseUtils';
@@ -56,20 +55,6 @@ export function getTempDir(prefix: string, mode?: number): string {
     unsafeCleanup: true, // recursively remove tmp dir on exit, even if not empty.
     prefix: `nativefier-${TMP_TIME}-${prefix}-`,
   }).name;
-}
-
-export async function copyFileOrDir(
-  sourceFileOrDir: string,
-  dest: string,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    ncp(sourceFileOrDir, dest, (error: Error[] | null): void => {
-      if (error) {
-        reject(error);
-      }
-      resolve();
-    });
-  });
 }
 
 export function downloadFile(
