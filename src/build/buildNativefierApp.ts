@@ -199,19 +199,36 @@ export async function buildNativefierApp(
     options.packager.upgradeFrom &&
     options.packager.overwrite
   ) {
+    console.log('buildNativefierApp upgrade', { appPath, finalOutDirectory });
+
     if (options.packager.platform === 'darwin') {
+      try {
+        // This is needed due to a funky thing that happens when copying Squirrel.framework
+        // over where it gets into a circular file reference somehow.
+        await fs.remove(
+          path.join(
+            finalOutDirectory,
+            `${options.packager.name ?? ''}.app`,
+            'Contents',
+            'Frameworks',
+          ),
+        );
+      } catch (err: unknown) {
+        log.warn(
+          'Encountered an error when attempting to pre-delete old frameworks:',
+          err,
+        );
+      }
       await fs.copy(
         path.join(appPath, `${options.packager.name ?? ''}.app`),
         path.join(finalOutDirectory, `${options.packager.name ?? ''}.app`),
         {
-          dereference: os.platform() !== 'win32',
           overwrite: options.packager.overwrite,
           preserveTimestamps: true,
         },
       );
     } else {
       await fs.copy(appPath, finalOutDirectory, {
-        dereference: os.platform() !== 'win32',
         overwrite: options.packager.overwrite,
         preserveTimestamps: true,
       });
