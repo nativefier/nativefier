@@ -198,8 +198,6 @@ export async function buildNativefierApp(
     options.packager.upgradeFrom &&
     options.packager.overwrite
   ) {
-    console.log('buildNativefierApp upgrade', { appPath, finalOutDirectory });
-
     if (options.packager.platform === 'darwin') {
       try {
         // This is needed due to a funky thing that happens when copying Squirrel.framework
