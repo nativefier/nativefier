@@ -10,7 +10,11 @@ import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { userAgent } from './options/fields/userAgent';
-import { NativefierOptions, RawOptions } from '../shared/src/options/model';
+import {
+  GlobalShortcut,
+  NativefierOptions,
+  RawOptions,
+} from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
 
 async function checkApp(
@@ -85,6 +89,21 @@ async function checkApp(
 
   // Test lang
   expect(nativefierConfig?.lang).toEqual(inputOptions.lang);
+
+  // Test global shortcuts
+  if (inputOptions.globalShortcuts) {
+    let shortcutData: GlobalShortcut[] | undefined = [];
+
+    if (typeof inputOptions.globalShortcuts === 'string') {
+      shortcutData = parseJson<GlobalShortcut[]>(
+        fs.readFileSync(inputOptions.globalShortcuts, 'utf8'),
+      );
+    } else {
+      shortcutData = inputOptions.globalShortcuts;
+    }
+
+    expect(nativefierConfig?.globalShortcuts).toStrictEqual(shortcutData);
+  }
 }
 
 describe('Nativefier', () => {
@@ -108,6 +127,34 @@ describe('Nativefier', () => {
   );
 });
 
+function generateShortcutsFile(dir: string): string {
+  const shortcuts = [
+    {
+      key: 'MediaPlayPause',
+      inputEvents: [
+        {
+          type: 'keyDown',
+          keyCode: 'Space',
+        },
+      ],
+    },
+    {
+      key: 'MediaNextTrack',
+      inputEvents: [
+        {
+          type: 'keyDown',
+          keyCode: 'Right',
+        },
+      ],
+    },
+  ];
+
+  const filename = path.join(dir, 'shortcuts.json');
+  fs.writeFileSync(filename, JSON.stringify(shortcuts));
+
+  return filename;
+}
+
 describe('Nativefier upgrade', () => {
   jest.setTimeout(300000);
 
@@ -126,8 +173,10 @@ describe('Nativefier upgrade', () => {
     'can upgrade a Nativefier app for platform/arch: %s',
     async (baseAppOptions) => {
       const tempDirectory = getTempDir('integtestUpgrade1');
+      const shortcuts = generateShortcutsFile(tempDirectory);
       const options: RawOptions = {
         electronVersion: '11.2.3',
+        globalShortcuts: shortcuts,
         out: tempDirectory,
         overwrite: true,
         targetUrl: 'https://google.com/',
