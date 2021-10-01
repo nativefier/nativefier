@@ -76,15 +76,16 @@ request_feedback "$tmp_dir"
 printf "\n***** SMOKE TEST 2: Setting up test and building app... *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-XXXXX)
 name="nativefier-smoke-test-2"
-node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
-  --basic-auth-username foo \
-  --basic-auth-password bar \
+# Removing for now as httpbin is not presently up
+# node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+node ./lib/cli.js 'https://authenticationtest.com/HTTPAuth/' \
+  --basic-auth-username user \
+  --basic-auth-password pass \
   --name "$name" \
   "$tmp_dir"
 
 printf '\n***** SMOKE TEST 2: Test checklist *****
-- Was successfully logged in via HTTP Basic Auth. Should see:
-  { "authenticated": true,  "user": "foo" }
+- Was successfully logged in via HTTP Basic Auth. Should see a "Login Success" and a green banner.
 - Console: no Electron runtime deprecation warnings/error logged'
 launch_app "$tmp_dir" "$name"
 request_feedback "$tmp_dir"
@@ -94,14 +95,14 @@ request_feedback "$tmp_dir"
 printf '\n***** SMOKE TEST 3: Setting up test and building app... *****\n'
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-prompt-XXXXX)
 name='nativefier-smoke-test-3'
-node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+# node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+node ./lib/cli.js 'https://authenticationtest.com/HTTPAuth/' \
   --name "$name" \
   "$tmp_dir"
 
 printf '\n***** SMOKE TEST 3: Test checklist *****
-- Should get a login window. Log in with username="foo" and password="bar".
-- Post login, you should see:
-  { "authenticated": true,  "user": "foo" }
+- Should get a login window. Log in with username="user" and password="pass".
+- Post login, you should see a "Login Success" and a green banner.
 - Console: no Electron runtime deprecation warnings/error logged'
 
 launch_app "$tmp_dir" "$name"
