@@ -17,7 +17,7 @@
         "source-map-support": "^0.5.19"
       },
       "devDependencies": {
-        "electron": "^13.4.0"
+        "electron": "^13.5.1"
       }
     },
     "node_modules/@electron/get": {
@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "14.17.18",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.18.tgz",
-      "integrity": "sha512-haYyibw4pbteEhkSg0xdDLAI3679L75EJ799ymVrPxOA922bPx3ML59SoDsQ//rHlvqpu+e36kcbR3XRQtFblA==",
+      "version": "14.17.20",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.20.tgz",
+      "integrity": "sha512-gI5Sl30tmhXsqkNvopFydP7ASc4c2cLfGNQrVKN3X90ADFWFsPEsotm/8JHSUJQKTHbwowAHtcJPeyVhtKv0TQ==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -229,9 +229,9 @@
       }
     },
     "node_modules/core-js": {
-      "version": "3.18.0",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.18.0.tgz",
-      "integrity": "sha512-WJeQqq6jOYgVgg4NrXKL0KLQhi0CT4ZOCvFL+3CQ5o7I6J8HkT5wd53EadMfqTDp1so/MT1J+w2ujhWcCJtN7w==",
+      "version": "3.18.1",
+      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.18.1.tgz",
+      "integrity": "sha512-vJlUi/7YdlCZeL6fXvWNaLUPh/id12WXj3MbkMw5uOyF0PfWPBNOCNbs53YqgrvtujLNlt9JQpruyIKkUZ+PKA==",
       "dev": true,
       "hasInstallScript": true,
       "optional": true,
@@ -308,9 +308,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "13.4.0",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-13.4.0.tgz",
-      "integrity": "sha512-KJGWS2qa0xZXIMPMDUNkRVO8/JxRd4+M0ejYYOzu2LIQ5ijecPzNuNR9nvDkml9XyyRBzu975FkhJcwD17ietQ==",
+      "version": "13.5.1",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-13.5.1.tgz",
+      "integrity": "sha512-ZyxhIhmdaeE3xiIGObf0zqEyCyuIDqZQBv9NKX8w5FNzGm87j4qR0H1+GQg6vz+cA1Nnv1x175Zvimzc0/UwEQ==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -1254,9 +1254,9 @@
       }
     },
     "@types/node": {
-      "version": "14.17.18",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.18.tgz",
-      "integrity": "sha512-haYyibw4pbteEhkSg0xdDLAI3679L75EJ799ymVrPxOA922bPx3ML59SoDsQ//rHlvqpu+e36kcbR3XRQtFblA==",
+      "version": "14.17.20",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.20.tgz",
+      "integrity": "sha512-gI5Sl30tmhXsqkNvopFydP7ASc4c2cLfGNQrVKN3X90ADFWFsPEsotm/8JHSUJQKTHbwowAHtcJPeyVhtKv0TQ==",
       "dev": true
     },
     "ansi-regex": {
@@ -1382,9 +1382,9 @@
       }
     },
     "core-js": {
-      "version": "3.18.0",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.18.0.tgz",
-      "integrity": "sha512-WJeQqq6jOYgVgg4NrXKL0KLQhi0CT4ZOCvFL+3CQ5o7I6J8HkT5wd53EadMfqTDp1so/MT1J+w2ujhWcCJtN7w==",
+      "version": "3.18.1",
+      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.18.1.tgz",
+      "integrity": "sha512-vJlUi/7YdlCZeL6fXvWNaLUPh/id12WXj3MbkMw5uOyF0PfWPBNOCNbs53YqgrvtujLNlt9JQpruyIKkUZ+PKA==",
       "dev": true,
       "optional": true
     },
@@ -1442,9 +1442,9 @@
       "dev": true
     },
     "electron": {
-      "version": "13.4.0",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-13.4.0.tgz",
-      "integrity": "sha512-KJGWS2qa0xZXIMPMDUNkRVO8/JxRd4+M0ejYYOzu2LIQ5ijecPzNuNR9nvDkml9XyyRBzu975FkhJcwD17ietQ==",
+      "version": "13.5.1",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-13.5.1.tgz",
+      "integrity": "sha512-ZyxhIhmdaeE3xiIGObf0zqEyCyuIDqZQBv9NKX8w5FNzGm87j4qR0H1+GQg6vz+cA1Nnv1x175Zvimzc0/UwEQ==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.0.1",
