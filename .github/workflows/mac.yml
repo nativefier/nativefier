@@ -50,10 +50,10 @@ jobs:
             --inject "$injected_js" \
             --name "$name" \
             "$tmp_dir"
-    - run: open -a /tmp/nativefier-test-${{ matrix.node-version }}/nativefier-smoke-test-1-darwin-x64/nativefier-smoke-test-1.app & sleep 15
+    - run: open -a -W /tmp/nativefier-test-${{ matrix.node-version }}/nativefier-smoke-test-1-darwin-x64/nativefier-smoke-test-1.app & sleep 15
     - name: Test --single-instance
       run: nativefier 'https://npmjs.com/' --single-instance --name single-instance-test /tmp/nativefier-single-instance-test-${{ matrix.node-version }} 
-    - run: gtimeout 15s /tmp/nativefier-single-instance-test-${{ matrix.node-version }}/single-instance-test-darwin-x64/single-instance-test.app/Contents/MacOS/single-instance-test
+    - run: open -a -W /tmp/nativefier-single-instance-test-${{ matrix.node-version }}/single-instance-test-darwin-x64/single-instance-test.app & sleep 15
     - run: screenshot nativefier-smoke-test-1 -f test.png 
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
