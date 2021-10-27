@@ -6,10 +6,7 @@ LABEL description="Alpine image to build Nativefier apps"
 RUN apk update \
     && apk add bash wine imagemagick dos2unix \
     && rm -rf /var/cache/apk/* \
-    && mkdir /nativefier && chown node:node /nativefier
-
-# Use node (1000) as default user not root
-USER node
+    && mkdir /nativefier
 
 ENV NPM_PACKAGES="/home/node/npm-packages"
 ENV PATH="$PATH:$NPM_PACKAGES/bin"
@@ -21,8 +18,8 @@ RUN mkdir $NPM_PACKAGES \
 
 WORKDIR /nativefier
 
-# Add sources with node as the owner so that it has the power it needs to build in /nativefier
-COPY --chown=node:node . .
+# Add sources to build in /nativefier
+COPY . .
 
 # Fix line endings that may have gotten mangled in Windows
 RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
