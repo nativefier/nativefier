@@ -21,10 +21,10 @@ echo ' - Red upgrades fulfill semver and do *not* need any action'
 echo ' - Yellow upgrades *do* need looking at changelogs for breaking changes, and updating package.json'
 echo
 echo 'CLI:'
-npm out
+npm out || true
 echo
 echo 'App:'
-cd app && npm out; cd ..
+cd app; npm out || true; cd ..
 echo
 echo 'Okay with this, or care to do/plan a few upgrades?'
 echo 'Press any key to continue, or Ctrl+C to abort'
