@@ -1,4 +1,13 @@
 
+45.0.5 / 2021-11-01
+===================
+
+  * Bump default Electron to 13.6.1, with bug fixes & security fixes
+    - 13.5.2: https://github.com/electron/electron/releases/tag/v13.5.2
+    - 13.6.0: https://github.com/electron/electron/releases/tag/v13.6.0
+    - 13.6.1: https://github.com/electron/electron/releases/tag/v13.6.1
+  * Maintenance: Fix auth manual tests (#1287), Bumps (axios, eslint), Doc & script nits
+
 45.0.4 / 2021-09-24
 ===================
 
