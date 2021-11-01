@@ -9,7 +9,7 @@
       "version": "45.0.4",
       "license": "MIT",
       "dependencies": {
-        "axios": "^0.21.1",
+        "axios": "^0.24.0",
         "electron-packager": "^15.2.0",
         "gitcloud": "^0.2.3",
         "hasbin": "^1.2.3",
@@ -2024,11 +2024,11 @@
       }
     },
     "node_modules/axios": {
-      "version": "0.21.4",
-      "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
-      "integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
+      "version": "0.24.0",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz",
+      "integrity": "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==",
       "dependencies": {
-        "follow-redirects": "^1.14.0"
+        "follow-redirects": "^1.14.4"
       }
     },
     "node_modules/babel-jest": {
@@ -3915,6 +3915,14 @@
       "engines": {
         "node": ">= 12.0.0",
         "npm": ">= 6.0.0"
+      }
+    },
+    "node_modules/gitcloud/node_modules/axios": {
+      "version": "0.21.4",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
+      "integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
+      "dependencies": {
+        "follow-redirects": "^1.14.0"
       }
     },
     "node_modules/glob": {
@@ -5815,6 +5823,14 @@
       "engines": {
         "node": ">= 10.0.0",
         "npm": ">= 6.0.0"
+      }
+    },
+    "node_modules/page-icon/node_modules/axios": {
+      "version": "0.21.4",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
+      "integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
+      "dependencies": {
+        "follow-redirects": "^1.14.0"
       }
     },
     "node_modules/parent-module": {
@@ -9202,11 +9218,11 @@
       "integrity": "sha1-0IiFvmubv5Q5/gh8dihyRfCoFFA="
     },
     "axios": {
-      "version": "0.21.4",
-      "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
-      "integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
+      "version": "0.24.0",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz",
+      "integrity": "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==",
       "requires": {
-        "follow-redirects": "^1.14.0"
+        "follow-redirects": "^1.14.4"
       }
     },
     "babel-jest": {
@@ -10636,6 +10652,16 @@
       "requires": {
         "axios": "^0.21.1",
         "cheerio": "^1.0.0-rc.10"
+      },
+      "dependencies": {
+        "axios": {
+          "version": "0.21.4",
+          "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
+          "integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
+          "requires": {
+            "follow-redirects": "^1.14.0"
+          }
+        }
       }
     },
     "glob": {
@@ -12083,6 +12109,16 @@
         "axios": "^0.21.1",
         "cheerio": "^1.0.0-rc.5",
         "file-type": "^16.2.0"
+      },
+      "dependencies": {
+        "axios": {
+          "version": "0.21.4",
+          "resolved": "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz",
+          "integrity": "sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==",
+          "requires": {
+            "follow-redirects": "^1.14.0"
+          }
+        }
       }
     },
     "parent-module": {
