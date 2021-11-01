@@ -17,13 +17,13 @@
         "source-map-support": "^0.5.19"
       },
       "devDependencies": {
-        "electron": "^13.5.1"
+        "electron": "^13.6.1"
       }
     },
     "node_modules/@electron/get": {
-      "version": "1.13.0",
-      "resolved": "https://registry.npmjs.org/@electron/get/-/get-1.13.0.tgz",
-      "integrity": "sha512-+SjZhRuRo+STTO1Fdhzqnv9D2ZhjxXP6egsJ9kiO8dtP68cDx7dFCwWi64dlMQV7sWcfW1OYCW4wviEBzmRsfQ==",
+      "version": "1.13.1",
+      "resolved": "https://registry.npmjs.org/@electron/get/-/get-1.13.1.tgz",
+      "integrity": "sha512-U5vkXDZ9DwXtkPqlB45tfYnnYBN8PePp1z/XDCupnSpdrxT8/ThCv9WCwPLf9oqiSGZTkH6dx2jDUPuoXpjkcA==",
       "dev": true,
       "dependencies": {
         "debug": "^4.1.1",
@@ -38,7 +38,7 @@
         "node": ">=8.6"
       },
       "optionalDependencies": {
-        "global-agent": "^2.0.2",
+        "global-agent": "^3.0.0",
         "global-tunnel-ng": "^2.7.1"
       }
     },
@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "14.17.20",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.20.tgz",
-      "integrity": "sha512-gI5Sl30tmhXsqkNvopFydP7ASc4c2cLfGNQrVKN3X90ADFWFsPEsotm/8JHSUJQKTHbwowAHtcJPeyVhtKv0TQ==",
+      "version": "14.17.32",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.32.tgz",
+      "integrity": "sha512-JcII3D5/OapPGx+eJ+Ik1SQGyt6WvuqdRfh9jUwL6/iHGjmyOriBDciBUu7lEIBTL2ijxwrR70WUnw5AEDmFvQ==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -228,18 +228,6 @@
         "proto-list": "~1.2.1"
       }
     },
-    "node_modules/core-js": {
-      "version": "3.18.1",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.18.1.tgz",
-      "integrity": "sha512-vJlUi/7YdlCZeL6fXvWNaLUPh/id12WXj3MbkMw5uOyF0PfWPBNOCNbs53YqgrvtujLNlt9JQpruyIKkUZ+PKA==",
-      "dev": true,
-      "hasInstallScript": true,
-      "optional": true,
-      "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/core-js"
-      }
-    },
     "node_modules/core-util-is": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz",
@@ -308,9 +296,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "13.5.1",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-13.5.1.tgz",
-      "integrity": "sha512-ZyxhIhmdaeE3xiIGObf0zqEyCyuIDqZQBv9NKX8w5FNzGm87j4qR0H1+GQg6vz+cA1Nnv1x175Zvimzc0/UwEQ==",
+      "version": "13.6.1",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-13.6.1.tgz",
+      "integrity": "sha512-rZ6Y7RberigruefQpWOiI4bA9ppyT88GQF8htY6N1MrAgal5RrBc+Mh92CcGU7zT9QO+XO3DarSgZafNTepffQ==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -542,14 +530,13 @@
       }
     },
     "node_modules/global-agent": {
-      "version": "2.2.0",
-      "resolved": "https://registry.npmjs.org/global-agent/-/global-agent-2.2.0.tgz",
-      "integrity": "sha512-+20KpaW6DDLqhG7JDiJpD1JvNvb8ts+TNl7BPOYcURqCrXqnN1Vf+XVOrkKJAFPqfX+oEhsdzOj1hLWkBTdNJg==",
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/global-agent/-/global-agent-3.0.0.tgz",
+      "integrity": "sha512-PT6XReJ+D07JvGoxQMkT6qji/jVNfX/h364XHZOWeRzy64sSFr+xJ5OX7LI3b4MPQzdL4H8Y8M0xzPpsVMwA8Q==",
       "dev": true,
       "optional": true,
       "dependencies": {
         "boolean": "^3.0.1",
-        "core-js": "^3.6.5",
         "es6-error": "^4.1.1",
         "matcher": "^3.0.0",
         "roarr": "^2.15.3",
@@ -1222,15 +1209,15 @@
   },
   "dependencies": {
     "@electron/get": {
-      "version": "1.13.0",
-      "resolved": "https://registry.npmjs.org/@electron/get/-/get-1.13.0.tgz",
-      "integrity": "sha512-+SjZhRuRo+STTO1Fdhzqnv9D2ZhjxXP6egsJ9kiO8dtP68cDx7dFCwWi64dlMQV7sWcfW1OYCW4wviEBzmRsfQ==",
+      "version": "1.13.1",
+      "resolved": "https://registry.npmjs.org/@electron/get/-/get-1.13.1.tgz",
+      "integrity": "sha512-U5vkXDZ9DwXtkPqlB45tfYnnYBN8PePp1z/XDCupnSpdrxT8/ThCv9WCwPLf9oqiSGZTkH6dx2jDUPuoXpjkcA==",
       "dev": true,
       "requires": {
         "debug": "^4.1.1",
         "env-paths": "^2.2.0",
         "fs-extra": "^8.1.0",
-        "global-agent": "^2.0.2",
+        "global-agent": "^3.0.0",
         "global-tunnel-ng": "^2.7.1",
         "got": "^9.6.0",
         "progress": "^2.0.3",
@@ -1254,9 +1241,9 @@
       }
     },
     "@types/node": {
-      "version": "14.17.20",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.20.tgz",
-      "integrity": "sha512-gI5Sl30tmhXsqkNvopFydP7ASc4c2cLfGNQrVKN3X90ADFWFsPEsotm/8JHSUJQKTHbwowAHtcJPeyVhtKv0TQ==",
+      "version": "14.17.32",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.17.32.tgz",
+      "integrity": "sha512-JcII3D5/OapPGx+eJ+Ik1SQGyt6WvuqdRfh9jUwL6/iHGjmyOriBDciBUu7lEIBTL2ijxwrR70WUnw5AEDmFvQ==",
       "dev": true
     },
     "ansi-regex": {
@@ -1381,13 +1368,6 @@
         "proto-list": "~1.2.1"
       }
     },
-    "core-js": {
-      "version": "3.18.1",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-3.18.1.tgz",
-      "integrity": "sha512-vJlUi/7YdlCZeL6fXvWNaLUPh/id12WXj3MbkMw5uOyF0PfWPBNOCNbs53YqgrvtujLNlt9JQpruyIKkUZ+PKA==",
-      "dev": true,
-      "optional": true
-    },
     "core-util-is": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz",
@@ -1442,9 +1422,9 @@
       "dev": true
     },
     "electron": {
-      "version": "13.5.1",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-13.5.1.tgz",
-      "integrity": "sha512-ZyxhIhmdaeE3xiIGObf0zqEyCyuIDqZQBv9NKX8w5FNzGm87j4qR0H1+GQg6vz+cA1Nnv1x175Zvimzc0/UwEQ==",
+      "version": "13.6.1",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-13.6.1.tgz",
+      "integrity": "sha512-rZ6Y7RberigruefQpWOiI4bA9ppyT88GQF8htY6N1MrAgal5RrBc+Mh92CcGU7zT9QO+XO3DarSgZafNTepffQ==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.0.1",
@@ -1631,14 +1611,13 @@
       }
     },
     "global-agent": {
-      "version": "2.2.0",
-      "resolved": "https://registry.npmjs.org/global-agent/-/global-agent-2.2.0.tgz",
-      "integrity": "sha512-+20KpaW6DDLqhG7JDiJpD1JvNvb8ts+TNl7BPOYcURqCrXqnN1Vf+XVOrkKJAFPqfX+oEhsdzOj1hLWkBTdNJg==",
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/global-agent/-/global-agent-3.0.0.tgz",
+      "integrity": "sha512-PT6XReJ+D07JvGoxQMkT6qji/jVNfX/h364XHZOWeRzy64sSFr+xJ5OX7LI3b4MPQzdL4H8Y8M0xzPpsVMwA8Q==",
       "dev": true,
       "optional": true,
       "requires": {
         "boolean": "^3.0.1",
-        "core-js": "^3.6.5",
         "es6-error": "^4.1.1",
         "matcher": "^3.0.0",
         "roarr": "^2.15.3",
