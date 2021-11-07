@@ -41,6 +41,7 @@
     - [[single-instance]](#single-instance)
     - [[title-bar-style]](#title-bar-style)
     - [[tray]](#tray)
+    - [[tray-menu]](#tray-menu)
     - [[width]](#width)
     - [[x]](#x)
     - [[y]](#y)
@@ -505,6 +506,51 @@ nativefier http://google.com --inject site.css --title-bar-style 'hiddenInset'
 When the optional argument `start-in-tray` is provided, i.e. the application is started using `--tray start-in-tray`, the main window will not be shown on first start.
 
 Limitation: when creating a macOS app using option `--tray`, from a non-macOS build machine, the tray icon (in the menu bar) will be invisible.
+
+#### [tray-menu]
+
+```
+--tray-menu <string>
+```
+
+*[New in XX.XX.XX]* Customize the items of the tray menu. Requires `--tray` to be set.
+
+Takes a path to a json file as an argument.
+
+```json
+[
+  {
+    "label": "App Name",
+    "action": "toggleWindow"
+  },
+  {
+    "label": "Actions",
+    "submenu": [
+      {
+        "label": "test",
+        "submenu": [
+          {
+            "label": "Previous",
+            "click": "document.querySelector('div[data-test=\"play-controls\"] button[data-type=\"button__skip-previous\"]').click()"
+          },
+          {
+            "label": "Play/Pause",
+            "click": "if (document.querySelector('button[data-type=\"button__pause\"]')) {document.querySelector('div[data-test=\"play-controls\"] button[data-type=\"button__pause\"]').click()} else {document.querySelector('div[data-test=\"play-controls\"] button[data-type=\"button__play\"]').click()}"
+          },
+          {
+            "label": "Next",
+            "click": "document.querySelector('div[data-test=\"play-controls\"] button[data-type=\"button__skip-next\"]').click()"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Quit",
+    "action": "quit"
+  }
+]
+```
 
 #### [width]
 

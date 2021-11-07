@@ -3,6 +3,20 @@ import log from 'loglevel';
 
 import { getAppIcon, getCounterValue, isOSX } from '../helpers/helpers';
 import { OutputOptions } from '../../../shared/src/options/model';
+import * as fs from 'fs';
+import path from 'path';
+import { MenuItemConstructorOptions } from 'electron/main';
+
+type TrayMenuConfig = TrayMenuItem[];
+
+type TrayMenuItem = {
+  label?: string;
+  click?: string;
+  action?: 'toggleWindow' | 'quit';
+  type?: 'normal' | 'separator' | 'submenu' | 'checkbox' | 'radio' | undefined;
+  icon?: string;
+  submenu?: TrayMenuItem[];
+};
 
 export function createTrayIcon(
   nativefierOptions: OutputOptions,
@@ -36,16 +50,21 @@ export function createTrayIcon(
       }
     };
 
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: options.name,
-        click: onClick,
-      },
-      {
-        label: 'Quit',
-        click: (): void => app.exit(0),
-      },
-    ]);
+    const contextMenu = options.trayMenu
+      ? createCustomTrayMenu(
+          path.join(__dirname, '..', 'traymenu.json'),
+          mainWindow,
+        )
+      : Menu.buildFromTemplate([
+          {
+            label: options.name,
+            click: onClick,
+          },
+          {
+            label: 'Quit',
+            click: (): void => app.exit(0),
+          },
+        ]);
 
     appIcon.on('click', onClick);
 
@@ -85,4 +104,83 @@ export function createTrayIcon(
   }
 
   return undefined;
+}
+
+function createCustomTrayMenu(
+  trayMenuConfigPath: string,
+  mainWindow: BrowserWindow,
+): Electron.Menu {
+  try {
+    const trayMenuConfig = JSON.parse(
+      fs.readFileSync(trayMenuConfigPath, 'utf-8'),
+    ) as TrayMenuConfig;
+
+    const test = trayMenuConfig.map((configMenuItem) =>
+      createTrayMenuItem(configMenuItem, mainWindow),
+    );
+
+    return Menu.buildFromTemplate(test);
+  } catch (err: unknown) {
+    log.error('Failed to load & parse traymenu configuration JSON file.', err);
+  }
+
+  return Menu.buildFromTemplate([]);
+}
+
+function createTrayMenuItem(
+  configMenuItem: TrayMenuItem,
+  mainWindow: BrowserWindow,
+): MenuItemConstructorOptions {
+  const menuItem: MenuItemConstructorOptions = {};
+
+  if (configMenuItem.label) {
+    menuItem['label'] = configMenuItem.label;
+  }
+
+  if (configMenuItem.type) {
+    menuItem['type'] = configMenuItem.type;
+  }
+
+  if (configMenuItem.click) {
+    const functionToExecute = (): void => {
+      void mainWindow.webContents
+        .executeJavaScript(<string>configMenuItem.click)
+        .then((res) => log.debug(res));
+    };
+
+    menuItem['click'] = functionToExecute;
+  }
+
+  if (configMenuItem.action) {
+    const toggleWindow = (): void => {
+      log.debug('onClick');
+      if (mainWindow.isVisible()) {
+        mainWindow.hide();
+      } else {
+        mainWindow.show();
+      }
+    };
+
+    switch (configMenuItem.action) {
+      case 'toggleWindow':
+        menuItem['click'] = toggleWindow;
+        break;
+      case 'quit':
+        menuItem['click'] = (): void => app.exit(0);
+        break;
+    }
+  }
+
+  if (configMenuItem.icon) {
+    menuItem['icon'] = configMenuItem.icon;
+  }
+
+  if (configMenuItem.submenu) {
+    menuItem['submenu'] =
+      configMenuItem.submenu.map<MenuItemConstructorOptions>((subMenuItem) =>
+        createTrayMenuItem(subMenuItem, mainWindow),
+      );
+  }
+
+  return menuItem;
 }

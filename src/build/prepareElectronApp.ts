@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { generateRandomSuffix } from '../helpers/helpers';
+import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
 import {
   AppOptions,
   OutputOptions,
@@ -83,6 +83,7 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     targetUrl: options.packager.targetUrl,
     titleBarStyle: options.nativefier.titleBarStyle,
     tray: options.nativefier.tray,
+    trayMenu: options.nativefier.trayMenu,
     usageDescription: options.packager.usageDescription,
     userAgent: options.nativefier.userAgent,
     userAgentHonest: options.nativefier.userAgentHonest,
@@ -201,6 +202,15 @@ export async function prepareElectronApp(
       await fs.copy(options.nativefier.bookmarksMenu, bookmarksJsonPath);
     } catch (err: unknown) {
       log.error('Error copying bookmarks menu config file.', err);
+    }
+  }
+
+  if (options.nativefier.trayMenu) {
+    const trayMenuScriptPath = path.join(dest, '/traymenu.json');
+    try {
+      await copyFileOrDir(options.nativefier.trayMenu, trayMenuScriptPath);
+    } catch (err: unknown) {
+      log.error('Error copying tray menu script file.', err);
     }
   }
 

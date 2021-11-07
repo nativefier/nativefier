@@ -58,6 +58,7 @@ export interface AppOptions {
     singleInstance: boolean;
     titleBarStyle?: TitleBarValue;
     tray: TrayValue;
+    trayMenu?: string;
     userAgent?: string;
     userAgentHonest: boolean;
     verbose: boolean;
@@ -184,6 +185,7 @@ export type RawOptions = {
   targetUrl?: string;
   titleBarStyle?: TitleBarValue;
   tray?: TrayValue;
+  trayMenu?: string;
   upgrade?: string | boolean;
   upgradeFrom?: string;
   userAgent?: string;

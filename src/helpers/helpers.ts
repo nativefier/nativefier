@@ -10,6 +10,7 @@ import * as log from 'loglevel';
 import * as tmp from 'tmp';
 
 import { parseJson } from '../utils/parseUtils';
+import ncp from 'ncp';
 
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
@@ -55,6 +56,20 @@ export function getTempDir(prefix: string, mode?: number): string {
     unsafeCleanup: true, // recursively remove tmp dir on exit, even if not empty.
     prefix: `nativefier-${TMP_TIME}-${prefix}-`,
   }).name;
+}
+
+export async function copyFileOrDir(
+  sourceFileOrDir: string,
+  dest: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    ncp(sourceFileOrDir, dest, (error: Error[] | null): void => {
+      if (error) {
+        reject(error);
+      }
+      resolve();
+    });
+  });
 }
 
 export function downloadFile(

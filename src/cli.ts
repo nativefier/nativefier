@@ -235,6 +235,11 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
         "allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
       choices: ['true', 'false', 'start-in-tray'],
     })
+    .option('tray', {
+      description:
+        'customize the items of the tray menu. Requires `--tray` to be set.',
+      type: 'string',
+    })
     .option('width', {
       defaultDescription: '1280',
       description: 'app window default width in pixels',
@@ -273,6 +278,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
         'process-envs',
         'single-instance',
         'tray',
+        'tray-menu',
         'width',
         'x',
         'y',
