@@ -1,3 +1,11 @@
+45.0.6 / 2021-11-22
+===================
+
+  * Fix notifications (PR #1308)
+  * Fix icon conversion scripts broken on recent macOS (fix #1277)
+  * Bump default Electron to 13.6.2, with bug fixes & security fixes
+    - 13.6.2: https://github.com/electron/electron/releases/tag/v13.6.2
+  * Maintenance: bump CI Nodejs to 17, Relock dependencies
 
 45.0.5 / 2021-11-01
 ===================
