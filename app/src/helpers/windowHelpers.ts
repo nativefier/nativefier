@@ -148,6 +148,7 @@ export function getDefaultWindowOptions(
       plugins: true,
       webSecurity: !options.insecure,
       zoomFactor: options.zoom,
+      contextIsolation: false,
       ...webPreferences,
     },
     ...browserwindowOptions,
