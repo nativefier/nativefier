@@ -171,10 +171,6 @@ export function setupNativefierWindow(
   options: WindowOptions,
   window: BrowserWindow,
 ): void {
-  if (options.userAgent) {
-    window.webContents.userAgent = options.userAgent;
-  }
-
   if (options.proxyRules) {
     setProxyRules(window, options.proxyRules);
   }
