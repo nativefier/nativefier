@@ -183,7 +183,7 @@ export type RawOptions = {
   singleInstance?: boolean;
   targetUrl?: string;
   titleBarStyle?: TitleBarValue;
-  tray: TrayValue;
+  tray?: TrayValue;
   upgrade?: string | boolean;
   upgradeFrom?: string;
   userAgent?: string;

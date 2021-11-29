@@ -1,12 +1,13 @@
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
+import * as chalk from 'chalk';
 import electronPackager from 'electron-packager';
+import * as fs from 'fs-extra';
 import * as log from 'loglevel';
 
 import { convertIconIfNecessary } from './buildIcon';
 import {
-  copyFileOrDir,
   getTempDir,
   hasWine,
   isWindows,
@@ -49,7 +50,7 @@ async function copyIconsIfNecessary(
       log.debug('Copying icon for tray application');
       const trayIconFileName = `tray-icon.png`;
       const destIconPath = path.join(appPath, 'icon.png');
-      await copyFileOrDir(
+      await fs.copy(
         `${path.dirname(options.packager.icon)}/${trayIconFileName}`,
         destIconPath,
       );
@@ -64,7 +65,7 @@ async function copyIconsIfNecessary(
   const destIconPath = path.join(appPath, destFileName);
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
-  await copyFileOrDir(options.packager.icon, destIconPath);
+  await fs.copy(options.packager.icon, destIconPath);
 }
 
 /**
@@ -129,12 +130,22 @@ function trimUnprocessableOptions(options: AppOptions): void {
 export async function buildNativefierApp(
   rawOptions: RawOptions,
 ): Promise<string | undefined> {
+  log.warn(
+    new chalk.Instance().yellowBright.bold(
+      '\n\n    Hi! Nativefier is minimally maintained these days, and needs more hands.\n' +
+        '    If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.\n' +
+        '    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.\n\n',
+    ),
+  );
+
   log.info('\nProcessing options...');
+
+  let finalOutDirectory = rawOptions.out ?? process.cwd();
 
   if (isUpgrade(rawOptions)) {
     log.debug('Attempting to upgrade from', rawOptions.upgradeFrom);
     const oldApp = findUpgradeApp(rawOptions.upgradeFrom as string);
-    if (oldApp === null) {
+    if (!oldApp) {
       throw new Error(
         `Could not find an old Nativfier app in "${
           rawOptions.upgradeFrom as string
@@ -143,7 +154,8 @@ export async function buildNativefierApp(
     }
     rawOptions = useOldAppOptions(rawOptions, oldApp);
     if (rawOptions.out === undefined && rawOptions.overwrite) {
-      rawOptions.out = path.dirname(rawOptions.upgradeFrom as string);
+      finalOutDirectory = oldApp.appRoot;
+      rawOptions.out = getTempDir('appUpgrade', 0o755);
     }
   }
   log.debug('rawOptions', rawOptions);
@@ -172,7 +184,7 @@ export async function buildNativefierApp(
   await prepareElectronApp(options.packager.dir, tmpPath, options);
 
   log.info('\nConverting icons...');
-  options.packager.dir = tmpPath; // const optionsWithTmpPath = { ...options, dir: tmpPath };
+  options.packager.dir = tmpPath;
   convertIconIfNecessary(options);
   await copyIconsIfNecessary(options, tmpPath);
 
@@ -184,20 +196,64 @@ export async function buildNativefierApp(
   const appPathArray = await electronPackager(options.packager);
 
   log.info('\nFinalizing build...');
-  const appPath = getAppPath(appPathArray);
+  let appPath = getAppPath(appPathArray);
 
-  if (appPath) {
-    let osRunHelp = '';
-    if (options.packager.platform === 'win32') {
-      osRunHelp = `the contained .exe file.`;
-    } else if (options.packager.platform === 'linux') {
-      osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
-    } else if (options.packager.platform === 'darwin') {
-      osRunHelp = `the app bundle.`;
-    }
-    log.info(
-      `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
-    );
+  if (!appPath) {
+    throw new Error('App Path could not be determined.');
   }
+
+  if (
+    options.packager.upgrade &&
+    options.packager.upgradeFrom &&
+    options.packager.overwrite
+  ) {
+    if (options.packager.platform === 'darwin') {
+      try {
+        // This is needed due to a funky thing that happens when copying Squirrel.framework
+        // over where it gets into a circular file reference somehow.
+        await fs.remove(
+          path.join(
+            finalOutDirectory,
+            `${options.packager.name ?? ''}.app`,
+            'Contents',
+            'Frameworks',
+          ),
+        );
+      } catch (err: unknown) {
+        log.warn(
+          'Encountered an error when attempting to pre-delete old frameworks:',
+          err,
+        );
+      }
+      await fs.copy(
+        path.join(appPath, `${options.packager.name ?? ''}.app`),
+        path.join(finalOutDirectory, `${options.packager.name ?? ''}.app`),
+        {
+          overwrite: options.packager.overwrite,
+          preserveTimestamps: true,
+        },
+      );
+    } else {
+      await fs.copy(appPath, finalOutDirectory, {
+        overwrite: options.packager.overwrite,
+        preserveTimestamps: true,
+      });
+    }
+    await fs.remove(appPath);
+    appPath = finalOutDirectory;
+  }
+
+  let osRunHelp = '';
+  if (options.packager.platform === 'win32') {
+    osRunHelp = `the contained .exe file.`;
+  } else if (options.packager.platform === 'linux') {
+    osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
+  } else if (options.packager.platform === 'darwin') {
+    osRunHelp = `the app bundle.`;
+  }
+  log.info(
+    `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
+  );
+
   return appPath;
 }

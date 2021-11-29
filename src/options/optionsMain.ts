@@ -226,11 +226,18 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   }
 
   if (rawOptions.globalShortcuts) {
-    log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
-    const globalShortcuts = parseJson<GlobalShortcut[]>(
-      fs.readFileSync(rawOptions.globalShortcuts as string).toString(),
-    );
-    options.nativefier.globalShortcuts = globalShortcuts;
+    if (typeof rawOptions.globalShortcuts === 'string') {
+      // This is a file we got over the command line
+      log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
+      const globalShortcuts = parseJson<GlobalShortcut[]>(
+        fs.readFileSync(rawOptions.globalShortcuts).toString(),
+      );
+      options.nativefier.globalShortcuts = globalShortcuts;
+    } else {
+      // This is an object we got from an existing config in an upgrade
+      log.debug('Using global shortcuts object', rawOptions.globalShortcuts);
+      options.nativefier.globalShortcuts = rawOptions.globalShortcuts;
+    }
   }
 
   await asyncConfig(options);

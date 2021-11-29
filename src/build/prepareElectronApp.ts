@@ -1,11 +1,10 @@
 import * as crypto from 'crypto';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as path from 'path';
-import { promisify } from 'util';
 
 import * as log from 'loglevel';
 
-import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
+import { generateRandomSuffix } from '../helpers/helpers';
 import {
   AppOptions,
   OutputOptions,
@@ -13,8 +12,6 @@ import {
 } from '../../shared/src/options/model';
 import { parseJson } from '../utils/parseUtils';
 import { DEFAULT_APP_NAME } from '../constants';
-
-const writeFileAsync = promisify(fs.writeFile);
 
 /**
  * Only picks certain app args to pass to nativefier.json
@@ -133,7 +130,7 @@ async function maybeCopyScripts(
     const destFileName = `inject-${postFixHash}${path.extname(src)}`;
     const destPath = path.join(dest, 'inject', destFileName);
     log.debug(`Copying injection file "${src}" to "${destPath}"`);
-    await copyFileOrDir(src, destPath);
+    await fs.copy(src, destPath);
   }
 }
 
@@ -186,7 +183,7 @@ export async function prepareElectronApp(
 ): Promise<void> {
   log.debug(`Copying electron app from ${src} to ${dest}`);
   try {
-    await copyFileOrDir(src, dest);
+    await fs.copy(src, dest);
   } catch (err: unknown) {
     throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${
       (err as Error).message
@@ -194,16 +191,14 @@ export async function prepareElectronApp(
   }
 
   const appJsonPath = path.join(dest, '/nativefier.json');
-  log.debug(`Writing app config to ${appJsonPath}`);
-  await writeFileAsync(
-    appJsonPath,
-    JSON.stringify(pickElectronAppArgs(options), null, 2),
-  );
+  const pickedOptions = pickElectronAppArgs(options);
+  log.debug(`Writing app config to ${appJsonPath}`, pickedOptions);
+  await fs.writeFile(appJsonPath, JSON.stringify(pickedOptions));
 
   if (options.nativefier.bookmarksMenu) {
     const bookmarksJsonPath = path.join(dest, '/bookmarks.json');
     try {
-      await copyFileOrDir(options.nativefier.bookmarksMenu, bookmarksJsonPath);
+      await fs.copy(options.nativefier.bookmarksMenu, bookmarksJsonPath);
     } catch (err: unknown) {
       log.error('Error copying bookmarks menu config file.', err);
     }
