@@ -31,7 +31,7 @@
         "@types/hasbin": "^1.2.0",
         "@types/jest": "^27.0.1",
         "@types/ncp": "^2.0.5",
-        "@types/node": "^12.20.16",
+        "@types/node": "14.14.20",
         "@types/page-icon": "^0.3.4",
         "@types/tmp": "^0.2.1",
         "@typescript-eslint/eslint-plugin": "^5.3.0",
@@ -1414,9 +1414,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "12.20.37",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-12.20.37.tgz",
-      "integrity": "sha512-i1KGxqcvJaLQali+WuypQnXwcplhtNtjs66eNsZpp2P2FL/trJJxx/VWsM0YCL2iMoIJrbXje48lvIQAQ4p2ZA==",
+      "version": "14.14.20",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.14.20.tgz",
+      "integrity": "sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==",
       "devOptional": true
     },
     "node_modules/@types/page-icon": {
@@ -8811,9 +8811,9 @@
       }
     },
     "@types/node": {
-      "version": "12.20.37",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-12.20.37.tgz",
-      "integrity": "sha512-i1KGxqcvJaLQali+WuypQnXwcplhtNtjs66eNsZpp2P2FL/trJJxx/VWsM0YCL2iMoIJrbXje48lvIQAQ4p2ZA==",
+      "version": "14.14.20",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.14.20.tgz",
+      "integrity": "sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==",
       "devOptional": true
     },
     "@types/page-icon": {
