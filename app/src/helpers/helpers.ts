@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import { spawnSync as nodeSpawnSync } from 'node:child_process';
 
 import { BrowserWindow, OpenExternalOptions, shell } from 'electron';
 import * as log from 'loglevel';
@@ -164,6 +165,15 @@ export function openExternal(
 ): Promise<void> {
   log.debug('openExternal', { url, options });
   return shell.openExternal(url, options);
+}
+
+export function isWayland(): boolean {
+  return isLinux() && spawnSync('echo', ['$XDG_SESSION_TYPE']).includes('wayland');
+}
+
+export function spawnSync(cmd: string, args: string[]): string {
+  const result = nodeSpawnSync(cmd, args, { encoding: 'utf-8' });
+  return result.stdout;
 }
 
 export function removeUserAgentSpecifics(

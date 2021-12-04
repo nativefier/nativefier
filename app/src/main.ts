@@ -22,7 +22,7 @@ import {
   createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
+import { isOSX, isWayland, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 import { setupNativefierWindow } from './helpers/windowEvents';
 import {
@@ -156,6 +156,10 @@ if (appArgs.basicAuthPassword) {
     'basic-auth-password',
     appArgs.basicAuthPassword,
   );
+}
+
+if (isWayland()) {
+  app.commandLine.appendSwitch('enable-features', 'WebRTCPipeWireCapturer');
 }
 
 if (appArgs.lang) {

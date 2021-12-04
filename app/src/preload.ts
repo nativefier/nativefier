@@ -10,8 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, desktopCapturer } from 'electron';
 import { OutputOptions } from '../../shared/src/options/model';
+import { isWayland } from './helpers/helpers';
 
 // Do *NOT* add 3rd-party imports here in preload (except for webpack `externals` like electron).
 // They will work during development, but break in the prod build :-/ .
@@ -43,7 +44,7 @@ function setNotificationCallback(
   clickCallback: { (): void; (this: Notification, ev: Event): unknown },
 ): void {
   const OldNotify = window.Notification;
-  const newNotify = function (
+  const newNotify = function(
     title: string,
     opt: NotificationOptions,
   ): Notification {
@@ -59,6 +60,195 @@ function setNotificationCallback(
 
   // @ts-expect-error TypeScript says its not compatible, but it works?
   window.Notification = newNotify;
+}
+
+async function getDisplayMedia(sourceId: number | string): Promise<MediaStream> {
+  type OriginalVideoPropertyType = boolean | MediaTrackConstraints | undefined;
+  // Electron supports an outdated specification for mediaDevices, see https://www.electronjs.org/docs/latest/api/desktop-capturer/
+  const stream = await window.navigator.mediaDevices.getUserMedia({
+    audio: false,
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: sourceId
+      }
+    } as unknown as OriginalVideoPropertyType
+  });
+
+  return stream;
+}
+
+function setupScreenSharePickerStyles(id: string): void {
+  const screenShareStyles = document.createElement('style');
+  screenShareStyles.id = id;
+  screenShareStyles.innerHTML = `
+  .desktop-capturer-selection {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(30,30,30,.75);
+    color: #fff;
+    z-index: 10000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .desktop-capturer-selection__close {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 1rem;
+    color: #fff;
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    cursor: pointer;
+  }
+  .desktop-capturer-selection__scroller {
+    width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+  .desktop-capturer-selection__list {
+    max-width: calc(100% - 100px);
+    margin: 50px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    overflow: hidden;
+    justify-content: center;
+  }
+  .desktop-capturer-selection__item {
+    display: flex;
+    margin: 4px;
+  }
+  .desktop-capturer-selection__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 145px;
+    margin: 0;
+    border: 0;
+    border-radius: 3px;
+    padding: 4px;
+    background: #252626;
+    text-align: left;
+    transition: background-color .15s, box-shadow .15s;
+  }
+  .desktop-capturer-selection__btn:hover,
+  .desktop-capturer-selection__btn:focus {
+    background: rgba(98,100,167,.8);
+  }
+  .desktop-capturer-selection__thumbnail {
+    width: 100%;
+    height: 81px;
+    object-fit: cover;
+  }
+  .desktop-capturer-selection__name {
+    margin: 6px 0 6px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }`;
+  document.head.appendChild(screenShareStyles);
+}
+
+function setupScreenSharePickerElement(
+  id: string,
+  sources: Electron.DesktopCapturerSource[]
+): void {
+  const selectionElem = document.createElement('div');
+  selectionElem.classList.add('desktop-capturer-selection');
+  selectionElem.id = id;
+  selectionElem.innerHTML = `
+    <div class="desktop-capturer-selection__scroller">
+      <button class="desktop-capturer-selection__close" id="${id}-close" aria-label="Close screen share picker" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+        <path fill="currentColor" d="m12 10.586 4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>   
+        </svg>
+      </button>
+      <ul class="desktop-capturer-selection__list">
+        ${sources.map(({ id, name, thumbnail }) => `
+          <li class="desktop-capturer-selection__item">
+            <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
+              <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
+              <span class="desktop-capturer-selection__name">${name}</span>
+            </button>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+    `;
+  document.body.appendChild(selectionElem);
+}
+
+function setupScreenSharePicker(
+  resolve: (value: MediaStream | PromiseLike<MediaStream>) => void,
+  reject: (reason?: any) => void,
+  sources: Electron.DesktopCapturerSource[]
+): void {
+  const baseElementsId = 'native-screen-share-picker';
+  const pickerStylesElementId = baseElementsId + '-styles';
+
+  setupScreenSharePickerElement(baseElementsId, sources);
+  setupScreenSharePickerStyles(pickerStylesElementId);
+
+  const clearElements = () => {
+      document.getElementById(pickerStylesElementId)?.remove();
+      document.getElementById(baseElementsId)?.remove();
+  };
+
+  document.getElementById(`${baseElementsId}-close`)
+    ?.addEventListener('click', () => {
+      clearElements();
+    });
+
+  document.querySelectorAll('.desktop-capturer-selection__btn')
+    .forEach(button => {
+      button.addEventListener('click', async () => {
+        try {
+          const id = button.getAttribute('data-id');
+          const source = sources.find(source => source.id === id);
+          if (!source) {
+            throw new Error(`Source with id ${id} does not exist`);
+          }
+          const stream = await getDisplayMedia(source.id);
+          resolve(stream);
+          
+          clearElements();
+        } catch (err: unknown) {
+          log.error('Error selecting desktop capture source:', err);
+          reject(err);
+        }
+      })
+    });
+}
+
+function setDisplayMediaPromise(): void {
+  // Since no implementation for `getDisplayMedia` exists in Electron we write our own.
+  window.navigator.mediaDevices.getDisplayMedia = () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sources = await desktopCapturer.getSources({ types: ['screen', 'window'] })
+
+        if (isWayland()) {
+          // No documentation is provided wether the first element is always PipeWire-picked or not
+          // i.e. maybe it's not deterministic, we are only taking a guess here.
+          const stream = await getDisplayMedia(sources[0].id);
+          resolve(stream);
+        } else {
+          setupScreenSharePicker(resolve, reject, sources);
+        }
+
+      } catch (err: unknown) {
+        log.error('Error displaying desktop capture sources:', err)
+        reject(err)
+      }
+    })
+  }
 }
 
 function injectScripts(): void {
@@ -95,6 +285,7 @@ function notifyNotificationClick(): void {
 
 // @ts-expect-error TypeScript thinks these are incompatible but they aren't
 setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
+setDisplayMediaPromise();
 
 ipcRenderer.on('params', (event, message: string) => {
   log.debug('ipcRenderer.params', { event, message });

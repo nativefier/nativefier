@@ -143,6 +143,7 @@ export async function createMainWindow(
   });
 
   setupSessionInteraction(options, mainWindow);
+  setupSessionPermissionHandler(mainWindow);
 
   if (options.clearCache) {
     await clearCache(mainWindow);
@@ -219,6 +220,15 @@ function setupCounter(
     } else {
       setDockBadge('');
     }
+  });
+}
+
+function setupSessionPermissionHandler(window: BrowserWindow): void {
+  window.webContents.session.setPermissionCheckHandler((_webContents, _permission, _details) => {
+    return true;
+  });
+  window.webContents.session.setPermissionRequestHandler(async (_webContents, _permission, callback, _details) => {
+    callback(true);
   });
 }
 
