@@ -164,12 +164,12 @@ function setupScreenSharePickerElement(
   selectionElem.classList.add('desktop-capturer-selection');
   selectionElem.id = id;
   selectionElem.innerHTML = `
+    <button class="desktop-capturer-selection__close" id="${id}-close" aria-label="Close screen share picker" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
+      <path fill="currentColor" d="m12 10.586 4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>   
+      </svg>
+    </button>
     <div class="desktop-capturer-selection__scroller">
-      <button class="desktop-capturer-selection__close" id="${id}-close" aria-label="Close screen share picker" type="button">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32">
-        <path fill="currentColor" d="m12 10.586 4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"/>   
-        </svg>
-      </button>
       <ul class="desktop-capturer-selection__list">
         ${sources.map(({ id, name, thumbnail }) => `
           <li class="desktop-capturer-selection__item">
