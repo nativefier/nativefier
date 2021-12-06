@@ -224,12 +224,16 @@ function setupCounter(
 }
 
 function setupSessionPermissionHandler(window: BrowserWindow): void {
-  window.webContents.session.setPermissionCheckHandler((_webContents, _permission, _details) => {
-    return true;
-  });
-  window.webContents.session.setPermissionRequestHandler(async (_webContents, _permission, callback, _details) => {
-    callback(true);
-  });
+  window.webContents.session.setPermissionCheckHandler(
+    (_webContents, _permission, _details) => {
+      return true;
+    },
+  );
+  window.webContents.session.setPermissionRequestHandler(
+    async (_webContents, _permission, callback, _details) => {
+      callback(true);
+    },
+  );
 }
 
 function setupNotificationBadge(

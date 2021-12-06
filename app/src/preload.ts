@@ -44,7 +44,7 @@ function setNotificationCallback(
   clickCallback: { (): void; (this: Notification, ev: Event): unknown },
 ): void {
   const OldNotify = window.Notification;
-  const newNotify = function(
+  const newNotify = function (
     title: string,
     opt: NotificationOptions,
   ): Notification {
@@ -62,17 +62,20 @@ function setNotificationCallback(
   window.Notification = newNotify;
 }
 
-async function getDisplayMedia(sourceId: number | string): Promise<MediaStream> {
+async function getDisplayMedia(
+  sourceId: number | string,
+): Promise<MediaStream> {
   type OriginalVideoPropertyType = boolean | MediaTrackConstraints | undefined;
-  // Electron supports an outdated specification for mediaDevices, see https://www.electronjs.org/docs/latest/api/desktop-capturer/
+  // Electron supports an outdated specification for mediaDevices,
+  // see https://www.electronjs.org/docs/latest/api/desktop-capturer/
   const stream = await window.navigator.mediaDevices.getUserMedia({
     audio: false,
     video: {
       mandatory: {
         chromeMediaSource: 'desktop',
-        chromeMediaSourceId: sourceId
-      }
-    } as unknown as OriginalVideoPropertyType
+        chromeMediaSourceId: sourceId,
+      },
+    } as unknown as OriginalVideoPropertyType,
   });
 
   return stream;
@@ -158,7 +161,7 @@ function setupScreenSharePickerStyles(id: string): void {
 
 function setupScreenSharePickerElement(
   id: string,
-  sources: Electron.DesktopCapturerSource[]
+  sources: Electron.DesktopCapturerSource[],
 ): void {
   const selectionElem = document.createElement('div');
   selectionElem.classList.add('desktop-capturer-selection');
@@ -171,14 +174,18 @@ function setupScreenSharePickerElement(
     </button>
     <div class="desktop-capturer-selection__scroller">
       <ul class="desktop-capturer-selection__list">
-        ${sources.map(({ id, name, thumbnail }) => `
+        ${sources
+          .map(
+            ({ id, name, thumbnail }) => `
           <li class="desktop-capturer-selection__item">
             <button class="desktop-capturer-selection__btn" data-id="${id}" title="${name}">
               <img class="desktop-capturer-selection__thumbnail" src="${thumbnail.toDataURL()}" />
               <span class="desktop-capturer-selection__name">${name}</span>
             </button>
           </li>
-        `).join('')}
+        `,
+          )
+          .join('')}
       </ul>
     </div>
     `;
@@ -187,8 +194,8 @@ function setupScreenSharePickerElement(
 
 function setupScreenSharePicker(
   resolve: (value: MediaStream | PromiseLike<MediaStream>) => void,
-  reject: (reason?: any) => void,
-  sources: Electron.DesktopCapturerSource[]
+  reject: (reason?: unknown) => void,
+  sources: Electron.DesktopCapturerSource[],
 ): void {
   const baseElementsId = 'native-screen-share-picker';
   const pickerStylesElementId = baseElementsId + '-styles';
@@ -196,59 +203,72 @@ function setupScreenSharePicker(
   setupScreenSharePickerElement(baseElementsId, sources);
   setupScreenSharePickerStyles(pickerStylesElementId);
 
-  const clearElements = () => {
-      document.getElementById(pickerStylesElementId)?.remove();
-      document.getElementById(baseElementsId)?.remove();
+  const clearElements = (): void => {
+    document.getElementById(pickerStylesElementId)?.remove();
+    document.getElementById(baseElementsId)?.remove();
   };
 
-  document.getElementById(`${baseElementsId}-close`)
+  document
+    .getElementById(`${baseElementsId}-close`)
     ?.addEventListener('click', () => {
       clearElements();
     });
 
-  document.querySelectorAll('.desktop-capturer-selection__btn')
-    .forEach(button => {
-      button.addEventListener('click', async () => {
-        try {
-          const id = button.getAttribute('data-id');
-          const source = sources.find(source => source.id === id);
-          if (!source) {
-            throw new Error(`Source with id ${id} does not exist`);
-          }
-          const stream = await getDisplayMedia(source.id);
-          resolve(stream);
-          
+  document
+    .querySelectorAll('.desktop-capturer-selection__btn')
+    .forEach((button) => {
+      button.addEventListener('click', () => {
+        const id = button.getAttribute('data-id');
+        if (!id) {
+          log.error("Couldn't find `data-id` of element");
           clearElements();
-        } catch (err: unknown) {
-          log.error('Error selecting desktop capture source:', err);
-          reject(err);
+          return;
         }
-      })
+        const source = sources.find((source) => source.id === id);
+        if (!source) {
+          log.error(`Source with id "${id}" does not exist`);
+          clearElements();
+          return;
+        }
+
+        getDisplayMedia(source.id)
+          .then((stream) => {
+            resolve(stream);
+          })
+          .catch((err) => {
+            log.error('Error selecting desktop capture source:', err);
+            reject(err);
+          })
+          .finally(() => {
+            clearElements();
+          });
+      });
     });
 }
 
 function setDisplayMediaPromise(): void {
   // Since no implementation for `getDisplayMedia` exists in Electron we write our own.
-  window.navigator.mediaDevices.getDisplayMedia = () => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const sources = await desktopCapturer.getSources({ types: ['screen', 'window'] })
-
-        if (isWayland()) {
-          // No documentation is provided wether the first element is always PipeWire-picked or not
-          // i.e. maybe it's not deterministic, we are only taking a guess here.
-          const stream = await getDisplayMedia(sources[0].id);
-          resolve(stream);
-        } else {
-          setupScreenSharePicker(resolve, reject, sources);
-        }
-
-      } catch (err: unknown) {
-        log.error('Error displaying desktop capture sources:', err)
-        reject(err)
-      }
-    })
-  }
+  window.navigator.mediaDevices.getDisplayMedia = (): Promise<MediaStream> => {
+    return new Promise((resolve, reject) => {
+      desktopCapturer
+        .getSources({
+          types: ['screen', 'window'],
+        })
+        .then(async (sources) => {
+          if (isWayland()) {
+            // No documentation is provided wether the first element is always PipeWire-picked or not
+            // i.e. maybe it's not deterministic, we are only taking a guess here.
+            const stream = await getDisplayMedia(sources[0].id);
+            resolve(stream);
+          } else {
+            setupScreenSharePicker(resolve, reject, sources);
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  };
 }
 
 function injectScripts(): void {
@@ -289,7 +309,7 @@ setDisplayMediaPromise();
 
 ipcRenderer.on('params', (event, message: string) => {
   log.debug('ipcRenderer.params', { event, message });
-  const appArgs = JSON.parse(message) as OutputOptions;
+  const appArgs: unknown = JSON.parse(message) as OutputOptions;
   log.info('nativefier.json', appArgs);
 });
 
