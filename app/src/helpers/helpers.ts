@@ -263,7 +263,11 @@ export function openExternal(
 }
 
 export function isWayland(): boolean {
-  return isLinux() && (Boolean(process.env.WAYLAND_DISPLAY) || process.env.XDG_SESSION_TYPE === 'wayland'); 
+  return (
+    isLinux() &&
+    (Boolean(process.env.WAYLAND_DISPLAY) ||
+      process.env.XDG_SESSION_TYPE === 'wayland')
+  );
 }
 
 export function removeUserAgentSpecifics(
