@@ -43,7 +43,7 @@
     "lint": "eslint shared app src --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
     "prepare": "cd app && npm ci && cd .. && npm run build",
-    "relock": "rm -rf ./node_modules/ ./app/node_modules/ ./npm-shrinkwrap.json ./app/npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out && cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
+    "relock": "rm -rf ./node_modules/ ./app/node_modules/ ./npm-shrinkwrap.json ./app/npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out; cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && ./.github/manual-test",
     "test:unit": "jest",
