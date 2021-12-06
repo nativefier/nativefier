@@ -148,6 +148,15 @@ export function getDefaultWindowOptions(
       plugins: true,
       webSecurity: !options.insecure,
       zoomFactor: options.zoom,
+      // `contextIsolation` was switched to true in Electron 12, which:
+      // 1. Breaks access to global variables in `--inject`-ed scripts:
+      //    https://github.com/nativefier/nativefier/issues/1269
+      // 2. Might break notifications under Windows, although this was refuted:
+      //    https://github.com/nativefier/nativefier/issues/1292
+      // So, it was flipped to false in https://github.com/nativefier/nativefier/pull/1308
+      //
+      // If attempting to set it back to `true` (for security),
+      // do test exhaustively these two areas, and more.
       contextIsolation: false,
       ...webPreferences,
     },
