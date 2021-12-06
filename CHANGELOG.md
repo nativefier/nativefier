@@ -1,3 +1,20 @@
+
+45.0.7 / 2021-12-06
+===================
+
+  * Use userAgentFallback for user-agent injection (PR #1316)
+  * Fix `--upgrade` (PR #1286)
+  * Bump default Electron to 13.6.3 with fixes & security fixes
+    - 13.6.3: https://github.com/electron/electron/releases/tag/v13.6.3
+  * Maintenance: documentation, scripts, dependencies bumps
+  * Display "we need your help" message when running CLI:
+
+```
+Hi! Nativefier is minimally maintained these days, and needs more hands.
+If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.
+Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.
+```
+
 45.0.6 / 2021-11-22
 ===================
 
