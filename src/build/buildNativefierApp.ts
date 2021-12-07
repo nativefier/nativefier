@@ -1,7 +1,6 @@
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
-import * as chalk from 'chalk';
 import electronPackager from 'electron-packager';
 import * as fs from 'fs-extra';
 import * as log from 'loglevel';
@@ -131,11 +130,9 @@ export async function buildNativefierApp(
   rawOptions: RawOptions,
 ): Promise<string | undefined> {
   log.warn(
-    new chalk.Instance().yellowBright.bold(
-      '\n\n    Hi! Nativefier is minimally maintained these days, and needs more hands.\n' +
-        '    If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.\n' +
-        '    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.\n\n',
-    ),
+    '\n\n    Hi! Nativefier is minimally maintained these days, and needs more hands.\n' +
+      '    If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.\n' +
+      '    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.\n\n',
   );
 
   log.info('\nProcessing options...');
