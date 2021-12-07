@@ -230,7 +230,7 @@ function setupSessionPermissionHandler(window: BrowserWindow): void {
     },
   );
   window.webContents.session.setPermissionRequestHandler(
-    async (_webContents, _permission, callback, _details) => {
+    (_webContents, _permission, callback, _details) => {
       callback(true);
     },
   );
