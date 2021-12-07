@@ -86,13 +86,19 @@ function setupScreenSharePickerStyles(id: string): void {
   screenShareStyles.id = id;
   screenShareStyles.innerHTML = `
   .desktop-capturer-selection {
+    --overlay-color: hsla(0, 0%, 11.8%, 0.75);
+    --highlight-color: highlight;
+    --text-content-color: #fff;
+    --selection-button-color: hsl(180, 1.3%, 14.7%);
+  }
+  .desktop-capturer-selection {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(30,30,30,.75);
-    color: #fff;
+    background: var(--overlay-color);
+    color: var(--text-content-color);
     z-index: 10000000;
     display: flex;
     align-items: center;
@@ -103,7 +109,7 @@ function setupScreenSharePickerStyles(id: string): void {
     -webkit-appearance: none;
     appearance: none;
     padding: 1rem;
-    color: #fff;
+    color: inherit;
     position: absolute;
     left: 1rem;
     top: 1rem;
@@ -137,13 +143,13 @@ function setupScreenSharePickerStyles(id: string): void {
     border: 0;
     border-radius: 3px;
     padding: 4px;
-    background: #252626;
+    background: var(--selection-button-color);
     text-align: left;
     transition: background-color .15s, box-shadow .15s;
   }
   .desktop-capturer-selection__btn:hover,
   .desktop-capturer-selection__btn:focus {
-    background: rgba(98,100,167,.8);
+    background: var(--highlight-color);
   }
   .desktop-capturer-selection__thumbnail {
     width: 100%;
@@ -155,6 +161,13 @@ function setupScreenSharePickerStyles(id: string): void {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+  @media (prefers-color-scheme: light) {
+    .desktop-capturer-selection {
+      --overlay-color: hsla(0, 0%, 90.2%, 0.75);
+      --text-content-color: hsl(0, 0%, 12.9%);
+      --selection-button-color: hsl(180, 1.3%, 85.3%);
+    }
   }`;
   document.head.appendChild(screenShareStyles);
 }
