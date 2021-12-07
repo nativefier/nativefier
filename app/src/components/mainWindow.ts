@@ -226,13 +226,11 @@ function setupCounter(
 }
 
 function setupSessionPermissionHandler(window: BrowserWindow): void {
-  window.webContents.session.setPermissionCheckHandler(
-    (_webContents, _permission, _details) => {
-      return true;
-    },
-  );
+  window.webContents.session.setPermissionCheckHandler(() => {
+    return true;
+  });
   window.webContents.session.setPermissionRequestHandler(
-    (_webContents, _permission, callback, _details) => {
+    (_webContents, _permission, callback) => {
       callback(true);
     },
   );
