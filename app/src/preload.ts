@@ -225,6 +225,7 @@ function setupScreenSharePicker(
     .getElementById(`${baseElementsId}-close`)
     ?.addEventListener('click', () => {
       clearElements();
+      reject('Screen share was cancelled by the user.');
     });
 
   document
