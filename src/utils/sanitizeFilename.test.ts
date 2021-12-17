@@ -1,17 +1,25 @@
 import { sanitizeFilename } from './sanitizeFilename';
 import { DEFAULT_APP_NAME } from '../constants';
 
-describe('replacing non ascii characters', () => {
-  const nonAscii = '�';
-  test('it should return a result without non ascii characters', () => {
-    const param = `${nonAscii}abc`;
+describe('replacing reserved characters', () => {
+  const reserved = '\\/?*<>:|';
+
+  test('it should return a result without reserved characters', () => {
     const expectedResult = 'abc';
+    const param = `${reserved}${expectedResult}`;
     const result = sanitizeFilename('', param);
     expect(result).toBe(expectedResult);
   });
 
-  describe('when the result of replacing these characters is empty', () => {
-    const result = sanitizeFilename('', nonAscii);
+  test('it should allow non-ascii characters', () => {
+    const expectedResult = '微信读书';
+    const param = `${reserved}${expectedResult}`;
+    const result = sanitizeFilename('', param);
+    expect(result).toBe(expectedResult);
+  });
+
+  test('when the result of replacing these characters is empty, use default', () => {
+    const result = sanitizeFilename('', reserved);
     expect(result).toBe(DEFAULT_APP_NAME);
   });
 });

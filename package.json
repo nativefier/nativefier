@@ -1,12 +1,14 @@
 {
   "name": "nativefier",
-  "version": "42.0.2",
+  "version": "45.0.8",
   "description": "Wrap web apps natively",
   "license": "MIT",
   "author": "Goh Jia Hao",
+  "engines_README": "Bumping the minimum required Node version? You must bump: 1. package.json -> engines.node, 2. package.json -> devDependencies.@types/node , 3. tsconfig.json -> {target, lib} , 4. .github/workflows/ci.yml -> node-version",
+  "engines_READMEforEnginesNode": "Here in engines.node, we require a version as old as possible, for Nativefier to be easily installable using the stock Node.js shipped by conservative Linux distros. It's a balancing act between this, and our own dependencies requiring more a recent Node; as much as possible, try to keep supporting Debian stable; https://packages.debian.org/search?suite=stable&keywords=nodejs",
   "engines": {
-    "node": ">= 10.0.0",
-    "npm": ">= 6.0.0"
+    "node": ">= 12.9.0",
+    "npm": ">= 6.9.0"
   },
   "keywords": [
     "desktop",
@@ -20,86 +22,104 @@
   "bin": {
     "nativefier": "lib/cli.js"
   },
-  "homepage": "https://github.com/jiahaog/nativefier",
+  "homepage": "https://github.com/nativefier/nativefier",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jiahaog/nativefier.git"
+    "url": "git+https://github.com/nativefier/nativefier.git"
   },
   "bugs": {
-    "url": "https://github.com/jiahaog/nativefier/issues"
+    "url": "https://github.com/nativefier/nativefier/issues"
   },
   "scripts": {
     "build-app": "cd app && webpack",
     "build-app-static": "ncp app/src/static/ app/lib/static/ && ncp app/dist/preload.js app/lib/preload.js && ncp app/dist/preload.js.map app/lib/preload.js.map",
-    "build": "npm run clean && tsc --build . app && npm run build-app && npm run build-app-static",
-    "build:watch": "tsc --build . app --watch",
-    "dev-up": "npm install && cd ./app && npm install && cd ..",
-    "dev-up-win": "npm install & cd app & npm install & cd ..",
-    "changelog": "./docs/generate-changelog",
-    "ci": "npm run lint && npm test",
-    "clean": "rimraf lib/ app/lib/ app/dist/",
-    "clean:full": "rimraf lib/ app/lib/ app/dist/ node_modules/ app/node_modules/",
-    "lint:fix": "eslint . --fix",
-    "lint:format": "prettier --write 'src/**/*.js' 'app/src/**/*.js'",
-    "lint": "eslint . --ext .ts",
+    "build": "npm run clean && tsc --build shared src app && npm run build-app && npm run build-app-static",
+    "build:watch": "npm run clean && tsc --build shared src app --watch",
+    "changelog": "./.github/generate-changelog",
+    "clean": "rimraf coverage/ lib/ app/lib/ app/dist/ shared/lib",
+    "clean:full": "npm run clean && rimraf app/node_modules/ node_modules/",
+    "lint:fix": "cd src && eslint . --ext .ts --fix && cd ../shared && eslint src --ext .ts --fix && cd ../app && eslint src --ext .ts --fix",
+    "lint:format": "prettier --write 'src/**/*.ts' 'app/src/**/*.ts' 'shared/src/**/*.ts'",
+    "lint": "eslint shared app src --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
-    "prepare": "cd ./app && npm install && cd .. && npm run build",
+    "prepare": "cd app && npm ci && cd .. && npm run build",
+    "relock": "rm -rf ./node_modules/ ./app/node_modules/ ./npm-shrinkwrap.json ./app/npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out; cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
     "test:integration": "jest --testRegex '.*integration-test.js'",
-    "test:manual": "npm run build && ./docs/manual-test",
+    "test:manual": "npm run build && ./.github/manual-test",
     "test:unit": "jest",
-    "test:watch": "jest --watch",
+    "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest --testRegex '[-.]test\\.js$'",
     "watch": "npx concurrently \"npm:*:watch\""
   },
   "dependencies": {
-    "@types/cheerio": "0.x",
-    "@types/lodash": "4.x",
-    "@types/ncp": "2.x",
-    "@types/node": "10.x",
-    "@types/page-icon": "0.x",
-    "@types/shelljs": "0.x",
-    "@types/tmp": "0.x",
-    "axios": "0.x",
-    "cheerio": "^1.0.0-rc.3",
-    "commander": "4.x",
-    "electron-packager": "15.x",
-    "gitcloud": "0.x",
-    "hasbin": "1.x",
-    "lodash": "4.x",
-    "loglevel": "1.x",
-    "ncp": "2.x",
-    "page-icon": "0.x",
-    "sanitize-filename": "1.x",
-    "shelljs": "0.x",
-    "source-map-support": "0.x",
-    "tmp": "0.x"
+    "axios": "^0.24.0",
+    "electron-packager": "^15.2.0",
+    "fs-extra": "^10.0.0",
+    "gitcloud": "^0.2.3",
+    "hasbin": "^1.2.3",
+    "loglevel": "^1.7.1",
+    "ncp": "^2.0.0",
+    "page-icon": "^0.4.0",
+    "sanitize-filename": "^1.6.3",
+    "source-map-support": "^0.5.19",
+    "tmp": "^0.2.1",
+    "yargs": "^17.1.1"
   },
   "devDependencies": {
-    "@types/jest": "26.x",
-    "@typescript-eslint/eslint-plugin": "4.x",
-    "@typescript-eslint/parser": "4.x",
-    "eslint": "7.x",
-    "eslint-config-prettier": "7.x",
-    "eslint-plugin-prettier": "3.x",
-    "jest": "26.x",
-    "prettier": "2.x",
-    "rimraf": "3.x",
-    "ts-loader": "8.x",
-    "typescript": "4.x",
-    "webpack": "5.x",
-    "webpack-cli": "4.x"
+    "@types/debug": "^4.1.6",
+    "@types/fs-extra": "^9.0.13",
+    "@types/hasbin": "^1.2.0",
+    "@types/jest": "^27.0.1",
+    "@types/ncp": "^2.0.5",
+    "@types/node": "14.14.20",
+    "@types/page-icon": "^0.3.4",
+    "@types/tmp": "^0.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.3.0",
+    "@typescript-eslint/parser": "^5.3.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.0.6",
+    "prettier": "^2.3.2",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.5",
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "jest_COMMENTS": {
+    "testPathIgnorePatterns": "See https://jestjs.io/docs/configuration#testpathignorepatterns-arraystring . We set it to 1. ignore coverage for deps, and 2. be sure we test the compiled JS, which is in `lib`, not `src` or `dist`",
+    "watchPathIgnorePatterns": "See https://jestjs.io/docs/configuration#watchpathignorepatterns-arraystring . We set it for `jest --watch` (a.k.a. `npm run test:watch`) to trigger only after `tsc --watch` (a.k.a. `npm run build:watch`) completes its incremental compilation. Else, jest will pick up immediately on changes in `src` when TSC is barely running, hence testing not-recompiled-yet code and being super confusing, as 1. your changes won't be taken during this first run, and 2. the *next* run (e.g. after a second 'Save' in your editor) will actually have the new code :D"
   },
   "jest": {
     "collectCoverage": true,
+    "moduleNameMapper": {
+      "^electron$": "<rootDir>/app/dist/mocks/electron.js"
+    },
     "setupFiles": [
       "./lib/jestSetupFiles"
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "/node_modules/",
+      "<rootDir>/src.*",
+      "<rootDir>/node_modules.*",
       "<rootDir>/app/src.*",
-      "<rootDir>/src.*"
+      "<rootDir>/app/lib.*",
+      "<rootDir>/app/node_modules.*"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/src.*",
+      "<rootDir>/tsconfig-base.json",
+      "<rootDir>/app/src.*",
+      "<rootDir>/app/lib.*",
+      "<rootDir>/app/tsconfig.json",
+      "<rootDir>/shared/tsconfig.json"
     ]
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "singleQuote": true,
+    "trailingComma": "all"
   }
 }

@@ -1,15 +1,21 @@
 import * as path from 'path';
 
 import * as electronGet from '@electron/get';
-import * as electronPackager from 'electron-packager';
-import * as hasbin from 'hasbin';
+import electronPackager from 'electron-packager';
+import * as fs from 'fs-extra';
 import * as log from 'loglevel';
 
-import { isWindows, getTempDir, copyFileOrDir } from '../helpers/helpers';
+import { convertIconIfNecessary } from './buildIcon';
+import {
+  getTempDir,
+  hasWine,
+  isWindows,
+  isWindowsAdmin,
+} from '../helpers/helpers';
+import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
+import { AppOptions, RawOptions } from '../../shared/src/options/model';
 import { getOptions } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
-import { convertIconIfNecessary } from './buildIcon';
-import { AppOptions, NativefierOptions } from '../options/model';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -19,28 +25,6 @@ const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'versionString',
   'win32metadata',
 ];
-
-/**
- * Checks the app path array to determine if packaging completed successfully
- */
-function getAppPath(appPath: string | string[]): string {
-  if (!Array.isArray(appPath)) {
-    return appPath;
-  }
-
-  if (appPath.length === 0) {
-    return null; // directory already exists and `--overwrite` not set
-  }
-
-  if (appPath.length > 1) {
-    log.warn(
-      'Warning: This should not be happening, packaged app path contains more than one element:',
-      appPath,
-    );
-  }
-
-  return appPath[0];
-}
 
 /**
  * For Windows & Linux, we have to copy over the icon to the resources/app
@@ -60,7 +44,18 @@ async function copyIconsIfNecessary(
     options.packager.platform === 'darwin' ||
     options.packager.platform === 'mas'
   ) {
-    log.debug('No copying necessary on macOS; aborting');
+    if (options.nativefier.tray !== 'false') {
+      //tray icon needs to be .png
+      log.debug('Copying icon for tray application');
+      const trayIconFileName = `tray-icon.png`;
+      const destIconPath = path.join(appPath, 'icon.png');
+      await fs.copy(
+        `${path.dirname(options.packager.icon)}/${trayIconFileName}`,
+        destIconPath,
+      );
+    } else {
+      log.debug('No copying necessary on macOS; aborting');
+    }
     return;
   }
 
@@ -69,15 +64,46 @@ async function copyIconsIfNecessary(
   const destIconPath = path.join(appPath, destFileName);
 
   log.debug(`Copying icon ${options.packager.icon} to`, destIconPath);
-  await copyFileOrDir(options.packager.icon, destIconPath);
+  await fs.copy(options.packager.icon, destIconPath);
+}
+
+/**
+ * Checks the app path array to determine if packaging completed successfully
+ */
+function getAppPath(appPath: string | string[]): string | undefined {
+  if (!Array.isArray(appPath)) {
+    return appPath;
+  }
+
+  if (appPath.length === 0) {
+    return undefined; // directory already exists and `--overwrite` not set
+  }
+
+  if (appPath.length > 1) {
+    log.warn(
+      'Warning: This should not be happening, packaged app path contains more than one element:',
+      appPath,
+    );
+  }
+
+  return appPath[0];
+}
+
+function isUpgrade(rawOptions: RawOptions): boolean {
+  if (
+    rawOptions.upgrade !== undefined &&
+    typeof rawOptions.upgrade === 'string' &&
+    rawOptions.upgrade !== ''
+  ) {
+    rawOptions.upgradeFrom = rawOptions.upgrade;
+    rawOptions.upgrade = true;
+    return true;
+  }
+  return false;
 }
 
 function trimUnprocessableOptions(options: AppOptions): void {
-  if (
-    options.packager.platform === 'win32' &&
-    !isWindows() &&
-    !hasbin.sync('wine')
-  ) {
+  if (options.packager.platform === 'win32' && !isWindows() && !hasWine()) {
     const optionsPresent = Object.entries(options)
       .filter(
         ([key, value]) =>
@@ -94,25 +120,69 @@ function trimUnprocessableOptions(options: AppOptions): void {
       'features, like a correct icon and process name. Do yourself a favor and install Wine, please.',
     );
     for (const keyToUnset of optionsPresent) {
-      options[keyToUnset] = null;
+      (options as unknown as Record<string, undefined>)[keyToUnset] = undefined;
     }
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(
-  rawOptions: NativefierOptions,
-): Promise<string> {
-  log.info('Processing options...');
+  rawOptions: RawOptions,
+): Promise<string | undefined> {
+  log.warn(
+    '\n\n    Hi! Nativefier is minimally maintained these days, and needs more hands.\n' +
+      '    If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.\n' +
+      '    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.\n\n',
+  );
+
+  log.info('\nProcessing options...');
+
+  let finalOutDirectory = rawOptions.out ?? process.cwd();
+
+  if (isUpgrade(rawOptions)) {
+    log.debug('Attempting to upgrade from', rawOptions.upgradeFrom);
+    const oldApp = findUpgradeApp(rawOptions.upgradeFrom as string);
+    if (!oldApp) {
+      throw new Error(
+        `Could not find an old Nativfier app in "${
+          rawOptions.upgradeFrom as string
+        }"`,
+      );
+    }
+    rawOptions = useOldAppOptions(rawOptions, oldApp);
+    if (rawOptions.out === undefined && rawOptions.overwrite) {
+      finalOutDirectory = oldApp.appRoot;
+      rawOptions.out = getTempDir('appUpgrade', 0o755);
+    }
+  }
+  log.debug('rawOptions', rawOptions);
+
   const options = await getOptions(rawOptions);
+  log.debug('options', options);
+
+  if (options.packager.platform === 'darwin' && isWindows()) {
+    // electron-packager has to extract the desired electron package for the target platform.
+    // For a target platform of Mac, this zip file contains symlinks. And on Windows, extracting
+    // files that are symlinks need Admin permissions. So we'll check if the user is an admin, and
+    // fail early if not.
+    // For reference
+    // https://github.com/electron/electron-packager/issues/933
+    // https://github.com/electron/electron-packager/issues/1194
+    // https://github.com/electron/electron/issues/11094
+    if (!isWindowsAdmin()) {
+      throw new Error(
+        'Building an app with a target platform of Mac on a Windows machine requires admin priveleges to perform. Please rerun this command in an admin command prompt.',
+      );
+    }
+  }
 
   log.info('\nPreparing Electron app...');
   const tmpPath = getTempDir('app', 0o755);
   await prepareElectronApp(options.packager.dir, tmpPath, options);
 
   log.info('\nConverting icons...');
-  options.packager.dir = tmpPath; // const optionsWithTmpPath = { ...options, dir: tmpPath };
-  await convertIconIfNecessary(options);
+  options.packager.dir = tmpPath;
+  convertIconIfNecessary(options);
   await copyIconsIfNecessary(options, tmpPath);
 
   log.info(
@@ -123,20 +193,64 @@ export async function buildNativefierApp(
   const appPathArray = await electronPackager(options.packager);
 
   log.info('\nFinalizing build...');
-  const appPath = getAppPath(appPathArray);
+  let appPath = getAppPath(appPathArray);
 
-  if (appPath) {
-    let osRunHelp = '';
-    if (options.packager.platform === 'win32') {
-      osRunHelp = `the contained .exe file.`;
-    } else if (options.packager.platform === 'linux') {
-      osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
-    } else if (options.packager.platform === 'darwin') {
-      osRunHelp = `the app bundle.`;
-    }
-    log.info(
-      `App built to ${appPath} , move it wherever it makes sense for you and run ${osRunHelp}`,
-    );
+  if (!appPath) {
+    throw new Error('App Path could not be determined.');
   }
+
+  if (
+    options.packager.upgrade &&
+    options.packager.upgradeFrom &&
+    options.packager.overwrite
+  ) {
+    if (options.packager.platform === 'darwin') {
+      try {
+        // This is needed due to a funky thing that happens when copying Squirrel.framework
+        // over where it gets into a circular file reference somehow.
+        await fs.remove(
+          path.join(
+            finalOutDirectory,
+            `${options.packager.name ?? ''}.app`,
+            'Contents',
+            'Frameworks',
+          ),
+        );
+      } catch (err: unknown) {
+        log.warn(
+          'Encountered an error when attempting to pre-delete old frameworks:',
+          err,
+        );
+      }
+      await fs.copy(
+        path.join(appPath, `${options.packager.name ?? ''}.app`),
+        path.join(finalOutDirectory, `${options.packager.name ?? ''}.app`),
+        {
+          overwrite: options.packager.overwrite,
+          preserveTimestamps: true,
+        },
+      );
+    } else {
+      await fs.copy(appPath, finalOutDirectory, {
+        overwrite: options.packager.overwrite,
+        preserveTimestamps: true,
+      });
+    }
+    await fs.remove(appPath);
+    appPath = finalOutDirectory;
+  }
+
+  let osRunHelp = '';
+  if (options.packager.platform === 'win32') {
+    osRunHelp = `the contained .exe file.`;
+  } else if (options.packager.platform === 'linux') {
+    osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
+  } else if (options.packager.platform === 'darwin') {
+    osRunHelp = `the app bundle.`;
+  }
+  log.info(
+    `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
+  );
+
   return appPath;
 }

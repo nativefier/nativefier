@@ -1,34 +1,54 @@
-FROM node:12-stretch
-LABEL description="Debian image to build nativefier apps"
+FROM node:12-alpine
+LABEL description="Alpine image to build Nativefier apps"
 
-# Get wine32, not 64, to work around binary incompatibility with rcedit.
-# https://github.com/jiahaog/nativefier/issues/375#issuecomment-304247033
-# Forced us to use Debian rather than Alpine, which doesn't do multiarch.
-RUN dpkg --add-architecture i386
 
-# Install dependencies
-RUN apt-get update \
-    && apt-get --yes install wine32 imagemagick \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install dependencies and cleanup extraneous files
+RUN apk update \
+    && apk add bash wine imagemagick dos2unix \
+    && rm -rf /var/cache/apk/* \
+    && mkdir /nativefier && chown node:node /nativefier
 
-# Add sources
-COPY . /nativefier
+# Use node (1000) as default user not root
+USER node
 
-# Build nativefier and link globally
-WORKDIR /nativefier/app
-RUN npm install
+ENV NPM_PACKAGES="/home/node/npm-packages"
+ENV PATH="$PATH:$NPM_PACKAGES/bin"
+ENV MANPATH="$MANPATH:$NPM_PACKAGES/share/man"
+
+# Setup a global packages location for "node" user so we can npm link
+RUN mkdir $NPM_PACKAGES \
+    && npm config set prefix $NPM_PACKAGES
+
 WORKDIR /nativefier
-RUN npm install && npm run build && npm link
 
-# Use 1000 as default user not root
-USER 1000
+# Add sources with node as the owner so that it has the power it needs to build in /nativefier
+COPY --chown=node:node . .
 
-# Run a {lin,mac,win} build: 1. to check installation was sucessful,
-# 2. to cache electron distributables and avoid downloads at runtime.
-RUN nativefier https://github.com/jiahaog/nativefier /tmp/nativefier \
-    && nativefier -p osx https://github.com/jiahaog/nativefier /tmp/nativefier \
-    && nativefier -p windows https://github.com/jiahaog/nativefier /tmp/nativefier \
+# Fix line endings that may have gotten mangled in Windows
+RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
+
+# Link (which will install and build)
+# Run tests (to ensure we don't Docker build & publish broken stuff)
+# Cleanup leftover files in this step to not waste Docker layer space
+# Make sure nativefier is executable
+RUN npm link \
+    && npm test \
+    && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \
+    && chmod +x $NPM_PACKAGES/bin/nativefier
+
+# Run a {lin,mac,win} build
+# 1. to check installation was sucessful
+# 2. to cache electron distributables and avoid downloads at runtime
+# Also delete generated apps so they don't get added to the Docker layer
+# !Important! The `rm -rf` command must be in the same `RUN` command (using an `&&`), to not waste Docker layer space
+RUN nativefier https://github.com/nativefier/nativefier /tmp/nativefier \
+    && nativefier -p osx https://github.com/nativefier/nativefier /tmp/nativefier \
+    && nativefier -p windows https://github.com/nativefier/nativefier /tmp/nativefier \
     && rm -rf /tmp/nativefier
+
+
+RUN echo Generated Electron cache size: $(du -sh ~/.cache/electron) \
+    && echo Final image size: $(du -sh / 2>/dev/null)
 
 ENTRYPOINT ["nativefier"]
 CMD ["--help"]

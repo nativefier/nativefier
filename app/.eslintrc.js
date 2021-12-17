@@ -1,28 +1,21 @@
+const base = require('../base-eslintrc');
+
 // # https://github.com/typescript-eslint/typescript-eslint/blob/master/docs/getting-started/linting/README.md
 module.exports = {
-  parser: '@typescript-eslint/parser',
+  parser: base.parser,
   parserOptions: {
     tsconfigRootDir: __dirname,
     project: ['./tsconfig.json'],
   },
-  plugins: ['@typescript-eslint'],
-  extends: [
-    'eslint:recommended',
-    'prettier',
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+  plugins: base.plugins,
+  extends: base.extends,
+  rules: base.rules,
+  // https://eslint.org/docs/user-guide/configuring/ignoring-code#ignorepatterns-in-config-files
+  ignorePatterns: [
+    'node_modules/**',
+    'lib/**',
+    'dist/**',
+    'built-tests/**',
+    'coverage/**',
   ],
-  rules: {
-    'prettier/prettier': 'error',
-    // TODO remove when done killing `any`s and making tsc strict
-    '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unsafe-assignment': 'off',
-    '@typescript-eslint/no-unsafe-call': 'off',
-    '@typescript-eslint/no-unsafe-member-access': 'off',
-    '@typescript-eslint/no-unsafe-return': 'off',
-    '@typescript-eslint/restrict-template-expressions': 'off'
-  },
 };

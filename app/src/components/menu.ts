@@ -1,22 +1,72 @@
-import { Menu, clipboard, shell, MenuItemConstructorOptions } from 'electron';
+import * as fs from 'fs';
+import path from 'path';
 
-export function createMenu({
-  nativefierVersion,
-  appQuit,
+import {
+  BrowserWindow,
+  clipboard,
+  Menu,
+  MenuItem,
+  MenuItemConstructorOptions,
+} from 'electron';
+import * as log from 'loglevel';
+
+import { isOSX, openExternal } from '../helpers/helpers';
+import {
+  clearAppData,
+  getCurrentURL,
+  goBack,
+  goForward,
+  goToURL,
   zoomIn,
   zoomOut,
   zoomReset,
-  zoomBuildTimeValue,
-  goBack,
-  goForward,
-  getCurrentUrl,
-  clearAppData,
-  disableDevTools,
-}): void {
+} from '../helpers/windowHelpers';
+import { OutputOptions } from '../../../shared/src/options/model';
+
+type BookmarksLink = {
+  type: 'link';
+  title: string;
+  url: string;
+  shortcut?: string;
+};
+
+type BookmarksSeparator = {
+  type: 'separator';
+};
+
+type BookmarkConfig = BookmarksLink | BookmarksSeparator;
+
+type BookmarksMenuConfig = {
+  menuLabel: string;
+  bookmarks: BookmarkConfig[];
+};
+
+export function createMenu(
+  options: OutputOptions,
+  mainWindow: BrowserWindow,
+): void {
+  log.debug('createMenu', { options, mainWindow });
+  const menuTemplate = generateMenu(options, mainWindow);
+
+  injectBookmarks(menuTemplate);
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+}
+
+export function generateMenu(
+  options: {
+    disableDevTools: boolean;
+    nativefierVersion: string;
+    zoom?: number;
+  },
+  mainWindow: BrowserWindow,
+): MenuItemConstructorOptions[] {
+  const { nativefierVersion, zoom, disableDevTools } = options;
   const zoomResetLabel =
-    zoomBuildTimeValue === 1.0
+    !zoom || zoom === 1.0
       ? 'Reset Zoom'
-      : `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
+      : `Reset Zoom (to ${(zoom * 100).toFixed(1)}%, set at build time)`;
 
   const editMenu: MenuItemConstructorOptions = {
     label: '&Edit',
@@ -47,10 +97,7 @@ export function createMenu({
       {
         label: 'Copy Current URL',
         accelerator: 'CmdOrCtrl+L',
-        click: () => {
-          const currentURL = getCurrentUrl();
-          clipboard.writeText(currentURL);
-        },
+        click: (): void => clipboard.writeText(getCurrentURL()),
       },
       {
         label: 'Paste',
@@ -69,7 +116,22 @@ export function createMenu({
       },
       {
         label: 'Clear App Data',
-        click: clearAppData,
+        click: (
+          item: MenuItem,
+          focusedWindow: BrowserWindow | undefined,
+        ): void => {
+          log.debug('Clear App Data.click', {
+            item,
+            focusedWindow,
+            mainWindow,
+          });
+          if (!focusedWindow) {
+            focusedWindow = mainWindow;
+          }
+          clearAppData(focusedWindow).catch((err) =>
+            log.error('clearAppData ERROR', err),
+          );
+        },
       },
     ],
   };
@@ -79,11 +141,7 @@ export function createMenu({
     submenu: [
       {
         label: 'Back',
-        accelerator: (() => {
-          const backKbShortcut =
-            process.platform === 'darwin' ? 'Cmd+Left' : 'Alt+Left';
-          return backKbShortcut;
-        })(),
+        accelerator: isOSX() ? 'CmdOrAlt+Left' : 'Alt+Left',
         click: goBack,
       },
       {
@@ -95,11 +153,7 @@ export function createMenu({
       },
       {
         label: 'Forward',
-        accelerator: (() => {
-          const forwardKbShortcut =
-            process.platform === 'darwin' ? 'Cmd+Right' : 'Alt+Right';
-          return forwardKbShortcut;
-        })(),
+        accelerator: isOSX() ? 'Cmd+Right' : 'Alt+Right',
         click: goForward,
       },
       {
@@ -111,27 +165,35 @@ export function createMenu({
       },
       {
         label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click: (item, focusedWindow) => {
-          if (focusedWindow) {
-            focusedWindow.reload();
-          }
-        },
+        role: 'reload',
       },
       {
         type: 'separator',
       },
       {
         label: 'Toggle Full Screen',
-        accelerator: (() => {
-          if (process.platform === 'darwin') {
-            return 'Ctrl+Cmd+F';
+        accelerator: isOSX() ? 'Ctrl+Cmd+F' : 'F11',
+        enabled: mainWindow.isFullScreenable() || isOSX(),
+        visible: mainWindow.isFullScreenable() || isOSX(),
+        click: (
+          item: MenuItem,
+          focusedWindow: BrowserWindow | undefined,
+        ): void => {
+          log.debug('Toggle Full Screen.click()', {
+            item,
+            focusedWindow,
+            isFullScreen: focusedWindow?.isFullScreen(),
+            isFullScreenable: focusedWindow?.isFullScreenable(),
+          });
+          if (!focusedWindow) {
+            focusedWindow = mainWindow;
           }
-          return 'F11';
-        })(),
-        click: (item, focusedWindow) => {
-          if (focusedWindow) {
+          if (focusedWindow.isFullScreenable()) {
             focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+          } else if (isOSX()) {
+            focusedWindow.setSimpleFullScreen(
+              !focusedWindow.isSimpleFullScreen(),
+            );
           }
         },
       },
@@ -162,14 +224,14 @@ export function createMenu({
       {
         label: zoomResetLabel,
         accelerator: 'CmdOrCtrl+0',
-        click: zoomReset,
+        click: (): void => zoomReset(options),
       },
       {
         label: 'ZoomResetAdditionalShortcut',
         visible: false,
         acceleratorWorksWhenHidden: true,
         accelerator: 'CmdOrCtrl+num0',
-        click: zoomReset,
+        click: (): void => zoomReset(options),
       },
     ],
   };
@@ -181,16 +243,13 @@ export function createMenu({
       },
       {
         label: 'Toggle Developer Tools',
-        accelerator: (() => {
-          if (process.platform === 'darwin') {
-            return 'Alt+Cmd+I';
+        accelerator: isOSX() ? 'Alt+Cmd+I' : 'Ctrl+Shift+I',
+        click: (item: MenuItem, focusedWindow: BrowserWindow | undefined) => {
+          log.debug('Toggle Developer Tools.click()', { item, focusedWindow });
+          if (!focusedWindow) {
+            focusedWindow = mainWindow;
           }
-          return 'Ctrl+Shift+I';
-        })(),
-        click: (item, focusedWindow) => {
-          if (focusedWindow) {
-            focusedWindow.webContents.toggleDevTools();
-          }
+          focusedWindow.webContents.toggleDevTools();
         },
       },
     );
@@ -219,16 +278,23 @@ export function createMenu({
     submenu: [
       {
         label: `Built with Nativefier v${nativefierVersion}`,
-        click: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/jiahaog/nativefier');
+        click: (): void => {
+          openExternal('https://github.com/nativefier/nativefier').catch(
+            (err: unknown): void =>
+              log.error(
+                'Built with Nativefier v${nativefierVersion}.click ERROR',
+                err,
+              ),
+          );
         },
       },
       {
         label: 'Report an Issue',
-        click: () => {
-          // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          shell.openExternal('https://github.com/jiahaog/nativefier/issues');
+        click: (): void => {
+          openExternal('https://github.com/nativefier/nativefier/issues').catch(
+            (err: unknown): void =>
+              log.error('Report an Issue.click ERROR', err),
+          );
         },
       },
     ],
@@ -236,7 +302,7 @@ export function createMenu({
 
   let menuTemplate: MenuItemConstructorOptions[];
 
-  if (process.platform === 'darwin') {
+  if (isOSX()) {
     const electronMenu: MenuItemConstructorOptions = {
       label: 'E&lectron',
       submenu: [
@@ -268,7 +334,7 @@ export function createMenu({
         {
           label: 'Quit',
           accelerator: 'Cmd+Q',
-          click: appQuit,
+          role: 'quit',
         },
       ],
     };
@@ -286,6 +352,61 @@ export function createMenu({
     menuTemplate = [editMenu, viewMenu, windowMenu, helpMenu];
   }
 
-  const menu = Menu.buildFromTemplate(menuTemplate);
-  Menu.setApplicationMenu(menu);
+  return menuTemplate;
+}
+
+function injectBookmarks(menuTemplate: MenuItemConstructorOptions[]): void {
+  const bookmarkConfigPath = path.join(__dirname, '..', 'bookmarks.json');
+
+  if (!fs.existsSync(bookmarkConfigPath)) {
+    return;
+  }
+
+  try {
+    const bookmarksMenuConfig = JSON.parse(
+      fs.readFileSync(bookmarkConfigPath, 'utf-8'),
+    ) as BookmarksMenuConfig;
+    const submenu: MenuItemConstructorOptions[] =
+      bookmarksMenuConfig.bookmarks.map((bookmark) => {
+        switch (bookmark.type) {
+          case 'link':
+            if (!('title' in bookmark && 'url' in bookmark)) {
+              throw new Error(
+                'All links in the bookmarks menu must have a title and url.',
+              );
+            }
+            try {
+              new URL(bookmark.url);
+            } catch {
+              throw new Error('Bookmark URL "' + bookmark.url + '"is invalid.');
+            }
+            return {
+              label: bookmark.title,
+              click: (): void => {
+                goToURL(bookmark.url)?.catch((err: unknown): void =>
+                  log.error(`${bookmark.title}.click ERROR`, err),
+                );
+              },
+              accelerator:
+                'shortcut' in bookmark ? bookmark.shortcut : undefined,
+            };
+          case 'separator':
+            return {
+              type: 'separator',
+            };
+          default:
+            throw new Error(
+              'A bookmarks menu entry has an invalid type; type must be one of "link", "separator".',
+            );
+        }
+      });
+    const bookmarksMenu: MenuItemConstructorOptions = {
+      label: bookmarksMenuConfig.menuLabel,
+      submenu,
+    };
+    // Insert custom bookmarks menu between menus "View" and "Window"
+    menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);
+  } catch (err: unknown) {
+    log.error('Failed to load & parse bookmarks configuration JSON file.', err);
+  }
 }

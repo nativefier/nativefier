@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# USAGE
+
+# ./convertToTrayIcon <input png or icns> <outfilename>.png
+# Example
+# ./convertToTrayIcon ~/sample.icns ~/converted.png
+
+set -e
+
+SOURCE=$1
+DEST=$2
+
+if [ -z "${SOURCE}" ]; then
+	echo "No source image specified"
+	exit 1
+fi
+
+if [ -z "${DEST}" ]; then
+	echo "No destination specified"
+	exit 1
+fi
+
+NAME=$(basename "${SOURCE}")
+EXT="${NAME##*.}"
+
+if [ "${EXT}" == "png" ]; then
+    cp "${SOURCE}" "${DEST}"
+    exit 0
+fi
+
+sips --setProperty format png --resampleHeightWidth "256" "256" "${SOURCE}" --out "${DEST}"

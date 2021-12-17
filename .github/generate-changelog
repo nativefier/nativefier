@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# Updates the changelog and version in the package.json
+# Will also create a commit with these changes locally
+#
+# Usage:
+# ./.github/generate-changelog -- "7.0.0"
+#
+# Prerequisites:
+# - On master branch
+# - No uncommitted changes
+#
+# Dependencies:
+# - git-extras: https://github.com/tj/git-extras/blob/master/Installation.md
+# - jq: https://stedolan.github.io/jq/download/
+
+set -eo pipefail
+
+echo 'HEY YOU. Before you release, here is a report of outdated dependencies.'
+echo ' - Red upgrades fulfill semver and do *not* need any action'
+echo ' - Yellow upgrades *do* need looking at changelogs for breaking changes, and updating package.json'
+echo
+echo 'CLI:'
+npm out || true
+echo
+echo 'App:'
+cd app; npm out || true; cd ..
+echo
+echo 'Okay with this, or care to do/plan a few upgrades?'
+echo 'Press any key to continue, or Ctrl+C to abort'
+read -r
+
+echo 'HEY YOU, again. Did you run the quick pre-release smoke test? ( npm run test:manual )'
+echo 'Press any key to continue, or Ctrl+C to abort'
+read -r
+
+# Checks if we are on the master branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$BRANCH" != 'master' ]]; then
+  echo 'ERROR: not on master branch' >&2
+  exit 1;
+fi
+
+# Checks if there are uncommitted changes
+git diff-index --quiet HEAD -- || (echo 'ERROR: there are uncommitted changes' >&2 && exit 1)
+
+VERSION="$1"
+
+# Validates the $VERSION
+SEMVER_REGEX='^([0-9]+\.){2}([0-9]+)$'
+if ! [[ $VERSION =~ $SEMVER_REGEX ]]; then
+ echo "ERROR: Version '$VERSION' is invalid " >&2
+ exit 1
+fi
+
+# 1. Update the version in the package.json
+cat package.json | jq ".version = \"$VERSION\"" > package.json.tmp
+mv package.json.tmp package.json  # workaround for in-place jq editing
+
+# 2. Compile new commits from CHANGELOG.md, and open it in your EDITOR for cleanup
+git changelog CHANGELOG.md --tag "$VERSION"
+
+# 3. Commit the changes
+git add CHANGELOG.md
+git add package.json
+git commit -m "Update changelog for \`v$VERSION\`"
+
+# 4. Create an annotated tag
+git tag -a "v$VERSION" -m "v$VERSION"
+
+# 5. List remaining work
+echo
+echo 'Please verify commit & tag look fine in Git, then:'
+echo ' 1. Push:  git push --follow-tags origin master'
+echo ' 2. Create a GitHub Release at https://github.com/nativefier/nativefier/releases ,'
+echo "    using created tag v$VERSION and with title \"Nativefier v$VERSION\" (yes, with a \"v\")."
+echo
+echo 'GitHub Action "publish" will react on the new release, and publish it to npm.'
+echo 'The new version will be visible on npm within a few minutes/hours.'

@@ -1,6 +1,7 @@
 import 'source-map-support/register';
 
 import { buildNativefierApp } from './build/buildNativefierApp';
+import { RawOptions } from '../shared/src/options/model';
 
 export { buildNativefierApp };
 
@@ -9,12 +10,12 @@ export { buildNativefierApp };
  * Use the better, modern async `buildNativefierApp` instead if you can!
  */
 function buildNativefierAppOldCallbackStyle(
-  options: any, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
-  callback: (err: any, result?: any) => void,
+  options: RawOptions, // eslint-disable-line @typescript-eslint/explicit-module-boundary-types
+  callback: (err?: Error, result?: string) => void,
 ): void {
   buildNativefierApp(options)
-    .then((result) => callback(null, result))
-    .catch((err) => callback(err));
+    .then((result) => callback(undefined, result))
+    .catch((err: Error) => callback(err));
 }
 
 export default buildNativefierAppOldCallbackStyle;

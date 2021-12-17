@@ -17,22 +17,20 @@ async function tryToInferName(targetUrl: string): Promise<string> {
     log.debug('Inferring name for', targetUrl);
     const pageTitle = await inferTitle(targetUrl);
     return pageTitle || DEFAULT_APP_NAME;
-  } catch (err) {
+  } catch (err: unknown) {
     log.warn(
-      `Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'. Reason: ${(err as Error).toString()}`,
+      `Unable to automatically determine app name, falling back to '${DEFAULT_APP_NAME}'.`,
+      err,
     );
     return DEFAULT_APP_NAME;
   }
 }
 
 export async function name(options: NameParams): Promise<string> {
-  if (options.packager.name) {
-    log.debug(
-      `Got name ${options.packager.name} from options. No inferring needed`,
-    );
-    return sanitizeFilename(options.packager.platform, options.packager.name);
+  let name: string | undefined = options.packager.name;
+  if (!name) {
+    name = await tryToInferName(options.packager.targetUrl);
   }
 
-  const inferredName = await tryToInferName(options.packager.targetUrl);
-  return sanitizeFilename(options.packager.platform, inferredName);
+  return sanitizeFilename(options.packager.platform, name);
 }

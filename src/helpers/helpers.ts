@@ -1,20 +1,31 @@
+import { spawnSync } from 'child_process';
+import * as crypto from 'crypto';
 import * as os from 'os';
 import * as path from 'path';
 
 import axios from 'axios';
+import * as dns from 'dns';
 import * as hasbin from 'hasbin';
-import { ncp } from 'ncp';
 import * as log from 'loglevel';
 import * as tmp from 'tmp';
+
+import { parseJson } from '../utils/parseUtils';
+
 tmp.setGracefulCleanup(); // cleanup temp dirs even when an uncaught exception occurs
 
 const now = new Date();
 const TMP_TIME = `${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
 
-type DownloadResult = {
+export type DownloadResult = {
   data: Buffer;
   ext: string;
 };
+
+type ProcessEnvs = Record<string, unknown>;
+
+export function hasWine(): boolean {
+  return hasbin.sync('wine');
+}
 
 export function isOSX(): boolean {
   return os.platform() === 'darwin';
@@ -22,6 +33,16 @@ export function isOSX(): boolean {
 
 export function isWindows(): boolean {
   return os.platform() === 'win32';
+}
+
+export function isWindowsAdmin(): boolean {
+  if (process.platform !== 'win32') {
+    return false;
+  }
+
+  // https://stackoverflow.com/questions/4051883/batch-script-how-to-check-for-admin-rights
+  // https://stackoverflow.com/questions/57009374/check-admin-or-non-admin-users-in-nodejs-or-javascript
+  return spawnSync('fltmc').status === 0;
 }
 
 /**
@@ -36,29 +57,17 @@ export function getTempDir(prefix: string, mode?: number): string {
   }).name;
 }
 
-export async function copyFileOrDir(
-  sourceFileOrDir: string,
-  dest: string,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    ncp(sourceFileOrDir, dest, (error: any) => {
-      if (error) {
-        reject(error);
-      }
-      resolve();
-    });
-  });
-}
-
-export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
+export function downloadFile(
+  fileUrl: string,
+): Promise<DownloadResult | undefined> {
   log.debug(`Downloading ${fileUrl}`);
   return axios
-    .get(fileUrl, {
+    .get<Buffer>(fileUrl, {
       responseType: 'arraybuffer',
     })
     .then((response) => {
       if (!response.data) {
-        return null;
+        return undefined;
       }
       return {
         data: response.data,
@@ -68,8 +77,8 @@ export async function downloadFile(fileUrl: string): Promise<DownloadResult> {
 }
 
 export function getAllowedIconFormats(platform: string): string[] {
-  const hasIdentify = hasbin.sync('identify');
-  const hasConvert = hasbin.sync('convert');
+  const hasIdentify = hasbin.sync('identify') || hasbin.sync('gm');
+  const hasConvert = hasbin.sync('convert') || hasbin.sync('gm');
   const hasIconUtil = hasbin.sync('iconutil');
 
   const pngToIcns = hasConvert && hasIconUtil;
@@ -81,7 +90,7 @@ export function getAllowedIconFormats(platform: string): string[] {
   const icnsToPng = false;
   const icnsToIco = false;
 
-  const formats = [];
+  const formats: string[] = [];
 
   // Shell scripting is not supported on windows, temporary override
   if (isWindows()) {
@@ -150,4 +159,28 @@ export function isArgFormatInvalid(arg: string): boolean {
       /^-[a-z]{2,}$/i.exec(arg) !== null) &&
     !['--x', '--y'].includes(arg) // exception for long args --{x,y}
   );
+}
+
+export function generateRandomSuffix(length = 6): string {
+  const hash = crypto.createHash('md5');
+  // Add a random salt to help avoid collisions
+  hash.update(crypto.randomBytes(256));
+  return hash.digest('hex').substring(0, length);
+}
+
+export function getProcessEnvs(val: string): ProcessEnvs | undefined {
+  if (!val) {
+    return undefined;
+  }
+  return parseJson<ProcessEnvs>(val);
+}
+
+export function checkInternet(): void {
+  dns.lookup('npmjs.com', (err) => {
+    if (err && err.code === 'ENOTFOUND') {
+      log.warn(
+        '\nNo Internet Connection\nTo offline build, download electron from https://github.com/electron/electron/releases\nand place in ~/AppData/Local/electron/Cache/ on Windows,\n~/.cache/electron on Linux or ~/Library/Caches/electron/ on Mac\nUse --electron-version to specify the version you downloaded.',
+      );
+    }
+  });
 }

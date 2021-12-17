@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+# Manual test to validate some hard-to-programmatically-test features work.
+set -eo pipefail
+
+missingDeps=false
+if ! command -v mktemp > /dev/null; then echo "Missing mktemp"; missingDeps=true; fi
+if ! command -v uname > /dev/null; then echo "Missing uname"; missingDeps=true; fi
+if ! command -v node > /dev/null; then echo "Missing node"; missingDeps=true; fi
+if [ "$missingDeps" = true ]; then exit 1; fi
+
+function launch_app() {
+  printf '\n*** Running app\n'
+  if [ "$(uname -s)" = "Darwin" ]; then
+    open -a "$1/$2-darwin-x64/$2.app"
+  elif [ "$(uname -o)" = "Msys" ]; then
+    "$1/$2-win32-x64/$2.exe"
+  else
+    "$1/$2-linux-x64/$2"
+  fi
+}
+
+function do_cleanup() {
+  if [ -n "$1" ]; then
+    printf '\n***** Deleting test dir %s *****\n' "$1"
+    rm -rf "$1"
+    printf '\n'
+  fi
+}
+
+function request_feedback() {
+  printf '\nDid everything work as expected? [yN] '
+  read -r response
+
+  do_cleanup "$1"
+
+  if [ "$response" != 'y' ]; then
+    echo "Back to fixing"
+    exit 1
+  fi
+  echo "Yayyyyyyyyyyy"
+}
+
+printf "\n***** SMOKE TEST 1: Setting up test and building app... *****\n"
+script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+nativefier_dir="$script_dir/.."
+pushd "$nativefier_dir"
+tmp_dir=$(mktemp -d -t nativefier-manual-test-XXXXX)
+name="nativefier-smoke-test-1"
+resources_dir="$tmp_dir/resources"
+mkdir "$resources_dir"
+injected_css="$resources_dir/inject.css"
+injected_js="$resources_dir/inject.js"
+echo '* { background-color: blue; }' > "$injected_css"
+echo 'alert("hello world from inject");' > "$injected_js"
+
+node ./lib/cli.js 'https://npmjs.com/' \
+  --inject "$injected_css" \
+  --inject "$injected_js" \
+  --name "$name" \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 1: Test checklist *****
+- Injected js: should show an alert saying hello
+- Injected css: should make npmjs all blue
+- Internal links open internally
+- External links open in browser
+- Context menu -> Open Link In New Window works
+- MAC ONLY: Context menu -> Open Link In New Tab works
+- Keyboard shortcuts: {back, forward, zoom in/out/zero} work
+- Console: no Electron runtime deprecation warnings/error logged'
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf "\n***** SMOKE TEST 2: Setting up test and building app... *****\n"
+tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-XXXXX)
+name="nativefier-smoke-test-2"
+# Removing for now as httpbin is not presently up
+# node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+node ./lib/cli.js 'https://authenticationtest.com/HTTPAuth/' \
+  --basic-auth-username user \
+  --basic-auth-password pass \
+  --name "$name" \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 2: Test checklist *****
+- Was successfully logged in via HTTP Basic Auth. Should see a "Login Success" and a green banner.
+- Console: no Electron runtime deprecation warnings/error logged'
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 3: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-prompt-XXXXX)
+name='nativefier-smoke-test-3'
+# node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+node ./lib/cli.js 'https://authenticationtest.com/HTTPAuth/' \
+  --name "$name" \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 3: Test checklist *****
+- Should get a login window. Log in with username="user" and password="pass".
+- Post login, you should see a "Login Success" and a green banner.
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 4: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-tray-XXXXX)
+name='nativefier-smoke-test-4'
+node ./lib/cli.js 'https://google.com/' \
+  --name "$name" \
+  --tray \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 4: Test checklist *****
+- Should have an app with a tray icon
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 5: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-start-in-tray-XXXXX)
+name='nativefier-smoke-test-5'
+node ./lib/cli.js 'https://google.com/' \
+  --name "$name" \
+  --tray start-in-tray \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 5: Test checklist *****
+- Should have an app that does not show a window initially,
+  but will have a tray icon that will show the window.
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
