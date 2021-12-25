@@ -27,9 +27,11 @@ export async function icon(options: IconParams): Promise<string | undefined> {
       options.packager.platform,
     );
   } catch (err: unknown) {
+    // eslint-disable-next-line
+    const errorUrl: string = (err as any)?.config?.url;
     log.warn(
       'Cannot automatically retrieve the app icon:',
-      (err as Error).message,
+      errorUrl ? `${(err as Error).message} on ${errorUrl}` : err,
     );
     return undefined;
   }
