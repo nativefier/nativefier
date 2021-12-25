@@ -14,7 +14,7 @@ jobs:
       matrix:
         node-version:
           # Align the top Node version here with: 1. linter conditions later below, 2. publish.yml.
-          - 17.x
+          - '17'
           # Bumping the minimum required Node version? You must bump:
           #   1. package.json -> engines.node
           #   2. package.json -> devDependencies.@types/node
@@ -23,7 +23,7 @@ jobs:
           #
           # Here in ci.yml, we want to always run the oldest version we require in
           # package.json -> engines.node, to be sure Nativefier runs on this minimum
-          - 12.x
+          - '12'
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
