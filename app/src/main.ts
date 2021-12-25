@@ -5,7 +5,6 @@ import * as path from 'path';
 
 import electron, {
   app,
-  crashReporter,
   dialog,
   globalShortcut,
   systemPreferences,
