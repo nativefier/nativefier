@@ -59,11 +59,15 @@ if (appArgs.portable) {
 }
 
 if (!appArgs.userAgentHonest) {
-  app.userAgentFallback = removeUserAgentSpecifics(
-    app.userAgentFallback,
-    app.getName(),
-    app.getVersion(),
-  );
+  if (appArgs.userAgent) {
+    app.userAgentFallback = appArgs.userAgent;
+  } else {
+    app.userAgentFallback = removeUserAgentSpecifics(
+      app.userAgentFallback,
+      app.getName(),
+      app.getVersion(),
+    );
+  }
 }
 
 // Take in a URL on the command line as an override

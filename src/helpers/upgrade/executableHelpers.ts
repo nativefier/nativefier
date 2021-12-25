@@ -36,7 +36,6 @@ function getExecutableArch(
     case 'darwin':
     case 'mas':
       // https://opensource.apple.com/source/xnu/xnu-2050.18.24/EXTERNAL_HEADERS/mach-o/loader.h
-
       switch ((exeBytes[0x04] << 8) + exeBytes[0x05]) {
         case 0x0700:
           return 'x64';
@@ -45,7 +44,7 @@ function getExecutableArch(
         default:
           return undefined;
       }
-    case 'windows':
+    case 'win32':
       // https://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files#COFF_Header
       switch ((exeBytes[0x7d] << 8) + exeBytes[0x7c]) {
         case 0x014c:
@@ -118,7 +117,7 @@ export function getOptionsFromExecutable(
     log.debug('This looks like a Windows app...');
 
     if (newOptions.platform === undefined) {
-      newOptions.platform = 'windows';
+      newOptions.platform = 'win32';
     }
     executablePath = path.join(
       appRoot,

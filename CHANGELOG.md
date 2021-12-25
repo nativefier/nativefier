@@ -1,4 +1,43 @@
 
+45.0.8 / 2021-12-06
+===================
+
+  * Fix 45.0.7 broken because of missing "chalk" dep (fix #1324)
+
+45.0.7 / 2021-12-06
+===================
+
+  * Use userAgentFallback for user-agent injection (PR #1316)
+  * Fix `--upgrade` (PR #1286)
+  * Bump default Electron to 13.6.3 with fixes & security fixes
+    - 13.6.3: https://github.com/electron/electron/releases/tag/v13.6.3
+  * Maintenance: documentation, scripts, dependencies bumps
+  * Display "we need your help" message when running CLI:
+
+```
+Hi! Nativefier is minimally maintained these days, and needs more hands.
+If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.
+Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.
+```
+
+45.0.6 / 2021-11-22
+===================
+
+  * Fix notifications (PR #1308)
+  * Fix icon conversion scripts broken on recent macOS (fix #1277)
+  * Bump default Electron to 13.6.2, with bug fixes & security fixes
+    - 13.6.2: https://github.com/electron/electron/releases/tag/v13.6.2
+  * Maintenance: bump CI Nodejs to 17, Relock dependencies
+
+45.0.5 / 2021-11-01
+===================
+
+  * Bump default Electron to 13.6.1, with bug fixes & security fixes
+    - 13.5.2: https://github.com/electron/electron/releases/tag/v13.5.2
+    - 13.6.0: https://github.com/electron/electron/releases/tag/v13.6.0
+    - 13.6.1: https://github.com/electron/electron/releases/tag/v13.6.1
+  * Maintenance: Fix auth manual tests (#1287), Bumps (axios, eslint), Doc & script nits
+
 45.0.4 / 2021-09-24
 ===================
 

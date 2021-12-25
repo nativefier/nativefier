@@ -38,7 +38,7 @@ if [ -z "${DEST}" ]; then
 	exit 1
 fi
 
-TEMP_DIR="$(mktemp -d -t nativefier_icons)"
+TEMP_DIR="$(mktemp -d -t nativefier-icns-XXXXXX)"
 ICONSET="${TEMP_DIR}/converted.iconset"
 
 function cleanUp() {

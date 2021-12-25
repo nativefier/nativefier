@@ -10,7 +10,7 @@ export const DEFAULT_CHROME_VERSION = '93.0.4577.82';
 
 // Update each of these periodically
 // https://product-details.mozilla.org/1.0/firefox_versions.json
-export const DEFAULT_FIREFOX_VERSION = '92.0.1';
+export const DEFAULT_FIREFOX_VERSION = '94.0.2';
 
 // https://en.wikipedia.org/wiki/Safari_version_history
 export const DEFAULT_SAFARI_VERSION = {

@@ -638,6 +638,26 @@ if (require.main === module) {
     ...parsedArgs,
   };
 
+  if (options.verbose) {
+    log.setLevel('trace');
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      require('debug').enable('electron-packager');
+    } catch (err: unknown) {
+      log.debug(
+        'Failed to enable electron-packager debug output. This should not happen,',
+        'and suggests their internals changed. Please report an issue.',
+      );
+    }
+
+    log.debug(
+      'Running in verbose mode! This will produce a mountain of logs and',
+      'is recommended only for troubleshooting or if you like Shakespeare.',
+    );
+  } else {
+    log.setLevel('info');
+  }
+
   checkInternet();
 
   buildNativefierApp(options).catch((error) => {
