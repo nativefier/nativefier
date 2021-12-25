@@ -3,38 +3,44 @@ name: ci
 on:
   push:
     branches:
-    - master
+      - master
   pull_request:
     branches:
-    - master
+      - master
 
 jobs:
   build:
     strategy:
       matrix:
         node-version:
-        # Align the top Node version here with: 1. linter conditions later below, 2. publish.yml.
-        - 17.x
-        # Bumping the minimum required Node version? You must bump:
-        #   1. package.json -> engines.node
-        #   2. package.json -> devDependencies.@types/node
-        #   3. tsconfig.json -> {target, lib}
-        #   4. .github/workflows/ci.yml -> node-version
-        #
-        # Here in ci.yml, we want to always run the oldest version we require in
-        # package.json -> engines.node, to be sure Nativefier runs on this minimum
-        - 12.x
+          # Align the top Node version here with: 1. linter conditions later below, 2. publish.yml.
+          - 17.x
+          # Bumping the minimum required Node version? You must bump:
+          #   1. package.json -> engines.node
+          #   2. package.json -> devDependencies.@types/node
+          #   3. tsconfig.json -> {target, lib}
+          #   4. .github/workflows/ci.yml -> node-version
+          #
+          # Here in ci.yml, we want to always run the oldest version we require in
+          # package.json -> engines.node, to be sure Nativefier runs on this minimum
+          - 12.x
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    # Will also (through `prepare` hook): 1. install ./app, and 2. build
-    - run: npm ci --no-fund
-    # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
-    - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '17.x'
-      run: npm run lint
-    - run: npm test
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
+      # Will also (through `prepare` hook): 1. install ./app, and 2. build
+      - run: npm ci --no-fund
+      # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
+      - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '17.x'
+        run: npm run lint
+      - run: npm test
