@@ -17,7 +17,7 @@
         "source-map-support": "^0.5.19"
       },
       "devDependencies": {
-        "electron": "^14.1.0"
+        "electron": "^14.2.3"
       }
     },
     "node_modules/@electron/get": {
@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "14.18.0",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.0.tgz",
-      "integrity": "sha512-0GeIl2kmVMXEnx8tg1SlG6Gg8vkqirrW752KqolYo1PHevhhZN3bhJ67qHj+bQaINhX0Ra3TlWwRvMCd9iEfNQ==",
+      "version": "14.18.2",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.2.tgz",
+      "integrity": "sha512-fqtSN5xn/bBzDxMT77C1rJg6CsH/R49E7qsGuvdPJa20HtV5zSTuLJPNfnlyVH3wauKnkHdLggTVkOW/xP9oQg==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -296,9 +296,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "14.1.0",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-14.1.0.tgz",
-      "integrity": "sha512-MnZSITjtdrY6jM/z/qXcuJqbIvz7MbxHp9f1O93mq/vt7aTxHYgjerPSqwya/RoUjkPEm1gkz669FsRk6ZtMdQ==",
+      "version": "14.2.3",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-14.2.3.tgz",
+      "integrity": "sha512-7wBqvzUKhK1tw544w3+F8J7NajnqURGC4pH3VFTiBHU5ayiI/oaTTXJxyFLZ54zsR7xwon/3dYEVjIm2i68+Zg==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -1241,9 +1241,9 @@
       }
     },
     "@types/node": {
-      "version": "14.18.0",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.0.tgz",
-      "integrity": "sha512-0GeIl2kmVMXEnx8tg1SlG6Gg8vkqirrW752KqolYo1PHevhhZN3bhJ67qHj+bQaINhX0Ra3TlWwRvMCd9iEfNQ==",
+      "version": "14.18.2",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.2.tgz",
+      "integrity": "sha512-fqtSN5xn/bBzDxMT77C1rJg6CsH/R49E7qsGuvdPJa20HtV5zSTuLJPNfnlyVH3wauKnkHdLggTVkOW/xP9oQg==",
       "dev": true
     },
     "ansi-regex": {
@@ -1422,9 +1422,9 @@
       "dev": true
     },
     "electron": {
-      "version": "14.1.0",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-14.1.0.tgz",
-      "integrity": "sha512-MnZSITjtdrY6jM/z/qXcuJqbIvz7MbxHp9f1O93mq/vt7aTxHYgjerPSqwya/RoUjkPEm1gkz669FsRk6ZtMdQ==",
+      "version": "14.2.3",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-14.2.3.tgz",
+      "integrity": "sha512-7wBqvzUKhK1tw544w3+F8J7NajnqURGC4pH3VFTiBHU5ayiI/oaTTXJxyFLZ54zsR7xwon/3dYEVjIm2i68+Zg==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.0.1",
