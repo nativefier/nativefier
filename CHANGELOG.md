@@ -1,3 +1,18 @@
+46.0.0 / 2022-01-02
+===================
+
+  * Upgrade Electron from 13.6.3 & Chrome 91 to 16.0.5 & Chrome 96 (PR #1288)
+    We did our best to adapt to [Electron breaking changes](https://www.electronjs.org/docs/latest/breaking-changes) in 14/15/16, but as usual,
+    patches welcome to address regressions. For detailed release notes, see
+    - https://github.com/electron/electron/releases/tag/v14.0.0
+    - https://github.com/electron/electron/releases/tag/v15.0.0
+    - https://github.com/electron/electron/releases/tag/v16.0.0
+    - https://github.com/electron/electron/releases/tag/v16.0.1
+    - https://github.com/electron/electron/releases/tag/v16.0.2
+    - https://github.com/electron/electron/releases/tag/v16.0.3
+    - https://github.com/electron/electron/releases/tag/v16.0.4
+    - https://github.com/electron/electron/releases/tag/v16.0.5
+  * Build/CI: use setup-node-v2 cache to speed up build
 
 45.0.8 / 2021-12-06
 ===================
