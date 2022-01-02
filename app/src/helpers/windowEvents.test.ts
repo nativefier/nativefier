@@ -2,7 +2,7 @@ jest.mock('./helpers');
 jest.mock('./windowEvents');
 jest.mock('./windowHelpers');
 
-import { dialog, BrowserWindow, WebContents } from 'electron';
+import { dialog, BrowserWindow } from 'electron';
 import { WindowOptions } from '../../../shared/src/options/model';
 import { linkIsInternal, openExternal, nativeTabsSupported } from './helpers';
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -371,7 +371,7 @@ describe('onWillPreventUnload', () => {
   test('shows dialog and calls preventDefault on ok', () => {
     mockShowDialog.mockReturnValue(0);
 
-    const event = { preventDefault, sender: new WebContents() };
+    const event = { preventDefault, sender: {} };
     onWillPreventUnload(event);
 
     expect(mockFromWebContents).toHaveBeenCalledWith(event.sender);
@@ -382,7 +382,7 @@ describe('onWillPreventUnload', () => {
   test('shows dialog and does not call preventDefault on cancel', () => {
     mockShowDialog.mockReturnValue(1);
 
-    const event = { preventDefault, sender: new WebContents() };
+    const event = { preventDefault, sender: {} };
     onWillPreventUnload(event);
 
     expect(mockFromWebContents).toHaveBeenCalledWith(event.sender);
