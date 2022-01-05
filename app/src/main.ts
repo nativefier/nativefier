@@ -5,7 +5,6 @@ import * as path from 'path';
 
 import electron, {
   app,
-  crashReporter,
   dialog,
   globalShortcut,
   systemPreferences,
@@ -211,14 +210,6 @@ app.on('quit', (event, exitCode) => {
 
 app.on('will-finish-launching', () => {
   log.debug('app.will-finish-launching');
-  if (appArgs.crashReporter) {
-    crashReporter.start({
-      companyName: appArgs.companyName ?? '',
-      productName: appArgs.name,
-      submitURL: appArgs.crashReporter,
-      uploadToServer: true,
-    });
-  }
 });
 
 if (appArgs.widevine) {
