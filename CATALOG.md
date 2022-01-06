@@ -3,9 +3,9 @@
 Below you'll find a list of build commands contributed by the Nativefier community. They are here as examples, to help you nativefy "complicated" apps that need a bit of elbow grease to work. We need your help to enrich it, as long as you follow these two guidelines:
 
 1. Only add sites that require something special! No need to document here that `simplesite.com` works with a simple `nativefier simplesite.com` 🙂.
-2. Please add commands with the *strict necessary* to make an app work. For example,
-    - Yes to mention that `--widevine` or some `--browserwindow-options` are necessary...
-    - ... but don't add other flags that are pure personal preference (e.g. `--disable-dev-tools` or `--disk-cache-size`).
+2. Please add commands with the _strict necessary_ to make an app work. For example,
+   - Yes to mention that `--widevine` or some `--browserwindow-options` are necessary...
+   - ... but don't add other flags that are pure personal preference (e.g. `--disable-dev-tools` or `--disk-cache-size`).
 
 ---
 
@@ -53,6 +53,25 @@ nativefier 'https://play.hbomax.com/'
 
 Note: as for Udemy, `--widevine` + [app signing](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362) is necessary.
 
+## WhatsApp
+
+```sh
+nativefier 'https://web.whatsapp.com/'
+  --inject whatsapp.js
+```
+
+With this `--inject` in `whatsapp.js` (and maybe more, see [#1112](https://github.com/nativefier/nativefier/issues/1112)):
+
+```javascript
+if ('serviceWorker' in navigator) {
+  caches.keys().then(function (cacheNames) {
+    cacheNames.forEach(function (cacheName) {
+      caches.delete(cacheName);
+    });
+  });
+}
+```
+
 ## Spotify
 
 ```sh
@@ -66,56 +85,63 @@ Notes:
 
 - You might have to pass `--user-agent firefox` to circumvent Spotify's detection that your browser isn't a real Chrome. But [maybe not](https://github.com/nativefier/nativefier/issues/1195#issuecomment-855003776).
 - [Inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following javascript as `spotify.js` to prevent "Unsupported Browser" messages.
+
 ```javascript
 function dontShowBrowserNoticePage() {
-    const browserNotice = document.getElementById('browser-support-notice');
-    console.log({ browserNotice })
-    if (browserNotice) {
-        // When Spotify displays the browser notice, it's not just the notice,
-        // but the entire page is focused on not allowing you to proceed.
-        // So in this case, we hide the body element (so nothing shows)
-        // until our JS deletes the service worker and reload (which will actually load the player)
-        document.getElementsByTagName('body')[0].style.display = 'none';
-    }
+  const browserNotice = document.getElementById('browser-support-notice');
+  console.log({ browserNotice });
+  if (browserNotice) {
+    // When Spotify displays the browser notice, it's not just the notice,
+    // but the entire page is focused on not allowing you to proceed.
+    // So in this case, we hide the body element (so nothing shows)
+    // until our JS deletes the service worker and reload (which will actually load the player)
+    document.getElementsByTagName('body')[0].style.display = 'none';
+  }
 }
 
 function reload() {
-    window.location.href = window.location.href;
+  window.location.href = window.location.href;
 }
 
 function nukeWorkers() {
-    dontShowBrowserNoticePage();
-    if ('serviceWorker' in navigator) {
-        caches.keys().then(function (cacheNames) {
-            cacheNames.forEach(function (cacheName) {
-                console.debug('Deleting cache', cacheName);
-                caches.delete(cacheName);
-            });
-        });
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-            registrations.forEach((worker) =>
-                worker.unregister().then((u) => {
-                    console.debug('Unregistered worker', worker);
-                    reload();
-                }).catch((e) =>
-                    console.error('Unable to unregister worker', error, { worker })
-                )
-            );
-        });
-    }
+  dontShowBrowserNoticePage();
+  if ('serviceWorker' in navigator) {
+    caches.keys().then(function (cacheNames) {
+      cacheNames.forEach(function (cacheName) {
+        console.debug('Deleting cache', cacheName);
+        caches.delete(cacheName);
+      });
+    });
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((worker) =>
+        worker
+          .unregister()
+          .then((u) => {
+            console.debug('Unregistered worker', worker);
+            reload();
+          })
+          .catch((e) =>
+            console.error('Unable to unregister worker', error, { worker }),
+          ),
+      );
+    });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    nukeWorkers()
+  nukeWorkers();
 });
 
-if (document.readyState === "interactive") {
-    nukeWorkers();
+if (document.readyState === 'interactive') {
+  nukeWorkers();
 }
 ```
 
 - It is also required to [sign the app](https://github.com/nativefier/nativefier/blob/master/API.md#widevine), or many songs will not play.
 - To hide all download links (as if you were in the actual app), [inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following CSS as `spotify.css`:
+
 ```css
-a[href="/download"] { display: none; }
+a[href='/download'] {
+  display: none;
+}
 ```
