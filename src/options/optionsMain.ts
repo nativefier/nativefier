@@ -142,6 +142,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
     log.setLevel('info');
   }
 
+  let requestedElectronBefore16 = false;
   if (options.packager.electronVersion) {
     const requestedVersion: string = options.packager.electronVersion;
     if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
@@ -155,12 +156,18 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
         `\nSimply abort & re-run without passing the version flag to default to ${DEFAULT_ELECTRON_VERSION}`,
       );
     }
+    if (requestedMajorVersion < 16) {
+      requestedElectronBefore16 = true;
+    }
   }
 
   if (options.nativefier.widevine) {
+    const widevineSuffix = requestedElectronBefore16 ? '-wvvmp' : '+wvcus';
+    log.debug(`Using widevine release suffix "${widevineSuffix}"`);
     const widevineElectronVersion = `${
       options.packager.electronVersion as string
-    }-wvvmp`;
+    }${widevineSuffix}`;
+
     try {
       await axios.get(
         `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,
