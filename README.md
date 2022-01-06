@@ -19,9 +19,9 @@ with minimal fuss. Apps are wrapped by [Electron](https://www.electronjs.org/)
 (which uses Chromium under the hood) in an OS executable (`.app`, `.exe`, etc)
 usable on Windows, macOS and Linux.
 
-I built this because I grew tired of having to `alt-tab` to my browser and then search
-through numerous open tabs when using [Messenger](https://messenger.com) or
-[Whatsapp Web](https://web.whatsapp.com) ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativefier features:
+I built this because I grew tired of having to Alt-Tab to my browser and then search
+through numerous open tabs when using Messenger or
+Whatsapp Web ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativefier features:
 
 - Automatically retrieval of app icon / name
 - Injection of custom JS & CSS
@@ -43,22 +43,21 @@ Optional dependencies:
 
 ## Usage
 
-To create a native desktop app for [medium.com](https://medium.com),
-simply `nativefier "medium.com"`
+To create a desktop app for medium.com, simply `nativefier "medium.com"`
 
 Nativefier will try to determine the app name, and well as lots of other options.
 If desired, these options can be overwritten. For example, to override the name,
 `nativefier --name 'My Medium App' 'medium.com'`
 
-**Read the [API documentation](API.md) or run `nativefier --help`**
-to learn about other command-line flags usable to configure the packaged app.
+**Read the [API docs](API.md) or run `nativefier --help`**
+to learn about command-line flags usable to configure your app.
 
-To have high-resolution icons used by default for an app/domain, please
-contribute to the [icon repository](https://github.com/nativefier/nativefier-icons)!
+To have high-quality icons used by default for an app/domain, please
+contribute to the [icon repository](https://github.com/nativefier/nativefier-icons).
 
 ### Catalog
 
-For a list of build commands contributed by the Nativefier community, see [CATALOG.md file](CATALOG.md).
+See [CATALOG.md](CATALOG.md) for build commands & workarounds contributed by the community.
 
 ## Docker
 
@@ -95,26 +94,25 @@ Docs: [Developer / build / hacking](HACKING.md), [API / flags](API.md),
 
 ## Troubleshooting
 
-Generally, see [Catalog](CATALOG.md) for ideas & workarounds, and search in existing issues.
+Generally, see [CATALOG.md](CATALOG.md) for ideas & workarounds, and search in
+[existing issues](https://github.com/nativefier/nativefier/issues).
 
-### Site says I use an old/unsupported browser
+### Old/unsupported browser
 
 Some sites intentionally block Nativefier (or similar) apps, e.g. [Google](https://github.com/nativefier/nativefier/issues/831) and [WhatsApp](https://github.com/nativefier/nativefier/issues/1112).
 
 First, try setting the [`--user-agent`](https://github.com/nativefier/nativefier/blob/master/API.md#user-agent) to `firefox` or `safari`.
-
-If still broken, see [Catalog](CATALOG.md) for ideas & workarounds, and search in existing issues.
+If still broken, see [CATALOG.md](CATALOG.md) + existing issues.
 
 ### Videos won't play
 
 This issue comes up for certain sites like [HBO Max](https://github.com/nativefier/nativefier/issues/1153) and [Udemy](https://github.com/nativefier/nativefier/issues/1147).
 
-First, try our [`--widevine` flag](API.md#widevine).
-
-If still broken, see [Catalog](CATALOG.md) for ideas & workarounds, and search in existing issues.
+First, try [`--widevine`](API.md#widevine).
+If still broken, see [CATALOG.md](CATALOG.md) + existing issues.
 
 ### Settings cached between app rebuilds
 
-This issue can occur because the cache of the app and the app itself are kept separate by default. You can try clearing out the cache.
+This can occur because app cache lives separate from the app.
 
-Try delete your app's cache, which can be found in `<your_app_name_lower_case>-nativefier-<random_id>` in your OS's "App Data" directory (for Linux: `$XDG_CONFIG_HOME` or `~/.config` , for MacOS: `~/Library/Application Support/` , for Windows: `%APPDATA%` or `C:\Users\yourprofile\AppData\Roaming`)
+Try delete your app's cache, which is found at `<your_app_name_lower_case>-nativefier-<random_id>` in your OS's "App Data" directory (for Linux: `$XDG_CONFIG_HOME` or `~/.config` , for MacOS: `~/Library/Application Support/` , for Windows: `%APPDATA%` or `C:\Users\yourprofile\AppData\Roaming`)
