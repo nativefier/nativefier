@@ -1,3 +1,11 @@
+
+46.0.1 / 2022-01-06
+===================
+
+  * Fix `--widevine` broken since 46.0.0
+    - https://github.com/electron/electron/releases/tag/v16.0.6
+  * Bump default Electron from 16.0.5 to 16.0.6
+
 46.0.0 / 2022-01-02
 ===================
 
