@@ -2,7 +2,7 @@
 
 ![Example of Nativefier app in the macOS dock](.github/dock-screenshot.png)
 
-You want to make a native wrapper for WhatsApp Web (or any web page).
+You want to make a native-looking wrapper for WhatsApp Web (or any web page).
 
 ```bash
 nativefier 'web.whatsapp.com'
