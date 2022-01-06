@@ -14,7 +14,7 @@ You're done.
 
 ## Introduction
 
-Nativefier is a command-line tool to easily create a "desktop app" for any web site
+Nativefier is a command-line tool to easily create a “desktop app” for any web site
 with minimal fuss. Apps are wrapped by [Electron](https://www.electronjs.org/)
 (which uses Chromium under the hood) in an OS executable (`.app`, `.exe`, etc)
 usable on Windows, macOS and Linux.
@@ -43,7 +43,7 @@ Optional dependencies:
 
 ## Usage
 
-To create a desktop app for medium.com, simply `nativefier "medium.com"`
+To create a desktop app for medium.com, simply `nativefier 'medium.com'`
 
 Nativefier will try to determine the app name, and well as lots of other options.
 If desired, these options can be overwritten. For example, to override the name,
