@@ -17,7 +17,7 @@
         "source-map-support": "^0.5.19"
       },
       "devDependencies": {
-        "electron": "^16.0.5"
+        "electron": "^16.0.6"
       }
     },
     "node_modules/@electron/get": {
@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "14.18.4",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.4.tgz",
-      "integrity": "sha512-swe3lD4izOJWHuxvsZdDFRq6S9i6koJsXOnQKYekhSO5JTizMVirUFgY/bUsaOJQj8oSD4oxmRYPBM/0b6jpdw==",
+      "version": "14.18.5",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.5.tgz",
+      "integrity": "sha512-LMy+vDDcQR48EZdEx5wRX1q/sEl6NdGuHXPnfeL8ixkwCOSZ2qnIyIZmcCbdX0MeRqHhAcHmX+haCbrS8Run+A==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -296,9 +296,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "16.0.5",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.5.tgz",
-      "integrity": "sha512-TgQXWmEGQ3uH2P2JDq5GyJDEu/fimRgqp1iNisARtGreU1k3630PqWlR+4SPnSEHN9NuSv92ng6NWxtefeFzxg==",
+      "version": "16.0.6",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.6.tgz",
+      "integrity": "sha512-Xs9dYLYhcJf3wXn8m2gDqFTb1L862KEhMxOx9swfFBHj6NoUPPtUgw/RyPQ0tXN1XPxG9vnBkoI0BdcKwrLKuQ==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -618,9 +618,9 @@
       }
     },
     "node_modules/graceful-fs": {
-      "version": "4.2.8",
-      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.8.tgz",
-      "integrity": "sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==",
+      "version": "4.2.9",
+      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.9.tgz",
+      "integrity": "sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==",
       "devOptional": true
     },
     "node_modules/http-cache-semantics": {
@@ -1241,9 +1241,9 @@
       }
     },
     "@types/node": {
-      "version": "14.18.4",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.4.tgz",
-      "integrity": "sha512-swe3lD4izOJWHuxvsZdDFRq6S9i6koJsXOnQKYekhSO5JTizMVirUFgY/bUsaOJQj8oSD4oxmRYPBM/0b6jpdw==",
+      "version": "14.18.5",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.5.tgz",
+      "integrity": "sha512-LMy+vDDcQR48EZdEx5wRX1q/sEl6NdGuHXPnfeL8ixkwCOSZ2qnIyIZmcCbdX0MeRqHhAcHmX+haCbrS8Run+A==",
       "dev": true
     },
     "ansi-regex": {
@@ -1422,9 +1422,9 @@
       "dev": true
     },
     "electron": {
-      "version": "16.0.5",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.5.tgz",
-      "integrity": "sha512-TgQXWmEGQ3uH2P2JDq5GyJDEu/fimRgqp1iNisARtGreU1k3630PqWlR+4SPnSEHN9NuSv92ng6NWxtefeFzxg==",
+      "version": "16.0.6",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.6.tgz",
+      "integrity": "sha512-Xs9dYLYhcJf3wXn8m2gDqFTb1L862KEhMxOx9swfFBHj6NoUPPtUgw/RyPQ0tXN1XPxG9vnBkoI0BdcKwrLKuQ==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.13.0",
@@ -1680,9 +1680,9 @@
       }
     },
     "graceful-fs": {
-      "version": "4.2.8",
-      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.8.tgz",
-      "integrity": "sha512-qkIilPUYcNhJpd33n0GBXTB1MMPp14TxEsEs0pTrsSVucApsYzW5V+Q8Qxhik6KU3evy+qkAAowTByymK0avdg==",
+      "version": "4.2.9",
+      "resolved": "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.9.tgz",
+      "integrity": "sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==",
       "devOptional": true
     },
     "http-cache-semantics": {

@@ -4,9 +4,9 @@ export const DEFAULT_APP_NAME = 'APP';
 
 // Update both DEFAULT_ELECTRON_VERSION and DEFAULT_CHROME_VERSION together,
 // and update app / package.json / devDeps / electron to value of DEFAULT_ELECTRON_VERSION
-export const DEFAULT_ELECTRON_VERSION = '16.0.5';
+export const DEFAULT_ELECTRON_VERSION = '16.0.6';
 // https://atom.io/download/atom-shell/index.json
-export const DEFAULT_CHROME_VERSION = '96.0.4664.55';
+export const DEFAULT_CHROME_VERSION = '96.0.4664.110';
 
 // Update each of these periodically
 // https://product-details.mozilla.org/1.0/firefox_versions.json
