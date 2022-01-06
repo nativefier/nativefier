@@ -36,6 +36,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Tag and push Docker image
         run: |
-          docker tag "nativefier/nativefier:latest" "nativefier/nativefier:${GITHUB_SHA::8}"
+          docker tag "nativefier/nativefier:latest" "nativefier/nativefier:${GITHUB_REF_NAME}"
           docker push "nativefier/nativefier:latest"
-          docker push "nativefier/nativefier:${GITHUB_SHA::8}"
+          docker push "nativefier/nativefier:${GITHUB_REF_NAME}"
