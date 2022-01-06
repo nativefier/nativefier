@@ -69,8 +69,8 @@ Nativefier is also usable from Docker:
 - ... or build it yourself: `docker build -t local/nativefier .`
   (in this case, replace `nativefier/` in the below examples with `local/`)
 
-By default, the command `nativefier --help` will be executed.
-To build e.g. a Gmail app to a writable local `~/nativefier-apps`,
+By default, `nativefier --help` will be executed.
+To build e.g. a Gmail app into `~/nativefier-apps`,
 
 ```bash
 docker run --rm -v ~/nativefier-apps:/target/ nativefier/nativefier https://mail.google.com/ /target/
