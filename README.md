@@ -24,7 +24,6 @@ through numerous open tabs when using [Messenger](https://messenger.com) or
 [Whatsapp Web](https://web.whatsapp.com) ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativefier features:
 
 - Automatically retrieval of app icon / name
-- JavaScript and CSS injection
 - Injection of custom JS & CSS
 - Many more, see the [API docs](API.md) or `nativefier --help`
 
