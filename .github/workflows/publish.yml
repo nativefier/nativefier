@@ -2,52 +2,40 @@ name: publish
 on:
   release:
     types:
-    - created
+      - created
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      # Setup .npmrc file to publish to npm
-    - uses: actions/setup-node@v1
-      with:
-        # Align the version of Node here with ci.yml.
-        node-version: '17.x'
-        registry-url: 'https://registry.npmjs.org'
-    # Will also (through `prepare` hook): 1. install ./app, and 2. build
-    - run: npm ci --no-fund
-    - run: npm test
-    - run: npm run lint
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        
-  # Docker build image and push to DockerHub
+      - uses: actions/checkout@v2
+        # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v1
+        with:
+          # Align the version of Node here with ci.yml.
+          node-version: '17.x'
+          registry-url: 'https://registry.npmjs.org'
+      # Will also (through `prepare` hook): 1. install ./app, and 2. build
+      - run: npm ci --no-fund
+      - run: npm test
+      - run: npm run lint
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   docker:
     needs: build
-
-    env:
-      IMAGE_ID: ${{ secrets.DOCKERHUB_USERNAME }}/nativefier
-    
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
-
-      - name: Build image
-        run: docker build . --file Dockerfile --tag "$IMAGE_ID:latest"
-
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag "nativefier/nativefier:latest"
       - name: Login to Docker Hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: Tag and Push
+      - name: Tag and push Docker image
         run: |
-          # Tag docker image the commit SHA
-          docker tag "$IMAGE_ID:latest" "$IMAGE_ID:${GITHUB_SHA::8}"
-          
-          # Push the images to the registry
-          docker push "$IMAGE_ID:latest"
-          docker push "$IMAGE_ID:${GITHUB_SHA::8}"
+          docker tag "nativefier/nativefier:latest" "nativefier/nativefier:${GITHUB_SHA::8}"
+          docker push "nativefier/nativefier:latest"
+          docker push "nativefier/nativefier:${GITHUB_SHA::8}"
