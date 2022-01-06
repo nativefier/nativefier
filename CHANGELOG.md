@@ -1,4 +1,9 @@
 
+46.0.3 / 2022-01-06
+===================
+
+  * CI: (Attempt to) push Docker image to our org, not my personal account
+
 46.0.2 / 2022-01-06
 ===================
 
