@@ -14,30 +14,33 @@ You're done.
 
 ## Introduction
 
-Nativefier is a command-line tool to easily create a desktop app for any web site
-with minimal configuration. Apps are wrapped by [Electron](https://www.electronjs.org/)
+Nativefier is a command-line tool to easily create a "desktop app" for any web site
+with minimal fuss. Apps are wrapped by [Electron](https://www.electronjs.org/)
 (which uses Chromium under the hood) in an OS executable (`.app`, `.exe`, etc)
-for use on Windows, macOS and Linux.
+usable on Windows, macOS and Linux.
 
-I did this because I was tired of having to `⌘-tab` or `alt-tab` to my browser and then search
-through the numerous open tabs when I was using [Facebook Messenger](https://messenger.com) or
+I built this because I grew tired of having to `alt-tab` to my browser and then search
+through numerous open tabs when using [Messenger](https://messenger.com) or
 [Whatsapp Web](https://web.whatsapp.com) ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativefier features:
 
-- Automatically retrieval of app icon / name.
-- JavaScript and CSS injection.
+- Automatically retrieval of app icon / name
+- JavaScript and CSS injection
+- Injection of custom JS & CSS
 - Many more, see the [API docs](API.md) or `nativefier --help`
 
 ## Installation
 
-- macOS 10.9+ / Windows / Linux
-- [Node.js](https://nodejs.org/) `>= 12.9` and npm `>= 6.9`
-- Optional dependencies:
-  - [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) to convert icons.
-    Make sure `convert` and `identify` or `gm` are in your system `$PATH`.
-  - [Wine](https://www.winehq.org/) to package Windows apps under non-Windows platforms.
-    Make sure `wine` is in your system `$PATH`.
+Install Nativefier globally with `npm install -g nativefier` . Requirements:
 
-Then, install Nativefier globally with `npm install -g nativefier`
+- macOS 10.9+ / Windows / Linux
+- [Node.js](https://nodejs.org/) ≥ 12.9 and npm ≥ 6.9
+
+Optional dependencies:
+
+- [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) to convert icons.
+  Be sure `convert` + `identify` or `gm` are in your `$PATH`.
+- [Wine](https://www.winehq.org/) to build Windows apps from non-Windows platforms.
+  Be sure `wine` is in your `$PATH`.
 
 ## Usage
 
@@ -84,7 +87,7 @@ docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target nativefier/na
 Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
 [feature requests](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request)!
 
-[Developer / build / hacking docs](HACKING.md), [API documentation](API.md),
+Docs: [Developer / build / hacking](HACKING.md), [API / flags](API.md),
 [Changelog](CHANGELOG.md).
 
 ## License
