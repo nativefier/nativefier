@@ -11,14 +11,19 @@ Below you'll find a list of build commands contributed by the Nativefier communi
 
 ## Google apps
 
-(This example documents Google Sheets, but is applicable to other Google apps)
+(This example documents Google Sheets, but is applicable to other Google apps,
+e.g. Google Calendar)
 
 ```sh
 nativefier 'https://docs.google.com/spreadsheets' \
   --user-agent firefox
 ```
 
-Note: lying about the User Agent is required, else Google will notice your "Chrome" isn't a real Chrome, and will refuse access.
+Note: lying about the User Agent is required, else Google will notice your
+"Chrome" isn't a real Chrome, and will:
+
+1. Refuse login
+2. Break notifications
 
 ## Outlook
 
