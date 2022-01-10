@@ -30,7 +30,7 @@ what you need to know to get started hacking on Nativefier.
 4. **Avoid adding npm dependencies**. Each new dep is a complexity & security liability.
    You might be thinking your extra dep is _"just a little extra dep"_, and maybe
    you found one that is high-quality & dependency-less. Still, it's an extra dep,
-   and over the life of Nativefier we requested changes to *dozens* of PRs to avoid
+   and over the life of Nativefier we requested changes to _dozens_ of PRs to avoid
    "just a little extra dep". Without this constant attention, Nativefier would be
    more bloated, less stable for users, more annoying to maintainers. Now, don't go
    rewriting zlib if you need a zlib dep, for sure use a dep. But if you can write a
@@ -125,15 +125,15 @@ When a new major [Electron release](https://github.com/electron/electron/release
 2. Thoroughly digest the new version's [breaking changes](https://www.electronjs.org/docs/breaking-changes)
    (also via the [Releases page](https://github.com/electron/electron/releases), the content is different),
    grepping our codebase for every changed API.
-    - If called for by the breaking changes, perform the necessary API changes
+   - If called for by the breaking changes, perform the necessary API changes
 3. Bump `src/constants.ts` / `DEFAULT_ELECTRON_VERSION` & `DEFAULT_CHROME_VERSION`
    and `app / package.json / devDeps / electron`
 4. On Windows, macOS, Linux, test for regression and crashes:
-    1. With `npm test` and `npm run test:manual`
-    2. With extra manual testing
+   1. With `npm test` and `npm run test:manual`
+   2. With extra manual testing
 5. When confident enough, release it in a regression-spelunking-friendly way:
-    1. If `master` has unreleased commits, make a patch/minor release with them, but without the major Electron bump.
-    2. Commit your Electron major bump and release it as a major new Nativefier version. Help users identify the breaking change by using a bold **[BREAKING]** marker in `CHANGELOG.md` and in the GitHub release.
+   1. If `master` has unreleased commits, make a patch/minor release with them, but without the major Electron bump.
+   2. Commit your Electron major bump and release it as a major new Nativefier version. Help users identify the breaking change by using a bold **[BREAKING]** marker in `CHANGELOG.md` and in the GitHub release.
 
 ### Deps updates
 
