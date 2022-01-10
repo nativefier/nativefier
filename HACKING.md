@@ -26,6 +26,7 @@ what you need to know to get started hacking on Nativefier.
    Introducing breaking changes willy nilly is a comfort to us developers, but is
    disrespectful to end users who must constantly bend to the flow of breaking changes
    pushed by _all their software_ who think it's "just one breaking change".
+   See [Rich Hickey - Spec-ulation](https://www.youtube.com/watch?v=oyLBGkS5ICk).
 
 4. **Avoid adding npm dependencies**. Each new dep is a complexity & security liability.
    You might be thinking your extra dep is _"just a little extra dep"_, and maybe
