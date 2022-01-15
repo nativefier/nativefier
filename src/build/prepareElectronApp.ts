@@ -80,6 +80,7 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     quiet: options.packager.quiet,
     showMenuBar: options.nativefier.showMenuBar,
     singleInstance: options.nativefier.singleInstance,
+    strictInternalUrls: options.nativefier.strictInternalUrls,
     targetUrl: options.packager.targetUrl,
     titleBarStyle: options.nativefier.titleBarStyle,
     tray: options.nativefier.tray,

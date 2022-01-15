@@ -46,6 +46,7 @@ const mockedAsyncConfig: AppOptions = {
     proxyRules: undefined,
     showMenuBar: false,
     singleInstance: false,
+    strictInternalUrls: false,
     titleBarStyle: undefined,
     tray: 'false',
     userAgent: undefined,

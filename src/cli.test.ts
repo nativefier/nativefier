@@ -221,6 +221,7 @@ describe('initArgs + parseArgs', () => {
     { arg: 'portable', shortArg: '' },
     { arg: 'show-menu-bar', shortArg: 'm' },
     { arg: 'single-instance', shortArg: '' },
+    { arg: 'strict-internal-urls', shortArg: '' },
     { arg: 'verbose', shortArg: '' },
     { arg: 'widevine', shortArg: '' },
   ])('test boolean arg %s', ({ arg, shortArg }) => {

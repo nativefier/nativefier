@@ -73,7 +73,7 @@ export function onNewWindowHelper(
     parent,
   });
   try {
-    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+    if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls, options.strictInternalUrls)) {
       preventDefault();
       if (options.blockExternalUrls) {
         return new Promise((resolve) => {
@@ -121,7 +121,7 @@ export function onWillNavigate(
   urlToGo: string,
 ): Promise<void> {
   log.debug('onWillNavigate', { options, event, urlToGo });
-  if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls)) {
+  if (!linkIsInternal(options.targetUrl, urlToGo, options.internalUrls, options.strictInternalUrls)) {
     event.preventDefault();
     if (options.blockExternalUrls) {
       return new Promise((resolve) => {
