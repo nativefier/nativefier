@@ -22,23 +22,23 @@ test('the original url should be internal', () => {
   expect(linkIsInternal(internalUrl, internalUrl, undefined, false)).toEqual(true);
 });
 
-test('the original url should be internal with strict mode on', () => {
+test('the original url should be internal with --strict-internal-urls on', () => {
   expect(linkIsInternal(internalUrl, internalUrl, undefined, true)).toEqual(true);
 });
 
-test('sub-paths of the original url should be internal with --strict-mode off', () => {
+test('sub-paths of the original url should be internal with --strict-internal-urls off', () => {
   expect(
     linkIsInternal(internalUrl, internalUrl + internalUrlSubPath, undefined, false),
   ).toEqual(true);
 });
 
-test('sub-paths of the original url should not be internal with --strict-mode on', () => {
+test('sub-paths of the original url should not be internal with --strict-internal-urls on', () => {
   expect(
     linkIsInternal(internalUrl, internalUrl + internalUrlSubPath, undefined, true),
   ).toEqual(false);
 });
 
-test('sub-paths of the original url should be internal with using a regex and --strict-mode on', () => {
+test('sub-paths of the original url should be internal with using a regex and --strict-internal-urls on', () => {
   expect(
     linkIsInternal(internalUrl, internalUrl + internalUrlSubPath, internalUrlSubPathRegex, true),
   ).toEqual(false);

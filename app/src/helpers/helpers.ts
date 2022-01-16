@@ -134,30 +134,31 @@ export function linkIsInternal(
     }
   }
 
+  if (isStrictInternalUrlsEnabled) {
+    return currentUrl == newUrl;
+  }
   
-  if (!isStrictInternalUrlsEnabled) {
-    try {
-      // Consider as "same domain-ish", without TLD/SLD list:
-      // 1. app.foo.com and foo.com
-      // 2. www.foo.com and foo.com
-      // 3. www.foo.com and app.foo.com
+  try {
+    // Consider as "same domain-ish", without TLD/SLD list:
+    // 1. app.foo.com and foo.com
+    // 2. www.foo.com and foo.com
+    // 3. www.foo.com and app.foo.com
 
-      // Only use the tld and the main domain for domain-ish test
-      // Enables domain-ish equality for blog.foo.com and shop.foo.com
-      return domainify(currentUrl) === domainify(newUrl);
-    } catch (err: unknown) {
-      log.error(
-        'Failed to parse domains as determining if link is internal. From:',
-        currentUrl,
-        'To:',
-        newUrl,
-        err,
-      );
-      return false;
-    }
-   }
+    // Only use the tld and the main domain for domain-ish test
+    // Enables domain-ish equality for blog.foo.com and shop.foo.com
+    return domainify(currentUrl) === domainify(newUrl);
+  } catch (err: unknown) {
+    log.error(
+      'Failed to parse domains as determining if link is internal. From:',
+      currentUrl,
+      'To:',
+      newUrl,
+      err,
+    );
+    return false;
+  }
 
-   return currentUrl == newUrl;
+   return false;
 }
 
 export function nativeTabsSupported(): boolean {

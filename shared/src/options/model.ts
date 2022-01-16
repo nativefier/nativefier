@@ -46,7 +46,7 @@ export interface AppOptions {
     hideWindowFrame: boolean;
     ignoreCertificate: boolean;
     ignoreGpuBlacklist: boolean;
-    inject?: string[]
+    inject?: string[];
     insecure: boolean;
     internalUrls?: string;
     lang?: string;
