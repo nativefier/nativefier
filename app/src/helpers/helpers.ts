@@ -157,8 +157,6 @@ export function linkIsInternal(
     );
     return false;
   }
-
-   return false;
 }
 
 export function nativeTabsSupported(): boolean {
