@@ -48,6 +48,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
       out: rawOptions.out ?? process.cwd(),
       overwrite: rawOptions.overwrite,
+      quiet: rawOptions.quiet ?? false,
       platform: rawOptions.platform,
       portable: rawOptions.portable ?? false,
       targetUrl:
@@ -99,6 +100,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       lang: rawOptions.lang,
       maximize: rawOptions.maximize ?? false,
       nativefierVersion: packageJson.version,
+      quiet: rawOptions.quiet ?? false,
       processEnvs: rawOptions.processEnvs,
       proxyRules: rawOptions.proxyRules,
       showMenuBar: rawOptions.showMenuBar ?? false,
@@ -139,7 +141,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       'is recommended only for troubleshooting or if you like Shakespeare.',
     );
   } else {
-    log.setLevel('info');
+    log.setLevel(options.nativefier.quiet ? 'silent' : 'info');
   }
 
   let requestedElectronBefore16 = false;
