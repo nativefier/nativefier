@@ -129,6 +129,7 @@ function trimUnprocessableOptions(options: AppOptions): void {
 export async function buildNativefierApp(
   rawOptions: RawOptions,
 ): Promise<string | undefined> {
+  // early-suppress potential logging before full options handling
   if (rawOptions.quiet) {
     log.setLevel('silent');
   }
