@@ -506,8 +506,13 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       description: 'enable verbose/debug/troubleshooting logs',
       type: 'boolean',
     })
+    .option('quiet', {
+      default: false,
+      description: 'suppress all logging',
+      type: 'boolean',
+    })
     .group(
-      ['crash-reporter', 'verbose'],
+      ['crash-reporter', 'verbose', 'quiet'],
       decorateYargOptionGroup('Debug Options'),
     )
     .version()
@@ -654,6 +659,8 @@ if (require.main === module) {
       'Running in verbose mode! This will produce a mountain of logs and',
       'is recommended only for troubleshooting or if you like Shakespeare.',
     );
+  } else if (options.quiet) {
+    log.setLevel('silent');
   } else {
     log.setLevel('info');
   }

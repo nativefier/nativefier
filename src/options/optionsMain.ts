@@ -140,8 +140,10 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       'Running in verbose mode! This will produce a mountain of logs and',
       'is recommended only for troubleshooting or if you like Shakespeare.',
     );
+  } else if (options.nativefier.quiet) {
+    log.setLevel('silent');
   } else {
-    log.setLevel(options.nativefier.quiet ? 'silent' : 'info');
+    log.setLevel('info');
   }
 
   let requestedElectronBefore16 = false;
