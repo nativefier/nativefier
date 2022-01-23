@@ -54,6 +54,7 @@ export interface AppOptions {
     nativefierVersion: string;
     processEnvs?: string;
     proxyRules?: string;
+    quiet?: boolean;
     showMenuBar: boolean;
     singleInstance: boolean;
     titleBarStyle?: TitleBarValue;
@@ -179,6 +180,7 @@ export type RawOptions = {
   portable?: boolean;
   processEnvs?: string;
   proxyRules?: string;
+  quiet?: boolean;
   showMenuBar?: boolean;
   singleInstance?: boolean;
   targetUrl?: string;
