@@ -18,7 +18,11 @@ const internalUrlSubPath = 'topic/technology';
 const externalUrl = 'https://www.wikipedia.org/wiki/Electron';
 const wildcardRegex = /.*/;
 
-test('the original url should be internal', () => {
+test('the original url should be internal without --strict-internal-urls', () => {
+  expect(linkIsInternal(internalUrl, internalUrl, undefined, undefined)).toEqual(true);
+});
+
+test('the original url should be internal with --strict-internal-urls off', () => {
   expect(linkIsInternal(internalUrl, internalUrl, undefined, false)).toEqual(true);
 });
 
