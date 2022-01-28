@@ -31,9 +31,9 @@ parts:
     source-type: git
     
     override-build: |
-      npm install
+      npm install --dev
       snapcraftctl build
-      
+
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
