@@ -36,7 +36,7 @@ parts:
       - git
       - npm
     
-    stage-pacakges:
+    stage-packages:
       - npm
 
     override-pull: |
