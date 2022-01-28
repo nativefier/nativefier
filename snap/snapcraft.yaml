@@ -30,7 +30,7 @@ parts:
     source-type: git
     override-build: |
       npm install nativefier -g --unsafe-perm=true
-      cp -rv ./nativefier* $SNAPCRAFT_PART_INSTALL/nativefier
+      cp -rv nativefier* $SNAPCRAFT_PART_INSTALL/nativefier
 
     build-packages:
       - git
