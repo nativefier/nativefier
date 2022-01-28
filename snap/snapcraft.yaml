@@ -42,3 +42,9 @@ parts:
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
+      
+  homeishome-launch:
+    plugin: nil
+    stage-snaps:
+      - homeishome-launch        
+      
