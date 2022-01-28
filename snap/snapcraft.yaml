@@ -31,6 +31,7 @@ parts:
     npm-node-version: "16.13.2"
     build-environment:
       - npm_config_global: 'true'
+      - npm_config_unsafe_perm: 'true'
     build-packages:
       - git
       - npm
