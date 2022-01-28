@@ -28,6 +28,9 @@ parts:
     plugin: npm
     source: https://github.com/nativefier/nativefier.git
     source-type: git
+    npm-node-version: "16.13.2"
+    build-environment:
+      - npm_config_global: 'true'
     build-packages:
       - git
       - npm
