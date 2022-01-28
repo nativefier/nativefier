@@ -16,7 +16,7 @@ assumes:
   
 apps:
   nativefier: 
-    command: nativefier
+    command: bin/nativefier
     command-chain: 
       - bin/homeishome-launch
     plugs:
@@ -31,7 +31,7 @@ parts:
     source-type: git
     
     override-build: |
-      npm install --dev
+      npm install
       snapcraftctl build
       
     override-pull: |
