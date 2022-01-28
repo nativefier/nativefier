@@ -25,15 +25,18 @@ apps:
   
 parts: 
   nativefier:
-    plugin: npm
+    plugin: nil
     source: https://github.com/nativefier/nativefier.git
     source-type: git
-    npm-node-version: "16.13.2"
-    build-environment:
-      - npm_config_global: 'true'
-      - npm_config_unsafe_perm: 'true'
+    override-build: |
+      npm install nativefier -g --unsafe-perm=true
+      cp -rv ./nativefier* $SNAPCRAFT_PART_INSTALL/nativefier
+
     build-packages:
       - git
+      - npm
+    
+    stage-pacakges:
       - npm
 
     override-pull: |
