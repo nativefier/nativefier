@@ -1,4 +1,4 @@
-name:
+name: nativefier
 adopt-info: nativefier
 summary: Nativefier is a command-line tool to easily create a “desktop app”
 description: |
@@ -34,3 +34,7 @@ parts:
     build-packages:
       - git
       - npm
+
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
