@@ -1,0 +1,33 @@
+name:
+adopt-info: nativefier
+summary: Nativefier is a command-line tool to easily create a “desktop app”
+description: |
+  Nativefier is a command-line tool to easily create a “desktop app” for any web site with minimal fuss. 
+  Apps are wrapped by Electron (which uses Chromium under the hood) in an OS executable (.app, .exe, etc) usable on Windows, macOS and Linux.
+  
+license: MIT
+
+base: core20
+grade: stable
+confinement: strict
+
+assumes:
+  - command-chain
+
+apps:
+  nativefier: 
+    command: nativefier
+    command-chain: 
+      - bin/homeishome-launch
+    plugs:
+      - network
+      - home  
+  
+parts: 
+  nativefier:
+    plugin: npm
+    source: https://github.com/nativefier/nativefier.git
+    source-type: git
+    build-packages:
+      - git
+      - npm
