@@ -13,6 +13,7 @@ confinement: strict
 
 architectures:
   - build-on: amd64
+    run-on: [amd64, armhf, arm64, ppc64el, s390x]
 
 assumes:
   - command-chain
