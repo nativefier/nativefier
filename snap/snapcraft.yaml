@@ -15,15 +15,14 @@ architectures:
   - build-on: amd64
     run-on: [amd64, armhf, arm64, ppc64el, s390x]
     
-environment:
-  npm_config_prefix: '$SNAP_COMMON'
-  npm_config_unsafe_perm: 'true'
-  npm_config_global: 'true'
-  HOME: '$SNAP_COMMON'
+assumes:
+  - command-chain
   
 apps:
   nativefier: 
-    command: bin/node $SNAP/bin/nativefier
+    command: bin/nativefier
+    command-chain: 
+      - bin/homeishome-launch        
     plugs:
       - network
       - home  
@@ -44,6 +43,8 @@ parts:
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
-      
-    stage-packages:
-      - nodejs
+
+  homeishome-launch:
+    plugin: nil
+    stage-snaps:
+      - homeishome-launch    
