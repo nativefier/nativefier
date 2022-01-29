@@ -43,8 +43,8 @@ parts:
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
       
-    stage-packages:
-      - npm
+    stage-snaps:
+      - node/16/stable
       
   homeishome-launch:
     plugin: nil
