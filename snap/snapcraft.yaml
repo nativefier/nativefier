@@ -20,7 +20,7 @@ assumes:
   
 apps:
   nativefier: 
-    command: bin/nativefier
+    command: bin/node $SNAP/bin/nativefier
     command-chain: 
       - bin/homeishome-launch
     plugs:
