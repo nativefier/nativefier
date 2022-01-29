@@ -29,6 +29,8 @@ Whatsapp Web ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativ
 
 ## Installation
 
+Install the snap (Linux) with `sudo snap install nativefier`
+
 Install Nativefier globally with `npm install -g nativefier` . Requirements:
 
 - macOS 10.9+ / Windows / Linux
