@@ -15,14 +15,9 @@ architectures:
   - build-on: amd64
     run-on: [amd64, armhf, arm64, ppc64el, s390x]
 
-assumes:
-  - command-chain
-  
 apps:
   nativefier: 
     command: bin/node $SNAP/bin/nativefier
-    command-chain: 
-      - bin/homeishome-launch
     plugs:
       - network
       - home  
@@ -43,8 +38,3 @@ parts:
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
-      
-  homeishome-launch:
-    plugin: nil
-    stage-snaps:
-      - homeishome-launch
