@@ -17,7 +17,7 @@ architectures:
 
 apps:
   nativefier: 
-    command: bin/node $SNAP/bin/nativefier
+    command: bin/npm $SNAP/bin/nativefier
     plugs:
       - network
       - home  
