@@ -36,7 +36,7 @@ parts:
       - node/16/stable
       
     override-build: |
-      npm install --dev
+      npm install --include=dev
       snapcraftctl build
 
     override-pull: |
