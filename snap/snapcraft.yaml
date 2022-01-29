@@ -29,8 +29,8 @@ parts:
     npm-node-version: "16.13.2"    
     source: https://github.com/nativefier/nativefier.git
     source-type: git
-    build-packages:
-      - npm
+    build-snaps:
+      - node/16/stable
       
     override-build: |
       npm install --dev
