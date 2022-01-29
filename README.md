@@ -29,8 +29,6 @@ Whatsapp Web ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativ
 
 ## Installation
 
-Install the snap (Linux) with `sudo snap install nativefier`
-
 Install Nativefier globally with `npm install -g nativefier` . Requirements:
 
 - macOS 10.9+ / Windows / Linux
@@ -81,6 +79,12 @@ You can pass Nativefier flags, and mount volumes to pass local files. E.g. to us
 ```bash
 docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target nativefier/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
 ```
+
+## Snap (on Linux)
+
+[![nativefier](https://snapcraft.io/nativefier/badge.svg)](https://snapcraft.io/nativefier)
+
+Install the snap with `sudo snap install nativefier`
 
 ## Development
 
