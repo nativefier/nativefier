@@ -65,7 +65,7 @@
     - [[disable-gpu]](#disable-gpu)
     - [[enable-es3-apis]](#enable-es3-apis)
     - [[ignore-gpu-blacklist]](#ignore-gpu-blacklist)
-  - [(In)Security Options](#in-security-options)
+  - [(In)Security Options](#insecurity-options)
     - [[disable-old-build-warning-yesiknowitisinsecure]](#disable-old-build-warning-yesiknowitisinsecure)
     - [[ignore-certificate]](#ignore-certificate)
     - [[insecure]](#insecure)
