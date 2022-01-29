@@ -11,6 +11,9 @@ base: core20
 grade: stable
 confinement: strict
 
+architectures:
+  - build-on: amd64
+
 assumes:
   - command-chain
   
