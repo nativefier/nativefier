@@ -23,7 +23,7 @@ environment:
   
 apps:
   nativefier: 
-    command: bin/npm $SNAP/bin/nativefier
+    command: bin/node $SNAP/bin/nativefier
     plugs:
       - network
       - home  
@@ -44,3 +44,6 @@ parts:
     override-pull: |
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
+      
+    stage-packages:
+      - nodejs
