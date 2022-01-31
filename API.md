@@ -115,9 +115,14 @@ The url to point the application at.
 
 #### [dest]
 
-Specifies the destination directory to build the app to, defaults to `NATIVEFIER_APPS_DIR` environment variable, or the current working directory if it is not set.
+Specifies the destination directory to build the app to.
+If no parameter is passed, defaults to the current working directory,
+or _[New in 46.0.5]_ the `NATIVEFIER_APPS_DIR` environment variable if set.
 
-**Tip:** Add `export NATIVEFIER_APPS_DIR=~/Applications/` to your `~/.bashrc` , `~/.zshrc`, or similar file to set the default app destination if none is passed. This lets you run `nativefier example.com` and have it automatically save it to your Applications folder on macOS. 
+**Tip:** Add `export NATIVEFIER_APPS_DIR=~/Applications/` to your
+`~/.bashrc` (or `~/.zshrc` or similar) to set the default app destination
+if none is passed. This lets you simply run `nativefier example.com` and
+have the app automatically built in your Applications folder.
 
 #### Help
 

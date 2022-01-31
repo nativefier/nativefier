@@ -46,7 +46,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     })
     .positional('outputDirectory', {
       defaultDescription:
-        'NATIVEFIER_APPS_DIR environment variable, or current directory if not set',
+        'defaults to the current directory, or env. var. NATIVEFIER_APPS_DIR if set',
       description: 'the directory to generate the app in',
       normalize: true,
       type: 'string',
