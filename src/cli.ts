@@ -45,7 +45,8 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'string',
     })
     .positional('outputDirectory', {
-      defaultDescription: 'current directory',
+      defaultDescription:
+        'NATIVEFIER_APPS_DIR environment variable, or current directory if not set',
       description: 'the directory to generate the app in',
       normalize: true,
       type: 'string',
@@ -666,6 +667,10 @@ if (require.main === module) {
   }
 
   checkInternet();
+
+  if (!options.out && process.env.NATIVEFIER_APPS_DIR) {
+    options.out = process.env.NATIVEFIER_APPS_DIR;
+  }
 
   buildNativefierApp(options).catch((error) => {
     log.error('Error during build. Run with --verbose for details.', error);
