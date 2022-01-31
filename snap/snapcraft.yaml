@@ -45,7 +45,7 @@ parts:
       snapcraftctl set-version "$(git describe --tags | sed 's/^v//' | cut -d "-" -f1)"
     
     stage-packages:
-      - wine
+      - wine64
       - imagemagick
       
   homeishome-launch:
