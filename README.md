@@ -80,6 +80,15 @@ You can pass Nativefier flags, and mount volumes to pass local files. E.g. to us
 docker run --rm -v ~/my-icons-folder/:/src -v $TARGET-PATH:/target nativefier/nativefier --icon /src/icon.png --name whatsApp -p linux -a x64 https://web.whatsapp.com/ /target/
 ```
 
+## Unofficial repositories
+
+Nativefier is also available in various user-contributed software repos.
+These are *not* managed by Nativefier maintainers; use at your own risk.
+If using them, for your security, please inspect the build script.
+
+- [Snap](https://snapcraft.io/nativefier)
+- [AUR](https://aur.archlinux.org/packages/nodejs-nativefier)
+
 ## Development
 
 Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
