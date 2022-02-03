@@ -7,6 +7,7 @@ import yargs from 'yargs';
 
 import { DEFAULT_ELECTRON_VERSION } from './constants';
 import {
+  camelCased,
   checkInternet,
   getProcessEnvs,
   isArgFormatInvalid,
@@ -582,6 +583,8 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
   ]) {
     if (parsed[arg] && typeof parsed[arg] === 'string') {
       parsed[arg] = parseJson(parsed[arg] as string);
+      // also set camel-cased option keys
+      parsed[camelCased(arg)] = parsed[arg];
     }
   }
   if (parsed['process-envs'] && typeof parsed['process-envs'] === 'string') {
