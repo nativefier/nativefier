@@ -1,4 +1,8 @@
-import { isArgFormatInvalid, generateRandomSuffix } from './helpers';
+import {
+  isArgFormatInvalid,
+  generateRandomSuffix,
+  camelCased,
+} from './helpers';
 
 describe('isArgFormatInvalid', () => {
   test('is false for correct short args', () => {
@@ -54,5 +58,27 @@ describe('generateRandomSuffix', () => {
 
   test('respects the length param', () => {
     expect(generateRandomSuffix(10).length).toBe(10);
+  });
+});
+
+describe('camelCased', () => {
+  test('has no hyphens in camel case', () => {
+    expect(camelCased('file-download')).toEqual(expect.not.stringMatching(/-/));
+  });
+
+  test('returns camel cased string', () => {
+    expect(camelCased('file-download')).toBe('fileDownload');
+  });
+
+  test('has no spaces in camel case', () => {
+    expect(camelCased('--file--download--')).toBe('fileDownload');
+  });
+
+  test('handles multiple hyphens properly', () => {
+    expect(camelCased('file--download--options')).toBe('fileDownloadOptions');
+  });
+
+  test('does not affect non-snake cased strings', () => {
+    expect(camelCased('win32options')).toBe('win32options');
   });
 });
