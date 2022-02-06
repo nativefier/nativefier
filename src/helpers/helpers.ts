@@ -184,3 +184,17 @@ export function checkInternet(): void {
     }
   });
 }
+
+/**
+ * Takes in a snake-cased string and converts to camelCase
+ */
+export function camelCased(str: string): string {
+  return str
+    .split('-')
+    .filter((s) => s.length > 0)
+    .map((word, i) => {
+      if (i === 0) return word;
+      return `${word[0].toUpperCase()}${word.substring(1)}`;
+    })
+    .join('');
+}
