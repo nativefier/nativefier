@@ -116,6 +116,7 @@ export function linkIsInternal(
   currentUrl: string,
   newUrl: string,
   internalUrlRegex: string | RegExp | undefined,
+  isStrictInternalUrlsEnabled: boolean | undefined,
 ): boolean {
   log.debug('linkIsInternal', { currentUrl, newUrl, internalUrlRegex });
   if (newUrl.split('#')[0] === 'about:blank') {
@@ -133,6 +134,10 @@ export function linkIsInternal(
     }
   }
 
+  if (isStrictInternalUrlsEnabled) {
+    return currentUrl == newUrl;
+  }
+  
   try {
     // Consider as "same domain-ish", without TLD/SLD list:
     // 1. app.foo.com and foo.com

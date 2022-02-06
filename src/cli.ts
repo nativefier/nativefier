@@ -348,8 +348,14 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     .option('internal-urls', {
       defaultDescription: 'URLs sharing the same base domain',
       description:
-        'regex of URLs to consider "internal"; all other URLs will be opened in an external browser',
+        `regex of URLs to consider "internal"; by default matches based on domain (see '--strict-internal-urls'); all other URLs will be opened in an external browser`,
       type: 'string',
+    })
+    .option('strict-internal-urls', {
+      default: false,
+      description:
+        'disable domain-based matching on internal URLs',
+      type: 'boolean',
     })
     .option('proxy-rules', {
       description:
@@ -357,7 +363,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'string',
     })
     .group(
-      ['block-external-urls', 'internal-urls', 'proxy-rules'],
+      ['block-external-urls', 'internal-urls', 'strict-internal-urls', 'proxy-rules'],
       decorateYargOptionGroup('URL Handling Options'),
     )
     // Auth Options

@@ -57,6 +57,7 @@ export interface AppOptions {
     quiet?: boolean;
     showMenuBar: boolean;
     singleInstance: boolean;
+    strictInternalUrls: boolean;
     titleBarStyle?: TitleBarValue;
     tray: TrayValue;
     userAgent?: string;
@@ -114,6 +115,7 @@ export type OutputOptions = NativefierOptions & {
   name: string;
   nativefierVersion: string;
   oldBuildWarningText: string;
+  strictInternalUrls: boolean;
   targetUrl: string;
   userAgent?: string;
   zoom?: number;
@@ -183,6 +185,7 @@ export type RawOptions = {
   quiet?: boolean;
   showMenuBar?: boolean;
   singleInstance?: boolean;
+  strictInternalUrls?: boolean;
   targetUrl?: string;
   titleBarStyle?: TitleBarValue;
   tray?: TrayValue;
@@ -205,6 +208,7 @@ export type WindowOptions = {
   browserwindowOptions?: BrowserWindowOptions;
   insecure: boolean;
   internalUrls?: string | RegExp;
+  strictInternalUrls?: boolean;
   name: string;
   proxyRules?: string;
   show?: boolean;

@@ -105,6 +105,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       proxyRules: rawOptions.proxyRules,
       showMenuBar: rawOptions.showMenuBar ?? false,
       singleInstance: rawOptions.singleInstance ?? false,
+      strictInternalUrls: rawOptions.strictInternalUrls ?? false,
       titleBarStyle: rawOptions.titleBarStyle,
       tray: rawOptions.tray ?? 'false',
       userAgent: rawOptions.userAgent,
