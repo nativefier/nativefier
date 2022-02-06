@@ -9,7 +9,7 @@
       "version": "46.0.4",
       "license": "MIT",
       "dependencies": {
-        "axios": "^0.24.0",
+        "axios": "^0.25.0",
         "electron-packager": "^15.2.0",
         "fs-extra": "^10.0.0",
         "gitcloud": "^0.2.3",
@@ -2027,11 +2027,11 @@
       }
     },
     "node_modules/axios": {
-      "version": "0.24.0",
-      "resolved": "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz",
-      "integrity": "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==",
+      "version": "0.25.0",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.25.0.tgz",
+      "integrity": "sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==",
       "dependencies": {
-        "follow-redirects": "^1.14.4"
+        "follow-redirects": "^1.14.7"
       }
     },
     "node_modules/babel-jest": {
@@ -9149,11 +9149,11 @@
       "integrity": "sha1-0IiFvmubv5Q5/gh8dihyRfCoFFA="
     },
     "axios": {
-      "version": "0.24.0",
-      "resolved": "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz",
-      "integrity": "sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==",
+      "version": "0.25.0",
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.25.0.tgz",
+      "integrity": "sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==",
       "requires": {
-        "follow-redirects": "^1.14.4"
+        "follow-redirects": "^1.14.7"
       }
     },
     "babel-jest": {
