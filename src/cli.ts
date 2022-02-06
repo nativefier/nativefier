@@ -583,7 +583,9 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
   ]) {
     if (parsed[arg] && typeof parsed[arg] === 'string') {
       parsed[arg] = parseJson(parsed[arg] as string);
-      // also set camel-cased option keys
+      // sets fileDownloadOptions and browserWindowOptions
+      // as parsed object as they were still strings in `nativefier.json`
+      // because only their snake-cased variants were being parsed above
       parsed[camelCased(arg)] = parsed[arg];
     }
   }
