@@ -137,7 +137,7 @@ export function linkIsInternal(
   if (isStrictInternalUrlsEnabled) {
     return currentUrl == newUrl;
   }
-  
+
   try {
     // Consider as "same domain-ish", without TLD/SLD list:
     // 1. app.foo.com and foo.com
