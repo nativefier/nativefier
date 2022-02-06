@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "14.18.5",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.5.tgz",
-      "integrity": "sha512-LMy+vDDcQR48EZdEx5wRX1q/sEl6NdGuHXPnfeL8ixkwCOSZ2qnIyIZmcCbdX0MeRqHhAcHmX+haCbrS8Run+A==",
+      "version": "14.18.10",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.10.tgz",
+      "integrity": "sha512-6iihJ/Pp5fsFJ/aEDGyvT4pHGmCpq7ToQ/yf4bl5SbVAvwpspYJ+v3jO7n8UyjhQVHTy+KNszOozDdv+O6sovQ==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -296,9 +296,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "16.0.6",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.6.tgz",
-      "integrity": "sha512-Xs9dYLYhcJf3wXn8m2gDqFTb1L862KEhMxOx9swfFBHj6NoUPPtUgw/RyPQ0tXN1XPxG9vnBkoI0BdcKwrLKuQ==",
+      "version": "16.0.8",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.8.tgz",
+      "integrity": "sha512-znTVkl8LaGcPNdfc6SRr+6LYg2GtSCKXln/nW/PC+urBfAFnOYIuDock8QyGVFfzr5PuAa+g8YQQAboHV77D7g==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -1241,9 +1241,9 @@
       }
     },
     "@types/node": {
-      "version": "14.18.5",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.5.tgz",
-      "integrity": "sha512-LMy+vDDcQR48EZdEx5wRX1q/sEl6NdGuHXPnfeL8ixkwCOSZ2qnIyIZmcCbdX0MeRqHhAcHmX+haCbrS8Run+A==",
+      "version": "14.18.10",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.18.10.tgz",
+      "integrity": "sha512-6iihJ/Pp5fsFJ/aEDGyvT4pHGmCpq7ToQ/yf4bl5SbVAvwpspYJ+v3jO7n8UyjhQVHTy+KNszOozDdv+O6sovQ==",
       "dev": true
     },
     "ansi-regex": {
@@ -1422,9 +1422,9 @@
       "dev": true
     },
     "electron": {
-      "version": "16.0.6",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.6.tgz",
-      "integrity": "sha512-Xs9dYLYhcJf3wXn8m2gDqFTb1L862KEhMxOx9swfFBHj6NoUPPtUgw/RyPQ0tXN1XPxG9vnBkoI0BdcKwrLKuQ==",
+      "version": "16.0.8",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-16.0.8.tgz",
+      "integrity": "sha512-znTVkl8LaGcPNdfc6SRr+6LYg2GtSCKXln/nW/PC+urBfAFnOYIuDock8QyGVFfzr5PuAa+g8YQQAboHV77D7g==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.13.0",
