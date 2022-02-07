@@ -95,6 +95,17 @@ export function generateMenu(
         role: 'copy',
       },
       {
+        label: 'Copy as Plain Text',
+        accelerator: 'CmdOrCtrl+Shift+C',
+        click: (): void => {
+          let text = clipboard.readText('selection');
+          if (text) {
+            text = text.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+          }
+          clipboard.writeText(text, 'clipboard');
+        },
+      },
+      {
         label: 'Copy Current URL',
         accelerator: 'CmdOrCtrl+L',
         click: (): void => clipboard.writeText(getCurrentURL()),
