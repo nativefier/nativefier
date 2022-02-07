@@ -188,5 +188,5 @@ export function removeUserAgentSpecifics(
 
 // Removes formatting from a text
 export function getPlainTextWithoutFormatting(text: string): string {
-  return text.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+  return text.trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
 }
