@@ -185,3 +185,8 @@ export function removeUserAgentSpecifics(
     .replace(`Electron/${process.versions.electron} `, '')
     .replace(`${appName}/${appVersion} `, ' ');
 }
+
+// Removes formatting from a text
+export function getPlainTextWithoutFormatting(text: string): string {
+  return text.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+}

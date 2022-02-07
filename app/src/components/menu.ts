@@ -10,7 +10,11 @@ import {
 } from 'electron';
 import * as log from 'loglevel';
 
-import { isOSX, openExternal } from '../helpers/helpers';
+import {
+  getPlainTextWithoutFormatting,
+  isOSX,
+  openExternal,
+} from '../helpers/helpers';
 import {
   clearAppData,
   getCurrentURL,
@@ -98,11 +102,8 @@ export function generateMenu(
         label: 'Copy as Plain Text',
         accelerator: 'CmdOrCtrl+Shift+C',
         click: (): void => {
-          let text = clipboard.readText('selection');
-          if (text) {
-            text = text.replace(/\n/g, ' ').replace(/\s+/g, ' ');
-          }
-          clipboard.writeText(text, 'clipboard');
+          const text = clipboard.readText('selection');
+          clipboard.writeText(getPlainTextWithoutFormatting(text), 'clipboard');
         },
       },
       {
