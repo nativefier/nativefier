@@ -185,3 +185,8 @@ export function removeUserAgentSpecifics(
     .replace(`Electron/${process.versions.electron} `, '')
     .replace(`${appName}/${appVersion} `, ' ');
 }
+
+/** Removes extra spaces from a text */
+export function cleanupPlainText(text: string): string {
+  return text.trim().replace(/\s+/g, ' ');
+}

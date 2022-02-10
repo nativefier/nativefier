@@ -10,7 +10,7 @@ import {
 } from 'electron';
 import * as log from 'loglevel';
 
-import { isOSX, openExternal } from '../helpers/helpers';
+import { cleanupPlainText, isOSX, openExternal } from '../helpers/helpers';
 import {
   clearAppData,
   getCurrentURL,
@@ -93,6 +93,15 @@ export function generateMenu(
         label: 'Copy',
         accelerator: 'CmdOrCtrl+C',
         role: 'copy',
+      },
+      {
+        label: 'Copy as Plain Text',
+        accelerator: 'CmdOrCtrl+Shift+C',
+        click: (): void => {
+          // We use clipboard.readText to strip down formatting
+          const text = clipboard.readText('selection');
+          clipboard.writeText(cleanupPlainText(text), 'clipboard');
+        },
       },
       {
         label: 'Copy Current URL',
