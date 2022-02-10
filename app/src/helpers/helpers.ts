@@ -186,7 +186,7 @@ export function removeUserAgentSpecifics(
     .replace(`${appName}/${appVersion} `, ' ');
 }
 
-// Removes extra spaces from a text
+/** Removes extra spaces from a text */
 export function cleanupPlainText(text: string): string {
   return text.trim().replace(/\s+/g, ' ');
 }
