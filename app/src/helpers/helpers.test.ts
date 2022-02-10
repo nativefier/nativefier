@@ -2,7 +2,7 @@ import {
   linkIsInternal,
   getCounterValue,
   removeUserAgentSpecifics,
-  getPlainTextWithoutFormatting,
+  cleanupPlainText,
 } from './helpers';
 
 const internalUrl = 'https://medium.com/';
@@ -263,26 +263,8 @@ describe('removeUserAgentSpecifics', () => {
   });
 });
 
-describe('getPlainTextWithoutFormatting', () => {
+describe('cleanupPlainText', () => {
   test('removes extra spaces from text', () => {
-    expect(getPlainTextWithoutFormatting('  this is a  test  ')).toBe(
-      'this is a test',
-    );
-  });
-  test('removes newlines from text', () => {
-    expect(
-      getPlainTextWithoutFormatting(`
-    this is a
-    test
-    `),
-    ).toBe('this is a test');
-  });
-  test('removes newlines and from text', () => {
-    expect(
-      getPlainTextWithoutFormatting(`
-        this is a  
-    test  
-    `),
-    ).toBe('this is a test');
+    expect(cleanupPlainText('  this is a  test  ')).toBe('this is a test');
   });
 });
