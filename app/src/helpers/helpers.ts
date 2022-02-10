@@ -186,7 +186,7 @@ export function removeUserAgentSpecifics(
     .replace(`${appName}/${appVersion} `, ' ');
 }
 
-// Removes formatting from a text
-export function getPlainTextWithoutFormatting(text: string): string {
-  return text.trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
+// Removes extra spaces from a text
+export function cleanupPlainText(text: string): string {
+  return text.trim().replace(/\s+/g, ' ');
 }
