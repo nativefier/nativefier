@@ -1,4 +1,12 @@
 
+46.1.1 / 2022-02-14
+===================
+
+  * Feature: Add "copy as plain text" in edit menu (PR #1351 @abhi12299, fix #1144)
+  * Bump default Electron to 16.0.9 (from 16.0.8), with security fixes
+    - https://github.com/electron/electron/releases/tag/v16.0.9
+  * Upgrade dependencies
+
 46.1.0 / 2022-02-06
 ===================
 
