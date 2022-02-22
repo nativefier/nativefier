@@ -183,7 +183,7 @@ export function removeUserAgentSpecifics(
   // We just need to strip out the appName/1.0.0 and Electron/electronVersion
   return userAgentFallback
     .replace(`Electron/${process.versions.electron} `, '')
-    .replace(`${appName}/${appVersion} `, ' ');
+    .replace(`${appName}/${appVersion} `, '');
 }
 
 /** Removes extra spaces from a text */
