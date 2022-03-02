@@ -168,7 +168,7 @@ Note: careful to not conflate _platform_ with _architecture_. If you want for ex
 -c, --conceal
 ```
 
-Specifies if the source code within the nativefied app should be packaged into an archive, defaults to false, [read more](http://electron.atom.io/docs/v0.36.0/tutorial/application-packaging/).
+Specifies if the source code within the nativefied app should be packaged into an archive, defaults to false, [read more](https://www.electronjs.org/docs/latest/glossary#asar).
 
 #### [electron-version]
 
