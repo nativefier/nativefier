@@ -11,7 +11,7 @@ export function sanitizeFilename(
 
   // spaces will cause problems with Ubuntu when pinned to the dock
   if (platform === 'linux') {
-    result = result.replace(/\s/g, '');
+    result = result.replace(/[\s\u200e\u200f]/g, '');
   }
 
   if (!result || result === '') {
