@@ -1,4 +1,15 @@
 
+46.2.0 / 2022-03-20
+===================
+
+  * Bugfix: Strip LRM and RLM in Linux names (fix #1361, PR #1365)
+  * Bugfix: Remove extra whitespace in UserAgent (fix #1357, PR #1367)
+  * Docs: Fix broken link in `API.md` for `conceal` flag (PR #1364)
+  * Bump default Electron to 16.1.0 (from 16.0.9), with security fixes:
+    - https://github.com/electron/electron/releases/tag/v16.1.0
+    - https://github.com/electron/electron/releases/tag/v16.0.10
+  * Upgrade dependencies lockfiles
+
 46.1.1 / 2022-02-14
 ===================
 
