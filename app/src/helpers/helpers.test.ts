@@ -248,9 +248,9 @@ test('getCounterValue should return a string for large counter numbers in the ti
 });
 
 describe('removeUserAgentSpecifics', () => {
+  const userAgentFallback =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) app-nativefier-804458/1.0.0 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36';
   test('removes Electron and App specific info', () => {
-    const userAgentFallback =
-      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) app-nativefier-804458/1.0.0 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36';
     expect(
       removeUserAgentSpecifics(
         userAgentFallback,
@@ -260,6 +260,16 @@ describe('removeUserAgentSpecifics', () => {
     ).not.toBe(
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.128 Safari/537.36',
     );
+  });
+
+  test('should not have multiple spaces in a row', () => {
+    expect(
+      removeUserAgentSpecifics(
+        userAgentFallback,
+        'app-nativefier-804458',
+        '1.0.0',
+      ),
+    ).toEqual(expect.not.stringMatching(/\s{2,}/));
   });
 });
 
