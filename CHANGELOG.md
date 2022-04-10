@@ -1,4 +1,14 @@
 
+46.2.1 / 2022-04-10
+===================
+
+  * Bump default Electron to 16.2.1 (from 16.1.0), with security fixes:
+    - https://github.com/electron/electron/releases/tag/v16.1.1
+    - https://github.com/electron/electron/releases/tag/v16.2.0
+    - https://github.com/electron/electron/releases/tag/v16.2.1
+    - https://github.com/electron/electron/releases/tag/v16.2.2
+  * Upgrade dependencies lockfiles
+
 46.2.0 / 2022-03-20
 ===================
 
