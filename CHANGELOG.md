@@ -1,4 +1,25 @@
 
+47.0.0 / 2022-04-10
+===================
+
+  * Bump default Electron to 18.0.3 (from 16.2.2)
+
+    As usual, we did our best to adapt to Electron breaking changes in 17/18,
+    but patches welcome to fix regressions. If unable to submit a patch, then
+    feel free to revert to Nativefier 46.2.1 or simply pass `-e 16.2.2` .
+    Release notes with breaking changes:
+
+    - https://www.electronjs.org/blog/electron-17-0
+    - https://www.electronjs.org/blog/electron-18-0
+
+    Detailed release notes:
+
+    - https://github.com/electron/electron/releases/tag/v17.0.0
+    - https://github.com/electron/electron/releases/tag/v18.0.0
+    - https://github.com/electron/electron/releases/tag/v18.0.1
+    - https://github.com/electron/electron/releases/tag/v18.0.2
+    - https://github.com/electron/electron/releases/tag/v18.0.3
+
 46.2.1 / 2022-04-10
 ===================
 
