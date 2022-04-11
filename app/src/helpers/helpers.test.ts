@@ -233,6 +233,7 @@ test.each(testNonLoginPages)(
 
 const smallCounterTitle = 'Inbox (11) - nobody@example.com - Gmail';
 const largeCounterTitle = 'Inbox (8,756) - nobody@example.com - Gmail';
+const hourCounterTitle = 'Today (1:23) - nobody@example.com - TimeTracker';
 const noCounterTitle = 'Inbox - nobody@example.com - Gmail';
 
 test('getCounterValue should return undefined for titles without counter numbers', () => {
@@ -245,6 +246,10 @@ test('getCounterValue should return a string for small counter numbers in the ti
 
 test('getCounterValue should return a string for large counter numbers in the title', () => {
   expect(getCounterValue(largeCounterTitle)).toEqual('8,756');
+});
+
+test('getCounterValue should return a string for hour counter numbers in the title', () => {
+  expect(getCounterValue(hourCounterTitle)).toEqual('1:23');
 });
 
 describe('removeUserAgentSpecifics', () => {
