@@ -48,11 +48,15 @@ export function initContextMenu(
             label: 'Open Link in New Tab',
             click: () =>
               // Fire a new window event for a foreground tab
+              // Previously we called createNewTab directly, but it had incosistent and buggy behavior
+              // as it was mostly designed for running off of events. So this will create a new event
+              // for a foreground-tab for the event handler to grab and take care of instead.
               (window as BrowserWindow).webContents.emit(
                 // event name
                 'new-window',
                 // event object
                 {
+                  // Leave to the default for a NewWindowWebContentsEvent
                   newGuest: undefined,
                   ...new Event('new-window'),
                 } as NewWindowWebContentsEvent,
