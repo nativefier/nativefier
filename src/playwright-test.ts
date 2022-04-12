@@ -107,6 +107,12 @@ describe('Application launch', () => {
 
   test('shows an initial window', async () => {
     const mainWindow = (await spawnApp()) as Page;
+    // Prevent page navigation so we can have a reliable test
+    await mainWindow.route('*', (route): void => {
+      route.abort().catch((error) => {
+        log.error('ERROR', error);
+      });
+    });
     await mainWindow.waitForLoadState('domcontentloaded');
     expect(app.windows()).toHaveLength(1);
     expect(await mainWindow.title()).toBe('npm');
