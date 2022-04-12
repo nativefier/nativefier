@@ -48,10 +48,12 @@ if (process.argv.indexOf('--verbose') > -1 || safeGetEnv('VERBOSE') === '1') {
 
 let mainWindow: BrowserWindow;
 
-const appArgs: OutputOptions =
+const appArgs =
   IS_PLAYWRIGHT && PLAYWRIGHT_CONFIG
-    ? JSON.parse(PLAYWRIGHT_CONFIG)
-    : JSON.parse(fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'));
+    ? (JSON.parse(PLAYWRIGHT_CONFIG) as OutputOptions)
+    : (JSON.parse(
+        fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
+      ) as OutputOptions);
 
 log.debug('appArgs', appArgs);
 // Do this relatively early so that we can start storing appData with the app

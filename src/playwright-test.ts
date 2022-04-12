@@ -51,23 +51,7 @@ describe('Application launch', () => {
     playwrightConfig: NativefierOptions = { ...DEFAULT_CONFIG },
     awaitFirstWindow = true,
   ): Promise<Page | undefined> => {
-    app = await _electron.launch({
-      args: [appMainJSPath],
-      env: {
-        LOG_FILE_DIR: logFileDir,
-        PLAYWRIGHT_TEST: '1',
-        PLAYWRIGHT_CONFIG: JSON.stringify(playwrightConfig),
-        USE_LOG_FILE: '1',
-        VERBOSE: '1',
-      },
-    });
-    app.on('close', () => (appClosed = true));
-    appClosed = false;
-    if (!awaitFirstWindow) {
-      return undefined;
-    }
-    const window = await app.firstWindow();
-    window.addListener('console', (consoleMessage: ConsoleMessage) => {
+    const consoleListener = (consoleMessage: ConsoleMessage): void => {
       const consoleMethods: Record<string, (...args: unknown[]) => unknown> = {
         debug: log.debug.bind(console),
         error: log.error.bind(console),
@@ -86,7 +70,27 @@ describe('Application launch', () => {
           }
         })
         .catch(() => log.log('window.console', consoleMessage));
+    };
+    app = await _electron.launch({
+      args: [appMainJSPath],
+      env: {
+        LOG_FILE_DIR: logFileDir,
+        PLAYWRIGHT_TEST: '1',
+        PLAYWRIGHT_CONFIG: JSON.stringify(playwrightConfig),
+        USE_LOG_FILE: '1',
+        VERBOSE: '1',
+      },
     });
+    app.on('window', (page: Page) => {
+      page.on('console', consoleListener);
+    });
+    app.on('close', () => (appClosed = true));
+    appClosed = false;
+    if (!awaitFirstWindow) {
+      return undefined;
+    }
+    const window = await app.firstWindow();
+    // window.addListener('console', consoleListener);
     return window;
   };
 

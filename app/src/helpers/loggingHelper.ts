@@ -20,6 +20,7 @@ function _logger(
     for (const arg of args) {
       try {
         const lines =
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           JSON.stringify(arg, null, 2)?.split('\n') ?? `${arg}`.split('\n');
         for (const line of lines) {
           fs.appendFileSync(
@@ -28,6 +29,7 @@ function _logger(
           );
         }
       } catch {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         fs.appendFileSync(LOG_FILENAME, `${logLevelNames[level]} ${arg}\n`);
       }
     }
