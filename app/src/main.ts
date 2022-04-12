@@ -189,21 +189,6 @@ const setDockBadge = isOSX()
     }
   : (): void => undefined;
 
-// TODO: Insert CSS Here instead of using ugly onAfterHeadersReceived hack?
-// app.on('web-contents-created', (event: Event, webContents: WebContents) => {
-//   const cssToInject = getCSSToInject();
-
-//   log.debug('web-contents-created', { event, webContents, cssToInject });
-
-//   if (!cssToInject) {
-//     return;
-//   }
-
-//   webContents
-//     .insertCSS(cssToInject)
-//     .catch((err: unknown) => log.error('webContents.insertCSS ERROR', err));
-// });
-
 app.on('window-all-closed', () => {
   log.debug('app.window-all-closed');
   if (!isOSX() || appArgs.fastQuit || IS_PLAYWRIGHT) {
