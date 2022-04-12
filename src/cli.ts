@@ -1,23 +1,25 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 
+import electronPackager = require('electron-packager');
 import * as log from 'loglevel';
-import * as yargs from 'yargs';
+import yargs from 'yargs';
 
+import { DEFAULT_ELECTRON_VERSION } from './constants';
 import {
+  camelCased,
   checkInternet,
   getProcessEnvs,
   isArgFormatInvalid,
 } from './helpers/helpers';
 import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
-import { RawOptions } from './options/model';
+import { RawOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
-import { DEFAULT_ELECTRON_VERSION } from './constants';
-import electronPackager = require('electron-packager');
 
 export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
-  const args = yargs(argv)
+  const sanitizedArgs = sanitizeArgs(argv);
+  const args = yargs(sanitizedArgs)
     .scriptName('nativefier')
     .usage(
       '$0 <targetUrl> [outputDirectory] [other options]\nor\n$0 --upgrade <pathToExistingApp> [other options]',
@@ -44,7 +46,8 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'string',
     })
     .positional('outputDirectory', {
-      defaultDescription: 'current directory',
+      defaultDescription:
+        'defaults to the current directory, or env. var. NATIVEFIER_APPS_DIR if set',
       description: 'the directory to generate the app in',
       normalize: true,
       type: 'string',
@@ -229,10 +232,10 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'boolean',
     })
     .option('tray', {
-      default: false,
+      default: 'false',
       description:
         "allow app to stay in system tray. If 'start-in-tray' is set as argument, don't show main window on first start",
-      type: 'boolean',
+      choices: ['true', 'false', 'start-in-tray'],
     })
     .option('width', {
       defaultDescription: '1280',
@@ -344,9 +347,13 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
     })
     .option('internal-urls', {
       defaultDescription: 'URLs sharing the same base domain',
-      description:
-        'regex of URLs to consider "internal"; all other URLs will be opened in an external browser',
+      description: `regex of URLs to consider "internal"; by default matches based on domain (see '--strict-internal-urls'); all other URLs will be opened in an external browser`,
       type: 'string',
+    })
+    .option('strict-internal-urls', {
+      default: false,
+      description: 'disable domain-based matching on internal URLs',
+      type: 'boolean',
     })
     .option('proxy-rules', {
       description:
@@ -354,7 +361,12 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       type: 'string',
     })
     .group(
-      ['block-external-urls', 'internal-urls', 'proxy-rules'],
+      [
+        'block-external-urls',
+        'internal-urls',
+        'strict-internal-urls',
+        'proxy-rules',
+      ],
       decorateYargOptionGroup('URL Handling Options'),
     )
     // Auth Options
@@ -505,8 +517,13 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       description: 'enable verbose/debug/troubleshooting logs',
       type: 'boolean',
     })
+    .option('quiet', {
+      default: false,
+      description: 'suppress all logging',
+      type: 'boolean',
+    })
     .group(
-      ['crash-reporter', 'verbose'],
+      ['crash-reporter', 'verbose', 'quiet'],
       decorateYargOptionGroup('Debug Options'),
     )
     .version()
@@ -518,7 +535,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   // Do this now to go ahead and get any errors out of the way
   args.argv;
 
-  return args;
+  return args as yargs.Argv<RawOptions>;
 }
 
 function decorateYargOptionGroup(value: string): string {
@@ -566,20 +583,41 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
 
   parsed.noOverwrite = parsed['no-overwrite'] = !parsed.overwrite;
 
+  // Since coerce in yargs seems to have broken since
+  // https://github.com/yargs/yargs/pull/1978
+  for (const arg of [
+    'win32metadata',
+    'browserwindow-options',
+    'file-download-options',
+  ]) {
+    if (parsed[arg] && typeof parsed[arg] === 'string') {
+      parsed[arg] = parseJson(parsed[arg] as string);
+      // sets fileDownloadOptions and browserWindowOptions
+      // as parsed object as they were still strings in `nativefier.json`
+      // because only their snake-cased variants were being parsed above
+      parsed[camelCased(arg)] = parsed[arg];
+    }
+  }
+  if (parsed['process-envs'] && typeof parsed['process-envs'] === 'string') {
+    parsed['process-envs'] = getProcessEnvs(parsed['process-envs']);
+  }
+
   return parsed;
 }
 
-if (require.main === module) {
-  // Not sure if we still need this with yargs. Keeping for now.
+function sanitizeArgs(argv: string[]): string[] {
   const sanitizedArgs: string[] = [];
-  process.argv.forEach((arg) => {
+  argv.forEach((arg) => {
     if (isArgFormatInvalid(arg)) {
       throw new Error(
         `Invalid argument passed: ${arg} .\nNativefier supports short options (like "-n") and long options (like "--name"), all lowercase. Run "nativefier --help" for help.\nAborting`,
       );
     }
+    const isLastArg = sanitizedArgs.length + 1 === argv.length;
     if (sanitizedArgs.length > 0) {
       const previousArg = sanitizedArgs[sanitizedArgs.length - 1];
+
+      log.debug({ arg, previousArg, isLastArg });
 
       // Work around commander.js not supporting default argument for options
       if (
@@ -590,12 +628,21 @@ if (require.main === module) {
       }
     }
     sanitizedArgs.push(arg);
+
+    if (arg === '--tray' && isLastArg) {
+      // Add a true if --tray is last so it gets enabled
+      sanitizedArgs.push('true');
+    }
   });
 
+  return sanitizedArgs;
+}
+
+if (require.main === module) {
   let args: yargs.Argv<RawOptions> | undefined = undefined;
   let parsedArgs: RawOptions;
   try {
-    args = initArgs(sanitizedArgs.slice(2));
+    args = initArgs(process.argv.slice(2));
     parsedArgs = parseArgs(args);
   } catch (err: unknown) {
     if (args) {
@@ -611,7 +658,33 @@ if (require.main === module) {
     ...parsedArgs,
   };
 
+  if (options.verbose) {
+    log.setLevel('trace');
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      require('debug').enable('electron-packager');
+    } catch (err: unknown) {
+      log.debug(
+        'Failed to enable electron-packager debug output. This should not happen,',
+        'and suggests their internals changed. Please report an issue.',
+      );
+    }
+
+    log.debug(
+      'Running in verbose mode! This will produce a mountain of logs and',
+      'is recommended only for troubleshooting or if you like Shakespeare.',
+    );
+  } else if (options.quiet) {
+    log.setLevel('silent');
+  } else {
+    log.setLevel('info');
+  }
+
   checkInternet();
+
+  if (!options.out && process.env.NATIVEFIER_APPS_DIR) {
+    options.out = process.env.NATIVEFIER_APPS_DIR;
+  }
 
   buildNativefierApp(options).catch((error) => {
     log.error('Error during build. Run with --verbose for details.', error);

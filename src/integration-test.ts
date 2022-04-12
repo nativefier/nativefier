@@ -10,12 +10,16 @@ import { getLatestSafariVersion } from './infer/browsers/inferSafariVersion';
 import { inferArch } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { userAgent } from './options/fields/userAgent';
-import { NativefierOptions } from './options/model';
+import {
+  GlobalShortcut,
+  NativefierOptions,
+  RawOptions,
+} from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
 
 async function checkApp(
   appRoot: string,
-  inputOptions: NativefierOptions,
+  inputOptions: RawOptions,
 ): Promise<void> {
   const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
   if (inputOptions.out !== undefined) {
@@ -27,25 +31,13 @@ async function checkApp(
     ).toBe(appRoot);
   }
 
-  let relativeAppFolder: string;
+  let relativeResourcesDir = 'resources';
 
-  switch (inputOptions.platform) {
-    case 'darwin':
-      relativeAppFolder = path.join('Google.app', 'Contents/Resources/app');
-      break;
-    case 'linux':
-      relativeAppFolder = 'resources/app';
-      break;
-    case 'win32':
-      relativeAppFolder = 'resources/app';
-      break;
-    default:
-      throw new Error(
-        `Unknown app platform: ${new String(inputOptions.platform).toString()}`,
-      );
+  if (inputOptions.platform === 'darwin') {
+    relativeResourcesDir = path.join('Google.app', 'Contents', 'Resources');
   }
 
-  const appPath = path.join(appRoot, relativeAppFolder);
+  const appPath = path.join(appRoot, relativeResourcesDir, 'app');
 
   const configPath = path.join(appPath, 'nativefier.json');
   const nativefierConfig: NativefierOptions | undefined =
@@ -59,7 +51,11 @@ async function checkApp(
 
   // Test icon writing
   const iconFile =
-    inputOptions.platform === 'darwin' ? '../electron.icns' : 'icon.png';
+    inputOptions.platform === 'darwin'
+      ? path.join('..', 'electron.icns')
+      : inputOptions.platform === 'linux'
+      ? 'icon.png'
+      : 'icon.ico';
   const iconPath = path.join(appPath, iconFile);
   expect(fs.existsSync(iconPath)).toEqual(true);
   expect(fs.statSync(iconPath).size).toBeGreaterThan(1000);
@@ -93,6 +89,21 @@ async function checkApp(
 
   // Test lang
   expect(nativefierConfig?.lang).toEqual(inputOptions.lang);
+
+  // Test global shortcuts
+  if (inputOptions.globalShortcuts) {
+    let shortcutData: GlobalShortcut[] | undefined = [];
+
+    if (typeof inputOptions.globalShortcuts === 'string') {
+      shortcutData = parseJson<GlobalShortcut[]>(
+        fs.readFileSync(inputOptions.globalShortcuts, 'utf8'),
+      );
+    } else {
+      shortcutData = inputOptions.globalShortcuts;
+    }
+
+    expect(nativefierConfig?.globalShortcuts).toStrictEqual(shortcutData);
+  }
 }
 
 describe('Nativefier', () => {
@@ -102,12 +113,12 @@ describe('Nativefier', () => {
     'builds a Nativefier app for platform %s',
     async (platform) => {
       const tempDirectory = getTempDir('integtest');
-      const options = {
-        platform,
-        targetUrl: 'https://google.com/',
+      const options: RawOptions = {
+        lang: 'en-US',
         out: tempDirectory,
         overwrite: true,
-        lang: 'en-US',
+        platform,
+        targetUrl: 'https://google.com/',
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
@@ -115,6 +126,34 @@ describe('Nativefier', () => {
     },
   );
 });
+
+function generateShortcutsFile(dir: string): string {
+  const shortcuts = [
+    {
+      key: 'MediaPlayPause',
+      inputEvents: [
+        {
+          type: 'keyDown',
+          keyCode: 'Space',
+        },
+      ],
+    },
+    {
+      key: 'MediaNextTrack',
+      inputEvents: [
+        {
+          type: 'keyDown',
+          keyCode: 'Right',
+        },
+      ],
+    },
+  ];
+
+  const filename = path.join(dir, 'shortcuts.json');
+  fs.writeFileSync(filename, JSON.stringify(shortcuts));
+
+  return filename;
+}
 
 describe('Nativefier upgrade', () => {
   jest.setTimeout(300000);
@@ -134,19 +173,21 @@ describe('Nativefier upgrade', () => {
     'can upgrade a Nativefier app for platform/arch: %s',
     async (baseAppOptions) => {
       const tempDirectory = getTempDir('integtestUpgrade1');
-      const options = {
-        targetUrl: 'https://google.com/',
+      const shortcuts = generateShortcutsFile(tempDirectory);
+      const options: RawOptions = {
+        electronVersion: '11.2.3',
+        globalShortcuts: shortcuts,
         out: tempDirectory,
         overwrite: true,
-        electronVersion: '11.2.3',
+        targetUrl: 'https://google.com/',
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
       await checkApp(appPath as string, options);
 
-      const upgradeOptions = {
-        upgrade: appPath,
+      const upgradeOptions: RawOptions = {
+        upgrade: appPath as string,
         overwrite: true,
       };
 

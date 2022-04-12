@@ -40,7 +40,7 @@ function domainify(url: string): string {
   return domain;
 }
 
-export function getAppIcon(): string {
+export function getAppIcon(): string | undefined {
   // Prefer ICO under Windows, see
   // https://www.electronjs.org/docs/api/browser-window#new-browserwindowoptions
   // https://www.electronjs.org/docs/api/native-image#supported-formats
@@ -56,7 +56,7 @@ export function getAppIcon(): string {
   }
 }
 
-export function getCounterValue(title: string): string {
+export function getCounterValue(title: string): string | undefined {
   const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
   const match = itemCountRegex.exec(title);
   return match ? match[1] : undefined;
@@ -75,7 +75,7 @@ export function getCSSToInject(): string {
   for (const cssFile of cssFiles) {
     log.debug('Injecting CSS file', cssFile);
     const cssFileData = fs.readFileSync(cssFile);
-    cssToInject += `/* ${cssFile} */\n\n ${cssFileData}\n\n`;
+    cssToInject += `/* ${cssFile} */\n\n ${cssFileData.toString()}\n\n`;
   }
   return cssToInject;
 }
@@ -106,6 +106,7 @@ function isInternalLoginPage(url: string): boolean {
     'okta\\.[a-zA-Z\\.]*', // Okta
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
+    '(?:id|auth)\\.atlassian\\.[a-zA-Z]+', // Atlassian
   ];
   // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const regex = RegExp(internalLoginPagesArray.join('|'));
@@ -115,7 +116,8 @@ function isInternalLoginPage(url: string): boolean {
 export function linkIsInternal(
   currentUrl: string,
   newUrl: string,
-  internalUrlRegex: string | RegExp,
+  internalUrlRegex: string | RegExp | undefined,
+  isStrictInternalUrlsEnabled: boolean | undefined,
 ): boolean {
   log.debug('linkIsInternal', { currentUrl, newUrl, internalUrlRegex });
   if (newUrl.split('#')[0] === 'about:blank') {
@@ -131,6 +133,10 @@ export function linkIsInternal(
     if (regex.test(newUrl)) {
       return true;
     }
+  }
+
+  if (isStrictInternalUrlsEnabled) {
+    return currentUrl == newUrl;
   }
 
   try {
@@ -178,5 +184,10 @@ export function removeUserAgentSpecifics(
   // We just need to strip out the appName/1.0.0 and Electron/electronVersion
   return userAgentFallback
     .replace(`Electron/${process.versions.electron} `, '')
-    .replace(`${appName}/${appVersion} `, ' ');
+    .replace(`${appName}/${appVersion} `, '');
+}
+
+/** Removes extra spaces from a text */
+export function cleanupPlainText(text: string): string {
+  return text.trim().replace(/\s+/g, ' ');
 }

@@ -19,7 +19,11 @@ import {
 } from '../constants';
 import { inferPlatform, inferArch } from '../infer/inferOs';
 import { asyncConfig } from './asyncConfig';
-import { AppOptions, GlobalShortcut, RawOptions } from './model';
+import {
+  AppOptions,
+  GlobalShortcut,
+  RawOptions,
+} from '../../shared/src/options/model';
 import { normalizeUrl } from './normalizeUrl';
 import { parseJson } from '../utils/parseUtils';
 
@@ -44,6 +48,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       name: typeof rawOptions.name === 'string' ? rawOptions.name : '',
       out: rawOptions.out ?? process.cwd(),
       overwrite: rawOptions.overwrite,
+      quiet: rawOptions.quiet ?? false,
       platform: rawOptions.platform,
       portable: rawOptions.portable ?? false,
       targetUrl:
@@ -95,12 +100,14 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       lang: rawOptions.lang,
       maximize: rawOptions.maximize ?? false,
       nativefierVersion: packageJson.version,
+      quiet: rawOptions.quiet ?? false,
       processEnvs: rawOptions.processEnvs,
       proxyRules: rawOptions.proxyRules,
       showMenuBar: rawOptions.showMenuBar ?? false,
       singleInstance: rawOptions.singleInstance ?? false,
+      strictInternalUrls: rawOptions.strictInternalUrls ?? false,
       titleBarStyle: rawOptions.titleBarStyle,
-      tray: rawOptions.tray ?? false,
+      tray: rawOptions.tray ?? 'false',
       userAgent: rawOptions.userAgent,
       userAgentHonest: rawOptions.userAgentHonest ?? false,
       verbose: rawOptions.verbose ?? false,
@@ -134,10 +141,13 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       'Running in verbose mode! This will produce a mountain of logs and',
       'is recommended only for troubleshooting or if you like Shakespeare.',
     );
+  } else if (options.nativefier.quiet) {
+    log.setLevel('silent');
   } else {
     log.setLevel('info');
   }
 
+  let requestedElectronBefore16 = false;
   if (options.packager.electronVersion) {
     const requestedVersion: string = options.packager.electronVersion;
     if (!SEMVER_VERSION_NUMBER_REGEX.exec(requestedVersion)) {
@@ -151,12 +161,18 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
         `\nSimply abort & re-run without passing the version flag to default to ${DEFAULT_ELECTRON_VERSION}`,
       );
     }
+    if (requestedMajorVersion < 16) {
+      requestedElectronBefore16 = true;
+    }
   }
 
   if (options.nativefier.widevine) {
+    const widevineSuffix = requestedElectronBefore16 ? '-wvvmp' : '+wvcus';
+    log.debug(`Using widevine release suffix "${widevineSuffix}"`);
     const widevineElectronVersion = `${
       options.packager.electronVersion as string
-    }-wvvmp`;
+    }${widevineSuffix}`;
+
     try {
       await axios.get(
         `https://github.com/castlabs/electron-releases/releases/tag/v${widevineElectronVersion}`,
@@ -222,11 +238,18 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
   }
 
   if (rawOptions.globalShortcuts) {
-    log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
-    const globalShortcuts = parseJson<GlobalShortcut[]>(
-      fs.readFileSync(rawOptions.globalShortcuts as string).toString(),
-    );
-    options.nativefier.globalShortcuts = globalShortcuts;
+    if (typeof rawOptions.globalShortcuts === 'string') {
+      // This is a file we got over the command line
+      log.debug('Using global shortcuts file at', rawOptions.globalShortcuts);
+      const globalShortcuts = parseJson<GlobalShortcut[]>(
+        fs.readFileSync(rawOptions.globalShortcuts).toString(),
+      );
+      options.nativefier.globalShortcuts = globalShortcuts;
+    } else {
+      // This is an object we got from an existing config in an upgrade
+      log.debug('Using global shortcuts object', rawOptions.globalShortcuts);
+      options.nativefier.globalShortcuts = rawOptions.globalShortcuts;
+    }
   }
 
   await asyncConfig(options);

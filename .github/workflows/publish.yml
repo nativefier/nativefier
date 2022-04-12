@@ -2,22 +2,40 @@ name: publish
 on:
   release:
     types:
-    - created
+      - created
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      # Setup .npmrc file to publish to npm
-    - uses: actions/setup-node@v1
-      with:
-        # Align the version of Node here with ci.yml.
-        node-version: '16.x'
-        registry-url: 'https://registry.npmjs.org'
-    # Will also (through `prepare` hook): 1. install ./app, and 2. build
-    - run: npm install --no-fund
-    - run: npm test
-    - run: npm run lint
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: actions/checkout@v2
+        # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v1
+        with:
+          # Align the version of Node here with ci.yml.
+          node-version: '17.x'
+          registry-url: 'https://registry.npmjs.org'
+      # Will also (through `prepare` hook): 1. install ./app, and 2. build
+      - run: npm ci --no-fund
+      - run: npm test
+      - run: npm run lint
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  docker:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag "nativefier/nativefier:latest"
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Tag and push Docker image
+        run: |
+          docker tag "nativefier/nativefier:latest" "nativefier/nativefier:${GITHUB_REF_NAME}"
+          docker push "nativefier/nativefier:latest"
+          docker push "nativefier/nativefier:${GITHUB_REF_NAME}"

@@ -9,7 +9,7 @@ import {
   MenuItemConstructorOptions,
 } from 'electron';
 
-import { isOSX, openExternal } from '../helpers/helpers';
+import { cleanupPlainText, isOSX, openExternal } from '../helpers/helpers';
 import * as log from '../helpers/loggingHelper';
 import {
   clearAppData,
@@ -21,6 +21,7 @@ import {
   zoomOut,
   zoomReset,
 } from '../helpers/windowHelpers';
+import { OutputOptions } from '../../../shared/src/options/model';
 
 type BookmarksLink = {
   type: 'link';
@@ -40,7 +41,10 @@ type BookmarksMenuConfig = {
   bookmarks: BookmarkConfig[];
 };
 
-export function createMenu(options, mainWindow: BrowserWindow): void {
+export function createMenu(
+  options: OutputOptions,
+  mainWindow: BrowserWindow,
+): void {
   log.debug('createMenu', { options, mainWindow });
   const menuTemplate = generateMenu(options, mainWindow);
 
@@ -51,14 +55,18 @@ export function createMenu(options, mainWindow: BrowserWindow): void {
 }
 
 export function generateMenu(
-  options,
+  options: {
+    disableDevTools: boolean;
+    nativefierVersion: string;
+    zoom?: number;
+  },
   mainWindow: BrowserWindow,
 ): MenuItemConstructorOptions[] {
-  const { nativefierVersion, zoomBuildTimeValue, disableDevTools } = options;
+  const { nativefierVersion, zoom, disableDevTools } = options;
   const zoomResetLabel =
-    zoomBuildTimeValue === 1.0
+    !zoom || zoom === 1.0
       ? 'Reset Zoom'
-      : `Reset Zoom (to ${zoomBuildTimeValue * 100}%, set at build time)`;
+      : `Reset Zoom (to ${(zoom * 100).toFixed(1)}%, set at build time)`;
 
   const editMenu: MenuItemConstructorOptions = {
     label: '&Edit',
@@ -87,6 +95,15 @@ export function generateMenu(
         role: 'copy',
       },
       {
+        label: 'Copy as Plain Text',
+        accelerator: 'CmdOrCtrl+Shift+C',
+        click: (): void => {
+          // We use clipboard.readText to strip down formatting
+          const text = clipboard.readText('selection');
+          clipboard.writeText(cleanupPlainText(text), 'clipboard');
+        },
+      },
+      {
         label: 'Copy Current URL',
         accelerator: 'CmdOrCtrl+L',
         click: (): void => clipboard.writeText(getCurrentURL()),
@@ -108,7 +125,10 @@ export function generateMenu(
       },
       {
         label: 'Clear App Data',
-        click: (item: MenuItem, focusedWindow: BrowserWindow): void => {
+        click: (
+          item: MenuItem,
+          focusedWindow: BrowserWindow | undefined,
+        ): void => {
           log.debug('Clear App Data.click', {
             item,
             focusedWindow,
@@ -164,7 +184,10 @@ export function generateMenu(
         accelerator: isOSX() ? 'Ctrl+Cmd+F' : 'F11',
         enabled: mainWindow.isFullScreenable() || isOSX(),
         visible: mainWindow.isFullScreenable() || isOSX(),
-        click: (item: MenuItem, focusedWindow: BrowserWindow): void => {
+        click: (
+          item: MenuItem,
+          focusedWindow: BrowserWindow | undefined,
+        ): void => {
           log.debug('Toggle Full Screen.click()', {
             item,
             focusedWindow,
@@ -210,14 +233,14 @@ export function generateMenu(
       {
         label: zoomResetLabel,
         accelerator: 'CmdOrCtrl+0',
-        click: zoomReset,
+        click: (): void => zoomReset(options),
       },
       {
         label: 'ZoomResetAdditionalShortcut',
         visible: false,
         acceleratorWorksWhenHidden: true,
         accelerator: 'CmdOrCtrl+num0',
-        click: zoomReset,
+        click: (): void => zoomReset(options),
       },
     ],
   };
@@ -230,7 +253,7 @@ export function generateMenu(
       {
         label: 'Toggle Developer Tools',
         accelerator: isOSX() ? 'Alt+Cmd+I' : 'Ctrl+Shift+I',
-        click: (item: MenuItem, focusedWindow: BrowserWindow) => {
+        click: (item: MenuItem, focusedWindow: BrowserWindow | undefined) => {
           log.debug('Toggle Developer Tools.click()', { item, focusedWindow });
           if (!focusedWindow) {
             focusedWindow = mainWindow;
@@ -349,12 +372,11 @@ function injectBookmarks(menuTemplate: MenuItemConstructorOptions[]): void {
   }
 
   try {
-    const bookmarksMenuConfig: BookmarksMenuConfig = JSON.parse(
+    const bookmarksMenuConfig = JSON.parse(
       fs.readFileSync(bookmarkConfigPath, 'utf-8'),
-    );
-    const bookmarksMenu: MenuItemConstructorOptions = {
-      label: bookmarksMenuConfig.menuLabel,
-      submenu: bookmarksMenuConfig.bookmarks.map((bookmark) => {
+    ) as BookmarksMenuConfig;
+    const submenu: MenuItemConstructorOptions[] =
+      bookmarksMenuConfig.bookmarks.map((bookmark) => {
         switch (bookmark.type) {
           case 'link':
             if (!('title' in bookmark && 'url' in bookmark)) {
@@ -370,11 +392,12 @@ function injectBookmarks(menuTemplate: MenuItemConstructorOptions[]): void {
             return {
               label: bookmark.title,
               click: (): void => {
-                goToURL(bookmark.url).catch((err: unknown): void =>
+                goToURL(bookmark.url)?.catch((err: unknown): void =>
                   log.error(`${bookmark.title}.click ERROR`, err),
                 );
               },
-              accelerator: 'shortcut' in bookmark ? bookmark.shortcut : null,
+              accelerator:
+                'shortcut' in bookmark ? bookmark.shortcut : undefined,
             };
           case 'separator':
             return {
@@ -385,7 +408,10 @@ function injectBookmarks(menuTemplate: MenuItemConstructorOptions[]): void {
               'A bookmarks menu entry has an invalid type; type must be one of "link", "separator".',
             );
         }
-      }),
+      });
+    const bookmarksMenu: MenuItemConstructorOptions = {
+      label: bookmarksMenuConfig.menuLabel,
+      submenu,
     };
     // Insert custom bookmarks menu between menus "View" and "Window"
     menuTemplate.splice(menuTemplate.length - 2, 0, bookmarksMenu);

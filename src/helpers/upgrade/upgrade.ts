@@ -3,7 +3,10 @@ import * as path from 'path';
 
 import * as log from 'loglevel';
 
-import { NativefierOptions, RawOptions } from '../../options/model';
+import {
+  NativefierOptions,
+  RawOptions,
+} from '../../../shared/src/options/model';
 import { dirExists, fileExists } from '../fsHelpers';
 import { extractBoolean, extractString } from './plistInfoXMLHelpers';
 import { getOptionsFromExecutable } from './executableHelpers';
@@ -11,6 +14,7 @@ import { parseJson } from '../../utils/parseUtils';
 
 export type UpgradeAppInfo = {
   appResourcesDir: string;
+  appRoot: string;
   options: NativefierOptions;
 };
 
@@ -35,6 +39,25 @@ function findUpgradeAppResourcesDir(searchDir: string): string | null {
 
   // Didn't find it down here
   return null;
+}
+
+function getAppRoot(
+  appResourcesDir: string,
+  options: NativefierOptions,
+): string {
+  switch (options.platform) {
+    case 'darwin':
+      return path.resolve(path.join(appResourcesDir, '..', '..', '..', '..'));
+    case 'linux':
+    case 'win32':
+      return path.resolve(path.join(appResourcesDir, '..', '..'));
+    default:
+      throw new Error(
+        `Could not find the app root for platform: ${
+          options.platform ?? 'undefined'
+        }`,
+      );
+  }
 }
 
 function getIconPath(appResourcesDir: string): string | undefined {
@@ -160,7 +183,7 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
   const nativefierJSONPath = path.join(appResourcesDir, 'nativefier.json');
 
   log.debug(`Loading ${nativefierJSONPath}`);
-  const options = parseJson<NativefierOptions>(
+  let options = parseJson<NativefierOptions>(
     fs.readFileSync(nativefierJSONPath, 'utf8'),
   );
 
@@ -172,11 +195,18 @@ export function findUpgradeApp(upgradeFrom: string): UpgradeAppInfo | null {
 
   options.electronVersion = undefined;
 
+  options = {
+    ...options,
+    ...getOptionsFromExecutable(appResourcesDir, options),
+  };
+
+  const appRoot = getAppRoot(appResourcesDir, options);
+
   return {
     appResourcesDir,
+    appRoot,
     options: {
       ...options,
-      ...getOptionsFromExecutable(appResourcesDir, options),
       ...getInfoPListOptions(appResourcesDir, options),
       asar: options.asar !== undefined ? options.asar : isAsar(appResourcesDir),
       icon: getIconPath(appResourcesDir),
@@ -194,7 +224,6 @@ export function useOldAppOptions(
     rawOptions.out = rawOptions.targetUrl;
   }
 
-  log.debug('rawOptions', rawOptions);
   log.debug('oldApp', oldApp);
 
   const combinedOptions = { ...rawOptions, ...oldApp.options };

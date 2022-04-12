@@ -1,15 +1,17 @@
 import * as crypto from 'crypto';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as path from 'path';
-import { promisify } from 'util';
 
 import * as log from 'loglevel';
 
-import { copyFileOrDir, generateRandomSuffix } from '../helpers/helpers';
-import { AppOptions, OutputOptions, PackageJSON } from '../options/model';
+import { generateRandomSuffix } from '../helpers/helpers';
+import {
+  AppOptions,
+  OutputOptions,
+  PackageJSON,
+} from '../../shared/src/options/model';
 import { parseJson } from '../utils/parseUtils';
-
-const writeFileAsync = promisify(fs.writeFile);
+import { DEFAULT_APP_NAME } from '../constants';
 
 /**
  * Only picks certain app args to pass to nativefier.json
@@ -66,7 +68,7 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     maxWidth: options.nativefier.maxWidth,
     minHeight: options.nativefier.minHeight,
     minWidth: options.nativefier.minWidth,
-    name: options.packager.name,
+    name: options.packager.name ?? DEFAULT_APP_NAME,
     nativefierVersion: options.nativefier.nativefierVersion,
     osxNotarize: options.packager.osxNotarize,
     osxSign: options.packager.osxSign,
@@ -78,6 +80,7 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     quiet: options.packager.quiet,
     showMenuBar: options.nativefier.showMenuBar,
     singleInstance: options.nativefier.singleInstance,
+    strictInternalUrls: options.nativefier.strictInternalUrls,
     targetUrl: options.packager.targetUrl,
     titleBarStyle: options.nativefier.titleBarStyle,
     tray: options.nativefier.tray,
@@ -128,7 +131,7 @@ async function maybeCopyScripts(
     const destFileName = `inject-${postFixHash}${path.extname(src)}`;
     const destPath = path.join(dest, 'inject', destFileName);
     log.debug(`Copying injection file "${src}" to "${destPath}"`);
-    await copyFileOrDir(src, destPath);
+    await fs.copy(src, destPath);
   }
 }
 
@@ -153,7 +156,7 @@ function changeAppPackageJsonName(
   appPath: string,
   name: string,
   url: string,
-): void {
+): string {
   const packageJsonPath = path.join(appPath, '/package.json');
   const packageJson = parseJson<PackageJSON>(
     fs.readFileSync(packageJsonPath).toString(),
@@ -165,7 +168,9 @@ function changeAppPackageJsonName(
   packageJson.name = normalizedAppName;
   log.debug(`Updating ${packageJsonPath} 'name' field to ${normalizedAppName}`);
 
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+
+  return normalizedAppName;
 }
 
 /**
@@ -179,7 +184,7 @@ export async function prepareElectronApp(
 ): Promise<void> {
   log.debug(`Copying electron app from ${src} to ${dest}`);
   try {
-    await copyFileOrDir(src, dest);
+    await fs.copy(src, dest);
   } catch (err: unknown) {
     throw `Error copying electron app from ${src} to temp dir ${dest}. Error: ${
       (err as Error).message
@@ -187,16 +192,14 @@ export async function prepareElectronApp(
   }
 
   const appJsonPath = path.join(dest, '/nativefier.json');
-  log.debug(`Writing app config to ${appJsonPath}`);
-  await writeFileAsync(
-    appJsonPath,
-    JSON.stringify(pickElectronAppArgs(options)),
-  );
+  const pickedOptions = pickElectronAppArgs(options);
+  log.debug(`Writing app config to ${appJsonPath}`, pickedOptions);
+  await fs.writeFile(appJsonPath, JSON.stringify(pickedOptions));
 
   if (options.nativefier.bookmarksMenu) {
     const bookmarksJsonPath = path.join(dest, '/bookmarks.json');
     try {
-      await copyFileOrDir(options.nativefier.bookmarksMenu, bookmarksJsonPath);
+      await fs.copy(options.nativefier.bookmarksMenu, bookmarksJsonPath);
     } catch (err: unknown) {
       log.error('Error copying bookmarks menu config file.', err);
     }
@@ -207,9 +210,10 @@ export async function prepareElectronApp(
   } catch (err: unknown) {
     log.error('Error copying injection files.', err);
   }
-  changeAppPackageJsonName(
+  const normalizedAppName = changeAppPackageJsonName(
     dest,
     options.packager.name as string,
     options.packager.targetUrl,
   );
+  options.packager.appBundleId = `com.electron.nativefier.${normalizedAppName}`;
 }

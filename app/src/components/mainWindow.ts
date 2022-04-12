@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcMain, BrowserWindow, IpcMainEvent } from 'electron';
+import { ipcMain, BrowserWindow, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import log from 'loglevel';
 
@@ -14,11 +14,16 @@ import {
 import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearCache,
+  createNewTab,
   getDefaultWindowOptions,
   hideWindow,
 } from '../helpers/windowHelpers';
 import { initContextMenu } from './contextMenu';
 import { createMenu } from './menu';
+import {
+  OutputOptions,
+  outputOptionsToWindowOptions,
+} from '../../../shared/src/options/model';
 
 export const APP_ARGS_FILE_PATH = path.join(__dirname, '..', 'nativefier.json');
 
@@ -32,7 +37,7 @@ type SessionInteractionRequest = {
 
 type SessionInteractionResult = {
   id?: string;
-  value?: unknown;
+  value?: unknown | Promise<unknown>;
   error?: Error;
 };
 
@@ -41,7 +46,7 @@ type SessionInteractionResult = {
  * @param {function} setDockBadge
  */
 export async function createMainWindow(
-  nativefierOptions,
+  nativefierOptions: OutputOptions,
   setDockBadge: (value: number | string, bounce?: boolean) => void,
 ): Promise<BrowserWindow> {
   const options = { ...nativefierOptions };
@@ -66,10 +71,10 @@ export async function createMainWindow(
     fullscreen: options.fullScreen,
     // Whether the window should always stay on top of other windows. Default is false.
     alwaysOnTop: options.alwaysOnTop,
-    titleBarStyle: options.titleBarStyle,
+    titleBarStyle: options.titleBarStyle ?? 'default',
     show: options.tray !== 'start-in-tray',
     backgroundColor: options.backgroundColor,
-    ...getDefaultWindowOptions(options),
+    ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
   });
 
   // Just load about:blank to start, gives Spectron something to latch onto initially for testing.
@@ -87,9 +92,11 @@ export async function createMainWindow(
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
   }
+
+  const windowOptions = outputOptionsToWindowOptions(options);
   createMenu(options, mainWindow);
   createContextMenu(options, mainWindow);
-  setupNativefierWindow(options, mainWindow);
+  setupNativefierWindow(windowOptions, mainWindow);
 
   // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
   // We can't quite cut over to that yet for a few reasons:
@@ -101,13 +108,13 @@ export async function createMainWindow(
   // users are being pointed to use setWindowOpenHandler.
   // E.g., https://github.com/electron/electron/issues/28374
 
-  // Note it is important to add this handler only to the *main* window,
+  // Note it is important to add these handlers only to the *main* window,
   // else we run into weird behavior like opening tabs twice
   mainWindow.webContents.on(
     'new-window',
     (event, url, frameName, disposition) => {
       onNewWindow(
-        options,
+        windowOptions,
         setupNativefierWindow,
         event,
         url,
@@ -116,6 +123,16 @@ export async function createMainWindow(
       ).catch((err) => log.error('onNewWindow ERROR', err));
     },
   );
+  // @ts-expect-error new-tab isn't in the type definition, but it does exist
+  mainWindow.on('new-tab', () => {
+    createNewTab(
+      windowOptions,
+      setupNativefierWindow,
+      options.targetUrl,
+      true,
+      mainWindow,
+    );
+  });
 
   if (options.counter) {
     setupCounter(options, mainWindow, setDockBadge);
@@ -134,22 +151,27 @@ export async function createMainWindow(
     await clearCache(mainWindow);
   }
 
-  await mainWindow.loadURL(options.targetUrl);
+  if (options.targetUrl) {
+    await mainWindow.loadURL(options.targetUrl);
+  }
 
   setupCloseEvent(options, mainWindow);
 
   return mainWindow;
 }
 
-function createContextMenu(options, window: BrowserWindow): void {
+function createContextMenu(
+  options: OutputOptions,
+  window: BrowserWindow,
+): void {
   if (!options.disableContextMenu) {
     initContextMenu(options, window);
   }
 }
 
-export function saveAppArgs(newAppArgs: any): void {
+export function saveAppArgs(newAppArgs: OutputOptions): void {
   try {
-    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs));
+    fs.writeFileSync(APP_ARGS_FILE_PATH, JSON.stringify(newAppArgs, null, 2));
   } catch (err: unknown) {
     log.warn(
       `WARNING: Ignored nativefier.json rewrital (${(err as Error).message})`,
@@ -157,19 +179,29 @@ export function saveAppArgs(newAppArgs: any): void {
   }
 }
 
-function setupCloseEvent(options, window: BrowserWindow): void {
-  window.on('close', (event: IpcMainEvent) => {
+function setupCloseEvent(options: OutputOptions, window: BrowserWindow): void {
+  window.on('close', (event: Event) => {
     log.debug('mainWindow.close', event);
     if (window.isFullScreen()) {
       if (nativeTabsSupported()) {
         window.moveTabToNewWindow();
       }
       window.setFullScreen(false);
-      window.once('leave-full-screen', (event: IpcMainEvent) =>
-        hideWindow(window, event, options.fastQuit, options.tray),
+      window.once('leave-full-screen', (event: Event) =>
+        hideWindow(
+          window,
+          event,
+          options.fastQuit ?? false,
+          options.tray ?? 'false',
+        ),
       );
     }
-    hideWindow(window, event, options.fastQuit, options.tray);
+    hideWindow(
+      window,
+      event,
+      options.fastQuit ?? false,
+      options.tray ?? 'false',
+    );
 
     if (options.clearCache) {
       clearCache(window).catch((err) => log.error('clearCache ERROR', err));
@@ -178,7 +210,7 @@ function setupCloseEvent(options, window: BrowserWindow): void {
 }
 
 function setupCounter(
-  options,
+  options: OutputOptions,
   window: BrowserWindow,
   setDockBadge: (value: number | string, bounce?: boolean) => void,
 ): void {
@@ -194,7 +226,7 @@ function setupCounter(
 }
 
 function setupNotificationBadge(
-  options,
+  options: OutputOptions,
   window: BrowserWindow,
   setDockBadge: (value: number | string, bounce?: boolean) => void,
 ): void {
@@ -211,7 +243,10 @@ function setupNotificationBadge(
   });
 }
 
-function setupSessionInteraction(options, window: BrowserWindow): void {
+function setupSessionInteraction(
+  options: OutputOptions,
+  window: BrowserWindow,
+): void {
   // See API.md / "Accessing The Electron Session"
   ipcMain.on(
     'session-interaction',
@@ -233,14 +268,13 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
           }
 
           // Call func with funcArgs
+          // @ts-expect-error accessing a func by string name
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           result.value = window.webContents.session[request.func](
             ...request.funcArgs,
           );
 
-          if (
-            result.value !== undefined &&
-            typeof result.value['then'] === 'function'
-          ) {
+          if (result.value !== undefined && result.value instanceof Promise) {
             // This is a promise. We'll resolve it here otherwise it will blow up trying to serialize it in the reply
             (result.value as Promise<unknown>)
               .then((trueResultValue) => {
@@ -256,11 +290,13 @@ function setupSessionInteraction(options, window: BrowserWindow): void {
         } else if (request.property !== undefined) {
           if (request.propertyValue !== undefined) {
             // Set the property
+            // @ts-expect-error setting a property by string name
             window.webContents.session[request.property] =
               request.propertyValue;
           }
 
           // Get the property value
+          // @ts-expect-error accessing a property by string name
           result.value = window.webContents.session[request.property];
         } else {
           // Why even send the event if you're going to do this? You're just wasting time! ;)

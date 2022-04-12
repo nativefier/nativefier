@@ -58,7 +58,7 @@ type convert &>/dev/null && HAVE_IMAGEMAGICK=true && CONVERT="convert"
 type sips &>/dev/null && HAVE_SIPS=true
 
 if [[ -n "$HAVE_IMAGEMAGICK" || -n "$HAVE_GRAPHICSMAGICK" ]]; then
-  PNG_PATH="$(mktemp -d)/icon.png"
+  PNG_PATH="$(mktemp -d -t nativefier-iconset-XXXXXX)/icon.png"
   "${BASH_SOURCE%/*}/convertToPng" "${SOURCE}" "${PNG_PATH}"
   make_iconset_imagemagick "${PNG_PATH}" "${DEST}"
 elif [[ -n "$HAVE_SIPS" ]]; then

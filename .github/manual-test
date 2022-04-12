@@ -13,7 +13,7 @@ function launch_app() {
   if [ "$(uname -s)" = "Darwin" ]; then
     open -a "$1/$2-darwin-x64/$2.app"
   elif [ "$(uname -o)" = "Msys" ]; then
-    "$1/$2-win32-x64/$2.exe" --verbose
+    "$1/$2-win32-x64/$2.exe"
   else
     "$1/$2-linux-x64/$2"
   fi
@@ -64,6 +64,8 @@ printf '\n***** SMOKE TEST 1: Test checklist *****
 - Injected css: should make npmjs all blue
 - Internal links open internally
 - External links open in browser
+- Context menu -> Open Link In New Window works
+- MAC ONLY: Context menu -> Open Link In New Tab works
 - Keyboard shortcuts: {back, forward, zoom in/out/zero} work
 - Console: no Electron runtime deprecation warnings/error logged'
 launch_app "$tmp_dir" "$name"
@@ -74,15 +76,16 @@ request_feedback "$tmp_dir"
 printf "\n***** SMOKE TEST 2: Setting up test and building app... *****\n"
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-XXXXX)
 name="nativefier-smoke-test-2"
-node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
-  --basic-auth-username foo \
-  --basic-auth-password bar \
+# Removing for now as httpbin is not presently up
+# node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+node ./lib/cli.js 'https://authenticationtest.com/HTTPAuth/' \
+  --basic-auth-username user \
+  --basic-auth-password pass \
   --name "$name" \
   "$tmp_dir"
 
 printf '\n***** SMOKE TEST 2: Test checklist *****
-- Was successfully logged in via HTTP Basic Auth. Should see:
-  { "authenticated": true,  "user": "foo" }
+- Was successfully logged in via HTTP Basic Auth. Should see a "Login Success" and a green banner.
 - Console: no Electron runtime deprecation warnings/error logged'
 launch_app "$tmp_dir" "$name"
 request_feedback "$tmp_dir"
@@ -92,14 +95,49 @@ request_feedback "$tmp_dir"
 printf '\n***** SMOKE TEST 3: Setting up test and building app... *****\n'
 tmp_dir=$(mktemp -d -t nativefier-manual-test-auth-prompt-XXXXX)
 name='nativefier-smoke-test-3'
-node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+# node ./lib/cli.js 'http://httpbin.org/basic-auth/foo/bar' \
+node ./lib/cli.js 'https://authenticationtest.com/HTTPAuth/' \
   --name "$name" \
   "$tmp_dir"
 
 printf '\n***** SMOKE TEST 3: Test checklist *****
-- Should get a login window. Log in with username="foo" and password="bar".
-- Post login, you should see:
-  { "authenticated": true,  "user": "foo" }
+- Should get a login window. Log in with username="user" and password="pass".
+- Post login, you should see a "Login Success" and a green banner.
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 4: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-tray-XXXXX)
+name='nativefier-smoke-test-4'
+node ./lib/cli.js 'https://google.com/' \
+  --name "$name" \
+  --tray \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 4: Test checklist *****
+- Should have an app with a tray icon
+- Console: no Electron runtime deprecation warnings/error logged'
+
+launch_app "$tmp_dir" "$name"
+request_feedback "$tmp_dir"
+
+# ------------------------------------------------------------------------------
+
+printf '\n***** SMOKE TEST 5: Setting up test and building app... *****\n'
+tmp_dir=$(mktemp -d -t nativefier-manual-test-start-in-tray-XXXXX)
+name='nativefier-smoke-test-5'
+node ./lib/cli.js 'https://google.com/' \
+  --name "$name" \
+  --tray start-in-tray \
+  "$tmp_dir"
+
+printf '\n***** SMOKE TEST 5: Test checklist *****
+- Should have an app that does not show a window initially,
+  but will have a tray icon that will show the window.
 - Console: no Electron runtime deprecation warnings/error logged'
 
 launch_app "$tmp_dir" "$name"

@@ -1,15 +1,8 @@
 {
+  "extends": "../tsconfig-base.json",
   "compilerOptions": {
-    "allowJs": false,
-    "declaration": true,
-    "incremental": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "./lib",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "strict": true,
+    "outDir": "../lib",
+    "rootDir": ".",
     // Bumping the minimum required Node version? You must bump:
     //   1. package.json -> engines.node
     //   2. package.json -> devDependencies.@types/node
@@ -28,9 +21,11 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
   },
-  "include": [
-    "./src/**/*"
+  "references": [
+    {
+      "path": "../shared"
+    }
   ]
 }

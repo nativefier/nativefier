@@ -1,4 +1,209 @@
 
+47.0.0 / 2022-04-10
+===================
+
+  * Bump default Electron to 18.0.3 (from 16.2.2)
+
+    As usual, we did our best to adapt to Electron breaking changes in 17/18,
+    but patches welcome to fix regressions. If unable to submit a patch, then
+    feel free to revert to Nativefier 46.2.1 or simply pass `-e 16.2.2` .
+    Release notes with breaking changes:
+
+    - https://www.electronjs.org/blog/electron-17-0
+    - https://www.electronjs.org/blog/electron-18-0
+
+    Detailed release notes:
+
+    - https://github.com/electron/electron/releases/tag/v17.0.0
+    - https://github.com/electron/electron/releases/tag/v18.0.0
+    - https://github.com/electron/electron/releases/tag/v18.0.1
+    - https://github.com/electron/electron/releases/tag/v18.0.2
+    - https://github.com/electron/electron/releases/tag/v18.0.3
+
+46.2.1 / 2022-04-10
+===================
+
+  * Bump default Electron to 16.2.1 (from 16.1.0), with security fixes:
+    - https://github.com/electron/electron/releases/tag/v16.1.1
+    - https://github.com/electron/electron/releases/tag/v16.2.0
+    - https://github.com/electron/electron/releases/tag/v16.2.1
+    - https://github.com/electron/electron/releases/tag/v16.2.2
+  * Upgrade dependencies lockfiles
+
+46.2.0 / 2022-03-20
+===================
+
+  * Bugfix: Strip LRM and RLM in Linux names (fix #1361, PR #1365)
+  * Bugfix: Remove extra whitespace in UserAgent (fix #1357, PR #1367)
+  * Docs: Fix broken link in `API.md` for `conceal` flag (PR #1364)
+  * Bump default Electron to 16.1.0 (from 16.0.9), with security fixes:
+    - https://github.com/electron/electron/releases/tag/v16.1.0
+    - https://github.com/electron/electron/releases/tag/v16.0.10
+  * Upgrade dependencies lockfiles
+
+46.1.1 / 2022-02-14
+===================
+
+  * Feature: Add "copy as plain text" in edit menu (PR #1351 @abhi12299, fix #1144)
+  * Bump default Electron to 16.0.9 (from 16.0.8), with security fixes
+    - https://github.com/electron/electron/releases/tag/v16.0.9
+  * Upgrade dependencies
+
+46.1.0 / 2022-02-06
+===================
+
+  * Add flag `--strict-internal-urls` to disable domain and subpath matching (PR #1340 @hbridge)
+  * Add flag `--quiet` flag to suppress all log output (PR #1342 @Nickersoft)
+  * Fix flag `--file-download-options` (PR #1350 @abhi12299, #1275)
+  * Allow setting default app destination with env. var. `NATIVEFIER_APPS_DIR` (PR #1339 @mattruzzi, #1336)
+  * Bump default Electron to 16.0.8, from 16.0.6
+    - https://github.com/electron/electron/releases/tag/v16.0.7
+    - https://github.com/electron/electron/releases/tag/v16.0.8
+  * Upgrade dependencies
+  * Docs:
+    - CATALOG.md: Document GCal needs lying about useragent for working notifications (fix #1292)
+    - API.md: Fix broken "insecurity options" link (PR #1345 @ZacharyTalis)
+    - README.md: mention Snap & AUR repos
+    - HACKING.md: add triage guidelines
+
+46.0.4 / 2022-01-06
+===================
+
+  * CI: (Attempt to) push tag, not unreadable SHA
+
+46.0.3 / 2022-01-06
+===================
+
+  * CI: Push Docker image to our org, not my personal account
+
+46.0.2 / 2022-01-06
+===================
+
+  * CI: Fix Docker Hub image build & push (PR #1100, thx @snpranav)
+
+46.0.1 / 2022-01-06
+===================
+
+  * Fix `--widevine` broken since 46.0.0 (thx @loxK)
+  * Bump default Electron from 16.0.5 to 16.0.6
+    - https://github.com/electron/electron/releases/tag/v16.0.6
+
+46.0.0 / 2022-01-02
+===================
+
+  * Upgrade Electron from 13.6.3 & Chrome 91 to 16.0.5 & Chrome 96 (PR #1288)
+    We did our best to adapt to [Electron breaking changes](https://www.electronjs.org/docs/latest/breaking-changes) in 14/15/16, but as usual,
+    patches welcome to address regressions. For detailed release notes, see
+    - https://github.com/electron/electron/releases/tag/v14.0.0
+    - https://github.com/electron/electron/releases/tag/v15.0.0
+    - https://github.com/electron/electron/releases/tag/v16.0.0
+    - https://github.com/electron/electron/releases/tag/v16.0.1
+    - https://github.com/electron/electron/releases/tag/v16.0.2
+    - https://github.com/electron/electron/releases/tag/v16.0.3
+    - https://github.com/electron/electron/releases/tag/v16.0.4
+    - https://github.com/electron/electron/releases/tag/v16.0.5
+  * Build/CI: use setup-node-v2 cache to speed up build
+
+45.0.8 / 2021-12-06
+===================
+
+  * Fix 45.0.7 broken because of missing "chalk" dep (fix #1324)
+
+45.0.7 / 2021-12-06
+===================
+
+  * Use userAgentFallback for user-agent injection (PR #1316)
+  * Fix `--upgrade` (PR #1286)
+  * Bump default Electron to 13.6.3 with fixes & security fixes
+    - 13.6.3: https://github.com/electron/electron/releases/tag/v13.6.3
+  * Maintenance: documentation, scripts, dependencies bumps
+  * Display "we need your help" message when running CLI:
+
+```
+Hi! Nativefier is minimally maintained these days, and needs more hands.
+If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.
+Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.
+```
+
+45.0.6 / 2021-11-22
+===================
+
+  * Fix notifications (PR #1308)
+  * Fix icon conversion scripts broken on recent macOS (fix #1277)
+  * Bump default Electron to 13.6.2, with bug fixes & security fixes
+    - 13.6.2: https://github.com/electron/electron/releases/tag/v13.6.2
+  * Maintenance: bump CI Nodejs to 17, Relock dependencies
+
+45.0.5 / 2021-11-01
+===================
+
+  * Bump default Electron to 13.6.1, with bug fixes & security fixes
+    - 13.5.2: https://github.com/electron/electron/releases/tag/v13.5.2
+    - 13.6.0: https://github.com/electron/electron/releases/tag/v13.6.0
+    - 13.6.1: https://github.com/electron/electron/releases/tag/v13.6.1
+  * Maintenance: Fix auth manual tests (#1287), Bumps (axios, eslint), Doc & script nits
+
+45.0.4 / 2021-09-24
+===================
+
+  * Actually actually (TM) include lockfile in npm artifacts, duuuuuh
+
+45.0.3 / 2021-09-24
+===================
+
+  * Actually include package-lock.json in npm artifacts, duh
+
+45.0.2 / 2021-09-24
+===================
+
+  * Fix regressions in opening windows/tabs, update browser versions (PR #1284)
+  * Make macOS "bundle identifier" mention Nativefier (fix #866) (PR #1259)
+  * Maintenance: Work around yargs coerce issue (PR #1283)
+
+45.0.1 / 2021-09-20
+===================
+
+  * Auto-internal login pages: add `(id|auth).atlassian.com` (fix #1265)
+  * API.md: document need to use CSS `!important` keyword (fix #1264)
+  * Bump default Electron to 13.4.0 with security fixes
+  * Maintenance: deps bumps, fix build:watch script, re-introduce a lockfile
+
+45.0.0 / 2021-07-19
+===================
+
+  * **[BREAKING]** Bump default Electron to 13.1.7 with Chrome 91 (PR #1230)
+    See https://www.electronjs.org/blog/electron-13-0
+    and https://www.electronjs.org/blog/electron-13-0#breaking-changes
+
+44.0.7 / 2021-07-10
+===================
+
+  * Fix badge/counter icon not being removed correctly (#1251, PR #1252)
+  * App context menu: add "Save Image", "Copy Image", "Copy Image Address" (PR #1256)
+  * Bump default Electron from 12.0.12 to 12.0.14. Changelogs:
+    [Electron 12.0.13](https://github.com/electron/electron/releases/tag/v12.0.13)
+    [Electron 12.0.14](https://github.com/electron/electron/releases/tag/v12.0.14)
+  * Maintenance: {API.md, HACKING.md} documentation, improve `generate-changelog`
+
+44.0.6 / 2021-06-26
+===================
+
+Like 44.0.4, this release only contains one behind-the-scenes TS change with no user-visible changes.
+It is here to let us narrow down on potential regressions that may have crept in.
+It isn't especially scary, though. Do test it, use it, and report regressions!
+
+  * App: Enable TypeScript `strict:true`, more typescript-eslint rules, shared TS project (#1231)
+
+44.0.5 / 2021-06-25
+===================
+
+  * Fix "Reset Zoom" menu item (#1241, PR #1243)
+  * Fix `--tray start-in-tray` (#1225, PR #1235)
+  * Fix external URLs opening in a new Nativefier tab (#1228, PR #1229)
+  * Bump default Electron from 12.0.11 to 12.0.12. See changelog:
+    [Electron 12.0.12](https://github.com/electron/electron/releases/tag/v12.0.12)
+  * Maintenance: documentation
+
 44.0.4 / 2021-06-15
 ===================
 

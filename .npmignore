@@ -1,12 +1,12 @@
 /*
 !lib/
 !icon-scripts
+!npm-shrinkwrap.json
 .DS_Store
 src/
 *eslintrc.js
 *eslintrc.yml
 *tsconfig.tsbuildinfo
-*package-lock.json
 *tsconfig.json
 *jestSetupFiles*
 *-test.js
@@ -19,4 +19,5 @@ app/*
 !app/inject/
 !app/nativefier.json
 !app/package.json
+!app/npm-shrinkwrap.json
 .vscode/
