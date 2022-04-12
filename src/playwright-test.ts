@@ -2,6 +2,7 @@ import { once } from 'events';
 import * as fs from 'fs';
 import * as path from 'path';
 
+import { Shell } from 'electron';
 import {
   _electron,
   ConsoleMessage,
@@ -158,7 +159,7 @@ describe('Application launch', () => {
     await mainWindow.waitForLoadState('domcontentloaded');
 
     // Install the mock first
-    await app.evaluate(({ shell }) => {
+    await app.evaluate(({ shell }: { shell: Shell }) => {
       // @ts-expect-error injecting into shell so that this promise
       // can be accessed outside of this anonymous function's scope
       // Not my favorite thing to do, but I could not find another way
