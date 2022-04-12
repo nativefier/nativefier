@@ -687,7 +687,7 @@ if (require.main === module) {
     options.out = process.env.NATIVEFIER_APPS_DIR;
   }
 
-  if (((options.arch ?? '') as string).toLowerCase() === 'universal') {
+  if ((options.arch ?? '').toLowerCase() === 'universal') {
     buildUniversalApp(options).catch((error) => {
       log.error('Error during build. Run with --verbose for details.', error);
     });

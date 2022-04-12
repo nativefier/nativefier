@@ -133,7 +133,7 @@ function trimUnprocessableOptions(options: AppOptions): void {
 function isInvalidUniversal(options: RawOptions): boolean {
   const platform = normalizePlatform(options.platform);
   if (
-    ((options.arch ?? '') as string).toLowerCase() === 'universal' &&
+    (options.arch ?? '').toLowerCase() === 'universal' &&
     platform !== 'darwin' &&
     platform !== 'mas'
   ) {

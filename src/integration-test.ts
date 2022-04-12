@@ -21,7 +21,7 @@ async function checkApp(
   appRoot: string,
   inputOptions: RawOptions,
 ): Promise<void> {
-  const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
+  const arch = inputOptions.arch ? inputOptions.arch : inferArch();
   if (inputOptions.out !== undefined) {
     expect(
       path.join(
@@ -122,7 +122,7 @@ describe('Nativefier', () => {
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
-      await checkApp(appPath as string, options);
+      await checkApp(appPath, options);
     },
   );
 });
@@ -184,10 +184,10 @@ describe('Nativefier upgrade', () => {
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
-      await checkApp(appPath as string, options);
+      await checkApp(appPath, options);
 
       const upgradeOptions: RawOptions = {
-        upgrade: appPath as string,
+        upgrade: appPath,
         overwrite: true,
       };
 
@@ -195,7 +195,7 @@ describe('Nativefier upgrade', () => {
       options.electronVersion = DEFAULT_ELECTRON_VERSION;
       options.userAgent = baseAppOptions.userAgent;
       expect(upgradeAppPath).not.toBeUndefined();
-      await checkApp(upgradeAppPath as string, options);
+      await checkApp(upgradeAppPath, options);
     },
   );
 });
