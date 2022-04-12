@@ -98,9 +98,9 @@
   "jest": {
     "collectCoverage": true,
     "collectCoverageFrom": [
+      "./app/dist/**/*.js",
       "./lib/**/*.js",
-      "/app/dist/**/*.js",
-      "/app/lib/**/*.js"
+      "./shared/lib/**/*.js"
     ],
     "coveragePathIgnorePatterns": [
       "[.-]test.js$"
@@ -113,19 +113,18 @@
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "<rootDir>/src.*",
-      "<rootDir>/node_modules.*",
+      "<rootDir>/app/node_modules.*",
       "<rootDir>/app/src.*",
       "<rootDir>/app/lib.*",
-      "<rootDir>/app/node_modules.*"
+      "<rootDir>/src.*"
     ],
     "watchPathIgnorePatterns": [
-      "<rootDir>/src.*",
-      "<rootDir>/tsconfig-base.json",
-      "<rootDir>/app/src.*",
       "<rootDir>/app/lib.*",
+      "<rootDir>/app/src.*",
       "<rootDir>/app/tsconfig.json",
-      "<rootDir>/shared/tsconfig.json"
+      "<rootDir>/shared/tsconfig.json",
+      "<rootDir>/src.*",
+      "<rootDir>/tsconfig-base.json"
     ]
   },
   "prettier": {

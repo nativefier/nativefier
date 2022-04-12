@@ -18,6 +18,12 @@ const INJECT_DIR = path.join(__dirname, '..', 'app', 'inject');
 
 const log = console;
 
+function sleep(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
+
 describe('Application launch', () => {
   jest.setTimeout(60000);
 
@@ -50,6 +56,7 @@ describe('Application launch', () => {
   const spawnApp = async (
     playwrightConfig: NativefierOptions = { ...DEFAULT_CONFIG },
     awaitFirstWindow = true,
+    preventNavigation = false,
   ): Promise<Page | undefined> => {
     const consoleListener = (consoleMessage: ConsoleMessage): void => {
       const consoleMethods: Record<string, (...args: unknown[]) => unknown> = {
@@ -83,6 +90,19 @@ describe('Application launch', () => {
     });
     app.on('window', (page: Page) => {
       page.on('console', consoleListener);
+      if (preventNavigation) {
+        // Prevent page navigation so we can have a reliable test
+        page
+          .route('*', (route): void => {
+            log.info(`Preventing route: ${route.request().url()}`);
+            route.abort().catch((error) => {
+              log.error('ERROR', error);
+            });
+          })
+          .catch((error) => {
+            log.error('ERROR', error);
+          });
+      }
     });
     app.on('close', () => (appClosed = true));
     appClosed = false;
@@ -90,7 +110,16 @@ describe('Application launch', () => {
       return undefined;
     }
     const window = await app.firstWindow();
-    // window.addListener('console', consoleListener);
+    // Wait for our initial page to finish loading, otherwise some tests will break
+    let waited = 0;
+    while (
+      window.url() === 'about:blank' &&
+      playwrightConfig.targetUrl !== 'about:blank' &&
+      waited < 2000
+    ) {
+      waited += 100;
+      await sleep(100);
+    }
     return window;
   };
 
@@ -107,12 +136,6 @@ describe('Application launch', () => {
 
   test('shows an initial window', async () => {
     const mainWindow = (await spawnApp()) as Page;
-    // Prevent page navigation so we can have a reliable test
-    await mainWindow.route('*', (route): void => {
-      route.abort().catch((error) => {
-        log.error('ERROR', error);
-      });
-    });
     await mainWindow.waitForLoadState('domcontentloaded');
     expect(app.windows()).toHaveLength(1);
     expect(await mainWindow.title()).toBe('npm');
@@ -145,7 +168,11 @@ describe('Application launch', () => {
       'inject.js',
       `setTimeout(() => {alert("${alertMsg}"); }, 5000);`, // Buy ourselves 5 seconds to get the dialog handler setup
     );
-    const mainWindow = (await spawnApp()) as Page;
+    const mainWindow = (await spawnApp(
+      { ...DEFAULT_CONFIG },
+      true,
+      true,
+    )) as Page;
     const [dialogPromise] = (await once(
       mainWindow,
       'dialog',
