@@ -18,7 +18,7 @@ const INJECT_DIR = path.join(__dirname, '..', 'app', 'inject');
 
 const log = console;
 
-function sleep(milliseconds: number) {
+function sleep(milliseconds: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
   });
