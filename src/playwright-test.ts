@@ -37,21 +37,8 @@ describe('Application launch', () => {
 
   const logFileDir = getTempDir('playwright');
 
-  // const metaOrAlt = process.platform === 'darwin' ? 'Meta' : 'Alt';
-  // const metaOrCtrl = process.platform === 'darwin' ? 'Meta' : 'Control';
-
-  // Create a reporter that only displays the log from electron on failure
-  const logReporter = {
-    specDone: function (result: { status: string }): void {
-      if (result.status === 'failed') {
-        showLogs(logFileDir);
-      }
-    },
-  };
-
-  // // @ts-expect-error should be here at runtime
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  // jasmine.getEnv().addReporter(logReporter);
+  const metaOrAlt = process.platform === 'darwin' ? 'Meta' : 'Alt';
+  const metaOrCtrl = process.platform === 'darwin' ? 'Meta' : 'Control';
 
   const spawnApp = async (
     playwrightConfig: NativefierOptions = { ...DEFAULT_CONFIG },
@@ -131,6 +118,9 @@ describe('Application launch', () => {
   afterEach(async () => {
     if (app && !appClosed) {
       await app.close();
+    }
+    if (process.env.DEBUG) {
+      showLogs(logFileDir);
     }
   });
 
@@ -222,80 +212,73 @@ describe('Application launch', () => {
     expect(openExternalUrl).not.toBe(DEFAULT_CONFIG.targetUrl);
   });
 
-  // Currently disabled. Playwright doesn't seem to support app keypress events
-  // only browser keypress events. Will fix
-  // test('keyboard shortcuts: zoom', async () => {
-  //   const mainWindow = await spawnApp();
-  //   await mainWindow.waitForLoadState('domcontentloaded');
+  // Currently disabled. Playwright doesn't seem to support app keypress events for menu shortcuts.
+  // Will enable when https://github.com/microsoft/playwright/issues/8004 is resolved.
+  test.skip('keyboard shortcuts: zoom', async () => {
+    const mainWindow = (await spawnApp()) as Page;
+    await mainWindow.waitForLoadState('domcontentloaded');
 
-  //   const defaultZoom = await app.evaluate(
-  //     ({ BrowserWindow }): number | undefined =>
-  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
-  //   );
+    const defaultZoom: number | undefined = await app.evaluate(
+      ({ BrowserWindow }) =>
+        BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+    );
 
-  //   expect(defaultZoom).toBeDefined();
+    expect(defaultZoom).toBeDefined();
 
-  //   if (defaultZoom === undefined) {
-  //     // Won't actually be hit, but lets TypeScript know it won't be undefined at this point.
-  //     return;
-  //   }
+    await mainWindow.keyboard.press(`${metaOrCtrl}+Equal`);
+    const postZoomIn = await app.evaluate(
+      ({ BrowserWindow }): number | undefined =>
+        BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+    );
 
-  //   await mainWindow.keyboard.press(`${metaOrCtrl}+Equal`);
-  //   const postZoomIn = await app.evaluate(
-  //     ({ BrowserWindow }): number | undefined =>
-  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
-  //   );
+    expect(postZoomIn).toBeGreaterThan(defaultZoom as number);
 
-  //   expect(postZoomIn).toBeGreaterThan(defaultZoom);
+    await mainWindow.keyboard.press(`${metaOrCtrl}+0`);
+    const postZoomReset = await app.evaluate(
+      ({ BrowserWindow }): number | undefined =>
+        BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+    );
 
-  //   await mainWindow.keyboard.press(`${metaOrCtrl}+0`);
-  //   const postZoomReset = await app.evaluate(
-  //     ({ BrowserWindow }): number | undefined =>
-  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
-  //   );
+    expect(postZoomReset).toEqual(defaultZoom);
 
-  //   expect(postZoomReset).toEqual(defaultZoom);
+    await mainWindow.keyboard.press(`${metaOrCtrl}+Minus`);
+    const postZoomOut: number | undefined = await app.evaluate(
+      ({ BrowserWindow }) =>
+        BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
+    );
 
-  //   await mainWindow.keyboard.press(`${metaOrCtrl}+Minus`);
-  //   const postZoomOut = await app.evaluate(
-  //     ({ BrowserWindow }): number | undefined =>
-  //       BrowserWindow.getFocusedWindow()?.webContents?.zoomFactor,
-  //   );
+    expect(postZoomOut).toBeLessThan(defaultZoom as number);
+  });
 
-  //   expect(postZoomOut).toBeLessThan(defaultZoom);
-  // });
+  // Currently disabled. Playwright doesn't seem to support app keypress events for menu shortcuts.
+  // Will enable when https://github.com/microsoft/playwright/issues/8004 is resolved.
+  test.skip('keyboard shortcuts: back and forward', async () => {
+    const mainWindow = (await spawnApp()) as Page;
+    await mainWindow.waitForLoadState('domcontentloaded');
 
-  // Currently disabled. Playwright doesn't seem to support app keypress events
-  // only browser keypress events.
-  // test('keyboard shortcuts: back and forward', async () => {
-  //   const mainWindow = await spawnApp();
-  //   await mainWindow.waitForLoadState('domcontentloaded');
+    await Promise.all([
+      mainWindow.click('#nav-products-link'),
+      mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    ]);
 
-  //   await Promise.all([
-  //     mainWindow.click('#nav-products-link'),
-  //     mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-  //   ]);
+    // Go back
+    // console.log(`${metaOrAlt}+ArrowLeft`);
+    await mainWindow.keyboard.press(`${metaOrAlt}+ArrowLeft`);
+    await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
-  //   // Go back
-  //   // console.log(`${metaOrAlt}+ArrowLeft`);
-  //   await mainWindow.keyboard
-  //     .press(`${metaOrAlt}+ArrowLeft`);
-  //   await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    const backUrl = await mainWindow.evaluate(() => window.location.href);
 
-  //   const backUrl = await mainWindow.evaluate(() => window.location.href);
+    expect(backUrl).toBe(DEFAULT_CONFIG.targetUrl);
 
-  //   expect(backUrl).toBe(DEFAULT_CONFIG.targetUrl);
+    // Go forward
+    // console.log(`${metaOrAlt}+ArrowRight`);
+    await mainWindow.keyboard.press(`${metaOrAlt}+ArrowRight`);
+    await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
 
-  //   // Go forward
-  //   // console.log(`${metaOrAlt}+ArrowRight`);
-  //   await mainWindow.keyboard
-  //     .press(`${metaOrAlt}+ArrowRight`);
-  //   await mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    const forwardUrl = await mainWindow.evaluate(() => window.location.href);
 
-  //   const forwardUrl = await mainWindow.evaluate(() => window.location.href);
-
-  //   expect(forwardUrl).not.toBe(DEFAULT_CONFIG.targetUrl);
-  // });
+    expect(forwardUrl).not.toBe(DEFAULT_CONFIG.targetUrl);
+  });
 
   test('no errors thrown in console', async () => {
     await spawnApp({ ...DEFAULT_CONFIG }, false);
