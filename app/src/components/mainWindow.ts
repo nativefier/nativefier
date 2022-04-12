@@ -11,6 +11,7 @@ import {
   isOSX,
   nativeTabsSupported,
 } from '../helpers/helpers';
+import { IS_PLAYWRIGHT } from '../helpers/playwrightHelpers';
 import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearCache,
@@ -78,7 +79,9 @@ export async function createMainWindow(
   });
 
   // Just load about:blank to start, gives playwright something to latch onto initially for testing.
-  await mainWindow.loadURL('about:blank');
+  if (IS_PLAYWRIGHT) {
+    await mainWindow.loadURL('about:blank');
+  }
 
   mainWindowState.manage(mainWindow);
 
