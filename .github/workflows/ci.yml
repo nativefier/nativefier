@@ -46,4 +46,3 @@ jobs:
       - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '17'
         run: npm run lint
       - run: npm test
-      - run: npm run test:playwright
