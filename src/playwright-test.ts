@@ -3,15 +3,15 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import {
-  _electron as electron,
+  _electron,
   ConsoleMessage,
   Dialog,
   ElectronApplication,
   Page,
 } from 'playwright';
 
-import { NativefierOptions } from './options/model';
 import { getTempDir } from './helpers/helpers';
+import { NativefierOptions } from '../shared/src/options/model';
 
 const INJECT_DIR = path.join(__dirname, '..', 'app', 'inject');
 
@@ -42,15 +42,15 @@ describe('Application launch', () => {
     },
   };
 
-  // @ts-expect-error should be here at runtime
+  // // @ts-expect-error should be here at runtime
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-  jasmine.getEnv().addReporter(logReporter);
+  // jasmine.getEnv().addReporter(logReporter);
 
   const spawnApp = async (
     playwrightConfig: NativefierOptions = { ...DEFAULT_CONFIG },
     awaitFirstWindow = true,
   ): Promise<Page | undefined> => {
-    app = await electron.launch({
+    app = await _electron.launch({
       args: [appMainJSPath],
       env: {
         LOG_FILE_DIR: logFileDir,

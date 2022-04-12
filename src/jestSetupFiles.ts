@@ -7,4 +7,3 @@ if (process.env.LOGLEVEL) {
 }
 
 process.traceDeprecation = true;
-process.traceProcessWarnings = true;
