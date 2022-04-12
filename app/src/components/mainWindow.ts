@@ -77,7 +77,7 @@ export async function createMainWindow(
     ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
   });
 
-  // Just load about:blank to start, gives Spectron something to latch onto initially for testing.
+  // Just load about:blank to start, gives playwright something to latch onto initially for testing.
   await mainWindow.loadURL('about:blank');
 
   mainWindowState.manage(mainWindow);
