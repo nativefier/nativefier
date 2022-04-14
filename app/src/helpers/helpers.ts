@@ -106,6 +106,8 @@ function isInternalLoginPage(url: string): boolean {
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
     '(?:id|auth)\\.atlassian\\.[a-zA-Z]+', // Atlassian
+    '.*\\.workspaceair\\.com', // VMWare Workspace One SSO
+    '.*\\.securid\\.com', // SecurID for VMWare Workspace One SSO
   ];
   // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const regex = RegExp(internalLoginPagesArray.join('|'));
