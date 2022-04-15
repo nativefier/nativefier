@@ -69,6 +69,8 @@ if (!appArgs.userAgentHonest) {
   }
 }
 
+app.setAppUserModelId(app.getName());
+
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
   const maybeUrl = process.argv[1];
