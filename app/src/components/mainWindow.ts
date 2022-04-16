@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcMain, BrowserWindow, Event } from 'electron';
+import { ipcMain, BrowserWindow, Event, HandlerDetails } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 import log from 'loglevel';
 
@@ -95,31 +95,16 @@ export async function createMainWindow(
   createContextMenu(options, mainWindow);
   setupNativefierWindow(windowOptions, mainWindow);
 
-  // .on('new-window', ...) is deprected in favor of setWindowOpenHandler(...)
-  // We can't quite cut over to that yet for a few reasons:
-  // 1. Our version of Electron does not yet support a parameter to
-  //    setWindowOpenHandler that contains `disposition', which we need.
-  //    See https://github.com/electron/electron/issues/28380
-  // 2. setWindowOpenHandler doesn't support newGuest as well
-  // Though at this point, 'new-window' bugs seem to be coming up and downstream
-  // users are being pointed to use setWindowOpenHandler.
-  // E.g., https://github.com/electron/electron/issues/28374
-
   // Note it is important to add these handlers only to the *main* window,
   // else we run into weird behavior like opening tabs twice
-  mainWindow.webContents.on(
-    'new-window',
-    (event, url, frameName, disposition) => {
-      onNewWindow(
-        windowOptions,
-        setupNativefierWindow,
-        event,
-        url,
-        frameName,
-        disposition,
-      ).catch((err) => log.error('onNewWindow ERROR', err));
-    },
-  );
+  mainWindow.webContents.setWindowOpenHandler((details: HandlerDetails) => {
+    return onNewWindow(
+      windowOptions,
+      setupNativefierWindow,
+      details,
+      mainWindow,
+    );
+  });
   // @ts-expect-error new-tab isn't in the type definition, but it does exist
   mainWindow.on('new-tab', () => {
     createNewTab(
