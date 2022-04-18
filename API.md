@@ -795,6 +795,8 @@ Current known internal login pages:
 - `login.live.com` , `login.microsoftonline.com`
 - `okta.com`
 - `twitter.com/oauth/authenticate`
+- `workspaceair.com`
+- `securid.com`
 
 Note: While .com is specified, for most of these we try to match even on non-US
 based domains such as `.co.uk` as well
