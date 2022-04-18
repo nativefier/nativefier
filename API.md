@@ -158,7 +158,8 @@ The processor architecture to target when building.
     ```
     (See https://nodejs.org/api/os.html#os_os_arch)
   - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or re-install node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
-- Can be overridden by specifying one of: `ia32`, `x64`, `armv7l`, `arm64`.
+- Can be overridden by specifying one of: `ia32`, `x64`, `armv7l`, `arm64`, or `universal`
+- When specifying `universal` you must be building for the `darwin`, `mas`, `mac`, or `osx` platforms. This will generate a universal (M1 and x86) app.
 
 Note: careful to not conflate _platform_ with _architecture_. If you want for example a Linux or Mac build, it's `--platform` you are looking for. See its documentation for details.
 
