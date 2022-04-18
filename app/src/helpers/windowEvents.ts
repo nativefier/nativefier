@@ -42,7 +42,9 @@ export function onNewWindow(
   });
   const preventDefault = (newGuest?: BrowserWindow): void => {
     log.debug('onNewWindow.preventDefault', { newGuest, event });
-    event.preventDefault();
+    if (event.preventDefault) {
+      event.preventDefault();
+    }
     if (newGuest) {
       event.newGuest = newGuest;
     }
