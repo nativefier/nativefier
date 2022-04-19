@@ -315,8 +315,8 @@ export async function buildUniversalApp(options: RawOptions): Promise<string> {
   let x64Path: string | undefined;
   let arm64Path: string | undefined;
   try {
-    x64Path = await buildNativefierApp(x64Options);
-    arm64Path = await buildNativefierApp(arm64Options);
+    x64Path = path.resolve(await buildNativefierApp(x64Options));
+    arm64Path = path.resolve(await buildNativefierApp(arm64Options));
     const universalAppPath = path
       .join(
         x64Path,
