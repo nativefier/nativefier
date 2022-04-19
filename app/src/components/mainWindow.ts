@@ -3,14 +3,16 @@ import * as path from 'path';
 
 import { ipcMain, BrowserWindow, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
-import log from 'loglevel';
 
+import { initContextMenu } from './contextMenu';
+import { createMenu } from './menu';
 import {
   getAppIcon,
   getCounterValue,
   isOSX,
   nativeTabsSupported,
 } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
 import { IS_PLAYWRIGHT } from '../helpers/playwrightHelpers';
 import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
@@ -19,8 +21,6 @@ import {
   getDefaultWindowOptions,
   hideWindow,
 } from '../helpers/windowHelpers';
-import { initContextMenu } from './contextMenu';
-import { createMenu } from './menu';
 import {
   OutputOptions,
   outputOptionsToWindowOptions,

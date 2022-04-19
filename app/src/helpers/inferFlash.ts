@@ -1,8 +1,8 @@
 import * as fs from 'fs';
-import log from 'loglevel';
 import * as path from 'path';
 
 import { isOSX, isWindows, isLinux } from './helpers';
+import * as log from './loggingHelper';
 
 type fsError = Error & { code: string };
 
