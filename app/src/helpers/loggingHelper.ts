@@ -1,7 +1,13 @@
+// This helper allows logs to either be printed to the console as they would normally or if
+// the USE_LOG_FILE environment variable is set (such as through our playwright tests), then
+// the logs can be diverted from the command line to a log file, so that they can be displayed
+// later (such as at the end of a playwright test run to help diagnose potential failures).
+// Use this instead of loglevel whenever logging messages inside the app.
+
 import * as fs from 'fs';
 import * as path from 'path';
 
-import * as loglevel from 'loglevel';
+import loglevel from 'loglevel';
 
 import { safeGetEnv } from './playwrightHelpers';
 
