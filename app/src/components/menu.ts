@@ -153,7 +153,7 @@ export function generateMenu(
     submenu: [
       {
         label: 'Back',
-        accelerator: isOSX() ? 'Cmd+Left' : 'Alt+Left',
+        accelerator: isOSX() ? 'CmdOrAlt+Left' : 'Alt+Left',
         click: goBack,
       },
       {
