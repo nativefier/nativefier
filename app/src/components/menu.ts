@@ -115,7 +115,10 @@ export function generateMenu(
       },
       {
         label: 'Paste and Match Style',
-        accelerator: 'CmdOrCtrl+Shift+V',
+        // https://github.com/nativefier/nativefier/issues/404
+        // Apple's HIG lists this shortcut for paste and match style
+        // https://support.apple.com/en-us/HT209651
+        accelerator: isOSX() ? 'Option+Shift+Cmd+V' : 'Ctrl+Shift+V',
         role: 'pasteAndMatchStyle',
       },
       {

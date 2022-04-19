@@ -60,6 +60,7 @@ describe('fields', () => {
         zoom: 1,
       },
       packager: {
+        arch: process.arch,
         dir: '',
         platform: process.platform,
         portable: false,

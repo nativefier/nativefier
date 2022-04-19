@@ -81,7 +81,10 @@ async function edgeUserAgent(
 async function firefoxUserAgent(platform: string): Promise<string> {
   const firefoxVersion = await getLatestFirefoxVersion();
 
-  return `Mozilla/5.0 (${platform}; rv:${firefoxVersion}) Gecko/20100101 Firefox/${firefoxVersion}`;
+  return `Mozilla/5.0 (${platform}; rv:${firefoxVersion}) Gecko/20100101 Firefox/${firefoxVersion}`.replace(
+    '10_15_7',
+    '10.15',
+  );
 }
 
 async function safariUserAgent(platform: string): Promise<string> {
