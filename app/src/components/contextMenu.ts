@@ -4,8 +4,9 @@ import {
   NewWindowWebContentsEvent,
 } from 'electron';
 import contextMenu from 'electron-context-menu';
-import log from 'loglevel';
+
 import { nativeTabsSupported, openExternal } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
 import { setupNativefierWindow } from '../helpers/windowEvents';
 import { createNewWindow } from '../helpers/windowHelpers';
 import {

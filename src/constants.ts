@@ -3,6 +3,7 @@ import * as path from 'path';
 export const DEFAULT_APP_NAME = 'APP';
 
 // Update both DEFAULT_ELECTRON_VERSION and DEFAULT_CHROME_VERSION together,
+// and update package.json / devDeps / electron to value of DEFAULT_ELECTRON_VERSION
 // and update app / package.json / devDeps / electron to value of DEFAULT_ELECTRON_VERSION
 export const DEFAULT_ELECTRON_VERSION = '18.0.3';
 // https://atom.io/download/atom-shell/index.json

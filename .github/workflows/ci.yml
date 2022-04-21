@@ -39,8 +39,12 @@ jobs:
             package-lock.json
             app/package-lock.json
       # Will also (through `prepare` hook): 1. install ./app, and 2. build
-      - run: npm ci --no-fund
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-fund
       # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
       - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '17'
         run: npm run lint
-      - run: npm test
+      - run: npm run test -- --testPathIgnorePatterns ".*playwright.*" 
+      - if: matrix.platform != 'ubuntu-latest' # Doesn't work on non-GUI ubuntu
+        run: npm run test:playwright

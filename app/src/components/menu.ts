@@ -8,9 +8,9 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
 } from 'electron';
-import * as log from 'loglevel';
 
 import { cleanupPlainText, isOSX, openExternal } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
 import {
   clearAppData,
   getCurrentURL,
