@@ -20,7 +20,7 @@ import {
   APP_ARGS_FILE_PATH,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
+import { isOSX, isWindows, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 import * as log from './helpers/loggingHelper';
 import {
@@ -76,6 +76,13 @@ if (!appArgs.userAgentHonest) {
       app.getVersion(),
     );
   }
+}
+
+// this step is required to allow app names to be displayed correctly in notifications on windows
+// https://www.electronjs.org/docs/latest/api/app#appsetappusermodelidid-windows
+// https://www.electronjs.org/docs/latest/tutorial/notifications#windows
+if (isWindows()) {
+  app.setAppUserModelId(app.getName());
 }
 
 // Take in a URL on the command line as an override
