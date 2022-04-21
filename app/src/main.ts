@@ -69,7 +69,12 @@ if (!appArgs.userAgentHonest) {
   }
 }
 
-app.setAppUserModelId(app.getName());
+// this step is required to allow app names to be displayed correctly in notifications on windows
+// https://www.electronjs.org/docs/latest/api/app#appsetappusermodelidid-windows
+// https://www.electronjs.org/docs/latest/tutorial/notifications#windows
+if (isWindows()) {
+  app.setAppUserModelId(app.getName());
+}
 
 // Take in a URL on the command line as an override
 if (process.argv.length > 1) {
