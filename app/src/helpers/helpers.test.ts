@@ -200,6 +200,8 @@ const testLoginPages = [
   'https://appleid.apple.com/auth/authorize',
   'https://id.atlassian.com',
   'https://auth.atlassian.com',
+  'https://vmware.workspaceair.com',
+  'https://vmware.auth.securid.com',
 ];
 
 test.each(testLoginPages)(

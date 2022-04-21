@@ -7,7 +7,7 @@ import * as log from 'loglevel';
 // dirty. So if those change, we'll update these as well.
 // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
 // https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
-export const supportedArchs = ['ia32', 'x64', 'armv7l', 'arm64'];
+export const supportedArchs = ['ia32', 'x64', 'armv7l', 'arm64', 'universal'];
 export const supportedPlatforms = [
   'darwin',
   'linux',

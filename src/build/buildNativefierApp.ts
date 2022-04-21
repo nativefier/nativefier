@@ -13,9 +13,14 @@ import {
   isWindowsAdmin,
 } from '../helpers/helpers';
 import { useOldAppOptions, findUpgradeApp } from '../helpers/upgrade/upgrade';
-import { AppOptions, RawOptions } from '../../shared/src/options/model';
-import { getOptions } from '../options/optionsMain';
+import {
+  AppOptions,
+  OutputOptions,
+  RawOptions,
+} from '../../shared/src/options/model';
+import { getOptions, normalizePlatform } from '../options/optionsMain';
 import { prepareElectronApp } from './prepareElectronApp';
+import { makeUniversalApp } from '@electron/universal';
 
 const OPTIONS_REQUIRING_WINDOWS_FOR_WINDOWS_BUILD = [
   'icon',
@@ -125,10 +130,34 @@ function trimUnprocessableOptions(options: AppOptions): void {
   }
 }
 
+function isInvalidUniversal(options: RawOptions): boolean {
+  const platform = normalizePlatform(options.platform);
+  if (
+    (options.arch ?? '').toLowerCase() === 'universal' &&
+    platform !== 'darwin' &&
+    platform !== 'mas'
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function getOSRunHelp(platform?: string): string {
+  if (platform === 'win32') {
+    return `the contained .exe file.`;
+  } else if (platform === 'linux') {
+    return `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
+  } else if (platform === 'darwin') {
+    return `the app bundle.`;
+  }
+  return '';
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(
   rawOptions: RawOptions,
-): Promise<string | undefined> {
+): Promise<string> {
   // early-suppress potential logging before full options handling
   if (rawOptions.quiet) {
     log.setLevel('silent');
@@ -245,17 +274,101 @@ export async function buildNativefierApp(
     appPath = finalOutDirectory;
   }
 
-  let osRunHelp = '';
-  if (options.packager.platform === 'win32') {
-    osRunHelp = `the contained .exe file.`;
-  } else if (options.packager.platform === 'linux') {
-    osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
-  } else if (options.packager.platform === 'darwin') {
-    osRunHelp = `the app bundle.`;
-  }
+  const osRunHelp = getOSRunHelp(options.packager.platform);
   log.info(
     `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
   );
 
   return appPath;
+}
+
+function modifyOptionsForUniversal(appPath: string, buildDate: number): void {
+  const nativefierJSONPath = path.join(
+    appPath,
+    'Contents',
+    'Resources',
+    'app',
+    'nativefier.json',
+  );
+  const options = JSON.parse(
+    fs.readFileSync(nativefierJSONPath, 'utf8'),
+  ) as OutputOptions;
+  options.arch = 'universal';
+  options.buildDate = buildDate;
+  fs.writeFileSync(nativefierJSONPath, JSON.stringify(options, null, 2));
+}
+
+export async function buildUniversalApp(options: RawOptions): Promise<string> {
+  if (isInvalidUniversal(options)) {
+    throw new Error(
+      'arch of "universal" can only be used with Mac OS app types.',
+    );
+  }
+
+  const platform = normalizePlatform(options.platform);
+
+  const x64Options = { ...options, arch: 'x64' };
+  const arm64Options = { ...options, arch: 'arm64' };
+
+  log.info('Creating universal Mac binary...');
+
+  let x64Path: string | undefined;
+  let arm64Path: string | undefined;
+  try {
+    x64Path = path.resolve(await buildNativefierApp(x64Options));
+    arm64Path = path.resolve(await buildNativefierApp(arm64Options));
+    const universalAppPath = path
+      .join(
+        x64Path,
+        `${path.parse(x64Path).base.replace(`-${platform}-x64`, '')}.app`,
+      )
+      .replace('x64', 'universal');
+    const x64AppPath = path.join(
+      x64Path,
+      `${path.parse(x64Path).base.replace(`-${platform}-x64`, '')}.app`,
+    );
+    const arm64AppPath = path.join(
+      arm64Path,
+      `${path.parse(arm64Path).base.replace(`-${platform}-arm64`, '')}.app`,
+    );
+    // We're going to change the nativefier.json on these to match otherwise we'll see:
+    // Expected all non-binary files to have identical SHAs when creating a universal build but "Google.app/Contents/Resources/app/nativefier.json" did not
+    const buildDate = new Date().getTime();
+    modifyOptionsForUniversal(x64AppPath, buildDate);
+    modifyOptionsForUniversal(arm64AppPath, buildDate);
+    await makeUniversalApp({
+      x64AppPath,
+      arm64AppPath,
+      outAppPath: universalAppPath,
+      force: !!options.overwrite,
+    });
+
+    await fs.copyFile(
+      path.join(x64Path, 'LICENSE'),
+      path.join(universalAppPath, '..', 'LICENSE'),
+    );
+
+    await fs.copyFile(
+      path.join(x64Path, 'LICENSES.chromium.html'),
+      path.join(universalAppPath, '..', 'LICENSES.chromium.html'),
+    );
+
+    await fs.copyFile(
+      path.join(x64Path, 'version'),
+      path.join(universalAppPath, '..', 'version'),
+    );
+
+    const osRunHelp = getOSRunHelp(platform);
+    log.info(
+      `App built to ${universalAppPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
+    );
+    return universalAppPath;
+  } finally {
+    if (x64Path) {
+      fs.removeSync(x64Path);
+    }
+    if (arm64Path) {
+      fs.removeSync(arm64Path);
+    }
+  }
 }

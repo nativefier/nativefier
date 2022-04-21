@@ -5,10 +5,9 @@ import {
   NewWindowWebContentsEvent,
   WebContents,
 } from 'electron';
-import log from 'loglevel';
-import { WindowOptions } from '../../../shared/src/options/model';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
+import * as log from './loggingHelper';
 import {
   blockExternalURL,
   createAboutBlankWindow,
@@ -17,6 +16,7 @@ import {
   sendParamsOnDidFinishLoad,
   setProxyRules,
 } from './windowHelpers';
+import { WindowOptions } from '../../../shared/src/options/model';
 
 export function onNewWindow(
   options: WindowOptions,
@@ -42,7 +42,9 @@ export function onNewWindow(
   });
   const preventDefault = (newGuest?: BrowserWindow): void => {
     log.debug('onNewWindow.preventDefault', { newGuest, event });
-    event.preventDefault();
+    if (event.preventDefault) {
+      event.preventDefault();
+    }
     if (newGuest) {
       event.newGuest = newGuest;
     }

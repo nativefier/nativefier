@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as log from 'loglevel';
 
 const USER_AGENT =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36';
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15';
 
 export async function inferTitle(url: string): Promise<string> {
   const { data } = await axios.get<string>(url, {

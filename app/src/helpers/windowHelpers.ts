@@ -1,3 +1,5 @@
+import path from 'path';
+
 import {
   dialog,
   BrowserWindow,
@@ -8,10 +10,9 @@ import {
   OnResponseStartedListenerDetails,
 } from 'electron';
 
-import log from 'loglevel';
-import path from 'path';
-import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
 import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
+import * as log from './loggingHelper';
+import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
 
 const ZOOM_INTERVAL = 0.1;
 
