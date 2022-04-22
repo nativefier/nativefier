@@ -46,5 +46,7 @@ jobs:
       - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '18'
         run: npm run lint
       - run: npm run test -- --testPathIgnorePatterns ".*playwright.*" 
-      - if: matrix.platform != 'ubuntu-latest' # Doesn't work on non-GUI ubuntu
+      - name: Playwright tests
+        if: matrix.platform != 'ubuntu-latest' # Doesn't work on non-GUI ubuntu
         run: npm run test:playwright
+        timeout-minutes: 5
