@@ -14,7 +14,7 @@ jobs:
       matrix:
         node-version:
           # Align the top Node version here with: 1. linter conditions later below, 2. publish.yml.
-          - '17'
+          - '18'
           # Bumping the minimum required Node version? You must bump:
           #   1. package.json -> engines.node
           #   2. package.json -> devDependencies.@types/node
@@ -43,7 +43,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund
       # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
-      - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '17'
+      - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '18'
         run: npm run lint
       - run: npm run test -- --testPathIgnorePatterns ".*playwright.*" 
       - if: matrix.platform != 'ubuntu-latest' # Doesn't work on non-GUI ubuntu
