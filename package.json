@@ -84,7 +84,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "^27.0.6",
-    "playwright": "^1.20.1",
+    "playwright": "^1.21.1",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.2.3",
