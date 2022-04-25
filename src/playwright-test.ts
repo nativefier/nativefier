@@ -74,6 +74,7 @@ describe('Application launch', () => {
         USE_LOG_FILE: '1',
         VERBOSE: '1',
       },
+      timeout: 60000,
     });
     app.on('window', (page: Page) => {
       page.on('console', consoleListener);
