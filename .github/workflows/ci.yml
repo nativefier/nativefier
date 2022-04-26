@@ -47,6 +47,6 @@ jobs:
         run: npm run lint
       - run: npm run test -- --testPathIgnorePatterns ".*playwright.*" 
       - name: Playwright tests
-        if: matrix.platform != 'ubuntu-latest' # Doesn't work on non-GUI ubuntu
+        if: matrix.platform == 'windows-latest' # Doesn't work on headless ubuntu, and is slow on mac
         run: npm run test:playwright
         timeout-minutes: 5
