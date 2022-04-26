@@ -16,6 +16,7 @@ import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { RawOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
+import { buildUniversalApp } from './build/buildNativefierApp';
 
 export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   const sanitizedArgs = sanitizeArgs(argv);
@@ -686,7 +687,13 @@ if (require.main === module) {
     options.out = process.env.NATIVEFIER_APPS_DIR;
   }
 
-  buildNativefierApp(options).catch((error) => {
-    log.error('Error during build. Run with --verbose for details.', error);
-  });
+  if ((options.arch ?? '').toLowerCase() === 'universal') {
+    buildUniversalApp(options).catch((error) => {
+      log.error('Error during build. Run with --verbose for details.', error);
+    });
+  } else {
+    buildNativefierApp(options).catch((error) => {
+      log.error('Error during build. Run with --verbose for details.', error);
+    });
+  }
 }

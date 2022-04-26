@@ -1,4 +1,46 @@
 
+47.0.0 / 2022-04-10
+===================
+
+  * Bump default Electron to 18.0.3 (from 16.2.2)
+
+    As usual, we did our best to adapt to Electron breaking changes in 17/18,
+    but patches welcome to fix regressions. If unable to submit a patch, then
+    feel free to revert to Nativefier 46.2.1 or simply pass `-e 16.2.2` .
+    Release notes with breaking changes:
+
+    - https://www.electronjs.org/blog/electron-17-0
+    - https://www.electronjs.org/blog/electron-18-0
+
+    Detailed release notes:
+
+    - https://github.com/electron/electron/releases/tag/v17.0.0
+    - https://github.com/electron/electron/releases/tag/v18.0.0
+    - https://github.com/electron/electron/releases/tag/v18.0.1
+    - https://github.com/electron/electron/releases/tag/v18.0.2
+    - https://github.com/electron/electron/releases/tag/v18.0.3
+
+46.2.1 / 2022-04-10
+===================
+
+  * Bump default Electron to 16.2.1 (from 16.1.0), with security fixes:
+    - https://github.com/electron/electron/releases/tag/v16.1.1
+    - https://github.com/electron/electron/releases/tag/v16.2.0
+    - https://github.com/electron/electron/releases/tag/v16.2.1
+    - https://github.com/electron/electron/releases/tag/v16.2.2
+  * Upgrade dependencies lockfiles
+
+46.2.0 / 2022-03-20
+===================
+
+  * Bugfix: Strip LRM and RLM in Linux names (fix #1361, PR #1365)
+  * Bugfix: Remove extra whitespace in UserAgent (fix #1357, PR #1367)
+  * Docs: Fix broken link in `API.md` for `conceal` flag (PR #1364)
+  * Bump default Electron to 16.1.0 (from 16.0.9), with security fixes:
+    - https://github.com/electron/electron/releases/tag/v16.1.0
+    - https://github.com/electron/electron/releases/tag/v16.0.10
+  * Upgrade dependencies lockfiles
+
 46.1.1 / 2022-02-14
 ===================
 

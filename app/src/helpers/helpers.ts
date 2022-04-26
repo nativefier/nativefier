@@ -3,7 +3,8 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { BrowserWindow, OpenExternalOptions, shell } from 'electron';
-import * as log from 'loglevel';
+
+import * as log from '../helpers/loggingHelper';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
 
@@ -56,7 +57,7 @@ export function getAppIcon(): string | undefined {
 }
 
 export function getCounterValue(title: string): string | undefined {
-  const itemCountRegex = /[([{]([\d.,]*)\+?[}\])]/;
+  const itemCountRegex = /[([{]([\d.,:]*)\+?[}\])]/;
   const match = itemCountRegex.exec(title);
   return match ? match[1] : undefined;
 }
@@ -106,6 +107,8 @@ function isInternalLoginPage(url: string): boolean {
     'twitter\\.[a-zA-Z\\.]*/oauth/authenticate', // Twitter
     'appleid\\.apple\\.com/auth/authorize', // Apple
     '(?:id|auth)\\.atlassian\\.[a-zA-Z]+', // Atlassian
+    '.*\\.workspaceair\\.com', // VMWare Workspace One SSO
+    '.*\\.securid\\.com', // SecurID for VMWare Workspace One SSO
   ];
   // Making changes? Remember to update the tests in helpers.test.ts and in API.md
   const regex = RegExp(internalLoginPagesArray.join('|'));
@@ -183,7 +186,7 @@ export function removeUserAgentSpecifics(
   // We just need to strip out the appName/1.0.0 and Electron/electronVersion
   return userAgentFallback
     .replace(`Electron/${process.versions.electron} `, '')
-    .replace(`${appName}/${appVersion} `, ' ');
+    .replace(`${appName}/${appVersion} `, '');
 }
 
 /** Removes extra spaces from a text */

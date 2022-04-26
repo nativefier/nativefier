@@ -12,17 +12,22 @@ import electron, {
   Event,
 } from 'electron';
 import electronDownload from 'electron-dl';
-import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
+  createMainWindow,
   saveAppArgs,
   APP_ARGS_FILE_PATH,
-  createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
+import { isOSX, isWindows, removeUserAgentSpecifics } from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
+import * as log from './helpers/loggingHelper';
+import {
+  IS_PLAYWRIGHT,
+  PLAYWRIGHT_CONFIG,
+  safeGetEnv,
+} from './helpers/playwrightHelpers';
 import { setupNativefierWindow } from './helpers/windowEvents';
 import {
   OutputOptions,
@@ -34,17 +39,21 @@ if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
-if (process.argv.indexOf('--verbose') > -1) {
+if (process.argv.indexOf('--verbose') > -1 || safeGetEnv('VERBOSE') === '1') {
   log.setLevel('DEBUG');
   process.traceDeprecation = true;
   process.traceProcessWarnings = true;
+  process.argv.slice(1);
 }
 
 let mainWindow: BrowserWindow;
 
-const appArgs = JSON.parse(
-  fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
-) as OutputOptions;
+const appArgs =
+  IS_PLAYWRIGHT && PLAYWRIGHT_CONFIG
+    ? (JSON.parse(PLAYWRIGHT_CONFIG) as OutputOptions)
+    : (JSON.parse(
+        fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
+      ) as OutputOptions);
 
 log.debug('appArgs', appArgs);
 // Do this relatively early so that we can start storing appData with the app
@@ -67,6 +76,13 @@ if (!appArgs.userAgentHonest) {
       app.getVersion(),
     );
   }
+}
+
+// this step is required to allow app names to be displayed correctly in notifications on windows
+// https://www.electronjs.org/docs/latest/api/app#appsetappusermodelidid-windows
+// https://www.electronjs.org/docs/latest/tutorial/notifications#windows
+if (isWindows()) {
+  app.setAppUserModelId(app.getName());
 }
 
 // Take in a URL on the command line as an override
@@ -182,7 +198,7 @@ const setDockBadge = isOSX()
 
 app.on('window-all-closed', () => {
   log.debug('app.window-all-closed');
-  if (!isOSX() || appArgs.fastQuit) {
+  if (!isOSX() || appArgs.fastQuit || IS_PLAYWRIGHT) {
     app.quit();
   }
 });
@@ -243,7 +259,7 @@ if (appArgs.widevine) {
 
 app.on('activate', (event: electron.Event, hasVisibleWindows: boolean) => {
   log.debug('app.activate', { event, hasVisibleWindows });
-  if (isOSX()) {
+  if (isOSX() && !IS_PLAYWRIGHT) {
     // this is called when the dock is clicked
     if (!hasVisibleWindows) {
       mainWindow.show();

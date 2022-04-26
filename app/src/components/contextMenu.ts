@@ -1,9 +1,14 @@
-import { BrowserWindow, ContextMenuParams } from 'electron';
+import {
+  BrowserWindow,
+  ContextMenuParams,
+  NewWindowWebContentsEvent,
+} from 'electron';
 import contextMenu from 'electron-context-menu';
-import log from 'loglevel';
+
 import { nativeTabsSupported, openExternal } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
 import { setupNativefierWindow } from '../helpers/windowEvents';
-import { createNewTab, createNewWindow } from '../helpers/windowHelpers';
+import { createNewWindow } from '../helpers/windowHelpers';
 import {
   OutputOptions,
   outputOptionsToWindowOptions,
@@ -43,12 +48,25 @@ export function initContextMenu(
           items.push({
             label: 'Open Link in New Tab',
             click: () =>
-              createNewTab(
-                outputOptionsToWindowOptions(options),
-                setupNativefierWindow,
+              // Fire a new window event for a foreground tab
+              // Previously we called createNewTab directly, but it had incosistent and buggy behavior
+              // as it was mostly designed for running off of events. So this will create a new event
+              // for a foreground-tab for the event handler to grab and take care of instead.
+              (window as BrowserWindow).webContents.emit(
+                // event name
+                'new-window',
+                // event object
+                {
+                  // Leave to the default for a NewWindowWebContentsEvent
+                  newGuest: undefined,
+                  ...new Event('new-window'),
+                } as NewWindowWebContentsEvent,
+                // url
                 params.linkURL,
-                true,
-                window,
+                // frameName
+                window?.webContents.mainFrame.name ?? '',
+                // disposition
+                'foreground-tab',
               ),
           });
         }

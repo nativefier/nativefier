@@ -3,14 +3,17 @@ import * as path from 'path';
 
 import { ipcMain, BrowserWindow, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
-import log from 'loglevel';
 
+import { initContextMenu } from './contextMenu';
+import { createMenu } from './menu';
 import {
   getAppIcon,
   getCounterValue,
   isOSX,
   nativeTabsSupported,
 } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
+import { IS_PLAYWRIGHT } from '../helpers/playwrightHelpers';
 import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearCache,
@@ -18,8 +21,6 @@ import {
   getDefaultWindowOptions,
   hideWindow,
 } from '../helpers/windowHelpers';
-import { initContextMenu } from './contextMenu';
-import { createMenu } from './menu';
 import {
   OutputOptions,
   outputOptionsToWindowOptions,
@@ -76,6 +77,11 @@ export async function createMainWindow(
     backgroundColor: options.backgroundColor,
     ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
   });
+
+  // Just load about:blank to start, gives playwright something to latch onto initially for testing.
+  if (IS_PLAYWRIGHT) {
+    await mainWindow.loadURL('about:blank');
+  }
 
   mainWindowState.manage(mainWindow);
 

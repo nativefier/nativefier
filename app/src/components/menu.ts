@@ -8,9 +8,9 @@ import {
   MenuItem,
   MenuItemConstructorOptions,
 } from 'electron';
-import * as log from 'loglevel';
 
 import { cleanupPlainText, isOSX, openExternal } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
 import {
   clearAppData,
   getCurrentURL,
@@ -115,7 +115,10 @@ export function generateMenu(
       },
       {
         label: 'Paste and Match Style',
-        accelerator: 'CmdOrCtrl+Shift+V',
+        // https://github.com/nativefier/nativefier/issues/404
+        // Apple's HIG lists this shortcut for paste and match style
+        // https://support.apple.com/en-us/HT209651
+        accelerator: isOSX() ? 'Option+Shift+Cmd+V' : 'Ctrl+Shift+V',
         role: 'pasteAndMatchStyle',
       },
       {
