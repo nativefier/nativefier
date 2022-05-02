@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "16.11.27",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.27.tgz",
-      "integrity": "sha512-C1pD3kgLoZ56Uuy5lhfOxie4aZlA3UMGLX9rXteq4WitEZH6Rl80mwactt9QG0w0gLFlN/kLBTFnGXtDVWvWQw==",
+      "version": "16.11.33",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.33.tgz",
+      "integrity": "sha512-0PJ0vg+JyU0MIan58IOIFRtSvsb7Ri+7Wltx2qAg94eMOrpg4+uuP3aUHCpxXc1i0jCXiC+zIamSZh3l9AbcQA==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -300,9 +300,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "18.0.4",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-18.0.4.tgz",
-      "integrity": "sha512-xfsozNpFr3WzeM1EFlw2qqiqXbCrgQNBJJMlcC4/DUYVpkF8364SZenX7FFFA42NmwXiOEahkvvho/u7UrAcGg==",
+      "version": "18.2.0",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-18.2.0.tgz",
+      "integrity": "sha512-AN+CKalzA57beuvuI90PVgW/yj6zjw7rpb1h8FvIwBJ3toDC3x0Plfzbzh4Ondecbjci7pSg/NA5ngOk804WIQ==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -1306,9 +1306,9 @@
       }
     },
     "@types/node": {
-      "version": "16.11.27",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.27.tgz",
-      "integrity": "sha512-C1pD3kgLoZ56Uuy5lhfOxie4aZlA3UMGLX9rXteq4WitEZH6Rl80mwactt9QG0w0gLFlN/kLBTFnGXtDVWvWQw==",
+      "version": "16.11.33",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.33.tgz",
+      "integrity": "sha512-0PJ0vg+JyU0MIan58IOIFRtSvsb7Ri+7Wltx2qAg94eMOrpg4+uuP3aUHCpxXc1i0jCXiC+zIamSZh3l9AbcQA==",
       "dev": true
     },
     "ansi-regex": {
@@ -1488,9 +1488,9 @@
       "dev": true
     },
     "electron": {
-      "version": "18.0.4",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-18.0.4.tgz",
-      "integrity": "sha512-xfsozNpFr3WzeM1EFlw2qqiqXbCrgQNBJJMlcC4/DUYVpkF8364SZenX7FFFA42NmwXiOEahkvvho/u7UrAcGg==",
+      "version": "18.2.0",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-18.2.0.tgz",
+      "integrity": "sha512-AN+CKalzA57beuvuI90PVgW/yj6zjw7rpb1h8FvIwBJ3toDC3x0Plfzbzh4Ondecbjci7pSg/NA5ngOk804WIQ==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.13.0",
