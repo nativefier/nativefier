@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@electron/universal": "^1.2.1",
-    "axios": "^0.26.0",
+    "axios": "^0.27.0",
     "electron-packager": "^15.2.0",
     "fs-extra": "^10.0.0",
     "gitcloud": "^0.2.3",
