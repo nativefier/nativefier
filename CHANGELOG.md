@@ -1,5 +1,5 @@
 
-47.1.1 / 2022-05-02
+47.1.2 / 2022-05-02
 ===================
 
   * Auto-internal URLs: add VMWare Workspace ONE + SecurID (PR #1391, fix #1390)
