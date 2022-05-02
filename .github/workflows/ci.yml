@@ -15,30 +15,6 @@ on:
 #   4. .github/workflows/ci.yml -> node-version
 # - Bumping the *maximum* tested Node version? You must bump also: publish.yml
 jobs:
-  tests:
-    strategy:
-      matrix:
-        node-version:
-          - '12' # the oldest we require in package.json -> engines.node, to check we run on this minimum
-          - '18'
-        platform: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: |
-            npm-shrinkwrap.json
-            app/npm-shrinkwrap.json
-            package-lock.json
-            app/package-lock.json
-      - env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
-        run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
-      - run: npm run test -- --testPathIgnorePatterns ".*playwright.*"
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -76,3 +52,27 @@ jobs:
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test:playwright
         timeout-minutes: 5
+  tests:
+    strategy:
+      matrix:
+        node-version:
+          - '18'
+          - '12' # the oldest we require in package.json -> engines.node, to check we run on this minimum
+        platform: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
+      - run: npm run test -- --testPathIgnorePatterns ".*playwright.*"
