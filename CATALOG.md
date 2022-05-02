@@ -1,25 +1,3 @@
-# General Recipes 
- 
-## Window Size and Position
-
-- This allows the last set window size and position to be remembered and applied if application is closed. 
-
-```sh
-nativefier 'https://open.google.com/'
-  --inject window.js
-```
-Notes:
-- [Inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject) the following javascript as `windows.js` to prevent the window size and position to reset.
-```javascript
-function storeWindowPos() {
-window.localStorage.setItem('windowX', window.screenX);
-window.localStorage.setItem('windowY', window.screenY);
-}
-
-window.moveTo(window.localStorage.getItem('windowX'), window.localStorage.getItem('windowY'));
-setInterval(storeWindowPos, 250);
-```
-
 # Build Commands Catalog
 
 Below you'll find a list of build commands contributed by the Nativefier community. They are here as examples, to help you nativefy "complicated" apps that need a bit of elbow grease to work. We need your help to enrich it, as long as you follow these two guidelines:
@@ -30,6 +8,30 @@ Below you'll find a list of build commands contributed by the Nativefier communi
    - ... but don't add other flags that are pure personal preference (e.g. `--disable-dev-tools` or `--disk-cache-size`).
 
 ---
+
+## General recipes
+
+### Window size and position
+
+This allows the last set window size and position to be remembered and applied
+after your app is restarted. Note: PR welcome for a built-in fix for that :) .
+
+```sh
+nativefier 'https://open.google.com/'
+  --inject window.js
+```
+
+Note: [Inject](https://github.com/nativefier/nativefier/blob/master/API.md#inject)
+the following javascript as `windows.js` to prevent the window size and position to reset.
+```javascript
+function storeWindowPos() {
+  window.localStorage.setItem('windowX', window.screenX);
+  window.localStorage.setItem('windowY', window.screenY);
+}
+
+window.moveTo(window.localStorage.getItem('windowX'), window.localStorage.getItem('windowY'));
+setInterval(storeWindowPos, 250);
+```
 
 ## Google apps
 
