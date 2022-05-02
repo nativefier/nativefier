@@ -30,7 +30,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: npm-shrinkwrap.json app/npm-shrinkwrap.json package-lock.json app/package-lock.json
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
       - env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
@@ -44,7 +48,11 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          cache-dependency-path: npm-shrinkwrap.json app/npm-shrinkwrap.json package-lock.json app/package-lock.json
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
       - env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
@@ -58,7 +66,11 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
-          cache-dependency-path: npm-shrinkwrap.json app/npm-shrinkwrap.json package-lock.json app/package-lock.json
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
       - env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
