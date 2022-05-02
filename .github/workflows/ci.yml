@@ -75,4 +75,4 @@ jobs:
       - env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
-      - run: npm run test -- --testPathIgnorePatterns ".*playwright.*"
+      - run: npm run test:noplaywright
