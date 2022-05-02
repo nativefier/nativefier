@@ -31,7 +31,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: npm-shrinkwrap.json app/npm-shrinkwrap.json package-lock.json app/package-lock.json
-      - env: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test -- --testPathIgnorePatterns ".*playwright.*"
   lint:
@@ -44,7 +45,8 @@ jobs:
           node-version: 18
           cache: 'npm'
           cache-dependency-path: npm-shrinkwrap.json app/npm-shrinkwrap.json package-lock.json app/package-lock.json
-      - env: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run lint
   playwright:
@@ -57,7 +59,8 @@ jobs:
           node-version: 18
           cache: 'npm'
           cache-dependency-path: npm-shrinkwrap.json app/npm-shrinkwrap.json package-lock.json app/package-lock.json
-      - env: PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test:playwright
         timeout-minutes: 5
