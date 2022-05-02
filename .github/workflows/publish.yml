@@ -4,18 +4,28 @@ on:
     types:
       - created
 jobs:
+  playwright:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1 # Setup .npmrc file to publish to npm
+        with:
+          node-version: '18' # Align the version of Node here with ci.yml.
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
+      - run: npm run test:playwright
+        timeout-minutes: 5
+
   build:
+    needs: playwright
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1 # Setup .npmrc file to publish to npm
         with:
-          # Align the version of Node here with ci.yml.
-          node-version: '18'
+          node-version: '18' # Align the version of Node here with ci.yml.
           registry-url: 'https://registry.npmjs.org'
-      # Will also (through `prepare` hook): 1. install ./app, and 2. build
-      - run: npm ci --no-fund
+      - run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test -- --testPathIgnorePatterns ".*playwright.*"
       - run: npm run lint
       - run: npm publish
@@ -23,7 +33,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   docker:
-    needs: build
+    needs: [ playwright, build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
