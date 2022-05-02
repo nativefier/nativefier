@@ -16,7 +16,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       # Will also (through `prepare` hook): 1. install ./app, and 2. build
       - run: npm ci --no-fund
-      - run: npm test
+      - run: npm run test -- --testPathIgnorePatterns ".*playwright.*"
       - run: npm run lint
       - run: npm publish
         env:
