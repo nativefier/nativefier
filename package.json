@@ -72,10 +72,10 @@
     "yargs": "^17.1.1"
   },
   "devDependencies": {
-    "@jest/types": "^28.0.2",
     "@types/debug": "^4.1.6",
     "@types/fs-extra": "^9.0.13",
     "@types/hasbin": "^1.2.0",
+    "@types/jest": "^27.0.1",
     "@types/ncp": "^2.0.5",
     "@types/node": "14.14.20",
     "@types/page-icon": "^0.3.4",
@@ -86,7 +86,7 @@
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^28.0.3",
+    "jest": "^27.0.6",
     "playwright": "^1.21.1",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
