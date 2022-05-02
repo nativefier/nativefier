@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        # Setup .npmrc file to publish to npm
+      # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v1
         with:
           # Align the version of Node here with ci.yml.
-          node-version: '18.x'
+          node-version: '18'
           registry-url: 'https://registry.npmjs.org'
       # Will also (through `prepare` hook): 1. install ./app, and 2. build
       - run: npm ci --no-fund
