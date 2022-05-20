@@ -476,7 +476,7 @@ Prevents application from being run multiple times. If such an attempt occurs th
 --title-bar-style <value>
 ```
 
-_[New in 7.6.4]_ (macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://github.com/electron/electron/blob/master/docs/api/frameless-window.md#alternatives-on-macos) documentation.
+_[New in 7.6.4]_ (macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://www.electronjs.org/pt/docs/latest/api/frameless-window) documentation.
 
 Consider injecting a custom CSS (via `--inject`) for better integration. Specifically, the CSS should specify a draggable region. For instance, if the target website has a `<header>` element, you can make it draggable like so.
 
