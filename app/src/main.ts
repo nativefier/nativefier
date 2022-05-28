@@ -228,6 +228,15 @@ app.on('will-finish-launching', () => {
   log.debug('app.will-finish-launching');
 });
 
+app.on('open-url', (event, url) => {
+  log.debug('app.open-url', { event, url });
+
+  event.preventDefault();
+  if (mainWindow) {
+    mainWindow.webContents.send('open-url', url);
+  }
+});
+
 if (appArgs.widevine) {
   // @ts-expect-error This event only appears on the widevine version of electron, which we'd see at runtime
   app.on('widevine-ready', (version: string, lastVersion: string) => {
