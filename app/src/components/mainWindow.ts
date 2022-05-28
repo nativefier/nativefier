@@ -155,7 +155,11 @@ export async function createMainWindow(
   }
 
   if (options.targetUrl) {
-    await mainWindow.loadURL(options.targetUrl);
+    try {
+      await mainWindow.loadURL(options.targetUrl);
+    } catch (err: unknown) {
+      log.error('targetUrl ERROR', err);
+    }
   }
 
   setupCloseEvent(options, mainWindow);
