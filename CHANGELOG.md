@@ -1,4 +1,18 @@
 
+47.2.0 / 2022-05-30
+===================
+
+  * Handle `open-url` event: support "deep-linking" e.g. for mailto links (PR #1418, fix #1412)
+  * Bump default Electron to 18.3.1 (from 18.2.0), with security fixes:
+    https://github.com/electron/electron/releases/tag/v18.2.1
+    https://github.com/electron/electron/releases/tag/v18.2.2
+    https://github.com/electron/electron/releases/tag/v18.2.3
+    https://github.com/electron/electron/releases/tag/v18.2.4
+    https://github.com/electron/electron/releases/tag/v18.3.0
+    https://github.com/electron/electron/releases/tag/v18.3.1
+  * Update dependencies
+  * Docs: {API, README, CATALOG}.md cleanups
+
 47.1.3 / 2022-05-02
 ===================
 
