@@ -42,7 +42,7 @@ Optional dependencies:
   Be sure `wine` is in your `$PATH`.
 
 <details>
-  <summary>Nativefier is also installable with Docker (click to expand)</summary>
+  <summary>Or install with Docker (click to expand)</summary>
 
   - Pull the image from [Docker Hub](https://hub.docker.com/r/nativefier/nativefier): `docker pull nativefier/nativefier`
   - ... or build it yourself: `docker build -t local/nativefier .`
@@ -63,7 +63,7 @@ Optional dependencies:
 </details>
 
 <details>
-  <summary>Nativefier is also installable from Snap & AUR (click to expand)</summary>
+  <summary>Or install with Snap & AUR (click to expand)</summary>
 
   These repos are *not* managed by Nativefier maintainers; use at your own risk.
   If using them, for your security, please inspect the build script.
