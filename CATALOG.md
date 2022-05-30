@@ -11,6 +11,19 @@ Below you'll find a list of build commands contributed by the Nativefier communi
 
 ## General recipes
 
+### Videos don’t play
+
+Some sites like [HBO Max](https://github.com/nativefier/nativefier/issues/1153) and [Udemy](https://github.com/nativefier/nativefier/issues/1147) host videos using [DRM](https://en.wikipedia.org/wiki/Digital_rights_management).
+
+For those, try passing the [`--widevine`](API.md#widevine) option.
+
+### Settings cached between app rebuilds
+
+You might be surprised to see settings persist after rebuilding your app.
+This occurs because the app cache lives separately from the app.
+
+Try deleting your app's cache, found at `<your_app_name_lower_case>-nativefier-<random_id>` in your OS’s "App Data" directory (Linux: `$XDG_CONFIG_HOME` or `~/.config` , MacOS: `~/Library/Application Support/` , Windows: `%APPDATA%` or `C:\Users\yourprofile\AppData\Roaming`)
+
 ### Window size and position
 
 This allows the last set window size and position to be remembered and applied
@@ -28,26 +41,22 @@ function storeWindowPos() {
   window.localStorage.setItem('windowX', window.screenX);
   window.localStorage.setItem('windowY', window.screenY);
 }
-
 window.moveTo(window.localStorage.getItem('windowX'), window.localStorage.getItem('windowY'));
 setInterval(storeWindowPos, 250);
 ```
 
 ## Google apps
 
-(This example documents Google Sheets, but is applicable to other Google apps,
-e.g. Google Calendar)
+Lying about the User Agent is required, else Google Login will notice your
+"Chrome" isn't a real Chrome, and will: 1. Refuse login, 2. Break notifications.
+
+This example documents Google Sheets, but is applicable to other Google apps,
+e.g. Google Calendar, GMail, etc. If `firefox` doesn’t work, try `safari` .
 
 ```sh
 nativefier 'https://docs.google.com/spreadsheets' \
   --user-agent firefox
 ```
-
-Note: lying about the User Agent is required, else Google will notice your
-"Chrome" isn't a real Chrome, and will:
-
-1. Refuse login
-2. Break notifications
 
 ## Outlook
 
