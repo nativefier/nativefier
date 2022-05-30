@@ -86,8 +86,9 @@ contribute to the [icon repository](https://github.com/nativefier/nativefier-ico
 
 ## Troubleshooting
 
-See [CATALOG.md](CATALOG.md) for site-specific ideas & workarounds contributed by the
-community, and search in [existing issues](https://github.com/nativefier/nativefier/issues).
+**See [CATALOG.md](CATALOG.md) for site-specific ideas & workarounds contributed by the community**.
+
+If this doesn’t help, go look at our [issue tracker](https://github.com/nativefier/nativefier/issues).
 
 ## Development
 
