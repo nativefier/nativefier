@@ -84,7 +84,7 @@ If desired, these options can be overwritten. For example, to override the name,
 to learn about command-line flags usable to configure your app.
 contribute to the [icon repository](https://github.com/nativefier/nativefier-icons).
 
-### Troubleshooting
+## Troubleshooting
 
 See [CATALOG.md](CATALOG.md) for site-specific ideas & workarounds contributed by the
 community, and search in [existing issues](https://github.com/nativefier/nativefier/issues).
