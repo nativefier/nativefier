@@ -45,7 +45,11 @@ window.moveTo(window.localStorage.getItem('windowX'), window.localStorage.getIte
 setInterval(storeWindowPos, 250);
 ```
 
-## Google apps
+---
+
+## Site-specific recipes
+
+### Google apps
 
 Lying about the User Agent is required, else Google Login will notice your
 "Chrome" isn't a real Chrome, and will: 1. Refuse login, 2. Break notifications.
@@ -58,7 +62,7 @@ nativefier 'https://docs.google.com/spreadsheets' \
   --user-agent firefox
 ```
 
-## Outlook
+### Outlook
 
 ```sh
 nativefier 'https://outlook.office.com/mail'
@@ -69,7 +73,7 @@ nativefier 'https://outlook.office.com/mail'
 
 Note: `--browserwindow-options` is needed to allow pop-outs when creating/editing an email.
 
-## Udemy
+### Udemy
 
 ```sh
 nativefier 'https://www.udemy.com/'
@@ -80,7 +84,7 @@ nativefier 'https://www.udemy.com/'
 
 Note: most videos will work, but to play some DRMed videos you must pass `--widevine` AND [sign the app](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362).
 
-## HBO Max
+### HBO Max
 
 ```sh
 nativefier 'https://play.hbomax.com/'
@@ -91,7 +95,7 @@ nativefier 'https://play.hbomax.com/'
 
 Note: as for Udemy, `--widevine` + [app signing](https://github.com/nativefier/nativefier/issues/1147#issuecomment-828750362) is necessary.
 
-## WhatsApp
+### WhatsApp
 
 ```sh
 nativefier 'https://web.whatsapp.com/'
@@ -110,7 +114,7 @@ if ('serviceWorker' in navigator) {
 }
 ```
 
-## Spotify
+### Spotify
 
 ```sh
 nativefier 'https://open.spotify.com/'
