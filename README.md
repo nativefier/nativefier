@@ -82,7 +82,6 @@ If desired, these options can be overwritten. For example, to override the name,
 
 **Read the [API docs](API.md) or run `nativefier --help`**
 to learn about command-line flags usable to configure your app.
-contribute to the [icon repository](https://github.com/nativefier/nativefier-icons).
 
 ## Troubleshooting
 
