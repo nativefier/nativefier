@@ -74,14 +74,13 @@ Optional dependencies:
 
 ## Usage
 
-To create a desktop app for medium.com, simply `nativefier 'medium.com'`
+To create an app for medium.com, simply `nativefier 'medium.com'`
 
-Nativefier will try to determine the app name, and well as lots of other options.
-If desired, these options can be overwritten. For example, to override the name,
-`nativefier --name 'My Medium App' 'medium.com'`
+Nativefier will try to determine the app name, and well as other options that you
+can override. For example, to override the name, `nativefier --name 'My Medium App' 'medium.com'`
 
 **Read the [API docs](API.md) or run `nativefier --help`**
-to learn about command-line flags usable to configure your app.
+to learn about command-line flags and configure your app.
 
 ## Troubleshooting
 
