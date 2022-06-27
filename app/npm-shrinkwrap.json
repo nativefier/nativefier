@@ -17,7 +17,7 @@
         "source-map-support": "^0.5.19"
       },
       "devDependencies": {
-        "electron": "^18.3.1"
+        "electron": "^18.3.5"
       }
     },
     "node_modules/@electron/get": {
