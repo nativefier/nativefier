@@ -1,4 +1,15 @@
 
+47.2.1 / 2022-06-27
+===================
+
+  * macOS: fix incorrect "Back" keyboard shortcut (fix #1426)
+  * Bump default Electron to 18.3.5 (from 18.3.1), with security fixes:
+    https://github.com/electron/electron/releases/tag/v18.3.2
+    https://github.com/electron/electron/releases/tag/v18.3.3
+    https://github.com/electron/electron/releases/tag/v18.3.4
+    https://github.com/electron/electron/releases/tag/v18.3.5
+  * Update dependencies
+
 47.2.0 / 2022-05-30
 ===================
 
