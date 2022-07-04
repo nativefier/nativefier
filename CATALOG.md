@@ -187,3 +187,63 @@ a[href='/download'] {
   display: none;
 }
 ```
+
+
+### Notion Pages with interactive buttons
+
+```sh
+nativefier 'YOUR_NOTION_PAGE_SHARE_URL'
+  --inject notion.js
+  --inject notion.css
+```
+
+Notes:
+
+- You can inject the notion.js and notion.css files by copying them to the resources/app/inject folder of your nativefier app.
+
+```javascript
+/* notion.js */
+
+// First, we replace all placeholders in our Notion page to add our interactive buttons to it.
+window.onload = 
+  setTimeout(function(){
+    let htmlCode = document.body.getElementsByTagName("*");
+    for (let i = 0; i <= htmlCode.length; i++) {
+      if(htmlCode[i] && htmlCode[i].innerHTML){
+        let match = htmlCode[i].innerHTML.match(/\[notionbutton\]([\s\S]*?)\[\/notionbutton\]/);
+        if (match && typeof match == 'object'){
+          let btnarray = match['1'].split("|");
+          let btn_text = btnarray[0];
+          let btn_action = btnarray[1];
+          let btn_params = btnarray[2];
+          htmlCode[i].innerHTML = htmlCode[i].innerHTML.replace(match['0'], "<button class=\"btn-notion\" btnaction=\"" + btn_action + "\"  >"+btn_text+"</button>");
+        }
+      }
+    }
+    let buttons = document.querySelectorAll(".btn-notion");
+    for (let j=0; j <= buttons.length; j++){
+      if(buttons[j].hasAttribute("btnaction")){
+        buttons[j].onclick = function () { runAction() };
+      }
+    }
+  }, 3000);
+
+// And then we define your action below, according to our needs
+function runAction() {
+    alert('Hello World!');
+}
+```
+
+After that, set your css file as follows:
+```css
+.notion-topbar{ /* hiding notion's default navigation bar for a more "app" feeling */
+  display:none; 
+}
+.btn-notion{ /* defining some style for our buttons */
+  background-color:#FFC300;
+  color: #333333;
+}
+.notion-selectable.notion-page-block.notion-collection-item span{
+  pointer-events: auto !important; /* notion prevents clicks on items inside databases. Use this to remove that. */
+}
+```
