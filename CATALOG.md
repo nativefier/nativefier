@@ -204,7 +204,7 @@ nativefier 'YOUR_NOTION_PAGE_SHARE_URL'
 Notes:
 
 - You can inject the notion.js and notion.css files by copying them to the resources/app/inject folder of your nativefier app.
-
+- In your Notion page, use [notionbutton]BUTTON_TEXT|BUTTON_ACTION[/notionbutton], where BUTTON_TEXT is the text contained in your button and BUTTON_ACTION is the action which will be called in your JS function.
 ```javascript
 /* notion.js */
 
@@ -219,7 +219,6 @@ window.onload =
           let btnarray = match['1'].split("|");
           let btn_text = btnarray[0];
           let btn_action = btnarray[1];
-          let btn_params = btnarray[2];
           htmlCode[i].innerHTML = htmlCode[i].innerHTML.replace(match['0'], "<button class=\"btn-notion\" btnaction=\"" + btn_action + "\"  >"+btn_text+"</button>");
         }
       }
@@ -227,14 +226,20 @@ window.onload =
     let buttons = document.querySelectorAll(".btn-notion");
     for (let j=0; j <= buttons.length; j++){
       if(buttons[j].hasAttribute("btnaction")){
-        buttons[j].onclick = function () { runAction() };
+        buttons[j].onclick = function () { runAction(buttons[j].getAttribute("btnaction")) };
       }
     }
   }, 3000);
 
 // And then we define your action below, according to our needs
-function runAction() {
-    alert('Hello World!');
+function runAction(action) {
+    switch(action){
+      case '1':
+        alert('Nice One!');
+        break;
+      default:
+        alert('Hello World!');
+    }
 }
 ```
 
