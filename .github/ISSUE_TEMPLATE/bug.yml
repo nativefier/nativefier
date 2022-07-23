@@ -64,18 +64,26 @@ body:
     attributes:
       label: Nativefier version
       placeholder: "nativefier --version"
+    validations:
+      required: true
   - type: input
     id: node-version
     attributes:
       label: Node.js version
       placeholder: "node --version"
+    validations:
+      required: true
   - type: input
     id: npm-version
     attributes:
       label: npm version
       placeholder: "npm --version"
+    validations:
+      required: true
   - type: input
     id: os
     attributes:
       label: OS
       placeholder: "For example: Windows 10 build 1809"
+    validations:
+      required: true
