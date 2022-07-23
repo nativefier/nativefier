@@ -75,7 +75,7 @@
     "@types/debug": "^4.1.6",
     "@types/fs-extra": "^9.0.13",
     "@types/hasbin": "^1.2.0",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^28.1.6",
     "@types/ncp": "^2.0.5",
     "@types/node": "14.14.20",
     "@types/page-icon": "^0.3.4",
