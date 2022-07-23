@@ -58,9 +58,9 @@ body:
     attributes:
       label: Debug info
       placeholder: |
-        - Console logs of your full build command, with the `--verbose` flag
+        - Logs of your full build command, with the `--verbose` flag. Put them in a ```code block``` !
         - If the bug happens at app run time, the in-app DevTools console logs (open it with F12)
-        - Error messages, screenshots, anything relevant!
+        - Error messages, screenshots, screencasts, anything relevant!
     validations:
       required: false
   - type: input
