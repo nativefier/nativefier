@@ -11,9 +11,16 @@ body:
     attributes:
       label: Homework
       options:
-        - label: I looked at `nativefier --help` and https://github.com/nativefier/nativefier/blob/master/API.md , no existing option fits my needs.
-        - label: I searched existing issues, open & closed. Yes, my question is new.
-        - label: I'm using the latest version available at https://github.com/nativefier/nativefier/releases
+        - label: I took the time to write a good, descriptive issue title
+          required: true
+        - label: I read `nativefier --help` and [API.md](https://github.com/nativefier/nativefier/blob/master/API.md).
+          required: true
+        - label: I checked [CATALOG.md](https://github.com/nativefier/nativefier/blob/master/CATALOG.md) for community suggestions & workarounds.
+          required: true
+        - label: I searched [existing issues, open & closed](https://github.com/nativefier/nativefier/issues?q=is%3Aissue). Yes, my question is new.
+          required: true
+        - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
+          required: true
     validations:
       required: false
   - type: textarea
@@ -39,38 +46,33 @@ body:
     id: debug-info
     attributes:
       label: Debug info
-      description: |
-        If applicable,
-
-        - Console logs of your attempted `nativefier` build command, with `--verbose` flag
-        - Error messages
-        - Screenshots
-        - Anything else relevant!
+      placeholder: |
+        Error messages, screenshots, screencasts, anything relevant!
   - type: input
     id: nativefier-version
     attributes:
       label: Nativefier version
-      description: "Output of `nativefier --version`"
+      placeholder: "nativefier --version"
+    validations:
+      required: true
   - type: input
     id: node-version
     attributes:
       label: Node.js version
-      description: "Output of `node --version`"
+      placeholder: "node --version"
+    validations:
+      required: true
   - type: input
     id: npm-version
     attributes:
       label: npm version
-      description: "Output of `npm --version`"
+      placeholder: "npm --version"
+    validations:
+      required: true
   - type: input
     id: os
     attributes:
       label: OS
       placeholder: "For example: Windows 10 build 1809"
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Any additional information that would be relevant. 
-      placeholder: "For example: \"I'm behind a proxy, with configuration X and protocol Y\""
     validations:
-      required: false
+      required: true
