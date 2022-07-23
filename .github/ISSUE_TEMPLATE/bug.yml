@@ -6,15 +6,17 @@ body:
     attributes:
       value: |
         Thanks for taking the time to fill out this bug report!
+        Help us help you, please fill this form thoroughly.
+        An incomplete bug report is a useless bug report.
   - type: checkboxes
     id: homework
     attributes:
       label: Homework
       options:
-        - label: I looked at `nativefier --help` and https://github.com/nativefier/nativefier/blob/master/API.md
-        - label: I checked the [Troubleshooting section of the README](https://github.com/nativefier/nativefier/blob/master/README.md#troubleshooting).
+        - label: I read `nativefier --help` and [API.md](https://github.com/nativefier/nativefier/blob/master/API.md)
+        - label: I checked [CATALOG.md](https://github.com/nativefier/nativefier/blob/master/CATALOG.md) for site-specific community suggestions.
         - label: I searched existing issues, open & closed. Yes, my bug is new.
-        - label: I'm using the latest version available at https://github.com/nativefier/nativefier/releases
+        - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
     validations:
       required: false
   - type: textarea
@@ -25,71 +27,54 @@ body:
     validations:
       required: true
   - type: textarea
-    id: steps-to-reproduce
+    id: nativefier-command
     attributes:
-      label: Steps to reproduce
-      description: "Give your ***full*** nativefier command and its logs, with the ***`--verbose` flag***, on a ***public*** site:"
-      value: |
-        ```
-        nativefier --verbose --some-option https://mysite.com
-        <paste your verbose build logs too>
-        ```
+      label: nativefier-command
+      description: "Your ***full*** nativefier command, on a ***public*** site."
+      placeholder: nativefier --verbose --some-option https://mysite.com
     validations:
       required: true
-  - type: markdown
-    attributes:
-      value: "***Tip:*** Use screenshots whenever possible to help us better diagnose the issue. For an example, see [#1175](https://github.com/nativefier/nativefier/issues/1175)"
   - type: textarea
     id: expected-behavior
     attributes:
       label: Expected behavior
-      description: What you expected to happen.
+      placeholder: What you expected to happen.
     validations:
       required: true
   - type: textarea
     id: actual-behavior
     attributes:
       label: Actual behavior
-      description: What happened instead.
+      placeholder: What happened instead.
     validations:
       required: true
   - type: textarea
     id: debug-info
     attributes:
       label: Debug info
-      value: |
-        - Console logs of your `nativefier` build command, with `--verbose` flag
+      placeholder: |
+        - Console logs of your full build command, with the `--verbose` flag
         - If the bug happens at app run time, the in-app DevTools console logs (open it with F12)
-        - Error messages
-        - Screenshots
-        - Anything else relevant!
+        - Error messages, screenshots, Anything else relevant!
     validations:
       required: false
   - type: input
     id: nativefier-version
     attributes:
       label: Nativefier version
-      description: "Output of `nativefier --version`"
+      placeholder: "nativefier --version"
   - type: input
     id: node-version
     attributes:
       label: Node.js version
-      description: "Output of `node --version`"
+      placeholder: "node --version"
   - type: input
     id: npm-version
     attributes:
       label: npm version
-      description: "Output of `npm --version`"
+      placeholder: "npm --version"
   - type: input
     id: os
     attributes:
       label: OS
       placeholder: "For example: Windows 10 build 1809"
-  - type: textarea
-    id: context
-    attributes:
-      label: Additional context
-      description: Any additional information that would be relevant. 
-      placeholder: "For example: \"I'm behind a proxy, with configuration X and protocol Y\""
-    validations:
-      required: false
