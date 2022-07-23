@@ -25,6 +25,7 @@ body:
       placeholder: nativefier --verbose --some-option https://mysite.com
     validations:
       required: true
+    render: Shell
   - type: textarea
     id: steps-to-repro
     attributes:
