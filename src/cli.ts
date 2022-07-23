@@ -18,6 +18,19 @@ import { RawOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
 import { buildUniversalApp } from './build/buildNativefierApp';
 
+// @types/yargs@17.x started pretending yargs.argv can be a promise:
+// https://github.com/DefinitelyTyped/DefinitelyTyped/blob/8e17f9ca957a06040badb53ae7688fbb74229ccf/types/yargs/index.d.ts#L73
+// Dunno in which case it happens, but it doesn't for us! So, having to await
+// (and end up having to flac sync code as async) would be useless and annoying.
+// So, copy-pastaing and axing the Promise half of yargs's type definition,
+// to have a *non*-promise type. Maybe that's wrong. If it is, this type should
+// be dropped, and extra async-ness should be added where needed.
+type YargsArgvSync<T> = {
+  [key in keyof yargs.Arguments<T> as
+    | key
+    | yargs.CamelCaseKey<key>]: yargs.Arguments<T>[key];
+};
+
 export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
   const sanitizedArgs = sanitizeArgs(argv);
   const args = yargs(sanitizedArgs)
@@ -534,7 +547,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
 
   // We must access argv in order to get yargs to actually process args
   // Do this now to go ahead and get any errors out of the way
-  args.argv;
+  args.argv as YargsArgvSync<RawOptions>;
 
   return args as yargs.Argv<RawOptions>;
 }
@@ -544,7 +557,7 @@ function decorateYargOptionGroup(value: string): string {
 }
 
 export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
-  const parsed = { ...args.argv };
+  const parsed = { ...(args.argv as YargsArgvSync<RawOptions>) };
   // In yargs, the _ property of the parsed args is an array of the positional args
   // https://github.com/yargs/yargs/blob/master/docs/examples.md#and-non-hyphenated-options-too-just-use-argv_
   // So try to extract the targetUrl and outputDirectory from these
