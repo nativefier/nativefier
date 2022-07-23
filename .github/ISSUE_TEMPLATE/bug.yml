@@ -5,9 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
-        Help us help you, please fill this form thoroughly.
-        An incomplete bug report is a useless bug report.
+        Thanks for taking the time to fill out this bug report 🙂! Help us help you, **fill this form thoroughly**. An incomplete bug report is a useless bug report.
   - type: checkboxes
     id: homework
     attributes:
@@ -26,10 +24,10 @@ body:
       description: A clear and concise description of what the bug is.
     validations:
       required: true
-  - type: textarea
+  - type: input
     id: nativefier-command
     attributes:
-      label: nativefier-command
+      label: Nativefier command
       description: "Your ***full*** nativefier command, on a ***public*** site."
       placeholder: nativefier --verbose --some-option https://mysite.com
     validations:
