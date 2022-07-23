@@ -17,19 +17,22 @@ body:
         - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
     validations:
       required: false
-  - type: textarea
-    id: bug-description
-    attributes:
-      label: Bug description
-      description: A clear and concise description of what the bug is.
-    validations:
-      required: true
   - type: input
     id: nativefier-command
     attributes:
       label: Nativefier command
       description: "Your ***full*** nativefier command, on a ***public*** site."
       placeholder: nativefier --verbose --some-option https://mysite.com
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. I did this...
+        2. And then that...
+        3. Finally, I clicked here.
     validations:
       required: true
   - type: textarea
