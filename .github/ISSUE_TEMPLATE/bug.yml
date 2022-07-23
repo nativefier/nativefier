@@ -17,7 +17,7 @@ body:
           required: true
         - label: I checked [CATALOG.md](https://github.com/nativefier/nativefier/blob/master/CATALOG.md) for community suggestions & workarounds.
           required: true
-        - label: I searched [existing issues, open & closed](https://github.com/nativefier/nativefier/issues?q=is%3Aissue). Yes, my feature request is new.
+        - label: I searched [existing issues, open & closed](https://github.com/nativefier/nativefier/issues?q=is%3Aissue). Yes, my bug is new.
           required: true
         - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
           required: true
