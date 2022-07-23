@@ -21,7 +21,7 @@ import { buildUniversalApp } from './build/buildNativefierApp';
 // @types/yargs@17.x started pretending yargs.argv can be a promise:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/8e17f9ca957a06040badb53ae7688fbb74229ccf/types/yargs/index.d.ts#L73
 // Dunno in which case it happens, but it doesn't for us! So, having to await
-// (and end up having to flac sync code as async) would be useless and annoying.
+// (and end up having to flag sync code as async) would be useless and annoying.
 // So, copy-pastaing and axing the Promise half of yargs's type definition,
 // to have a *non*-promise type. Maybe that's wrong. If it is, this type should
 // be dropped, and extra async-ness should be added where needed.
