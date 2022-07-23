@@ -35,6 +35,7 @@
         "@types/node": "14.14.20",
         "@types/page-icon": "^0.3.4",
         "@types/tmp": "^0.2.1",
+        "@types/yargs": "^17.0.10",
         "@typescript-eslint/eslint-plugin": "^5.3.0",
         "@typescript-eslint/parser": "^5.3.0",
         "electron": "^18.3.5",
@@ -1087,6 +1088,15 @@
         "node": "^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0"
       }
     },
+    "node_modules/@jest/types/node_modules/@types/yargs": {
+      "version": "16.0.4",
+      "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-16.0.4.tgz",
+      "integrity": "sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==",
+      "dev": true,
+      "dependencies": {
+        "@types/yargs-parser": "*"
+      }
+    },
     "node_modules/@jridgewell/gen-mapping": {
       "version": "0.1.1",
       "resolved": "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.1.1.tgz",
@@ -1476,9 +1486,9 @@
       "dev": true
     },
     "node_modules/@types/yargs": {
-      "version": "16.0.4",
-      "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-16.0.4.tgz",
-      "integrity": "sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==",
+      "version": "17.0.10",
+      "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-17.0.10.tgz",
+      "integrity": "sha512-gmEaFwpj/7f/ROdtIlci1R1VYU1J4j95m8T+Tj3iBgiBFKg1foE/PSl93bBd5T9LDXNPo8UlNN6W0qwD8O5OaA==",
       "dev": true,
       "dependencies": {
         "@types/yargs-parser": "*"
@@ -9267,6 +9277,17 @@
         "@types/node": "*",
         "@types/yargs": "^16.0.0",
         "chalk": "^4.0.0"
+      },
+      "dependencies": {
+        "@types/yargs": {
+          "version": "16.0.4",
+          "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-16.0.4.tgz",
+          "integrity": "sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==",
+          "dev": true,
+          "requires": {
+            "@types/yargs-parser": "*"
+          }
+        }
       }
     },
     "@jridgewell/gen-mapping": {
@@ -9617,9 +9638,9 @@
       "dev": true
     },
     "@types/yargs": {
-      "version": "16.0.4",
-      "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-16.0.4.tgz",
-      "integrity": "sha512-T8Yc9wt/5LbJyCaLiHPReJa0kApcIgJ7Bn735GjItUfh08Z1pJvu8QZqb9s+mMvKV6WUQRV7K2R46YbjMXTTJw==",
+      "version": "17.0.10",
+      "resolved": "https://registry.npmjs.org/@types/yargs/-/yargs-17.0.10.tgz",
+      "integrity": "sha512-gmEaFwpj/7f/ROdtIlci1R1VYU1J4j95m8T+Tj3iBgiBFKg1foE/PSl93bBd5T9LDXNPo8UlNN6W0qwD8O5OaA==",
       "dev": true,
       "requires": {
         "@types/yargs-parser": "*"
