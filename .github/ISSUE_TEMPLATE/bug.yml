@@ -16,7 +16,7 @@ body:
         - label: I searched existing issues, open & closed. Yes, my bug is new.
         - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
     validations:
-      required: false
+      required: true
   - type: input
     id: nativefier-command
     attributes:
@@ -56,7 +56,7 @@ body:
       placeholder: |
         - Console logs of your full build command, with the `--verbose` flag
         - If the bug happens at app run time, the in-app DevTools console logs (open it with F12)
-        - Error messages, screenshots, Anything else relevant!
+        - Error messages, screenshots, anything relevant!
     validations:
       required: false
   - type: input
