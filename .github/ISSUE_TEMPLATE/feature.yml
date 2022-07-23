@@ -30,7 +30,7 @@ body:
       description: A clear and concise description of what your feature would be.
       placeholder: |
         For example:
-        Nativefier should XYZ.
+        Nativefier should XYZ, ... details details details...
         Existing option --something is not what I want, because ...
     validations:
       required: true
