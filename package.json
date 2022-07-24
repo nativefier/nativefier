@@ -49,7 +49,7 @@
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && bash .github/manual-test",
     "test:playwright": "jest --detectOpenHandles --testRegex=playwright-test",
-    "test:noplaywright": "jest --testRegex '[-.]test\\.js$' --testPathIgnorePatterns '.*playwright.*'",
+    "test:noplaywright": "jest --testRegex '[-.]test\\.js$' --testPathIgnorePatterns=playwright",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
@@ -121,7 +121,8 @@
       "<rootDir>/app/node_modules.*",
       "<rootDir>/app/src.*",
       "<rootDir>/app/lib.*",
-      "<rootDir>/src.*"
+      "<rootDir>/src.*",
+      ".+\\.d\\.ts"
     ],
     "watchPathIgnorePatterns": [
       "<rootDir>/app/lib.*",
