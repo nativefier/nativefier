@@ -24,6 +24,10 @@ function sleep(milliseconds: number): Promise<void> {
   });
 }
 
+/**
+ * Debugging this? Run your playwright tests in debug mode:
+ * DEBUG='pw:browser*' npm run test:playwright
+ */
 describe('Application launch', () => {
   jest.setTimeout(60000);
 
