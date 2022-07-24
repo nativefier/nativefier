@@ -52,6 +52,9 @@ jobs:
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test:playwright
         timeout-minutes: 5
+        # Useful to debug PlayWright tests failing in CI
+        # env:
+        #   DEBUG: pw:browser*
   tests:
     strategy:
       matrix:

@@ -46,14 +46,14 @@
     "relock:cli": "rm -rf ./node_modules/ ./npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
     "relock:app": "rm -rf ./app/node_modules/ ./app/npm-shrinkwrap.json && cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
     "relock": "npm run relock:cli; npm run relock:app",
-    "test:integration": "jest --testRegex '.*integration-test.js'",
+    "test:integration": "jest --testRegex=integration-test",
     "test:manual": "npm run build && bash .github/manual-test",
-    "test:playwright": "jest --detectOpenHandles --testRegex '.*playwright-test.js'",
-    "test:noplaywright": "jest --testRegex '[-.]test\\.js$' --testPathIgnorePatterns '.*playwright.*'",
+    "test:playwright": "jest --detectOpenHandles --testRegex=playwright-test",
+    "test:noplaywright": "jest --testPathIgnorePatterns=playwright",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
     "test:withlog": "LOGLEVEL=trace npm run test",
-    "test": "jest --testRegex '[-.]test\\.js$'",
+    "test": "jest",
     "watch": "npx concurrently \"npm:*:watch\""
   },
   "dependencies": {
@@ -87,8 +87,8 @@
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^27.0.6",
-    "playwright": "^1.21.1",
+    "jest": "^28.1.3",
+    "playwright": "^1.24.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.2.3",
@@ -121,8 +121,11 @@
       "<rootDir>/app/node_modules.*",
       "<rootDir>/app/src.*",
       "<rootDir>/app/lib.*",
-      "<rootDir>/src.*"
+      "<rootDir>/src.*",
+      ".+\\.d\\.ts",
+      ".+\\.js\\.map"
     ],
+    "testRegex": "test\\.js",
     "watchPathIgnorePatterns": [
       "<rootDir>/app/lib.*",
       "<rootDir>/app/src.*",
