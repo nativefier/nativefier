@@ -48,7 +48,7 @@
     "relock": "npm run relock:cli; npm run relock:app",
     "test:integration": "jest --testRegex '.*integration-test.js'",
     "test:manual": "npm run build && bash .github/manual-test",
-    "test:playwright": "jest --detectOpenHandles --testRegex '.*playwright-test.js'",
+    "test:playwright": "jest --detectOpenHandles --testRegex=playwright-test",
     "test:noplaywright": "jest --testRegex '[-.]test\\.js$' --testPathIgnorePatterns '.*playwright.*'",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
