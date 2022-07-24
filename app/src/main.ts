@@ -85,9 +85,11 @@ if (isWindows()) {
   app.setAppUserModelId(app.getName());
 }
 
+const urlArgv = process.argv.filter((a) => a.startsWith('http'));
+
 // Take in a URL on the command line as an override
-if (process.argv.length > 1) {
-  const maybeUrl = process.argv[1];
+if (urlArgv.length > 0) {
+  const maybeUrl = urlArgv[0];
   try {
     new URL(maybeUrl);
     appArgs.targetUrl = maybeUrl;
