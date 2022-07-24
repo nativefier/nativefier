@@ -50,11 +50,11 @@ jobs:
       - env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
-      - run: dir .\lib # Trying to debug why no playwright tests are found
-      - env:
-          DEBUG: pw:browser*
-        run: npm run test:playwright
+      - run: npm run test:playwright
         timeout-minutes: 5
+        # Useful to debug PlayWright tests failing in CI
+        # env:
+        #   DEBUG: pw:browser*
   tests:
     strategy:
       matrix:
@@ -78,8 +78,4 @@ jobs:
       - env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
         run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
-      - if: ${{ matrix.platform == 'windows-latest' }}
-        run: dir .\lib # Trying to debug why no tests are found
-      - if: ${{ matrix.platform != 'windows-latest' }}
-        run: ls -la ./lib # Trying to debug why no tests are found
       - run: npm run test:noplaywright
