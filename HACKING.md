@@ -124,7 +124,7 @@ When a new major [Electron release](https://github.com/electron/electron/release
 
 1. Wait a few weeks to let it stabilize. Never upgrade Nativefier to a `.0.0`.
 2. Thoroughly digest the new version's [breaking changes](https://www.electronjs.org/docs/breaking-changes)
-   (also via the [Releases page](https://github.com/electron/electron/releases), the content is different),
+   (also via the [Releases page](https://github.com/electron/electron/releases) and [the blog](https://www.electronjs.org/blog/), the content is different),
    grepping our codebase for every changed API.
    - If called for by the breaking changes, perform the necessary API changes
 3. Bump `src/constants.ts` / `DEFAULT_ELECTRON_VERSION` & `DEFAULT_CHROME_VERSION`
