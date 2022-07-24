@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:18-alpine
 LABEL description="Alpine image to build Nativefier apps"
 
 
