@@ -1,4 +1,32 @@
 
+48.0.0 / 2022-07-24
+===================
+
+  * **[BREAKING]** Bump default Electron to 19.0.9 (from 18.3.5)
+
+    As usual, we did our best to adapt to Electron breaking changes, but
+    patches welcome to fix regressions. If unable to submit a patch,
+    feel free to revert to Nativefier 47.2.1, or pass `-e 18.3.5` for a
+    _temporary_ downgrade (it will work for a while, but not forever).
+    Official release notes: https://www.electronjs.org/blog/electron-19-0
+
+    Detailed release notes:
+
+    - https://github.com/electron/electron/releases/tag/v19.0.0
+    - https://github.com/electron/electron/releases/tag/v19.0.1
+    - https://github.com/electron/electron/releases/tag/v19.0.2
+    - https://github.com/electron/electron/releases/tag/v19.0.3
+    - https://github.com/electron/electron/releases/tag/v19.0.4
+    - https://github.com/electron/electron/releases/tag/v19.0.5
+    - https://github.com/electron/electron/releases/tag/v19.0.6
+    - https://github.com/electron/electron/releases/tag/v19.0.7
+    - https://github.com/electron/electron/releases/tag/v19.0.8
+    - https://github.com/electron/electron/releases/tag/v19.0.9
+
+  * CATALOG.md: add a new recipe for using interactive buttons on Notion (PR #1430)
+  * GitHub Issues: switch from "Issue templates" to new & better "Issue forms" (fix #1258) (PR #1425)
+  * Maintenance: upgrade Jest, fix PlayWright tests
+
 47.2.1 / 2022-06-27
 ===================
 
@@ -49,7 +77,7 @@
 47.0.0 / 2022-04-10
 ===================
 
-  * Bump default Electron to 18.0.3 (from 16.2.2)
+  * **[BREAKING]** Bump default Electron to 18.0.3 (from 16.2.2)
 
     As usual, we did our best to adapt to Electron breaking changes in 17/18,
     but patches welcome to fix regressions. If unable to submit a patch, then
@@ -138,7 +166,7 @@
 46.0.0 / 2022-01-02
 ===================
 
-  * Upgrade Electron from 13.6.3 & Chrome 91 to 16.0.5 & Chrome 96 (PR #1288)
+  * **[BREAKING]** Upgrade Electron from 13.6.3 & Chrome 91 to 16.0.5 & Chrome 96 (PR #1288)
     We did our best to adapt to [Electron breaking changes](https://www.electronjs.org/docs/latest/breaking-changes) in 14/15/16, but as usual,
     patches welcome to address regressions. For detailed release notes, see
     - https://github.com/electron/electron/releases/tag/v14.0.0
