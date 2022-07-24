@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "16.11.41",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.41.tgz",
-      "integrity": "sha512-mqoYK2TnVjdkGk8qXAVGc/x9nSaTpSrFaGFm43BUH3IdoBV0nta6hYaGmdOvIMlbHJbUEVen3gvwpwovAZKNdQ==",
+      "version": "16.11.45",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.45.tgz",
+      "integrity": "sha512-3rKg/L5x0rofKuuUt5zlXzOnKyIHXmIu5R8A0TuNDMF2062/AOIDBciFIjToLEJ/9F9DzkHNot+BpNsMI1OLdQ==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -178,12 +178,15 @@
       }
     },
     "node_modules/clone-response": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/clone-response/-/clone-response-1.0.2.tgz",
-      "integrity": "sha512-yjLXh88P599UOyPTFX0POsd7WxnbsVsGohcwzHOLspIhhpalPw1BcqED8NblyZLKcGrL8dTgMlcaZxV2jAD41Q==",
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/clone-response/-/clone-response-1.0.3.tgz",
+      "integrity": "sha512-ROoL94jJH2dUVML2Y/5PEDNaSHgeOdSDicUyS7izcF63G6sTc/FTjLub4b8Il9S8S0beOfYt0TaA5qvFK+w0wA==",
       "dev": true,
       "dependencies": {
         "mimic-response": "^1.0.0"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/sindresorhus"
       }
     },
     "node_modules/color-convert": {
@@ -294,9 +297,9 @@
       "optional": true
     },
     "node_modules/duplexer3": {
-      "version": "0.1.4",
-      "resolved": "https://registry.npmjs.org/duplexer3/-/duplexer3-0.1.4.tgz",
-      "integrity": "sha512-CEj8FwwNA4cVH2uFCoHUrmojhYh1vmCdOaneKJXwkeY1i9jnlslVo9dx+hQ5Hl9GnH/Bwy/IjxAyOePyPKYnzA==",
+      "version": "0.1.5",
+      "resolved": "https://registry.npmjs.org/duplexer3/-/duplexer3-0.1.5.tgz",
+      "integrity": "sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==",
       "dev": true
     },
     "node_modules/electron": {
@@ -1306,9 +1309,9 @@
       }
     },
     "@types/node": {
-      "version": "16.11.41",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.41.tgz",
-      "integrity": "sha512-mqoYK2TnVjdkGk8qXAVGc/x9nSaTpSrFaGFm43BUH3IdoBV0nta6hYaGmdOvIMlbHJbUEVen3gvwpwovAZKNdQ==",
+      "version": "16.11.45",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.45.tgz",
+      "integrity": "sha512-3rKg/L5x0rofKuuUt5zlXzOnKyIHXmIu5R8A0TuNDMF2062/AOIDBciFIjToLEJ/9F9DzkHNot+BpNsMI1OLdQ==",
       "dev": true
     },
     "ansi-regex": {
@@ -1389,9 +1392,9 @@
       }
     },
     "clone-response": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/clone-response/-/clone-response-1.0.2.tgz",
-      "integrity": "sha512-yjLXh88P599UOyPTFX0POsd7WxnbsVsGohcwzHOLspIhhpalPw1BcqED8NblyZLKcGrL8dTgMlcaZxV2jAD41Q==",
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/clone-response/-/clone-response-1.0.3.tgz",
+      "integrity": "sha512-ROoL94jJH2dUVML2Y/5PEDNaSHgeOdSDicUyS7izcF63G6sTc/FTjLub4b8Il9S8S0beOfYt0TaA5qvFK+w0wA==",
       "dev": true,
       "requires": {
         "mimic-response": "^1.0.0"
@@ -1482,9 +1485,9 @@
       "optional": true
     },
     "duplexer3": {
-      "version": "0.1.4",
-      "resolved": "https://registry.npmjs.org/duplexer3/-/duplexer3-0.1.4.tgz",
-      "integrity": "sha512-CEj8FwwNA4cVH2uFCoHUrmojhYh1vmCdOaneKJXwkeY1i9jnlslVo9dx+hQ5Hl9GnH/Bwy/IjxAyOePyPKYnzA==",
+      "version": "0.1.5",
+      "resolved": "https://registry.npmjs.org/duplexer3/-/duplexer3-0.1.5.tgz",
+      "integrity": "sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==",
       "dev": true
     },
     "electron": {
