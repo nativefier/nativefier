@@ -117,18 +117,23 @@ const fileDownloadOptions = { ...appArgs.fileDownloadOptions };
 electronDownload(fileDownloadOptions);
 
 if (appArgs.processEnvs) {
+  let processEnvs: Record<string, string> =
+    appArgs.processEnvs as unknown as Record<string, string>;
   // This is compatibility if just a string was passed.
   if (typeof appArgs.processEnvs === 'string') {
-    process.env.processEnvs = appArgs.processEnvs;
-  } else {
-    Object.keys(appArgs.processEnvs)
-      .filter((key) => key !== undefined)
-      .forEach((key) => {
-        // @ts-expect-error TS will complain this could be undefined, but we filtered those out
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        process.env[key] = appArgs.processEnvs[key];
-      });
+    try {
+      processEnvs = JSON.parse(appArgs.processEnvs) as Record<string, string>;
+    } catch {
+      // This wasn't JSON. Fall back to the old code
+      processEnvs = {};
+      process.env.processEnvs = appArgs.processEnvs;
+    }
   }
+  Object.keys(processEnvs)
+    .filter((key) => key !== undefined)
+    .forEach((key) => {
+      process.env[key] = processEnvs[key];
+    });
 }
 
 if (typeof appArgs.flashPluginDir === 'string') {
