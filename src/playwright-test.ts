@@ -11,7 +11,7 @@ import {
   Page,
 } from 'playwright';
 
-import { getTempDir } from './helpers/helpers';
+import { getTempDir, isLinux } from './helpers/helpers';
 import { NativefierOptions } from '../shared/src/options/model';
 
 const INJECT_DIR = path.join(__dirname, '..', 'app', 'inject');
@@ -70,11 +70,26 @@ describe('Application launch', () => {
         .catch(() => log.log('window.console', consoleMessage));
     };
     app = await _electron.launch({
-      args: [appMainJSPath],
+      // Workaround for the following errors in some linux distros:
+      // pw:browser [pid=24716][err] [24718:0100/000000.660708:ERROR:zygote_linux.cc(650)] write: Broken pipe (32) +16ms
+      // pw:browser [pid=24719][err] [24719:0725/114519.722060:FATAL:setuid_sandbox_host.cc(157)] The SUID sandbox helper binary was found, but is not configured correctly. Rather than run without sandboxing I'm aborting now. You need to make sure that /home/parallels/Dev/nativefier/node_modules/electron/dist/chrome-sandbox is owned by root and has mode 4755. +61ms
+      args: isLinux()
+        ? ['--no-sandbox', '--disable-setuid-sandbox', appMainJSPath]
+        : [appMainJSPath],
       env: {
         LOG_FILE_DIR: logFileDir,
         PLAYWRIGHT_TEST: '1',
-        PLAYWRIGHT_CONFIG: JSON.stringify(playwrightConfig),
+        PLAYWRIGHT_CONFIG: JSON.stringify({
+          ...playwrightConfig,
+          // disableGpu and process.env.DISPLAY forwarding solve the following errors on Linux:
+          // pw:browser [pid=286188][err] [286188:0724/102939.938248:ERROR:ozone_platform_x11.cc(248)] Missing X server or $DISPLAY +77ms
+          // pw:browser [pid=286188][err] [286188:0724/102939.938299:ERROR:env.cc(225)] The platform failed to initialize.  Exiting. +2ms
+          disableGpu: isLinux() ? true : undefined,
+          processEnvs:
+            isLinux() && process.env.DISPLAY
+              ? JSON.stringify({ DISPLAY: process.env.DISPLAY })
+              : undefined,
+        } as NativefierOptions),
         USE_LOG_FILE: '1',
         VERBOSE: '1',
       },
@@ -344,24 +359,29 @@ describe('Application launch', () => {
     const loginWindow = appWindows.filter((x) => x !== mainWindow)[0];
 
     await loginWindow.waitForLoadState('domcontentloaded');
+    await loginWindow.waitForLoadState('load');
 
     const usernameField = await loginWindow.$('#username-input');
-
     expect(usernameField).not.toBeNull();
+    await usernameField?.fill('foo');
 
     const passwordField = await loginWindow.$('#password-input');
-
     expect(passwordField).not.toBeNull();
+    await passwordField?.fill('bar');
 
     const submitButton = await loginWindow.$('#submit-form-button');
-
     expect(submitButton).not.toBeNull();
 
-    await usernameField?.fill('foo');
-    await passwordField?.fill('bar');
+    // "Why is this here?" you may be asking yourself.
+    // Because for some reason, on some linux boxes,
+    // the click function will not work until this is done.
+    // Why? I do not have access to the dark incantation
+    // that would allow me to know such information.
+    log.log({ submitButton });
+
     await submitButton?.click();
 
-    await mainWindow.waitForLoadState('networkidle');
+    await mainWindow.waitForEvent('load');
 
     const documentText = await mainWindow.evaluate<string>(
       'document.documentElement.innerText',
