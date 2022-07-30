@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "16.11.45",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.45.tgz",
-      "integrity": "sha512-3rKg/L5x0rofKuuUt5zlXzOnKyIHXmIu5R8A0TuNDMF2062/AOIDBciFIjToLEJ/9F9DzkHNot+BpNsMI1OLdQ==",
+      "version": "16.11.46",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.46.tgz",
+      "integrity": "sha512-x+sfpb2dMrhCQPL4NAGs64Z9hh0t72aP0dg+PuZidmPr/0Gj5ELQTjD/t46dq3DF/8ZvSHOaIyDIbAsdPshyVQ==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -303,9 +303,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "19.0.9",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.9.tgz",
-      "integrity": "sha512-ooEwrv8Y7NSzdhKcl6kPCYecnzcg5nFWuS5ryG+VFH3MMBR8zXh9nW2wLsZrBz6OGUxXrcc5BKBC7dA8C6RhGQ==",
+      "version": "19.0.10",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.10.tgz",
+      "integrity": "sha512-EiWtPWdD7CzkRkp1cw7t0N9W2qhI5XZOudHX7daOh5wI076nsdV2dtlAf/XyTHhPNoKR5qhTWrSnYL9PY6D1vg==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -1309,9 +1309,9 @@
       }
     },
     "@types/node": {
-      "version": "16.11.45",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.45.tgz",
-      "integrity": "sha512-3rKg/L5x0rofKuuUt5zlXzOnKyIHXmIu5R8A0TuNDMF2062/AOIDBciFIjToLEJ/9F9DzkHNot+BpNsMI1OLdQ==",
+      "version": "16.11.46",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.46.tgz",
+      "integrity": "sha512-x+sfpb2dMrhCQPL4NAGs64Z9hh0t72aP0dg+PuZidmPr/0Gj5ELQTjD/t46dq3DF/8ZvSHOaIyDIbAsdPshyVQ==",
       "dev": true
     },
     "ansi-regex": {
@@ -1491,9 +1491,9 @@
       "dev": true
     },
     "electron": {
-      "version": "19.0.9",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.9.tgz",
-      "integrity": "sha512-ooEwrv8Y7NSzdhKcl6kPCYecnzcg5nFWuS5ryG+VFH3MMBR8zXh9nW2wLsZrBz6OGUxXrcc5BKBC7dA8C6RhGQ==",
+      "version": "19.0.10",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.10.tgz",
+      "integrity": "sha512-EiWtPWdD7CzkRkp1cw7t0N9W2qhI5XZOudHX7daOh5wI076nsdV2dtlAf/XyTHhPNoKR5qhTWrSnYL9PY6D1vg==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.14.1",
