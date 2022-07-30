@@ -415,6 +415,10 @@ async function onReady(): Promise<void> {
       })
       .catch((err) => log.error('dialog.showMessageBox ERROR', err));
   }
+
+  if (appArgs.targetUrl) {
+    await mainWindow.loadURL(appArgs.targetUrl);
+  }
 }
 
 app.on(
