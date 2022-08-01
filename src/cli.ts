@@ -16,7 +16,6 @@ import { supportedArchs, supportedPlatforms } from './infer/inferOs';
 import { buildNativefierApp } from './main';
 import { RawOptions } from '../shared/src/options/model';
 import { parseJson } from './utils/parseUtils';
-import { buildUniversalApp } from './build/buildNativefierApp';
 
 // @types/yargs@17.x started pretending yargs.argv can be a promise:
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/8e17f9ca957a06040badb53ae7688fbb74229ccf/types/yargs/index.d.ts#L73
@@ -700,13 +699,7 @@ if (require.main === module) {
     options.out = process.env.NATIVEFIER_APPS_DIR;
   }
 
-  if ((options.arch ?? '').toLowerCase() === 'universal') {
-    buildUniversalApp(options).catch((error) => {
-      log.error('Error during build. Run with --verbose for details.', error);
-    });
-  } else {
-    buildNativefierApp(options).catch((error) => {
-      log.error('Error during build. Run with --verbose for details.', error);
-    });
-  }
+  buildNativefierApp(options).catch((error) => {
+    log.error('Error during build. Run with --verbose for details.', error);
+  });
 }
