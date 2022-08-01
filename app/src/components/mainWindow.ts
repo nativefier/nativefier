@@ -154,10 +154,6 @@ export async function createMainWindow(
     await clearCache(mainWindow);
   }
 
-  if (options.targetUrl) {
-    await mainWindow.loadURL(options.targetUrl);
-  }
-
   setupCloseEvent(options, mainWindow);
 
   return mainWindow;

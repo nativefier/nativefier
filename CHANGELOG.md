@@ -1,4 +1,27 @@
 
+49.0.0 / 2022-07-30
+===================
+
+**[BREAKING]** 49.0.0 doesn't have more breaking changes than 48.0.0, but I'm
+releasing a new major release anyway to signal one particularly noteworthy
+breaking change in Electron 19 that I failed to pass along to you in 48.0.0:
+**The `ia32` arch (a.k.a. `i386` or `x86/32bit`) is no longer supported.**
+
+People still running Nativefier apps on old ia32 machines, feel free to keep
+passing a flag `--electron-version 18.x.y` *while it works*. Note however that
+we won't be testing it, and future Nativefier versions may depend on upcoming
+Electron APIs that will crash your electron18-app-packaged-by-future-Nativefier.
+The deprecation is an upstream Electron decision, and there's nothing we will
+do about it. Thx @TheCleric for the catch.
+
+Also,
+
+* macOS: Fix "main window cannot be activated" (fix #1415, PR #1417)
+* Bump default Electron from 19.0.9 to [19.0.10](https://github.com/electron/electron/releases/tag/v19.0.10)
+* Fix loud axios "fetch" warning (https://github.com/nativefier/gitcloud-client/pull/4)
+* Fix playwright tests on Linux (#1440)
+* Docker: upgraded base node-alpine image from 12 to LTS (currently 16)
+
 48.0.0 / 2022-07-24
 ===================
 
