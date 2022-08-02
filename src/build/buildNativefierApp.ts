@@ -146,11 +146,9 @@ export async function buildNativefierApp(
   }
 
   log.warn(
-    '\u001B[93m' + // Make this text bright yellow.
-      '\n\n    Hi! Nativefier is minimally maintained these days, and needs more hands.\n' +
+    '\n\n    Hi! Nativefier is minimally maintained these days, and needs more hands.\n' +
       '    If you have the time & motivation, help with bugfixes and maintenance is VERY welcome.\n' +
-      '    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.\n\n' +
-      '\u001B[39m', // End bright yellow
+      '    Please go to https://github.com/nativefier/nativefier and help how you can. Thanks.\n\n',
   );
 
   log.info('\nProcessing options...');
