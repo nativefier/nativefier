@@ -56,6 +56,7 @@ function pickElectronAppArgs(options: AppOptions): OutputOptions {
     height: options.nativefier.height,
     helperBundleId: options.packager.helperBundleId,
     hideWindowFrame: options.nativefier.hideWindowFrame,
+    thickFrame: options.nativefier.thickFrame,
     ignoreCertificate: options.nativefier.ignoreCertificate,
     ignoreGpuBlacklist: options.nativefier.ignoreGpuBlacklist,
     insecure: options.nativefier.insecure,

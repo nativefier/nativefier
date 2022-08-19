@@ -92,6 +92,7 @@ export async function getOptions(rawOptions: RawOptions): Promise<AppOptions> {
       fullScreen: rawOptions.fullScreen ?? false,
       globalShortcuts: undefined,
       hideWindowFrame: rawOptions.hideWindowFrame ?? false,
+      thickFrame: rawOptions.thickFrame ?? true,
       ignoreCertificate: rawOptions.ignoreCertificate ?? false,
       ignoreGpuBlacklist: rawOptions.ignoreGpuBlacklist ?? false,
       inject: rawOptions.inject ?? [],

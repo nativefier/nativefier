@@ -45,6 +45,7 @@ export interface AppOptions {
     fullScreen: boolean;
     globalShortcuts?: GlobalShortcut[];
     hideWindowFrame: boolean;
+    thickFrame?: boolean;
     ignoreCertificate: boolean;
     ignoreGpuBlacklist: boolean;
     inject?: string[];
@@ -163,6 +164,7 @@ export type RawOptions = {
   globalShortcuts?: string | GlobalShortcut[];
   height?: number;
   hideWindowFrame?: boolean;
+  thickFrame?: boolean;
   icon?: string;
   ignoreCertificate?: boolean;
   ignoreGpuBlacklist?: boolean;

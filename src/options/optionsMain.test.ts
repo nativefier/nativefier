@@ -30,6 +30,7 @@ const mockedAsyncConfig: AppOptions = {
     fullScreen: false,
     globalShortcuts: undefined,
     height: undefined,
+    thickFrame: true,
     hideWindowFrame: false,
     ignoreCertificate: false,
     ignoreGpuBlacklist: false,

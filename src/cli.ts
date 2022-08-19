@@ -203,6 +203,11 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
       description: 'disable window frame and controls',
       type: 'boolean',
     })
+    .option('compact-title-bar', {
+      default: false,
+      description: '[Windows only] use a more compact title bar',
+      type: 'boolean',
+    })
     .option('m', {
       alias: 'show-menu-bar',
       default: false,
@@ -279,6 +284,7 @@ export function initArgs(argv: string[]): yargs.Argv<RawOptions> {
         'full-screen',
         'height',
         'hide-window-frame',
+        'compact-title-bar',
         'm',
         'max-width',
         'max-height',
@@ -593,8 +599,11 @@ export function parseArgs(args: yargs.Argv<RawOptions>): RawOptions {
       'ERROR: Nativefier must be called with either a targetUrl or the --upgrade option.\n',
     );
   }
-
   parsed.noOverwrite = parsed['no-overwrite'] = !parsed.overwrite;
+
+  if (parsed.compactTitleBar) {
+    parsed.thickFrame = false;
+  }
 
   // Since coerce in yargs seems to have broken since
   // https://github.com/yargs/yargs/pull/1978

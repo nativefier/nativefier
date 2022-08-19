@@ -213,6 +213,7 @@ describe('initArgs + parseArgs', () => {
     { arg: 'flash', shortArg: '' },
     { arg: 'full-screen', shortArg: '' },
     { arg: 'hide-window-frame', shortArg: '' },
+    { arg: 'compact-title-bar', shortArg: '' },
     { arg: 'honest', shortArg: '' },
     { arg: 'ignore-certificate', shortArg: '' },
     { arg: 'ignore-gpu-blacklist', shortArg: '' },

@@ -59,6 +59,7 @@ export async function createMainWindow(
 
   const mainWindow = new BrowserWindow({
     frame: !options.hideWindowFrame,
+    thickFrame: options.thickFrame,
     width: mainWindowState.width,
     height: mainWindowState.height,
     minWidth: options.minWidth,
