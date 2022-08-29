@@ -1,4 +1,15 @@
 
+49.0.1 / 2022-08-28
+===================
+
+* Bump default Electron to 19.0.14 (from .10), with security fixes
+    - https://github.com/electron/electron/releases/tag/v19.0.11
+    - https://github.com/electron/electron/releases/tag/v19.0.12
+    - https://github.com/electron/electron/releases/tag/v19.0.13
+    - https://github.com/electron/electron/releases/tag/v19.0.14
+* macOS: Move handling of "Universal" apps to electron-packager instead of our own thing (PR #1443)
+* Upgrade cli+app dependencies
+
 49.0.0 / 2022-07-30
 ===================
 
