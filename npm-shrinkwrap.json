@@ -31,7 +31,7 @@
         "@types/hasbin": "^1.2.0",
         "@types/jest": "^28.1.6",
         "@types/ncp": "^2.0.5",
-        "@types/node": "14.14.20",
+        "@types/node": "^12.12.6",
         "@types/page-icon": "^0.3.4",
         "@types/tmp": "^0.2.1",
         "@types/yargs": "^17.0.10",
@@ -1549,9 +1549,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "14.14.20",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.14.20.tgz",
-      "integrity": "sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==",
+      "version": "12.20.55",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-12.20.55.tgz",
+      "integrity": "sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==",
       "devOptional": true
     },
     "node_modules/@types/page-icon": {
@@ -8804,9 +8804,9 @@
       }
     },
     "@types/node": {
-      "version": "14.14.20",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-14.14.20.tgz",
-      "integrity": "sha512-Y93R97Ouif9JEOWPIUyU+eyIdyRqQR0I8Ez1dzku4hDx34NWh4HbtIc3WNzwB1Y9ULvNGeu5B8h8bVL5cAk4/A==",
+      "version": "12.20.55",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-12.20.55.tgz",
+      "integrity": "sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==",
       "devOptional": true
     },
     "@types/page-icon": {
