@@ -1,4 +1,24 @@
 
+50.0.0 / 2022-09-17
+===================
+
+**[BREAKING]** Add validation to opening external URLs in desktop handler (fix #1459)
+This will, for security, refuse loading of certain external of two kinds.
+One: using dubious URL schemes, two: including nasty characters.
+Blocking URLs will be accompanied by a window explaining what's going on,
+and linking to a discussion thread where you can report false positives.
+Hopefully not _BREAKING_ much (the behavior should now be aligned with
+what browsers do), but web weirdness happens. Shout and we'll tweak.
+
+Also,
+
+  * Fix double-navigation to pages (fix #1452)
+  * Upgrade cli+app dependencies
+  * Bump default Electron to 19.0.17 (from .14), with security fixes
+    - https://github.com/electron/electron/releases/tag/v19.0.15
+    - https://github.com/electron/electron/releases/tag/v19.0.16
+    - https://github.com/electron/electron/releases/tag/v19.0.17
+
 49.0.1 / 2022-08-28
 ===================
 
