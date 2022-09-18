@@ -438,14 +438,14 @@ app.on(
   },
 );
 
-app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-blur', { event, window });
+app.on('browser-window-blur', () => {
+  log.debug('app.browser-window-blur');
 });
 
-app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-created', { event, window });
+app.on('browser-window-created', () => {
+  log.debug('app.browser-window-created');
 });
 
-app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-focus', { event, window });
+app.on('browser-window-focus', () => {
+  log.debug('app.browser-window-focus');
 });

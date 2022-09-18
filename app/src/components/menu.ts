@@ -45,7 +45,7 @@ export function createMenu(
   options: OutputOptions,
   mainWindow: BrowserWindow,
 ): void {
-  log.debug('createMenu', { options, mainWindow });
+  log.debug('createMenu', { options });
   const menuTemplate = generateMenu(options, mainWindow);
 
   injectBookmarks(menuTemplate);

@@ -52,6 +52,7 @@
     "test:noplaywright": "jest --testPathIgnorePatterns=playwright",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
+    "test:watch:unit": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false --testPathIgnorePatterns=integration --testPathIgnorePatterns=playwright",
     "test:withlog": "LOGLEVEL=trace npm run test",
     "test": "jest",
     "watch": "npx concurrently \"npm:*:watch\""

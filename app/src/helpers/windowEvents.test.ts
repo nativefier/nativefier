@@ -31,7 +31,7 @@ const {
   onWillPreventUnload: (event: unknown) => void;
 } = jest.requireActual('./windowEvents');
 import {
-  blockExternalURL,
+  showNavigationBlockedMessage,
   createAboutBlankWindow,
   createNewTab,
 } from './windowHelpers';
@@ -49,7 +49,8 @@ describe('onNewWindowHelper', () => {
     targetUrl: originalURL,
     zoom: 1.0,
   };
-  const mockBlockExternalURL: jest.SpyInstance = blockExternalURL as jest.Mock;
+  const mockShowNavigationBlockedMessage: jest.SpyInstance =
+    showNavigationBlockedMessage as jest.Mock;
   const mockCreateAboutBlank: jest.SpyInstance =
     createAboutBlankWindow as jest.Mock;
   const mockCreateNewTab: jest.SpyInstance = createNewTab as jest.Mock;
@@ -63,7 +64,7 @@ describe('onNewWindowHelper', () => {
   const setupWindow = jest.fn();
 
   beforeEach(() => {
-    mockBlockExternalURL
+    mockShowNavigationBlockedMessage
       .mockReset()
       .mockReturnValue(Promise.resolve(undefined));
     mockCreateAboutBlank.mockReset();
@@ -76,7 +77,7 @@ describe('onNewWindowHelper', () => {
   });
 
   afterAll(() => {
-    mockBlockExternalURL.mockRestore();
+    mockShowNavigationBlockedMessage.mockRestore();
     mockCreateAboutBlank.mockRestore();
     mockCreateNewTab.mockRestore();
     mockLinkIsInternal.mockRestore();
@@ -95,7 +96,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
@@ -113,7 +114,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -134,7 +135,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).toHaveBeenCalledTimes(1);
+    expect(mockShowNavigationBlockedMessage).toHaveBeenCalledTimes(1);
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -150,7 +151,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
@@ -168,7 +169,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -193,7 +194,7 @@ describe('onNewWindowHelper', () => {
       true,
       undefined,
     );
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -218,7 +219,7 @@ describe('onNewWindowHelper', () => {
       false,
       undefined,
     );
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -234,7 +235,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -250,7 +251,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).toHaveBeenCalledTimes(1);
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
@@ -266,7 +267,7 @@ describe('onNewWindowHelper', () => {
 
     expect(mockCreateAboutBlank).not.toHaveBeenCalled();
     expect(mockCreateNewTab).not.toHaveBeenCalled();
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
@@ -277,13 +278,14 @@ describe('onWillNavigate', () => {
   const internalURL = 'https://medium.com/topics/technology';
   const externalURL = 'https://www.wikipedia.org/wiki/Electron';
 
-  const mockBlockExternalURL: jest.SpyInstance = blockExternalURL as jest.Mock;
+  const mockShowNavigationBlockedMessage: jest.SpyInstance =
+    showNavigationBlockedMessage as jest.Mock;
   const mockLinkIsInternal: jest.SpyInstance = linkIsInternal as jest.Mock;
   const mockOpenExternal: jest.SpyInstance = openExternal as jest.Mock;
   const preventDefault = jest.fn();
 
   beforeEach(() => {
-    mockBlockExternalURL
+    mockShowNavigationBlockedMessage
       .mockReset()
       .mockReturnValue(Promise.resolve(undefined));
     mockLinkIsInternal.mockReset().mockReturnValue(false);
@@ -292,7 +294,7 @@ describe('onWillNavigate', () => {
   });
 
   afterAll(() => {
-    mockBlockExternalURL.mockRestore();
+    mockShowNavigationBlockedMessage.mockRestore();
     mockLinkIsInternal.mockRestore();
     mockOpenExternal.mockRestore();
   });
@@ -306,7 +308,7 @@ describe('onWillNavigate', () => {
     const event = { preventDefault };
     await onWillNavigate(options, event, internalURL);
 
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).not.toHaveBeenCalled();
   });
@@ -319,12 +321,12 @@ describe('onWillNavigate', () => {
     const event = { preventDefault };
     await onWillNavigate(options, event, externalURL);
 
-    expect(mockBlockExternalURL).not.toHaveBeenCalled();
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).toHaveBeenCalledTimes(1);
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });
 
-  test('external urls should be ignored if blockExternalUrls is true', async () => {
+  test('external urls should be blocked if blockExternalUrls is true', async () => {
     const options = {
       blockExternalUrls: true,
       targetUrl: originalURL,
@@ -332,7 +334,7 @@ describe('onWillNavigate', () => {
     const event = { preventDefault };
     await onWillNavigate(options, event, externalURL);
 
-    expect(mockBlockExternalURL).toHaveBeenCalledTimes(1);
+    expect(mockShowNavigationBlockedMessage).toHaveBeenCalledTimes(1);
     expect(mockOpenExternal).not.toHaveBeenCalled();
     expect(preventDefault).toHaveBeenCalledTimes(1);
   });

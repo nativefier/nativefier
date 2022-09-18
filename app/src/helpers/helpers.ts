@@ -5,8 +5,79 @@ import * as path from 'path';
 import { BrowserWindow, OpenExternalOptions, shell } from 'electron';
 
 import * as log from '../helpers/loggingHelper';
+import { showNavigationBlockedMessage } from './windowHelpers';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
+
+// Taken from Firefox's. Location might vary in codebase, search for one of them, e.g.
+// https://searchfox.org/mozilla-central/search?q=%22xmpp%22&path=&case=false&regexp=false
+const SAFE_URL_PROTOCOLS_FIREFOX = [
+  'bitcoin:',
+  'ftp:',
+  'ftps:',
+  'geo:',
+  'im:',
+  'irc:',
+  'ircs:',
+  'magnet:',
+  'mailto:',
+  'matrix:',
+  'mms:',
+  'news:',
+  'nntp:',
+  'openpgp4fpr:',
+  'sftp:',
+  'sip:',
+  'sms:',
+  'smsto:',
+  'ssh:',
+  'tel:',
+  'urn:',
+  'webcal:',
+  'wtai:',
+  'xmpp:',
+];
+const SAFE_URL_PROTOCOLS = ['http:', 'https:', ...SAFE_URL_PROTOCOLS_FIREFOX];
+const SHELL_SAFETY_FEEDBACK_STR =
+  'If you believe this URL should open, you might be right, and our validation might be excessive.' +
+  'Please share this error & URL at https://github.com/nativefier/nativefier/issues/1459';
+
+export function isUrlShellSafe(
+  urlToGo: string,
+): { blocked: false } | { blocked: true; reason: string } {
+  let url: URL;
+  try {
+    url = new URL(urlToGo.toLowerCase());
+  } catch (err: unknown) {
+    return {
+      blocked: true,
+      reason: `URL appears malformed. ${SHELL_SAFETY_FEEDBACK_STR}`,
+    };
+  }
+
+  if (!SAFE_URL_PROTOCOLS.includes(url.protocol)) {
+    return {
+      blocked: true,
+      reason: `URL protocol is disallowed. ${SHELL_SAFETY_FEEDBACK_STR}`,
+    };
+  }
+
+  // https://cwe.mitre.org/data/definitions/177.html
+  if (
+    urlToGo.includes('%00') ||
+    urlToGo.includes('%0a') ||
+    urlToGo.includes('%2e') ||
+    urlToGo.includes('%2f') ||
+    urlToGo.includes('%5c')
+  ) {
+    return {
+      blocked: true,
+      reason: `URL might be malicious. ${SHELL_SAFETY_FEEDBACK_STR}`,
+    };
+  }
+
+  return { blocked: false };
+}
 
 /**
  * Helper to print debug messages from the main process in the browser window
@@ -166,11 +237,28 @@ export function nativeTabsSupported(): boolean {
   return isOSX();
 }
 
+/**
+ * Open the given external protocol URL in the desktop's default manner
+ * (e.g. `mailto:` URLs in the user's default mail agent), with extra validation.
+ */
 export function openExternal(
   url: string,
   options?: OpenExternalOptions,
 ): Promise<void> {
-  log.debug('openExternal', { url, options });
+  const urlShellSafety = isUrlShellSafe(url);
+  log.debug('openExternal', { url, options, urlShellSafety });
+  if (urlShellSafety.blocked) {
+    return new Promise((resolve) => {
+      showNavigationBlockedMessage(
+        `Navigation blocked to ${url}\n\n${urlShellSafety.reason}`,
+      )
+        .then(() => resolve())
+        .catch((err: unknown) => {
+          throw err;
+        });
+    });
+  }
+
   return shell.openExternal(url, options);
 }
 

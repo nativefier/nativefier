@@ -9,12 +9,12 @@ import {
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
 import * as log from './loggingHelper';
 import {
-  blockExternalURL,
   createAboutBlankWindow,
   createNewTab,
   injectCSS,
   sendParamsOnDidFinishLoad,
   setProxyRules,
+  showNavigationBlockedMessage,
 } from './windowHelpers';
 import { WindowOptions } from '../../../shared/src/options/model';
 
@@ -86,7 +86,9 @@ export function onNewWindowHelper(
       preventDefault();
       if (options.blockExternalUrls) {
         return new Promise((resolve) => {
-          blockExternalURL(urlToGo)
+          showNavigationBlockedMessage(
+            `Navigation to external URL blocked by options: ${urlToGo}`,
+          )
             .then(() => resolve())
             .catch((err: unknown) => {
               throw err;
@@ -129,7 +131,7 @@ export function onWillNavigate(
   event: Event,
   urlToGo: string,
 ): Promise<void> {
-  log.debug('onWillNavigate', { options, event, urlToGo });
+  log.debug('onWillNavigate', urlToGo);
   if (
     !linkIsInternal(
       options.targetUrl,
@@ -141,7 +143,9 @@ export function onWillNavigate(
     event.preventDefault();
     if (options.blockExternalUrls) {
       return new Promise((resolve) => {
-        blockExternalURL(urlToGo)
+        showNavigationBlockedMessage(
+          `Navigation to external URL blocked by options: ${urlToGo}`,
+        )
           .then(() => resolve())
           .catch((err: unknown) => {
             throw err;

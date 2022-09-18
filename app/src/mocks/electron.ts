@@ -144,10 +144,17 @@ class MockWebRequest {
 
 class InternalEmitter extends EventEmitter {}
 
+const mockShell = {
+  openExternal(url: string, options?: unknown): Promise<void> {
+    return new Promise((resolve) => resolve());
+  },
+};
+
 export {
   MockDialog as dialog,
   MockBrowserWindow as BrowserWindow,
   MockSession as Session,
   MockWebContents as WebContents,
   MockWebRequest as WebRequest,
+  mockShell as shell,
 };

@@ -23,12 +23,14 @@ export function adjustWindowZoom(adjustment: number): void {
   });
 }
 
-export function blockExternalURL(url: string): Promise<MessageBoxReturnValue> {
+export function showNavigationBlockedMessage(
+  message: string,
+): Promise<MessageBoxReturnValue> {
   return new Promise((resolve, reject) => {
     withFocusedWindow((focusedWindow) => {
       dialog
         .showMessageBox(focusedWindow, {
-          message: `Cannot navigate to external URL: ${url}`,
+          message,
           type: 'error',
           title: 'Navigation blocked',
         })

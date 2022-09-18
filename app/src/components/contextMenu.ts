@@ -18,7 +18,7 @@ export function initContextMenu(
   options: OutputOptions,
   window?: BrowserWindow,
 ): void {
-  log.debug('initContextMenu', { options, window });
+  log.debug('initContextMenu');
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   contextMenu({

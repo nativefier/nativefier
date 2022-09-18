@@ -1,9 +1,14 @@
+import { shell } from 'electron';
+jest.mock('./windowHelpers');
+
 import {
-  linkIsInternal,
-  getCounterValue,
-  removeUserAgentSpecifics,
   cleanupPlainText,
+  getCounterValue,
+  linkIsInternal,
+  openExternal,
+  removeUserAgentSpecifics,
 } from './helpers';
+import { showNavigationBlockedMessage } from './windowHelpers';
 
 const internalUrl = 'https://medium.com/';
 const internalUrlWww = 'https://www.medium.com/';
@@ -283,5 +288,61 @@ describe('removeUserAgentSpecifics', () => {
 describe('cleanupPlainText', () => {
   test('removes extra spaces from text', () => {
     expect(cleanupPlainText('  this is a  test  ')).toBe('this is a test');
+  });
+});
+
+describe('openExternal', () => {
+  const mockShellOpenExternal: jest.SpyInstance = jest.spyOn(
+    shell,
+    'openExternal',
+  );
+  const mockShowNavigationBlockedMessage: jest.SpyInstance =
+    showNavigationBlockedMessage as jest.Mock;
+
+  beforeEach(() => {
+    mockShellOpenExternal.mockReset();
+    mockShowNavigationBlockedMessage
+      .mockReset()
+      .mockReturnValue(Promise.resolve(undefined));
+  });
+
+  afterAll(() => {
+    mockShellOpenExternal.mockRestore();
+    mockShowNavigationBlockedMessage.mockRestore();
+  });
+
+  test('https urls scheme should *not* be blocked', async () => {
+    await openExternal('https://whatever.foo');
+
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
+    expect(mockShellOpenExternal).toHaveBeenCalled();
+  });
+
+  test('urls with whitelisted scheme should *not* be blocked', async () => {
+    await openExternal('ircs://irc.libera.chat/whatever');
+
+    expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
+    expect(mockShellOpenExternal).toHaveBeenCalled();
+  });
+
+  test('urls with non-allowlisted scheme *should* be blocked', async () => {
+    await openExternal('barf://whatever.foo');
+
+    expect(mockShowNavigationBlockedMessage).toHaveBeenCalledTimes(1);
+    expect(mockShellOpenExternal).not.toHaveBeenCalled();
+  });
+
+  test('potentially-malicious urls *should* be blocked', async () => {
+    await openExternal('https://hello.com/wor%00ld');
+
+    expect(mockShowNavigationBlockedMessage).toHaveBeenCalledTimes(1);
+    expect(mockShellOpenExternal).not.toHaveBeenCalled();
+  });
+
+  test('malformed urls *should* be blocked', async () => {
+    await openExternal('zombocom');
+
+    expect(mockShowNavigationBlockedMessage).toHaveBeenCalledTimes(1);
+    expect(mockShellOpenExternal).not.toHaveBeenCalled();
   });
 });
