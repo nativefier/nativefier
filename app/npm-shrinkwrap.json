@@ -64,9 +64,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "16.11.56",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.56.tgz",
-      "integrity": "sha512-aFcUkv7EddxxOa/9f74DINReQ/celqH8DiB3fRYgVDM2Xm5QJL8sl80QKuAnGvwAsMn+H3IFA6WCrQh1CY7m1A==",
+      "version": "16.11.59",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.59.tgz",
+      "integrity": "sha512-6u+36Dj3aDzhfBVUf/mfmc92OEdzQ2kx2jcXGdigfl70E/neV21ZHE6UCz4MDzTRcVqGAM27fk+DLXvyDsn3Jw==",
       "dev": true
     },
     "node_modules/ansi-regex": {
@@ -303,9 +303,9 @@
       "dev": true
     },
     "node_modules/electron": {
-      "version": "19.0.14",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.14.tgz",
-      "integrity": "sha512-I+ptDJZXjwMTitjF4W1s/kkt5nMrzO+TeWP3oy/kmH3pilhNag2OQA7+/cGOHTTUubDMFA8Ni4AvlQ0VDRScwQ==",
+      "version": "19.0.17",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.17.tgz",
+      "integrity": "sha512-3Offu61K+d19EZIc76MhKRsSCqfe3jDiqtD0p8jXr6p/TW7+7/jOQp407ZaZu0nQN6/xDIEi2sP4XQBom6GjTQ==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -532,9 +532,9 @@
       "optional": true
     },
     "node_modules/get-intrinsic": {
-      "version": "1.1.2",
-      "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.2.tgz",
-      "integrity": "sha512-Jfm3OyCxHh9DJyc28qGk+JmfkpO41A4XkneDSujN9MDXrm4oDKdHvndhZ2dN94+ERNfkYJWDclW6k2L/ZGHjXA==",
+      "version": "1.1.3",
+      "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.3.tgz",
+      "integrity": "sha512-QJVz1Tj7MS099PevUG5jvnt9tSkXN8K14dxQlikJuPt4uD9hHAHjLyLBiLR5zELelBdD9QNRAXZzsJx0WaDL9A==",
       "dev": true,
       "optional": true,
       "dependencies": {
@@ -1309,9 +1309,9 @@
       }
     },
     "@types/node": {
-      "version": "16.11.56",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.56.tgz",
-      "integrity": "sha512-aFcUkv7EddxxOa/9f74DINReQ/celqH8DiB3fRYgVDM2Xm5QJL8sl80QKuAnGvwAsMn+H3IFA6WCrQh1CY7m1A==",
+      "version": "16.11.59",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-16.11.59.tgz",
+      "integrity": "sha512-6u+36Dj3aDzhfBVUf/mfmc92OEdzQ2kx2jcXGdigfl70E/neV21ZHE6UCz4MDzTRcVqGAM27fk+DLXvyDsn3Jw==",
       "dev": true
     },
     "ansi-regex": {
@@ -1491,9 +1491,9 @@
       "dev": true
     },
     "electron": {
-      "version": "19.0.14",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.14.tgz",
-      "integrity": "sha512-I+ptDJZXjwMTitjF4W1s/kkt5nMrzO+TeWP3oy/kmH3pilhNag2OQA7+/cGOHTTUubDMFA8Ni4AvlQ0VDRScwQ==",
+      "version": "19.0.17",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-19.0.17.tgz",
+      "integrity": "sha512-3Offu61K+d19EZIc76MhKRsSCqfe3jDiqtD0p8jXr6p/TW7+7/jOQp407ZaZu0nQN6/xDIEi2sP4XQBom6GjTQ==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.14.1",
@@ -1678,9 +1678,9 @@
       "optional": true
     },
     "get-intrinsic": {
-      "version": "1.1.2",
-      "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.2.tgz",
-      "integrity": "sha512-Jfm3OyCxHh9DJyc28qGk+JmfkpO41A4XkneDSujN9MDXrm4oDKdHvndhZ2dN94+ERNfkYJWDclW6k2L/ZGHjXA==",
+      "version": "1.1.3",
+      "resolved": "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.3.tgz",
+      "integrity": "sha512-QJVz1Tj7MS099PevUG5jvnt9tSkXN8K14dxQlikJuPt4uD9hHAHjLyLBiLR5zELelBdD9QNRAXZzsJx0WaDL9A==",
       "dev": true,
       "optional": true,
       "requires": {
