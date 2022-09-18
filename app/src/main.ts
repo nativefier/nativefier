@@ -444,7 +444,6 @@ app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
 
 app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
   log.debug('app.browser-window-created', { event, window });
-  setupNativefierWindow(outputOptionsToWindowOptions(appArgs), window);
 });
 
 app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
