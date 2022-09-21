@@ -36,6 +36,7 @@ const SAFE_URL_PROTOCOLS_FIREFOX = [
   'webcal:',
   'wtai:',
   'xmpp:',
+  'zoommtg:',
 ];
 const SAFE_URL_PROTOCOLS = ['http:', 'https:', ...SAFE_URL_PROTOCOLS_FIREFOX];
 const SHELL_SAFETY_FEEDBACK_STR =
