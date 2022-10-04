@@ -114,6 +114,29 @@ if ('serviceWorker' in navigator) {
 }
 ```
 
+Another option to see WhatsApp or WhatsApp Business more macOS-like (macos only):
+
+```sh
+nativefier https://web.whatsapp.com --name 'WhatsApp Business' --counter true --darwin-dark-mode-support true --title-bar-style hidden --inject whatsappmacos.css
+```
+
+with this `whatsappmacos.css` to make the window draggable, and move the user avatar to the right:
+```css
+header > div:first-child {
+    flex: 0 0 auto;
+    margin-right: 15px;
+}
+div#app > div.os-mac > span:first-child {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 59px;
+    pointer-events: none;
+    -webkit-app-region: drag;
+}
+```
+
 ### Spotify
 
 ```sh
