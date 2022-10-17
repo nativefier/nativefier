@@ -279,3 +279,22 @@ After that, set your css file as follows:
   pointer-events: auto !important; /* notion prevents clicks on items inside databases. Use this to remove that. */
 }
 ```
+
+### Microsoft Teams
+
+You can get an almost macOS look-alike using this:
+
+```sh
+nativefier https://teams.microsoft.com --name 'Microsoft Teams' --counter true --darwin-dark-mode-support true --title-bar-style hidden --internal-urls "(.*)" --inject teamsapp.css
+```
+Note that the `--internal-urls` argument is necessary to login.
+
+Inject the following `teamsapp.css` file to hide the download button at the bottom left and the Office 365 apps waffle button at the top left:
+```css
+get-app-button.ts-sym.app-bar-link {
+    display: none;
+}
+button#ts-waffle-button {
+    display: none;
+}
+```
