@@ -289,7 +289,7 @@ nativefier https://teams.microsoft.com --name 'Microsoft Teams' --counter true -
 ```
 Note that the `--internal-urls` argument is necessary to login.
 
-Inject the following `teamsapp.cs` file to hide the download button at the bottom left and the Office 365 apps waffle button at the top left:
+Inject the following `teamsapp.css` file to hide the download button at the bottom left and the Office 365 apps waffle button at the top left:
 ```css
 get-app-button.ts-sym.app-bar-link {
     display: none;
