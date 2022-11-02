@@ -8,11 +8,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
 
-import { ipcRenderer, desktopCapturer } from 'electron';
+import { ipcRenderer } from 'electron';
 import { OutputOptions } from '../../shared/src/options/model';
-import { isWayland } from './helpers/helpers';
 
 // Do *NOT* add 3rd-party imports here in preload (except for webpack `externals` like electron).
 // They will work during development, but break in the prod build :-/ .
@@ -264,10 +264,10 @@ function setDisplayMediaPromise(): void {
   // Since no implementation for `getDisplayMedia` exists in Electron we write our own.
   window.navigator.mediaDevices.getDisplayMedia = (): Promise<MediaStream> => {
     return new Promise((resolve, reject) => {
-      desktopCapturer
-        .getSources({
-          types: ['screen', 'window'],
-        })
+      const sources = ipcRenderer.invoke(
+        'desktop-capturer-get-sources',
+      ) as Promise<Electron.DesktopCapturerSource[]>;
+      sources
         .then(async (sources) => {
           if (isWayland()) {
             // No documentation is provided wether the first element is always PipeWire-picked or not
@@ -330,3 +330,15 @@ ipcRenderer.on('params', (event, message: string) => {
 ipcRenderer.on('debug', (event, message: string) => {
   log.debug('ipcRenderer.debug', { event, message });
 });
+
+function isWayland(): boolean {
+  return (
+    isLinux() &&
+    (Boolean(process.env.WAYLAND_DISPLAY) ||
+      process.env.XDG_SESSION_TYPE === 'wayland')
+  );
+}
+
+function isLinux(): boolean {
+  return os.platform() === 'linux';
+}

@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcMain, BrowserWindow, Event } from 'electron';
+import { ipcMain, desktopCapturer, BrowserWindow, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 
 import { initContextMenu } from './contextMenu';
@@ -234,6 +234,11 @@ function setupSessionPermissionHandler(window: BrowserWindow): void {
       callback(true);
     },
   );
+  ipcMain.handle('desktop-capturer-get-sources', () => {
+    return desktopCapturer.getSources({
+      types: ['screen', 'window'],
+    });
+  });
 }
 
 function setupNotificationBadge(
