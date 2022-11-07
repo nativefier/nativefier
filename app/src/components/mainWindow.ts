@@ -74,6 +74,8 @@ export async function createMainWindow(
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle ?? 'default',
     // Maximize window visual glitch on Windows fix
+    // We want a consistent behavior on all OSes, but Windows needs help to not glitch.
+    // So, we manually mainWindow.show() later, see a few lines below
     show: options.tray !== 'start-in-tray' && process.platform !== 'win32',
     backgroundColor: options.backgroundColor,
     ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
@@ -96,7 +98,7 @@ export async function createMainWindow(
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
   } else if (process.platform === 'win32') {
-    // Maximize window visual glitch on Windows fix
+    // See other "Maximize window visual glitch on Windows fix" comment above.
     mainWindow.show();
   }
 
