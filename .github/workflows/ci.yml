@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 18
+      - name: Use Node.js 19
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 19
           cache: 'npm'
           cache-dependency-path: |
             npm-shrinkwrap.json
@@ -37,10 +37,10 @@ jobs:
     runs-on: windows-latest # Doesn't work on headless ubuntu, and is slow on mac
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 18
+      - name: Use Node.js 19
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 19
           cache: 'npm'
           cache-dependency-path: |
             npm-shrinkwrap.json
@@ -59,7 +59,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - '18'
+          - '19'
           - '12' # the oldest we require in package.json -> engines.node, to check we run on this minimum
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}

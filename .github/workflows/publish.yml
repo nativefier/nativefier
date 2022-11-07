@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1 # Setup .npmrc file to publish to npm
         with:
-          node-version: '18' # Align the version of Node here with ci.yml.
+          node-version: '19' # Align the version of Node here with ci.yml.
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test:playwright
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1 # Setup .npmrc file to publish to npm
         with:
-          node-version: '18' # Align the version of Node here with ci.yml.
+          node-version: '19' # Align the version of Node here with ci.yml.
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
       - run: npm run test:noplaywright
