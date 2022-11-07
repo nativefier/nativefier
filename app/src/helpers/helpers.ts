@@ -9,9 +9,12 @@ import { showNavigationBlockedMessage } from './windowHelpers';
 
 export const INJECT_DIR = path.join(__dirname, '..', 'inject');
 
-// Taken from Firefox's. Location might vary in codebase, search for one of them, e.g.
-// https://searchfox.org/mozilla-central/search?q=%22xmpp%22&path=&case=false&regexp=false
-const SAFE_URL_PROTOCOLS_FIREFOX = [
+/**
+ * Firefox's list of protocols for which opening an external handler is allowed without confirmation.
+ * Taken from Firefox's. Location might vary in codebase, search for one of them, e.g.
+ * https://searchfox.org/mozilla-central/search?q=%22xmpp%22&path=&case=false&regexp=false
+ */
+const URL_PROTOCOLS_NOCONFIRMATION_FIREFOX = [
   'bitcoin:',
   'ftp:',
   'ftps:',
@@ -37,7 +40,26 @@ const SAFE_URL_PROTOCOLS_FIREFOX = [
   'wtai:',
   'xmpp:',
 ];
-const SAFE_URL_PROTOCOLS = ['http:', 'https:', ...SAFE_URL_PROTOCOLS_FIREFOX];
+/**
+ * Our extension to Firefox's list. If extending this list too much, we should
+ * really add a confirmation modal (for now we just block), like browsers do.
+ * But for now, since nobody shouts at us for bluntly blocking anything else,
+ * let's keep rolling with it.
+ */
+const URL_PROTOCOLS_NOCONFIRMATION_EXTRA = ['zoommtg:'];
+/**
+ * List of protocols for which opening an external handler is allowed without confirmation.
+ * Note: "without confirmation" is currently a lie. It was implemented this way
+ * as a way to know from user feedback what protocols would cause users to shout,
+ * but there wasn't much shouting happening, so we currently don't have a confirmation
+ * mechanism, we just bluntly block. That might need to change at some point.
+ */
+const URL_PROTOCOLS_NOCONFIRMATION = [
+  'http:',
+  'https:',
+  ...URL_PROTOCOLS_NOCONFIRMATION_FIREFOX,
+  ...URL_PROTOCOLS_NOCONFIRMATION_EXTRA,
+];
 const SHELL_SAFETY_FEEDBACK_STR =
   'If you believe this URL should open, you might be right, and our validation might be excessive.' +
   'Please share this error & URL at https://github.com/nativefier/nativefier/issues/1459';
@@ -55,7 +77,7 @@ export function isUrlShellSafe(
     };
   }
 
-  if (!SAFE_URL_PROTOCOLS.includes(url.protocol)) {
+  if (!URL_PROTOCOLS_NOCONFIRMATION.includes(url.protocol)) {
     return {
       blocked: true,
       reason: `URL protocol is disallowed. ${SHELL_SAFETY_FEEDBACK_STR}`,
