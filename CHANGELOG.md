@@ -1,4 +1,14 @@
 
+50.0.1 / 2022-11-07
+===================
+
+* Windows: Fix "Maximize window visual glitch" (fix #1447) (PR #1448)
+* External URL protocols: add zoommtg as no-confirmation (PR #1463)
+* CATALOG.md: MS Teams CSS inject (PR #1469), WhatsApp native macOS look CSS (PR #1468)
+* Bump default Electron from 19.0.17 to 19.1.4, with security fixe
+* CI: test on 12 and **19**, now that 19 is out
+* Upgrade CLI & App dependencies
+
 50.0.0 / 2022-09-17
 ===================
 
