@@ -73,7 +73,10 @@ export async function createMainWindow(
     // Whether the window should always stay on top of other windows. Default is false.
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle ?? 'default',
-    show: options.tray !== 'start-in-tray',
+    // Maximize window visual glitch on Windows fix
+    // We want a consistent behavior on all OSes, but Windows needs help to not glitch.
+    // So, we manually mainWindow.show() later, see a few lines below
+    show: options.tray !== 'start-in-tray' && process.platform !== 'win32',
     backgroundColor: options.backgroundColor,
     ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
   });
@@ -94,6 +97,9 @@ export async function createMainWindow(
 
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
+  } else if (process.platform === 'win32') {
+    // See other "Maximize window visual glitch on Windows fix" comment above.
+    mainWindow.show();
   }
 
   const windowOptions = outputOptionsToWindowOptions(options);
