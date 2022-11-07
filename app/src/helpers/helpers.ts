@@ -262,6 +262,8 @@ export function openExternal(
   return shell.openExternal(url, options);
 }
 
+// Copy-pastaed as unable to get imports to work in preload.
+// If modifying, update also app/src/preload.ts
 export function isWayland(): boolean {
   return (
     isLinux() &&

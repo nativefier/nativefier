@@ -331,6 +331,8 @@ ipcRenderer.on('debug', (event, message: string) => {
   log.debug('ipcRenderer.debug', { event, message });
 });
 
+// Copy-pastaed as unable to get imports to work in preload.
+// If modifying, update also app/src/helpers/helpers.ts
 function isWayland(): boolean {
   return (
     isLinux() &&
