@@ -28,11 +28,7 @@ import {
   PLAYWRIGHT_CONFIG,
   safeGetEnv,
 } from './helpers/playwrightHelpers';
-import { setupNativefierWindow } from './helpers/windowEvents';
-import {
-  OutputOptions,
-  outputOptionsToWindowOptions,
-} from '../../shared/src/options/model';
+import { OutputOptions } from '../../shared/src/options/model';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
 if (require('electron-squirrel-startup')) {
