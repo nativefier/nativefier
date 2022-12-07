@@ -1164,7 +1164,7 @@ const request = {
 };
 electron.ipcRenderer.send('session-interaction', request);
 
-electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
   console.log('session-interaction-reply', event, result.value);
 });
 ```
@@ -1197,7 +1197,7 @@ const request = {
 };
 electron.ipcRenderer.send('session-interaction', request);
 
-electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
   console.log('session-interaction-reply', event, result.id, result.value);
 });
 ```
@@ -1233,7 +1233,7 @@ const request = {
 };
 electron.ipcRenderer.send('session-interaction', request);
 
-electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
   console.log('session-interaction-reply', event, result);
 });
 ```
