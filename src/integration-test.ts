@@ -201,7 +201,7 @@ describe('Nativefier upgrade', () => {
 describe('Browser version retrieval', () => {
   test('get chrome version with electron version', async () => {
     await expect(getChromeVersionForElectronVersion('12.0.0')).resolves.toBe(
-      '89.0.4389.69',
+      '102.0.5005.167',
     );
   });
 

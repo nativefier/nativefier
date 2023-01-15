@@ -1,6 +1,5 @@
-FROM node:lts-alpine
+FROM node:16.3.0-alpine
 LABEL description="Alpine image to build Nativefier apps"
-
 
 # Install dependencies and cleanup extraneous files
 RUN apk update \
@@ -16,9 +15,14 @@ ENV PATH="$PATH:$NPM_PACKAGES/bin"
 ENV MANPATH="$MANPATH:$NPM_PACKAGES/share/man"
 
 # Setup a global packages location for "node" user so we can npm link
-RUN mkdir $NPM_PACKAGES \
-    && npm config set prefix $NPM_PACKAGES
+RUN mkdir $NPM_PACKAGES && chmod -R 777 $NPM_PACKAGES
+  
+RUN npm config set prefix $NPM_PACKAGES && npm install -g npm@9.2.0
 
+# Install rimraf and typescript globally
+RUN npm install -g rimraf typescript@4.3.5 @electron/asar@3.2.2 electron-packager@17.1.1
+
+# Set working directory to /nativefier
 WORKDIR /nativefier
 
 # Add sources with node as the owner so that it has the power it needs to build in /nativefier
@@ -31,6 +35,9 @@ RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 # Run tests (to ensure we don't Docker build & publish broken stuff)
 # Cleanup leftover files in this step to not waste Docker layer space
 # Make sure nativefier is executable
+RUN npm install --save-dev @types/electron \
+    && npm install \
+    && npm run build 
 RUN npm link \
     && npm run test:noplaywright \
     && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \

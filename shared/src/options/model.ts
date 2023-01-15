@@ -1,4 +1,4 @@
-import { CreateOptions } from 'asar';
+import { CreateOptions } from '@electron/asar';
 import * as electronPackager from 'electron-packager';
 
 export type TitleBarValue =

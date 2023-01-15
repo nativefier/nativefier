@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as log from 'loglevel';
+
 import {
   DEFAULT_CHROME_VERSION,
   DEFAULT_ELECTRON_VERSION,
@@ -18,7 +19,7 @@ type ElectronRelease = {
   files: string[];
 };
 
-const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
+const ELECTRON_VERSIONS_URL = 'https://github.com/electron/releases/blob/master/lite.json';
 
 export async function getChromeVersionForElectronVersion(
   electronVersion: string,
