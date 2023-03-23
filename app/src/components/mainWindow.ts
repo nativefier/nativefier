@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcMain, BrowserWindow, Event } from 'electron';
+import { ipcMain, desktopCapturer, BrowserWindow, Event } from 'electron';
 import windowStateKeeper from 'electron-window-state';
 
 import { initContextMenu } from './contextMenu';
@@ -155,6 +155,7 @@ export async function createMainWindow(
   });
 
   setupSessionInteraction(options, mainWindow);
+  setupSessionPermissionHandler(mainWindow);
 
   if (options.clearCache) {
     await clearCache(mainWindow);
@@ -227,6 +228,22 @@ function setupCounter(
     } else {
       setDockBadge('');
     }
+  });
+}
+
+function setupSessionPermissionHandler(window: BrowserWindow): void {
+  window.webContents.session.setPermissionCheckHandler(() => {
+    return true;
+  });
+  window.webContents.session.setPermissionRequestHandler(
+    (_webContents, _permission, callback) => {
+      callback(true);
+    },
+  );
+  ipcMain.handle('desktop-capturer-get-sources', () => {
+    return desktopCapturer.getSources({
+      types: ['screen', 'window'],
+    });
   });
 }
 
