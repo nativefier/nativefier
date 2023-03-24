@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { inferTitle } from './inferTitle';
 
@@ -14,7 +14,8 @@ test('it returns the correct title', async () => {
     status: 200,
     statusText: 'OK',
     headers: {},
-    config: {},
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    config: {} as unknown as InternalAxiosRequestConfig<unknown>,
   };
   axiosGetMock.mockResolvedValue(mockedResponse);
   const result = await inferTitle('someurl');
