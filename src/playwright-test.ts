@@ -164,7 +164,7 @@ describe('Application launch', () => {
     );
     expect(headerStyle.backgroundColor).toBe(fuschia);
 
-    await mainWindow.click('#nav-products-link');
+    await mainWindow.click('#nav-pricing-link');
     await mainWindow.waitForLoadState('domcontentloaded');
     const headerStylePostNavigate = await mainWindow.$eval('header', (el) =>
       window.getComputedStyle(el),
@@ -196,7 +196,7 @@ describe('Application launch', () => {
   test('can open internal links', async () => {
     const mainWindow = (await spawnApp()) as Page;
     await mainWindow.waitForLoadState('domcontentloaded');
-    await mainWindow.click('#nav-products-link');
+    await mainWindow.click('#nav-pricing-link');
     await mainWindow.waitForLoadState('domcontentloaded');
     expect(app.windows()).toHaveLength(1);
   });
@@ -277,7 +277,7 @@ describe('Application launch', () => {
     await mainWindow.waitForLoadState('domcontentloaded');
 
     await Promise.all([
-      mainWindow.click('#nav-products-link'),
+      mainWindow.click('#nav-pricing-link'),
       mainWindow.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     ]);
 

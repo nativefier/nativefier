@@ -65,3 +65,4 @@ nativefier*.tgz
 .actrc
 
 tsconfig.tsbuildinfo
+scripts

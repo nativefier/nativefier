@@ -66,6 +66,9 @@ async function getDisplayMedia(
   sourceId: number | string,
 ): Promise<MediaStream> {
   type OriginalVideoPropertyType = boolean | MediaTrackConstraints | undefined;
+  if (!window?.navigator?.mediaDevices) {
+    throw Error('window.navigator.mediaDevices is not present');
+  }
   // Electron supports an outdated specification for mediaDevices,
   // see https://www.electronjs.org/docs/latest/api/desktop-capturer/
   const stream = await window.navigator.mediaDevices.getUserMedia({
@@ -262,6 +265,9 @@ function setupScreenSharePicker(
 
 function setDisplayMediaPromise(): void {
   // Since no implementation for `getDisplayMedia` exists in Electron we write our own.
+  if (!window?.navigator?.mediaDevices) {
+    return;
+  }
   window.navigator.mediaDevices.getDisplayMedia = (): Promise<MediaStream> => {
     return new Promise((resolve, reject) => {
       const sources = ipcRenderer.invoke(
