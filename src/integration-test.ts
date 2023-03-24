@@ -26,7 +26,7 @@ async function checkApp(
     expect(
       path.join(
         inputOptions.out,
-        `Google-${inputOptions.platform as string}-${arch}`,
+        `npm-${inputOptions.platform as string}-${arch}`,
       ),
     ).toBe(appRoot);
   }
@@ -34,7 +34,7 @@ async function checkApp(
   let relativeResourcesDir = 'resources';
 
   if (inputOptions.platform === 'darwin') {
-    relativeResourcesDir = path.join('Google.app', 'Contents', 'Resources');
+    relativeResourcesDir = path.join('npm.app', 'Contents', 'Resources');
   }
 
   const appPath = path.join(appRoot, relativeResourcesDir, 'app');
@@ -47,7 +47,7 @@ async function checkApp(
   expect(inputOptions.targetUrl).toBe(nativefierConfig?.targetUrl);
 
   // Test name inferring
-  expect(nativefierConfig?.name).toBe('Google');
+  expect(nativefierConfig?.name).toBe('npm');
 
   // Test icon writing
   const iconFile =
@@ -118,7 +118,7 @@ describe('Nativefier', () => {
         out: tempDirectory,
         overwrite: true,
         platform,
-        targetUrl: 'https://google.com/',
+        targetUrl: 'https://npmjs.com/',
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
@@ -177,7 +177,7 @@ describe('Nativefier upgrade', () => {
         globalShortcuts: shortcuts,
         out: tempDirectory,
         overwrite: true,
-        targetUrl: 'https://google.com/',
+        targetUrl: 'https://npmjs.com/',
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
