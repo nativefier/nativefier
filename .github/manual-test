@@ -105,7 +105,7 @@ request_feedback "$tmp_dir"
 # ------------------------------------------------------------------------------
 
 printf '\n***** SMOKE TEST 4: Setting up test and building app... *****\n'
-tmp_dir=$(mktemp -d -t nativefier-manual-test-start-in-tray-XXXXX)
+tmp_dir=$(mktemp -d -t nativefier-manual-test-get-media-devices)
 name='nativefier-smoke-test-4'
 node ./lib/cli.js 'https://meet.jit.si/nativefier-test' \
   --name "$name" \
@@ -115,6 +115,8 @@ printf '\n***** SMOKE TEST 4: Test checklist *****
 - Join the Jitsi meeting and try to share your screen
   (third button from the left in the bottom bar)
 - An overlay should appear where you can select a screen/window to share
+  This presently does not work in MacOS as you would have to give the app
+  "Screen Recording" permissions, but you can''t for an app in the temp directory.
 - After selecting a screen, a thumbnail of the shared screen should appear on
   the top right
 - Console: no Electron runtime deprecation warnings/error logged'
