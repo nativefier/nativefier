@@ -18,7 +18,7 @@ type ElectronRelease = {
   files: string[];
 };
 
-const ELECTRON_VERSIONS_URL = 'https://atom.io/download/atom-shell/index.json';
+const ELECTRON_VERSIONS_URL = 'https://releases.electronjs.org/releases.json';
 
 export async function getChromeVersionForElectronVersion(
   electronVersion: string,
