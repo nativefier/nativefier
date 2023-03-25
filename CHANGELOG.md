@@ -1,4 +1,10 @@
 
+50.1.0 / 2023-03-24
+===================
+
+  * Update outdated shrinkwrap files
+  * Add getDisplayMedia and PipeWire support (#1477)
+
 50.0.1 / 2022-11-07
 ===================
 

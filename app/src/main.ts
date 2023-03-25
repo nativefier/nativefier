@@ -20,7 +20,12 @@ import {
   APP_ARGS_FILE_PATH,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import { isOSX, isWindows, removeUserAgentSpecifics } from './helpers/helpers';
+import {
+  isOSX,
+  isWayland,
+  isWindows,
+  removeUserAgentSpecifics,
+} from './helpers/helpers';
 import { inferFlashPath } from './helpers/inferFlash';
 import * as log from './helpers/loggingHelper';
 import {
@@ -174,6 +179,10 @@ if (appArgs.basicAuthPassword) {
     'basic-auth-password',
     appArgs.basicAuthPassword,
   );
+}
+
+if (isWayland()) {
+  app.commandLine.appendSwitch('enable-features', 'WebRTCPipeWireCapturer');
 }
 
 if (appArgs.lang) {

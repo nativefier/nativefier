@@ -19,7 +19,7 @@ type ElectronRelease = {
   files: string[];
 };
 
-const ELECTRON_VERSIONS_URL = 'https://github.com/electron/releases/blob/master/lite.json';
+const ELECTRON_VERSIONS_URL = 'https://releases.electronjs.org/releases.json';
 
 export async function getChromeVersionForElectronVersion(
   electronVersion: string,
