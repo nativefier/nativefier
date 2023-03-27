@@ -1,4 +1,10 @@
 
+50.1.1 / 2023-03-27
+===================
+
+  * Fix shrinkwrap versions back to lockfileVersion 1 (node 12)
+  * Fix typo "electon" -> "electron" (#1492)
+
 50.1.0 / 2023-03-24
 ===================
 
