@@ -13,7 +13,7 @@ Please include the following in your new issue:
 
 ## Pull Requests
 
-See [here](https://github.com/nativefier/nativefier#development) for instructions on how to set up a development environment.
+See [here](https://github.com/nativefier/nativefier/blob/master/HACKING.md) for instructions on how to set up a development environment.
 
 We follow the [Airbnb Style Guide](https://github.com/airbnb/javascript), please make sure tests and lints pass when you submit your pull request. 
 
