@@ -149,6 +149,7 @@ export function getDefaultWindowOptions(
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
       preload: path.join(__dirname, 'preload.js'),
       plugins: true,
+      sandbox: false, // https://www.electronjs.org/blog/electron-20-0#default-changed-renderers-without-nodeintegration-true-are-sandboxed-by-default
       webSecurity: !options.insecure,
       zoomFactor: options.zoom,
       // `contextIsolation` was switched to true in Electron 12, which:

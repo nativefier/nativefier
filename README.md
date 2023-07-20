@@ -32,7 +32,7 @@ Whatsapp Web ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativ
 Install Nativefier globally with `npm install -g nativefier` . Requirements:
 
 - macOS 10.10+ / Windows / Linux
-- [Node.js](https://nodejs.org/) ≥ 12.9 and npm ≥ 6.9
+- [Node.js](https://nodejs.org/) ≥ 16.9 and npm ≥ 7.10
 
 Optional dependencies:
 

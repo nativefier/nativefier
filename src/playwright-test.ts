@@ -312,7 +312,7 @@ describe('Application launch', () => {
         // which isn't particularly useful
         expect({
           message: 'console.error called unexpectedly with',
-          consoleMessage,
+          consoleMessage: { ...consoleMessage },
         }).toBeUndefined();
       }
     });
@@ -322,9 +322,9 @@ describe('Application launch', () => {
 
   test('basic auth', async () => {
     const mainWindow = (await spawnApp({
-      targetUrl: 'http://httpbin.org/basic-auth/foo/bar',
-      basicAuthUsername: 'foo',
-      basicAuthPassword: 'bar',
+      targetUrl: 'https://authenticationtest.com/HTTPAuth/',
+      basicAuthUsername: 'user',
+      basicAuthPassword: 'pass',
     })) as Page;
     await mainWindow.waitForLoadState('networkidle');
 
@@ -332,20 +332,31 @@ describe('Application launch', () => {
       'document.documentElement.innerText',
     );
 
-    const documentJSON = JSON.parse(documentText) as {
-      authenticated: boolean;
-      user: string;
-    };
+    expect(documentText).toContain('Success');
 
-    expect(documentJSON).toEqual({
-      authenticated: true,
-      user: 'foo',
-    });
+    expect(documentText).not.toContain('Failure');
+  });
+
+  test('basic auth - bad login', async () => {
+    const mainWindow = (await spawnApp({
+      targetUrl: 'https://authenticationtest.com/HTTPAuth/',
+      basicAuthUsername: 'userbad',
+      basicAuthPassword: 'passbad',
+    })) as Page;
+    await mainWindow.waitForLoadState('networkidle');
+
+    const documentText = await mainWindow.evaluate<string>(
+      'document.documentElement.innerText',
+    );
+
+    expect(documentText).not.toContain('Success');
+
+    expect(documentText).toContain('Failure');
   });
 
   test('basic auth without pre-providing', async () => {
     const mainWindow = (await spawnApp({
-      targetUrl: 'http://httpbin.org/basic-auth/foo/bar',
+      targetUrl: 'https://authenticationtest.com/HTTPAuth/',
     })) as Page;
     await mainWindow.waitForLoadState('load');
 
@@ -363,11 +374,11 @@ describe('Application launch', () => {
 
     const usernameField = await loginWindow.$('#username-input');
     expect(usernameField).not.toBeNull();
-    await usernameField?.fill('foo');
+    await usernameField?.fill('user');
 
     const passwordField = await loginWindow.$('#password-input');
     expect(passwordField).not.toBeNull();
-    await passwordField?.fill('bar');
+    await passwordField?.fill('pass');
 
     const submitButton = await loginWindow.$('#submit-form-button');
     expect(submitButton).not.toBeNull();
@@ -387,15 +398,9 @@ describe('Application launch', () => {
       'document.documentElement.innerText',
     );
 
-    const documentJSON = JSON.parse(documentText) as {
-      authenticated: boolean;
-      user: string;
-    };
+    expect(documentText).toContain('Success');
 
-    expect(documentJSON).toEqual({
-      authenticated: true,
-      user: 'foo',
-    });
+    expect(documentText).not.toContain('Failure');
   });
 });
 

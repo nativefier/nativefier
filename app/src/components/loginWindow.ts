@@ -19,6 +19,7 @@ export async function createLoginWindow(
     webPreferences: {
       nodeIntegration: true, // TODO work around this; insecure
       contextIsolation: false, // https://github.com/electron/electron/issues/28017
+      sandbox: false, // https://www.electronjs.org/blog/electron-20-0#default-changed-renderers-without-nodeintegration-true-are-sandboxed-by-default
     },
   });
   await loginWindow.loadURL(
