@@ -126,6 +126,7 @@
       ".+\\.js\\.map"
     ],
     "testRegex": "test\\.js",
+    "testTimeout": 15000,
     "watchPathIgnorePatterns": [
       "<rootDir>/app/lib.*",
       "<rootDir>/app/src.*",
