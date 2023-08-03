@@ -1,4 +1,10 @@
 
+51.0.0 / 2023-08-03
+===================
+  **[BREAKING]**
+  * Update Electron to 21 + Node to 16 (#1550)
+  * Update link to Development Guide (#1544)
+
 50.1.1 / 2023-03-27
 ===================
 
