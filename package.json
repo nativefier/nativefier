@@ -7,8 +7,8 @@
   "engines_README": "Bumping the minimum required Node version? You must bump: 1. package.json -> engines.node, 2. package.json -> devDependencies.@types/node , 3. tsconfig.json -> {target, lib} , 4. .github/workflows/ci.yml -> node-version",
   "engines_READMEforEnginesNode": "Here in engines.node, we require a version as old as possible, for Nativefier to be easily installable using the stock Node.js shipped by conservative Linux distros. It's a balancing act between this, and our own dependencies requiring more a recent Node; as much as possible, try to keep supporting Debian stable; https://packages.debian.org/search?suite=stable&keywords=nodejs",
   "engines": {
-    "node": ">= 12.9.0",
-    "npm": ">= 6.9.0"
+    "node": ">= 16.16.0",
+    "npm": ">= 8.11.0"
   },
   "keywords": [
     "desktop",
@@ -77,13 +77,13 @@
     "@types/hasbin": "^1.2.0",
     "@types/jest": "^28.1.6",
     "@types/ncp": "^2.0.5",
-    "@types/node": "^12.12.6",
+    "@types/node": "^16.0.0",
     "@types/page-icon": "^0.3.4",
     "@types/tmp": "^0.2.1",
     "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
-    "electron": "^19.1.4",
+    "electron": "^21.4.4",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -126,6 +126,7 @@
       ".+\\.js\\.map"
     ],
     "testRegex": "test\\.js",
+    "testTimeout": 15000,
     "watchPathIgnorePatterns": [
       "<rootDir>/app/lib.*",
       "<rootDir>/app/src.*",
