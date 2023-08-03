@@ -125,10 +125,21 @@ function trimUnprocessableOptions(options: AppOptions): void {
   }
 }
 
+function getOSRunHelp(platform?: string): string {
+  if (platform === 'win32') {
+    return `the contained .exe file.`;
+  } else if (platform === 'linux') {
+    return `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
+  } else if (platform === 'darwin') {
+    return `the app bundle.`;
+  }
+  return '';
+}
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function buildNativefierApp(
   rawOptions: RawOptions,
-): Promise<string | undefined> {
+): Promise<string> {
   // early-suppress potential logging before full options handling
   if (rawOptions.quiet) {
     log.setLevel('silent');
@@ -190,6 +201,8 @@ export async function buildNativefierApp(
   convertIconIfNecessary(options);
   await copyIconsIfNecessary(options, tmpPath);
 
+  options.packager.quiet = !rawOptions.verbose;
+
   log.info(
     "\nPackaging... This will take a few seconds, maybe minutes if the requested Electron isn't cached yet...",
   );
@@ -245,14 +258,7 @@ export async function buildNativefierApp(
     appPath = finalOutDirectory;
   }
 
-  let osRunHelp = '';
-  if (options.packager.platform === 'win32') {
-    osRunHelp = `the contained .exe file.`;
-  } else if (options.packager.platform === 'linux') {
-    osRunHelp = `the contained executable file (prefixing with ./ if necessary)\nMenu/desktop shortcuts are up to you, because Nativefier cannot know where you're going to move the app. Search for "linux .desktop file" for help, or see https://wiki.archlinux.org/index.php/Desktop_entries`;
-  } else if (options.packager.platform === 'darwin') {
-    osRunHelp = `the app bundle.`;
-  }
+  const osRunHelp = getOSRunHelp(options.packager.platform);
   log.info(
     `App built to ${appPath}, move to wherever it makes sense for you and run ${osRunHelp}`,
   );

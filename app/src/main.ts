@@ -12,39 +12,49 @@ import electron, {
   Event,
 } from 'electron';
 import electronDownload from 'electron-dl';
-import * as log from 'loglevel';
 
 import { createLoginWindow } from './components/loginWindow';
 import {
+  createMainWindow,
   saveAppArgs,
   APP_ARGS_FILE_PATH,
-  createMainWindow,
 } from './components/mainWindow';
 import { createTrayIcon } from './components/trayIcon';
-import { isOSX, removeUserAgentSpecifics } from './helpers/helpers';
-import { inferFlashPath } from './helpers/inferFlash';
-import { setupNativefierWindow } from './helpers/windowEvents';
 import {
-  OutputOptions,
-  outputOptionsToWindowOptions,
-} from '../../shared/src/options/model';
+  isOSX,
+  isWayland,
+  isWindows,
+  removeUserAgentSpecifics,
+} from './helpers/helpers';
+import { inferFlashPath } from './helpers/inferFlash';
+import * as log from './helpers/loggingHelper';
+import {
+  IS_PLAYWRIGHT,
+  PLAYWRIGHT_CONFIG,
+  safeGetEnv,
+} from './helpers/playwrightHelpers';
+import { OutputOptions } from '../../shared/src/options/model';
 
 // Entrypoint for Squirrel, a windows update framework. See https://github.com/nativefier/nativefier/pull/744
 if (require('electron-squirrel-startup')) {
   app.exit();
 }
 
-if (process.argv.indexOf('--verbose') > -1) {
+if (process.argv.indexOf('--verbose') > -1 || safeGetEnv('VERBOSE') === '1') {
   log.setLevel('DEBUG');
   process.traceDeprecation = true;
   process.traceProcessWarnings = true;
+  process.argv.slice(1);
 }
 
 let mainWindow: BrowserWindow;
 
-const appArgs = JSON.parse(
-  fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
-) as OutputOptions;
+const appArgs =
+  IS_PLAYWRIGHT && PLAYWRIGHT_CONFIG
+    ? (JSON.parse(PLAYWRIGHT_CONFIG) as OutputOptions)
+    : (JSON.parse(
+        fs.readFileSync(APP_ARGS_FILE_PATH, 'utf8'),
+      ) as OutputOptions);
 
 log.debug('appArgs', appArgs);
 // Do this relatively early so that we can start storing appData with the app
@@ -69,9 +79,18 @@ if (!appArgs.userAgentHonest) {
   }
 }
 
+// this step is required to allow app names to be displayed correctly in notifications on windows
+// https://www.electronjs.org/docs/latest/api/app#appsetappusermodelidid-windows
+// https://www.electronjs.org/docs/latest/tutorial/notifications#windows
+if (isWindows()) {
+  app.setAppUserModelId(app.getName());
+}
+
+const urlArgv = process.argv.filter((a) => a.startsWith('http'));
+
 // Take in a URL on the command line as an override
-if (process.argv.length > 1) {
-  const maybeUrl = process.argv[1];
+if (urlArgv.length > 0) {
+  const maybeUrl = urlArgv[0];
   try {
     new URL(maybeUrl);
     appArgs.targetUrl = maybeUrl;
@@ -99,18 +118,23 @@ const fileDownloadOptions = { ...appArgs.fileDownloadOptions };
 electronDownload(fileDownloadOptions);
 
 if (appArgs.processEnvs) {
+  let processEnvs: Record<string, string> =
+    appArgs.processEnvs as unknown as Record<string, string>;
   // This is compatibility if just a string was passed.
   if (typeof appArgs.processEnvs === 'string') {
-    process.env.processEnvs = appArgs.processEnvs;
-  } else {
-    Object.keys(appArgs.processEnvs)
-      .filter((key) => key !== undefined)
-      .forEach((key) => {
-        // @ts-expect-error TS will complain this could be undefined, but we filtered those out
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        process.env[key] = appArgs.processEnvs[key];
-      });
+    try {
+      processEnvs = JSON.parse(appArgs.processEnvs) as Record<string, string>;
+    } catch {
+      // This wasn't JSON. Fall back to the old code
+      processEnvs = {};
+      process.env.processEnvs = appArgs.processEnvs;
+    }
   }
+  Object.keys(processEnvs)
+    .filter((key) => key !== undefined)
+    .forEach((key) => {
+      process.env[key] = processEnvs[key];
+    });
 }
 
 if (typeof appArgs.flashPluginDir === 'string') {
@@ -157,6 +181,10 @@ if (appArgs.basicAuthPassword) {
   );
 }
 
+if (isWayland()) {
+  app.commandLine.appendSwitch('enable-features', 'WebRTCPipeWireCapturer');
+}
+
 if (appArgs.lang) {
   const langParts = appArgs.lang.split(',');
   // Convert locales to languages, because for some reason locales don't work. Stupid Chromium
@@ -182,7 +210,7 @@ const setDockBadge = isOSX()
 
 app.on('window-all-closed', () => {
   log.debug('app.window-all-closed');
-  if (!isOSX() || appArgs.fastQuit) {
+  if (!isOSX() || appArgs.fastQuit || IS_PLAYWRIGHT) {
     app.quit();
   }
 });
@@ -210,6 +238,15 @@ app.on('quit', (event, exitCode) => {
 
 app.on('will-finish-launching', () => {
   log.debug('app.will-finish-launching');
+});
+
+app.on('open-url', (event, url) => {
+  log.debug('app.open-url', { event, url });
+
+  event.preventDefault();
+  if (mainWindow) {
+    mainWindow.webContents.send('open-url', url);
+  }
 });
 
 if (appArgs.widevine) {
@@ -243,7 +280,7 @@ if (appArgs.widevine) {
 
 app.on('activate', (event: electron.Event, hasVisibleWindows: boolean) => {
   log.debug('app.activate', { event, hasVisibleWindows });
-  if (isOSX()) {
+  if (isOSX() && !IS_PLAYWRIGHT) {
     // this is called when the dock is clicked
     if (!hasVisibleWindows) {
       mainWindow.show();
@@ -383,6 +420,10 @@ async function onReady(): Promise<void> {
       })
       .catch((err) => log.error('dialog.showMessageBox ERROR', err));
   }
+
+  if (appArgs.targetUrl) {
+    await mainWindow.loadURL(appArgs.targetUrl);
+  }
 }
 
 app.on(
@@ -402,15 +443,14 @@ app.on(
   },
 );
 
-app.on('browser-window-blur', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-blur', { event, window });
+app.on('browser-window-blur', () => {
+  log.debug('app.browser-window-blur');
 });
 
-app.on('browser-window-created', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-created', { event, window });
-  setupNativefierWindow(outputOptionsToWindowOptions(appArgs), window);
+app.on('browser-window-created', () => {
+  log.debug('app.browser-window-created');
 });
 
-app.on('browser-window-focus', (event: Event, window: BrowserWindow) => {
-  log.debug('app.browser-window-focus', { event, window });
+app.on('browser-window-focus', () => {
+  log.debug('app.browser-window-focus');
 });

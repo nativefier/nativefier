@@ -3,11 +3,8 @@ import * as os from 'os';
 import * as log from 'loglevel';
 
 // Ideally we'd get this list directly from electron-packager, but it's not
-// accessible in the package without importing its private js files, which felt
-// dirty. So if those change, we'll update these as well.
-// https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#platform
-// https://electron.github.io/electron-packager/master/interfaces/electronpackager.options.html#arch
-export const supportedArchs = ['ia32', 'x64', 'armv7l', 'arm64'];
+// possible to convert a literal type to an array of strings in current TypeScript
+export const supportedArchs = ['x64', 'armv7l', 'arm64', 'universal'];
 export const supportedPlatforms = [
   'darwin',
   'linux',

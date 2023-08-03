@@ -1,0 +1,93 @@
+name: Bug Report
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report 🙂! Help us help you, **fill this form thoroughly**. An incomplete bug report is a useless bug report.
+  - type: checkboxes
+    id: homework
+    attributes:
+      label: Homework
+      options:
+        - label: I took the time to write a good, descriptive issue title
+          required: true
+        - label: I read `nativefier --help` and [API.md](https://github.com/nativefier/nativefier/blob/master/API.md).
+          required: true
+        - label: I checked [CATALOG.md](https://github.com/nativefier/nativefier/blob/master/CATALOG.md) for community suggestions & workarounds.
+          required: true
+        - label: I searched [existing issues, open & closed](https://github.com/nativefier/nativefier/issues?q=is%3Aissue). Yes, my bug is new.
+          required: true
+        - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
+          required: true
+  - type: input
+    id: nativefier-command
+    attributes:
+      label: Nativefier command
+      description: "Your ***full*** nativefier command, on a ***public*** site."
+      placeholder: nativefier --verbose --some-option https://mysite.com
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. I did this...
+        2. And then that...
+        3. Finally, I clicked here.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      placeholder: What you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+      placeholder: What happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: debug-info
+    attributes:
+      label: Debug info
+      placeholder: |
+        - Logs of your full build command, with the `--verbose` flag. Put them in a ```code block``` !
+        - If the bug happens at app run time, the in-app DevTools console logs (open it with F12)
+        - Error messages, screenshots, screencasts, anything relevant!
+    validations:
+      required: false
+  - type: input
+    id: nativefier-version
+    attributes:
+      label: Nativefier version
+      placeholder: "nativefier --version"
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      placeholder: "node --version"
+    validations:
+      required: true
+  - type: input
+    id: npm-version
+    attributes:
+      label: npm version
+      placeholder: "npm --version"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "For example: Windows 10 build 1809"
+    validations:
+      required: true

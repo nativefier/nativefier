@@ -1,8 +1,165 @@
 
+51.0.0 / 2023-08-03
+===================
+  **[BREAKING]**
+  * Update Electron to 21 + Node to 16 (#1550)
+  * Update link to Development Guide (#1544)
+
+50.1.1 / 2023-03-27
+===================
+
+  * Fix shrinkwrap versions back to lockfileVersion 1 (node 12)
+  * Fix typo "electon" -> "electron" (#1492)
+
+50.1.0 / 2023-03-24
+===================
+
+  * Update outdated shrinkwrap files
+  * Add getDisplayMedia and PipeWire support (#1477)
+
+50.0.1 / 2022-11-07
+===================
+
+* Windows: Fix "Maximize window visual glitch" (fix #1447) (PR #1448)
+* External URL protocols: add zoommtg as no-confirmation (PR #1463)
+* CATALOG.md: MS Teams CSS inject (PR #1469), WhatsApp native macOS look CSS (PR #1468)
+* Bump default Electron from 19.0.17 to 19.1.4, with security fixe
+* CI: test on 12 and **19**, now that 19 is out
+* Upgrade CLI & App dependencies
+
+50.0.0 / 2022-09-17
+===================
+
+**[BREAKING]** Add validation to opening external URLs in desktop handler (fix #1459)
+This will, for security, refuse loading of certain external of two kinds.
+One: using dubious URL schemes, two: including nasty characters.
+Blocking URLs will be accompanied by a window explaining what's going on,
+and linking to a discussion thread where you can report false positives.
+Hopefully not _BREAKING_ much (the behavior should now be aligned with
+what browsers do), but web weirdness happens. Shout and we'll tweak.
+
+Also,
+
+  * Fix double-navigation to pages (fix #1452)
+  * Upgrade cli+app dependencies
+  * Bump default Electron to 19.0.17 (from .14), with security fixes
+    - https://github.com/electron/electron/releases/tag/v19.0.15
+    - https://github.com/electron/electron/releases/tag/v19.0.16
+    - https://github.com/electron/electron/releases/tag/v19.0.17
+
+49.0.1 / 2022-08-28
+===================
+
+* Bump default Electron to 19.0.14 (from .10), with security fixes
+    - https://github.com/electron/electron/releases/tag/v19.0.11
+    - https://github.com/electron/electron/releases/tag/v19.0.12
+    - https://github.com/electron/electron/releases/tag/v19.0.13
+    - https://github.com/electron/electron/releases/tag/v19.0.14
+* macOS: Move handling of "Universal" apps to electron-packager instead of our own thing (PR #1443)
+* Upgrade cli+app dependencies
+
+49.0.0 / 2022-07-30
+===================
+
+**[BREAKING]** 49.0.0 doesn't have more breaking changes than 48.0.0, but I'm
+releasing a new major release anyway to signal one particularly noteworthy
+breaking change in Electron 19 that I failed to pass along to you in 48.0.0:
+**The `ia32` arch (a.k.a. `i386` or `x86/32bit`) is no longer supported.**
+
+People still running Nativefier apps on old ia32 machines, feel free to keep
+passing a flag `--electron-version 18.x.y` *while it works*. Note however that
+we won't be testing it, and future Nativefier versions may depend on upcoming
+Electron APIs that will crash your electron18-app-packaged-by-future-Nativefier.
+The deprecation is an upstream Electron decision, and there's nothing we will
+do about it. Thx @TheCleric for the catch.
+
+Also,
+
+* macOS: Fix "main window cannot be activated" (fix #1415, PR #1417)
+* Bump default Electron from 19.0.9 to [19.0.10](https://github.com/electron/electron/releases/tag/v19.0.10)
+* Fix loud axios "fetch" warning (https://github.com/nativefier/gitcloud-client/pull/4)
+* Fix playwright tests on Linux (#1440)
+* Docker: upgraded base node-alpine image from 12 to LTS (currently 16)
+
+48.0.0 / 2022-07-24
+===================
+
+  * **[BREAKING]** Bump default Electron to 19.0.9 (from 18.3.5)
+
+    As usual, we did our best to adapt to Electron breaking changes, but
+    patches welcome to fix regressions. If unable to submit a patch,
+    feel free to revert to Nativefier 47.2.1, or pass `-e 18.3.5` for a
+    _temporary_ downgrade (it will work for a while, but not forever).
+    Official release notes: https://www.electronjs.org/blog/electron-19-0
+
+    Detailed release notes:
+
+    - https://github.com/electron/electron/releases/tag/v19.0.0
+    - https://github.com/electron/electron/releases/tag/v19.0.1
+    - https://github.com/electron/electron/releases/tag/v19.0.2
+    - https://github.com/electron/electron/releases/tag/v19.0.3
+    - https://github.com/electron/electron/releases/tag/v19.0.4
+    - https://github.com/electron/electron/releases/tag/v19.0.5
+    - https://github.com/electron/electron/releases/tag/v19.0.6
+    - https://github.com/electron/electron/releases/tag/v19.0.7
+    - https://github.com/electron/electron/releases/tag/v19.0.8
+    - https://github.com/electron/electron/releases/tag/v19.0.9
+
+  * CATALOG.md: add a new recipe for using interactive buttons on Notion (PR #1430)
+  * GitHub Issues: switch from "Issue templates" to new & better "Issue forms" (fix #1258) (PR #1425)
+  * Maintenance: upgrade Jest, fix PlayWright tests
+
+47.2.1 / 2022-06-27
+===================
+
+  * macOS: fix incorrect "Back" keyboard shortcut (fix #1426)
+  * Bump default Electron to 18.3.5 (from 18.3.1), with security fixes:
+    https://github.com/electron/electron/releases/tag/v18.3.2
+    https://github.com/electron/electron/releases/tag/v18.3.3
+    https://github.com/electron/electron/releases/tag/v18.3.4
+    https://github.com/electron/electron/releases/tag/v18.3.5
+  * Update dependencies
+
+47.2.0 / 2022-05-30
+===================
+
+  * Handle `open-url` event: support "deep-linking" e.g. for mailto links (PR #1418, fix #1412)
+  * Bump default Electron to 18.3.1 (from 18.2.0), with security fixes:
+    https://github.com/electron/electron/releases/tag/v18.2.1
+    https://github.com/electron/electron/releases/tag/v18.2.2
+    https://github.com/electron/electron/releases/tag/v18.2.3
+    https://github.com/electron/electron/releases/tag/v18.2.4
+    https://github.com/electron/electron/releases/tag/v18.3.0
+    https://github.com/electron/electron/releases/tag/v18.3.1
+  * Update dependencies
+  * Docs: {API, README, CATALOG}.md cleanups
+
+47.1.3 / 2022-05-02
+===================
+
+  * Auto-internal URLs: add VMWare Workspace ONE + SecurID (PR #1391, fix #1390)
+  * `--counter`: accept colon character; useful for time-tracking apps with hour:min in title (PR #1378)
+  * Windows: correctly set notifications name - not electron.app.YOURAPPNAME (PR #1394)
+  * macOS: support "universal" architecture (fix #1384 #1398, PR #1386)
+  * macOS: fix "Open In New Tab" (fix #1260, PR #1385)
+  * macOS: Change "Paste and Match Style" shortcut to match Apple's HIG guidelines (PR #1387, fix #404)
+  * macOS: Bump minimum macOS version from 10.9 to 10.10 (see #1404)
+    This has been effectively been the case since a long time, it was just misdocumented.
+    Thus, not really a breaking change, and not major-bumping.
+  * CATALOG.md: add a new "General recipes" section, with one to restore app position/size (PR #1349)
+  * CI: Add integration testing to the app, using Playwright (PR #1397)
+  * CI: Speed it up by parallelize tasks
+  * CI: Bump max tested version of Node for CI/Publish from 17 to 18
+  * Update dependencies
+  * Bump default Electron to 18.2.0 (from 18.0.3), with security fixes:
+    https://github.com/electron/electron/releases/tag/v18.0.4
+    https://github.com/electron/electron/releases/tag/v18.1.0
+    https://github.com/electron/electron/releases/tag/v18.2.0
+
 47.0.0 / 2022-04-10
 ===================
 
-  * Bump default Electron to 18.0.3 (from 16.2.2)
+  * **[BREAKING]** Bump default Electron to 18.0.3 (from 16.2.2)
 
     As usual, we did our best to adapt to Electron breaking changes in 17/18,
     but patches welcome to fix regressions. If unable to submit a patch, then
@@ -91,7 +248,7 @@
 46.0.0 / 2022-01-02
 ===================
 
-  * Upgrade Electron from 13.6.3 & Chrome 91 to 16.0.5 & Chrome 96 (PR #1288)
+  * **[BREAKING]** Upgrade Electron from 13.6.3 & Chrome 91 to 16.0.5 & Chrome 96 (PR #1288)
     We did our best to adapt to [Electron breaking changes](https://www.electronjs.org/docs/latest/breaking-changes) in 14/15/16, but as usual,
     patches welcome to address regressions. For detailed release notes, see
     - https://github.com/electron/electron/releases/tag/v14.0.0

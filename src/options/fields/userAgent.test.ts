@@ -78,7 +78,7 @@ test('short userAgent parameter is passed with an electronVersion', async () => 
   );
 
   const params = {
-    packager: { electronVersion: '12.0.0', platform: 'darwin' },
+    packager: { electronVersion: '16.0.0', platform: 'darwin' },
     nativefier: { userAgent: 'edge' },
   };
 
@@ -86,5 +86,5 @@ test('short userAgent parameter is passed with an electronVersion', async () => 
 
   expect(parsedUserAgent).not.toBe(params.nativefier.userAgent);
   expect(parsedUserAgent).toContain('102.0.0');
-  expect(getChromeVersionForElectronVersion).toHaveBeenCalledWith('12.0.0');
+  expect(getChromeVersionForElectronVersion).toHaveBeenCalledWith('16.0.0');
 });

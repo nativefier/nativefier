@@ -1,0 +1,78 @@
+name: Question
+description: Ask for help
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report 🙂! Help us help you, **fill this form thoroughly**. A cryptic question is a question unlikely to be answered.
+  - type: checkboxes
+    id: homework
+    attributes:
+      label: Homework
+      options:
+        - label: I took the time to write a good, descriptive issue title
+          required: true
+        - label: I read `nativefier --help` and [API.md](https://github.com/nativefier/nativefier/blob/master/API.md).
+          required: true
+        - label: I checked [CATALOG.md](https://github.com/nativefier/nativefier/blob/master/CATALOG.md) for community suggestions & workarounds.
+          required: true
+        - label: I searched [existing issues, open & closed](https://github.com/nativefier/nativefier/issues?q=is%3Aissue). Yes, my question is new.
+          required: true
+        - label: I'm running the [latest version](https://github.com/nativefier/nativefier/releases).
+          required: true
+    validations:
+      required: false
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+      description: Your question, expressed clearly and concisely.
+    validations:
+      required: true
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: "If you already have a Nativefier command you're struggling with, paste ***full*** nativefier command and its logs, with the ***`--verbose` flag***, on a ***public*** site:"
+      value: |
+        ```
+        nativefier --verbose --some-option https://mysite.com
+        <paste your verbose build logs, if relevant to your question>
+        ```
+    validations:
+      required: false
+  - type: textarea
+    id: debug-info
+    attributes:
+      label: Debug info
+      placeholder: |
+        Error messages, screenshots, screencasts, anything relevant!
+  - type: input
+    id: nativefier-version
+    attributes:
+      label: Nativefier version
+      placeholder: "nativefier --version"
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      placeholder: "node --version"
+    validations:
+      required: true
+  - type: input
+    id: npm-version
+    attributes:
+      label: npm version
+      placeholder: "npm --version"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: "For example: Windows 10 build 1809"
+    validations:
+      required: true

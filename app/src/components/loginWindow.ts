@@ -1,8 +1,8 @@
 import * as path from 'path';
 
-import * as log from 'loglevel';
-
 import { BrowserWindow, ipcMain } from 'electron';
+
+import * as log from '../helpers/loggingHelper';
 
 export async function createLoginWindow(
   loginCallback: (username?: string, password?: string) => void,
@@ -19,6 +19,7 @@ export async function createLoginWindow(
     webPreferences: {
       nodeIntegration: true, // TODO work around this; insecure
       contextIsolation: false, // https://github.com/electron/electron/issues/28017
+      sandbox: false, // https://www.electronjs.org/blog/electron-20-0#default-changed-renderers-without-nodeintegration-true-are-sandboxed-by-default
     },
   });
   await loginWindow.loadURL(

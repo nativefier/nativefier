@@ -1,14 +1,14 @@
 {
   "name": "nativefier",
-  "version": "47.0.0",
+  "version": "51.0.0",
   "description": "Wrap web apps natively",
   "license": "MIT",
   "author": "Goh Jia Hao",
   "engines_README": "Bumping the minimum required Node version? You must bump: 1. package.json -> engines.node, 2. package.json -> devDependencies.@types/node , 3. tsconfig.json -> {target, lib} , 4. .github/workflows/ci.yml -> node-version",
   "engines_READMEforEnginesNode": "Here in engines.node, we require a version as old as possible, for Nativefier to be easily installable using the stock Node.js shipped by conservative Linux distros. It's a balancing act between this, and our own dependencies requiring more a recent Node; as much as possible, try to keep supporting Debian stable; https://packages.debian.org/search?suite=stable&keywords=nodejs",
   "engines": {
-    "node": ">= 12.9.0",
-    "npm": ">= 6.9.0"
+    "node": ">= 16.16.0",
+    "npm": ">= 8.11.0"
   },
   "keywords": [
     "desktop",
@@ -43,18 +43,23 @@
     "lint": "eslint shared app src --ext .ts",
     "list-outdated-deps": "npm out; cd app && npm out; true",
     "prepare": "cd app && npm ci && cd .. && npm run build",
-    "relock": "rm -rf ./node_modules/ ./app/node_modules/ ./npm-shrinkwrap.json ./app/npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out; cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
-    "test:integration": "jest --testRegex '.*integration-test.js'",
+    "relock:cli": "rm -rf ./node_modules/ ./npm-shrinkwrap.json && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
+    "relock:app": "rm -rf ./app/node_modules/ ./app/npm-shrinkwrap.json && cd app && npm install --ignore-scripts --package-lock && mv package-lock.json npm-shrinkwrap.json && npm out",
+    "relock": "npm run relock:cli; npm run relock:app",
+    "test:integration": "jest --testRegex=integration-test",
     "test:manual": "npm run build && bash .github/manual-test",
+    "test:playwright": "jest --detectOpenHandles --testRegex=playwright-test",
+    "test:noplaywright": "jest --testPathIgnorePatterns=playwright",
     "test:unit": "jest",
     "test:watch": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false",
+    "test:watch:unit": "echo 'Remember to run npm run build:watch for the test watcher to work!' && jest --watchAll --collectCoverage=false --testPathIgnorePatterns=integration --testPathIgnorePatterns=playwright",
     "test:withlog": "LOGLEVEL=trace npm run test",
-    "test": "jest --testRegex '[-.]test\\.js$'",
+    "test": "jest",
     "watch": "npx concurrently \"npm:*:watch\""
   },
   "dependencies": {
-    "axios": "^0.26.0",
-    "electron-packager": "^15.2.0",
+    "axios": "^1.1.3",
+    "electron-packager": "^15.5.1",
     "fs-extra": "^10.0.0",
     "gitcloud": "^0.2.3",
     "hasbin": "^1.2.3",
@@ -70,17 +75,20 @@
     "@types/debug": "^4.1.6",
     "@types/fs-extra": "^9.0.13",
     "@types/hasbin": "^1.2.0",
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^28.1.6",
     "@types/ncp": "^2.0.5",
-    "@types/node": "14.14.20",
+    "@types/node": "^16.0.0",
     "@types/page-icon": "^0.3.4",
     "@types/tmp": "^0.2.1",
+    "@types/yargs": "^17.0.10",
     "@typescript-eslint/eslint-plugin": "^5.3.0",
     "@typescript-eslint/parser": "^5.3.0",
+    "electron": "^21.4.4",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^27.0.6",
+    "jest": "^28.1.3",
+    "playwright": "^1.24.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "ts-loader": "^9.2.3",
@@ -94,6 +102,14 @@
   },
   "jest": {
     "collectCoverage": true,
+    "collectCoverageFrom": [
+      "./app/dist/**/*.js",
+      "./lib/**/*.js",
+      "./shared/lib/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "[.-]test.js$"
+    ],
     "moduleNameMapper": {
       "^electron$": "<rootDir>/app/dist/mocks/electron.js"
     },
@@ -102,19 +118,22 @@
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "<rootDir>/src.*",
-      "<rootDir>/node_modules.*",
+      "<rootDir>/app/node_modules.*",
       "<rootDir>/app/src.*",
       "<rootDir>/app/lib.*",
-      "<rootDir>/app/node_modules.*"
+      "<rootDir>/src.*",
+      ".+\\.d\\.ts",
+      ".+\\.js\\.map"
     ],
+    "testRegex": "test\\.js",
+    "testTimeout": 15000,
     "watchPathIgnorePatterns": [
-      "<rootDir>/src.*",
-      "<rootDir>/tsconfig-base.json",
-      "<rootDir>/app/src.*",
       "<rootDir>/app/lib.*",
+      "<rootDir>/app/src.*",
       "<rootDir>/app/tsconfig.json",
-      "<rootDir>/shared/tsconfig.json"
+      "<rootDir>/shared/tsconfig.json",
+      "<rootDir>/src.*",
+      "<rootDir>/tsconfig-base.json"
     ]
   },
   "prettier": {

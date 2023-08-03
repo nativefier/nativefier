@@ -21,12 +21,12 @@ async function checkApp(
   appRoot: string,
   inputOptions: RawOptions,
 ): Promise<void> {
-  const arch = inputOptions.arch ? (inputOptions.arch as string) : inferArch();
+  const arch = inputOptions.arch ? inputOptions.arch : inferArch();
   if (inputOptions.out !== undefined) {
     expect(
       path.join(
         inputOptions.out,
-        `Google-${inputOptions.platform as string}-${arch}`,
+        `npm-${inputOptions.platform as string}-${arch}`,
       ),
     ).toBe(appRoot);
   }
@@ -34,7 +34,7 @@ async function checkApp(
   let relativeResourcesDir = 'resources';
 
   if (inputOptions.platform === 'darwin') {
-    relativeResourcesDir = path.join('Google.app', 'Contents', 'Resources');
+    relativeResourcesDir = path.join('npm.app', 'Contents', 'Resources');
   }
 
   const appPath = path.join(appRoot, relativeResourcesDir, 'app');
@@ -47,7 +47,7 @@ async function checkApp(
   expect(inputOptions.targetUrl).toBe(nativefierConfig?.targetUrl);
 
   // Test name inferring
-  expect(nativefierConfig?.name).toBe('Google');
+  expect(nativefierConfig?.name).toBe('npm');
 
   // Test icon writing
   const iconFile =
@@ -118,11 +118,11 @@ describe('Nativefier', () => {
         out: tempDirectory,
         overwrite: true,
         platform,
-        targetUrl: 'https://google.com/',
+        targetUrl: 'https://npmjs.com/',
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
-      await checkApp(appPath as string, options);
+      await checkApp(appPath, options);
     },
   );
 });
@@ -164,11 +164,9 @@ describe('Nativefier upgrade', () => {
     // Exhaustive integration testing here would be neat, but takes too long.
     // -> For now, only testing a subset of platforms/archs
     // { platform: 'win32', arch: 'x64' },
-    // { platform: 'win32', arch: 'ia32' },
     // { platform: 'darwin', arch: 'arm64' },
     // { platform: 'linux', arch: 'x64' },
     // { platform: 'linux', arch: 'armv7l' },
-    // { platform: 'linux', arch: 'ia32' },
   ])(
     'can upgrade a Nativefier app for platform/arch: %s',
     async (baseAppOptions) => {
@@ -179,15 +177,15 @@ describe('Nativefier upgrade', () => {
         globalShortcuts: shortcuts,
         out: tempDirectory,
         overwrite: true,
-        targetUrl: 'https://google.com/',
+        targetUrl: 'https://npmjs.com/',
         ...baseAppOptions,
       };
       const appPath = await buildNativefierApp(options);
       expect(appPath).not.toBeUndefined();
-      await checkApp(appPath as string, options);
+      await checkApp(appPath, options);
 
       const upgradeOptions: RawOptions = {
-        upgrade: appPath as string,
+        upgrade: appPath,
         overwrite: true,
       };
 
@@ -195,7 +193,7 @@ describe('Nativefier upgrade', () => {
       options.electronVersion = DEFAULT_ELECTRON_VERSION;
       options.userAgent = baseAppOptions.userAgent;
       expect(upgradeAppPath).not.toBeUndefined();
-      await checkApp(upgradeAppPath as string, options);
+      await checkApp(upgradeAppPath, options);
     },
   );
 });

@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM --platform=linux/amd64 node:lts-alpine
 LABEL description="Alpine image to build Nativefier apps"
 
 
@@ -31,8 +31,9 @@ RUN find ./icon-scripts ./src ./app -type f -print0 | xargs -0 dos2unix
 # Run tests (to ensure we don't Docker build & publish broken stuff)
 # Cleanup leftover files in this step to not waste Docker layer space
 # Make sure nativefier is executable
-RUN npm link \
-    && npm test \
+RUN npm i \
+    && npm link \
+    && npm run test:noplaywright \
     && rm -rf /tmp/nativefier* ~/.npm/_cacache ~/.cache/electron \
     && chmod +x $NPM_PACKAGES/bin/nativefier
 

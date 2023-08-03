@@ -1,3 +1,5 @@
+import path from 'path';
+
 import {
   dialog,
   BrowserWindow,
@@ -8,10 +10,9 @@ import {
   OnResponseStartedListenerDetails,
 } from 'electron';
 
-import log from 'loglevel';
-import path from 'path';
-import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
 import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
+import * as log from './loggingHelper';
+import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -22,12 +23,14 @@ export function adjustWindowZoom(adjustment: number): void {
   });
 }
 
-export function blockExternalURL(url: string): Promise<MessageBoxReturnValue> {
+export function showNavigationBlockedMessage(
+  message: string,
+): Promise<MessageBoxReturnValue> {
   return new Promise((resolve, reject) => {
     withFocusedWindow((focusedWindow) => {
       dialog
         .showMessageBox(focusedWindow, {
-          message: `Cannot navigate to external URL: ${url}`,
+          message,
           type: 'error',
           title: 'Navigation blocked',
         })
@@ -146,6 +149,7 @@ export function getDefaultWindowOptions(
       nodeIntegration: false, // `true` is *insecure*, and cause trouble with messenger.com
       preload: path.join(__dirname, 'preload.js'),
       plugins: true,
+      sandbox: false, // https://www.electronjs.org/blog/electron-20-0#default-changed-renderers-without-nodeintegration-true-are-sandboxed-by-default
       webSecurity: !options.insecure,
       zoomFactor: options.zoom,
       // `contextIsolation` was switched to true in Electron 12, which:

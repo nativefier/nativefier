@@ -9,6 +9,7 @@ export type TitleBarValue =
 export type TrayValue = 'true' | 'false' | 'start-in-tray';
 
 export interface ElectronPackagerOptions extends electronPackager.Options {
+  arch: string;
   portable: boolean;
   platform?: string;
   targetUrl: string;
@@ -130,7 +131,7 @@ export type RawOptions = {
   alwaysOnTop?: boolean;
   appCopyright?: string;
   appVersion?: string;
-  arch?: string | string[];
+  arch?: string;
   asar?: boolean | CreateOptions;
   backgroundColor?: string;
   basicAuthPassword?: string;

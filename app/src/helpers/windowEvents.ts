@@ -5,18 +5,18 @@ import {
   WebContents,
   HandlerDetails,
 } from 'electron';
-import log from 'loglevel';
-import { WindowOptions } from '../../../shared/src/options/model';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
+import * as log from './loggingHelper';
 import {
-  blockExternalURL,
   createAboutBlankWindow,
   createNewTab,
   injectCSS,
   sendParamsOnDidFinishLoad,
   setProxyRules,
+  showNavigationBlockedMessage,
 } from './windowHelpers';
+import { WindowOptions } from '../../../shared/src/options/model';
 
 type NewWindowHandlerResult = ReturnType<
   Parameters<WebContents['setWindowOpenHandler']>[0]
@@ -54,15 +54,24 @@ export function onNewWindowHelper(
       )
     ) {
       if (options.blockExternalUrls) {
-        blockExternalURL(details.url).catch((err: unknown) => {
-          log.error('blockExternalURL', err);
-        });
+        showNavigationBlockedMessage(
+          `Navigation to external URL blocked by options: ${details.url}`,
+        )
+          .then(() => {
+            // blockExternalURL(details.url).then(resolve).catch((err: unknown) => {
+            //   log.error('blockExternalURL', err);
+            // });
+          })
+          .catch((err: unknown) => {
+            throw err;
+          });
+        return { action: 'deny' };
       } else {
         openExternal(details.url).catch((err: unknown) => {
           log.error('openExternal', err);
         });
+        return { action: 'deny' };
       }
-      return { action: 'deny' };
     }
     // Normally the following would be:
     // if (urlToGo.startsWith('about:blank'))...
@@ -93,7 +102,7 @@ export function onWillNavigate(
   event: Event,
   urlToGo: string,
 ): Promise<void> {
-  log.debug('onWillNavigate', { options, event, urlToGo });
+  log.debug('onWillNavigate', urlToGo);
   if (
     !linkIsInternal(
       options.targetUrl,
@@ -105,7 +114,9 @@ export function onWillNavigate(
     event.preventDefault();
     if (options.blockExternalUrls) {
       return new Promise((resolve) => {
-        blockExternalURL(urlToGo)
+        showNavigationBlockedMessage(
+          `Navigation to external URL blocked by options: ${urlToGo}`,
+        )
           .then(() => resolve())
           .catch((err: unknown) => {
             throw err;

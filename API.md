@@ -158,7 +158,8 @@ The processor architecture to target when building.
     ```
     (See https://nodejs.org/api/os.html#os_os_arch)
   - Please note: On M1 Macs, unless an arm64 version of brew is used to install nodejs, the version installed will be an `x64` version run through Rosetta, and will result in an `x64` app being generated. If this is not desired, either specify `-a arm64` to build for M1, or re-install node with an arm64 version of brew. See https://github.com/nativefier/nativefier/issues/1089
-- Can be overridden by specifying one of: `ia32`, `x64`, `armv7l`, `arm64`.
+- Can be overridden by specifying one of: `x64`, `armv7l`, `arm64`, or `universal`
+- When specifying `universal` you must be building for the `darwin`, `mas`, `mac`, or `osx` platforms. This will generate a universal (M1 and x86) app.
 
 Note: careful to not conflate _platform_ with _architecture_. If you want for example a Linux or Mac build, it's `--platform` you are looking for. See its documentation for details.
 
@@ -475,7 +476,7 @@ Prevents application from being run multiple times. If such an attempt occurs th
 --title-bar-style <value>
 ```
 
-_[New in 7.6.4]_ (macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://github.com/electron/electron/blob/master/docs/api/frameless-window.md#alternatives-on-macos) documentation.
+_[New in 7.6.4]_ (macOS only) Sets the style for the app's title bar. See more details at electron's [Frameless Window](https://www.electronjs.org/pt/docs/latest/api/frameless-window) documentation.
 
 Consider injecting a custom CSS (via `--inject`) for better integration. Specifically, the CSS should specify a draggable region. For instance, if the target website has a `<header>` element, you can make it draggable like so.
 
@@ -795,6 +796,8 @@ Current known internal login pages:
 - `login.live.com` , `login.microsoftonline.com`
 - `okta.com`
 - `twitter.com/oauth/authenticate`
+- `workspaceair.com`
+- `securid.com`
 
 Note: While .com is specified, for most of these we try to match even on non-US
 based domains such as `.co.uk` as well
@@ -1161,7 +1164,7 @@ const request = {
 };
 electron.ipcRenderer.send('session-interaction', request);
 
-electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
   console.log('session-interaction-reply', event, result.value);
 });
 ```
@@ -1194,7 +1197,7 @@ const request = {
 };
 electron.ipcRenderer.send('session-interaction', request);
 
-electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
   console.log('session-interaction-reply', event, result.id, result.value);
 });
 ```
@@ -1230,7 +1233,7 @@ const request = {
 };
 electron.ipcRenderer.send('session-interaction', request);
 
-electon.ipcRenderer.on('session-interaction-reply', (event, result) => {
+electron.ipcRenderer.on('session-interaction-reply', (event, result) => {
   console.log('session-interaction-reply', event, result);
 });
 ```

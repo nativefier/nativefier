@@ -8,22 +8,59 @@ on:
     branches:
       - master
 
+# - Bumping the *minimum* required Node version? You must bump:
+#   1. package.json -> engines.node
+#   2. package.json -> devDependencies.@types/node
+#   3. tsconfig.json -> {target, lib}
+#   4. .github/workflows/ci.yml -> node-version
+# - Bumping the *maximum* tested Node version? You must bump also: publish.yml
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
+      - run: npm run lint
+  playwright:
+    runs-on: windows-latest # Doesn't work on headless ubuntu, and is slow on mac
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 20
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: |
+            npm-shrinkwrap.json
+            app/npm-shrinkwrap.json
+            package-lock.json
+            app/package-lock.json
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
+      - run: npm run test:playwright
+        timeout-minutes: 5
+        # Useful to debug PlayWright tests failing in CI
+        # env:
+        #   DEBUG: pw:browser*
+  tests:
     strategy:
       matrix:
         node-version:
-          # Align the top Node version here with: 1. linter conditions later below, 2. publish.yml.
-          - '17'
-          # Bumping the minimum required Node version? You must bump:
-          #   1. package.json -> engines.node
-          #   2. package.json -> devDependencies.@types/node
-          #   3. tsconfig.json -> {target, lib}
-          #   4. .github/workflows/ci.yml -> node-version
-          #
-          # Here in ci.yml, we want to always run the oldest version we require in
-          # package.json -> engines.node, to be sure Nativefier runs on this minimum
-          - '12'
+          - '20'
+          - '16' # the oldest we require in package.json -> engines.node, to check we run on this minimum
         platform: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
@@ -38,9 +75,7 @@ jobs:
             app/npm-shrinkwrap.json
             package-lock.json
             app/package-lock.json
-      # Will also (through `prepare` hook): 1. install ./app, and 2. build
-      - run: npm ci --no-fund
-      # Only run linter once, for faster CI. Align the versions of Node here with above and publish.yml.
-      - if: matrix.platform == 'ubuntu-latest' && matrix.node-version == '17'
-        run: npm run lint
-      - run: npm test
+      - env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+        run: npm ci --no-fund # Will also (via `prepare` hook): 1. install ./app, 2. build
+      - run: npm run test:noplaywright

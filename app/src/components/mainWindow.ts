@@ -1,16 +1,25 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { ipcMain, BrowserWindow, Event, HandlerDetails } from 'electron';
+import {
+  desktopCapturer,
+  ipcMain,
+  BrowserWindow,
+  Event,
+  HandlerDetails,
+} from 'electron';
 import windowStateKeeper from 'electron-window-state';
-import log from 'loglevel';
 
+import { initContextMenu } from './contextMenu';
+import { createMenu } from './menu';
 import {
   getAppIcon,
   getCounterValue,
   isOSX,
   nativeTabsSupported,
 } from '../helpers/helpers';
+import * as log from '../helpers/loggingHelper';
+import { IS_PLAYWRIGHT } from '../helpers/playwrightHelpers';
 import { onNewWindow, setupNativefierWindow } from '../helpers/windowEvents';
 import {
   clearCache,
@@ -18,8 +27,6 @@ import {
   getDefaultWindowOptions,
   hideWindow,
 } from '../helpers/windowHelpers';
-import { initContextMenu } from './contextMenu';
-import { createMenu } from './menu';
 import {
   OutputOptions,
   outputOptionsToWindowOptions,
@@ -72,10 +79,18 @@ export async function createMainWindow(
     // Whether the window should always stay on top of other windows. Default is false.
     alwaysOnTop: options.alwaysOnTop,
     titleBarStyle: options.titleBarStyle ?? 'default',
-    show: options.tray !== 'start-in-tray',
+    // Maximize window visual glitch on Windows fix
+    // We want a consistent behavior on all OSes, but Windows needs help to not glitch.
+    // So, we manually mainWindow.show() later, see a few lines below
+    show: options.tray !== 'start-in-tray' && process.platform !== 'win32',
     backgroundColor: options.backgroundColor,
     ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
   });
+
+  // Just load about:blank to start, gives playwright something to latch onto initially for testing.
+  if (IS_PLAYWRIGHT) {
+    await mainWindow.loadURL('about:blank');
+  }
 
   mainWindowState.manage(mainWindow);
 
@@ -88,6 +103,9 @@ export async function createMainWindow(
 
   if (options.tray === 'start-in-tray') {
     mainWindow.hide();
+  } else if (process.platform === 'win32') {
+    // See other "Maximize window visual glitch on Windows fix" comment above.
+    mainWindow.show();
   }
 
   const windowOptions = outputOptionsToWindowOptions(options);
@@ -128,13 +146,10 @@ export async function createMainWindow(
   });
 
   setupSessionInteraction(options, mainWindow);
+  setupSessionPermissionHandler(mainWindow);
 
   if (options.clearCache) {
     await clearCache(mainWindow);
-  }
-
-  if (options.targetUrl) {
-    await mainWindow.loadURL(options.targetUrl);
   }
 
   setupCloseEvent(options, mainWindow);
@@ -204,6 +219,22 @@ function setupCounter(
     } else {
       setDockBadge('');
     }
+  });
+}
+
+function setupSessionPermissionHandler(window: BrowserWindow): void {
+  window.webContents.session.setPermissionCheckHandler(() => {
+    return true;
+  });
+  window.webContents.session.setPermissionRequestHandler(
+    (_webContents, _permission, callback) => {
+      callback(true);
+    },
+  );
+  ipcMain.handle('desktop-capturer-get-sources', () => {
+    return desktopCapturer.getSources({
+      types: ['screen', 'window'],
+    });
   });
 }
 
