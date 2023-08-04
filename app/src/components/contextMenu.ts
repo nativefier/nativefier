@@ -1,13 +1,10 @@
-import {
-  BrowserWindow,
-  ContextMenuParams,
-} from 'electron';
+import { BrowserWindow, ContextMenuParams } from 'electron';
 import contextMenu from 'electron-context-menu';
 
 import { nativeTabsSupported, openExternal } from '../helpers/helpers';
 import * as log from '../helpers/loggingHelper';
 import { setupNativefierWindow } from '../helpers/windowEvents';
-import { createNewTab, createNewWindow } from '../helpers/windowHelpers';
+import { createNewWindow } from '../helpers/windowHelpers';
 import {
   OutputOptions,
   outputOptionsToWindowOptions,
