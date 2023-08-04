@@ -1,4 +1,9 @@
 
+51.0.1 / 2023-08-04
+===================
+
+  * `npm i` in the Dockerfile to esnure we have what we need to build + test (#1557)
+
 51.0.0 / 2023-08-03
 ===================
   **[BREAKING]**
