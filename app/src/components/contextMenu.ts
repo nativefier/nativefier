@@ -1,14 +1,13 @@
 import {
   BrowserWindow,
   ContextMenuParams,
-  NewWindowWebContentsEvent,
 } from 'electron';
 import contextMenu from 'electron-context-menu';
 
 import { nativeTabsSupported, openExternal } from '../helpers/helpers';
 import * as log from '../helpers/loggingHelper';
 import { setupNativefierWindow } from '../helpers/windowEvents';
-import { createNewWindow } from '../helpers/windowHelpers';
+import { createNewTab, createNewWindow } from '../helpers/windowHelpers';
 import {
   OutputOptions,
   outputOptionsToWindowOptions,
@@ -60,7 +59,7 @@ export function initContextMenu(
                   // Leave to the default for a NewWindowWebContentsEvent
                   newGuest: undefined,
                   ...new Event('new-window'),
-                } as NewWindowWebContentsEvent,
+                }, // as NewWindowWebContentsEvent,
                 // url
                 params.linkURL,
                 // frameName
