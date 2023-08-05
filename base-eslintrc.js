@@ -21,7 +21,6 @@ module.exports = {
     '@typescript-eslint/no-confusing-non-null-assertion': 'error',
     '@typescript-eslint/no-explicit-any': 'error',
     '@typescript-eslint/no-extraneous-class': 'error',
-    '@typescript-eslint/no-implicit-any-catch': 'error',
     '@typescript-eslint/no-invalid-void-type': 'error',
     '@typescript-eslint/prefer-ts-expect-error': 'error',
     '@typescript-eslint/type-annotation-spacing': 'error',

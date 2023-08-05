@@ -42,9 +42,9 @@ type SessionInteractionRequest = {
   propertyValue?: unknown;
 };
 
-type SessionInteractionResult = {
+type SessionInteractionResult<T = unknown> = {
   id?: string;
-  value?: unknown | Promise<unknown>;
+  value?: T | Promise<T>;
   error?: Error;
 };
 
