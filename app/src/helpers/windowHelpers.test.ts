@@ -52,7 +52,7 @@ describe('clearAppData', () => {
 });
 
 describe('createNewTab', () => {
-  const window = new BrowserWindow();
+  // const window = new BrowserWindow();
   const options: WindowOptions = {
     blockExternalUrls: false,
     insecure: false,
@@ -78,7 +78,7 @@ describe('createNewTab', () => {
   test('creates new foreground tab', () => {
     const foreground = true;
 
-    const tab = createNewTab(options, setupWindow, url, foreground, window);
+    const tab = createNewTab(options, setupWindow, url, foreground);
 
     expect(mockAddTabbedWindow).toHaveBeenCalledWith(tab);
     expect(setupWindow).toHaveBeenCalledWith(options, tab);
@@ -89,7 +89,13 @@ describe('createNewTab', () => {
   test('creates new background tab', () => {
     const foreground = false;
 
-    const tab = createNewTab(options, setupWindow, url, foreground, window);
+    const tab = createNewTab(
+      options,
+      setupWindow,
+      url,
+      foreground,
+      // window
+    );
 
     expect(mockAddTabbedWindow).toHaveBeenCalledWith(tab);
     expect(setupWindow).toHaveBeenCalledWith(options, tab);

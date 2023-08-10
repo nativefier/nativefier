@@ -84,7 +84,9 @@ export async function createMainWindow(
     // So, we manually mainWindow.show() later, see a few lines below
     show: options.tray !== 'start-in-tray' && process.platform !== 'win32',
     backgroundColor: options.backgroundColor,
-    ...getDefaultWindowOptions(outputOptionsToWindowOptions(options)),
+    ...getDefaultWindowOptions(
+      outputOptionsToWindowOptions(options, nativeTabsSupported()),
+    ),
   });
 
   // Just load about:blank to start, gives playwright something to latch onto initially for testing.
@@ -108,7 +110,10 @@ export async function createMainWindow(
     mainWindow.show();
   }
 
-  const windowOptions = outputOptionsToWindowOptions(options);
+  const windowOptions = outputOptionsToWindowOptions(
+    options,
+    nativeTabsSupported(),
+  );
   createMenu(options, mainWindow);
   createContextMenu(options, mainWindow);
   setupNativefierWindow(windowOptions, mainWindow);
@@ -123,14 +128,14 @@ export async function createMainWindow(
       mainWindow,
     );
   });
-  // @ts-expect-error new-tab isn't in the type definition, but it does exist
-  mainWindow.on('new-tab', () => {
+  mainWindow.on('new-window-for-tab', (event?: Event<{ url?: string }>) => {
+    log.debug('mainWindow.new-window-for-tab', { event });
     createNewTab(
       windowOptions,
       setupNativefierWindow,
-      options.targetUrl,
+      event?.url ?? options.targetUrl,
       true,
-      mainWindow,
+      // mainWindow,
     );
   });
 
@@ -145,7 +150,7 @@ export async function createMainWindow(
     mainWindow.show();
   });
 
-  setupSessionInteraction(options, mainWindow);
+  setupSessionInteraction(mainWindow);
   setupSessionPermissionHandler(mainWindow);
 
   if (options.clearCache) {
@@ -256,10 +261,7 @@ function setupNotificationBadge(
   });
 }
 
-function setupSessionInteraction(
-  options: OutputOptions,
-  window: BrowserWindow,
-): void {
+function setupSessionInteraction(window: BrowserWindow): void {
   // See API.md / "Accessing The Electron Session"
   ipcMain.on(
     'session-interaction',

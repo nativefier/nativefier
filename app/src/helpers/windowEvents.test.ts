@@ -167,7 +167,6 @@ describe('onNewWindowHelper', () => {
       setupWindow,
       internalURL,
       true,
-      undefined,
     );
     expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();
@@ -189,7 +188,6 @@ describe('onNewWindowHelper', () => {
       setupWindow,
       internalURL,
       false,
-      undefined,
     );
     expect(mockShowNavigationBlockedMessage).not.toHaveBeenCalled();
     expect(mockOpenExternal).not.toHaveBeenCalled();

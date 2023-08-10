@@ -31,7 +31,12 @@ export function onNewWindow(
   log.debug('onNewWindow', {
     details,
   });
-  return onNewWindowHelper(options, setupWindow, details, parent);
+  return onNewWindowHelper(
+    options,
+    setupWindow,
+    details,
+    nativeTabsSupported() ? undefined : parent,
+  );
 }
 
 export function onNewWindowHelper(
@@ -79,7 +84,11 @@ export function onNewWindowHelper(
     // Some sites use about:blank#something to use as placeholder windows to fill
     // with content via JavaScript. So we'll stay specific for now...
     else if (['about:blank', 'about:blank#blocked'].includes(details.url)) {
-      createAboutBlankWindow(options, setupWindow, parent);
+      createAboutBlankWindow(
+        options,
+        setupWindow,
+        nativeTabsSupported() ? undefined : parent,
+      );
       return { action: 'deny' };
     } else if (nativeTabsSupported()) {
       createNewTab(
@@ -87,7 +96,6 @@ export function onNewWindowHelper(
         setupWindow,
         details.url,
         details.disposition === 'foreground-tab',
-        parent,
       );
       return { action: 'deny' };
     }

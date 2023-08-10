@@ -3,15 +3,19 @@ import * as path from 'path';
 import { BrowserWindow, ipcMain } from 'electron';
 
 import * as log from '../helpers/loggingHelper';
+import { nativeTabsSupported } from '../helpers/helpers';
 
 export async function createLoginWindow(
   loginCallback: (username?: string, password?: string) => void,
   parent?: BrowserWindow,
 ): Promise<BrowserWindow> {
-  log.debug('createLoginWindow', { loginCallback, parent });
+  log.debug('createLoginWindow', {
+    loginCallback,
+    parent,
+  });
 
   const loginWindow = new BrowserWindow({
-    parent,
+    parent: nativeTabsSupported() ? undefined : parent,
     width: 300,
     height: 400,
     frame: false,

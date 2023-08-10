@@ -310,10 +310,10 @@ if (shouldQuit) {
   });
 }
 
-app.on('new-window-for-tab', () => {
-  log.debug('app.new-window-for-tab');
+app.on('new-window-for-tab', (event: Event) => {
+  log.debug('app.new-window-for-tab', { event });
   if (mainWindow) {
-    mainWindow.emit('new-tab');
+    mainWindow.emit('new-window-for-tab', event);
   }
 });
 
@@ -333,9 +333,10 @@ app.on(
     if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
       callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
     } else {
-      createLoginWindow(callback, mainWindow).catch((err) =>
-        log.error('createLoginWindow ERROR', err),
-      );
+      createLoginWindow(
+        callback,
+        // mainWindow
+      ).catch((err) => log.error('createLoginWindow ERROR', err));
     }
   },
 );

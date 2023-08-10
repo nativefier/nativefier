@@ -1,4 +1,8 @@
-import { BrowserWindow, ContextMenuParams } from 'electron';
+import {
+  BrowserWindow,
+  ContextMenuParams,
+  Event as ElectronEvent,
+} from 'electron';
 import contextMenu from 'electron-context-menu';
 
 import { nativeTabsSupported, openExternal } from '../helpers/helpers';
@@ -21,7 +25,7 @@ export function initContextMenu(
     prepend: (actions: contextMenu.Actions, params: ContextMenuParams) => {
       log.debug('contextMenu.prepend', { actions, params });
       const items = [];
-      if (params.linkURL) {
+      if (params.linkURL && window) {
         items.push({
           label: 'Open Link in Default Browser',
           click: () => {
@@ -34,36 +38,40 @@ export function initContextMenu(
           label: 'Open Link in New Window',
           click: () =>
             createNewWindow(
-              outputOptionsToWindowOptions(options),
+              outputOptionsToWindowOptions(options, nativeTabsSupported()),
               setupNativefierWindow,
               params.linkURL,
-              window,
+              // window,
             ),
         });
         if (nativeTabsSupported()) {
           items.push({
             label: 'Open Link in New Tab',
             click: () =>
-              // Fire a new window event for a foreground tab
-              // Previously we called createNewTab directly, but it had incosistent and buggy behavior
-              // as it was mostly designed for running off of events. So this will create a new event
-              // for a foreground-tab for the event handler to grab and take care of instead.
-              (window as BrowserWindow).webContents.emit(
-                // event name
-                'new-window',
-                // event object
-                {
-                  // Leave to the default for a NewWindowWebContentsEvent
-                  newGuest: undefined,
-                  ...new Event('new-window'),
-                }, // as NewWindowWebContentsEvent,
-                // url
-                params.linkURL,
-                // frameName
-                window?.webContents.mainFrame.name ?? '',
-                // disposition
-                'foreground-tab',
-              ),
+              // // Fire a new window event for a foreground tab
+              // // Previously we called createNewTab directly, but it had incosistent and buggy behavior
+              // // as it was mostly designed for running off of events. So this will create a new event
+              // // for a foreground-tab for the event handler to grab and take care of instead.
+              // (window as BrowserWindow).webContents.emit(
+              //   // event name
+              //   'new-window',
+              //   // event object
+              //   {
+              //     // Leave to the default for a NewWindowWebContentsEvent
+              //     newGuest: undefined,
+              //     ...new Event('new-window'),
+              //   }, // as NewWindowWebContentsEvent,
+              //   // url
+              //   params.linkURL,
+              //   // frameName
+              //   window?.webContents.mainFrame.name ?? '',
+              //   // disposition
+              //   'foreground-tab',
+              // ),
+              window.emit('new-window-for-tab', {
+                ...new Event('new-window-for-tab'),
+                url: params.linkURL,
+              } as ElectronEvent<{ url: string }>),
           });
         }
       }
