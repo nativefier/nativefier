@@ -150,6 +150,7 @@ export function getDefaultWindowOptions(
   };
 
   const defaultOptions: BrowserWindowConstructorOptions = {
+    autoHideMenuBar: options.autoHideMenuBar,
     fullscreenable: true,
     tabbingIdentifier: nativeTabsSupported()
       ? options.tabbingIdentifier ?? randomUUID()
