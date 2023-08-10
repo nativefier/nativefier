@@ -41,12 +41,13 @@ describe('onNewWindowHelper', () => {
   const foregroundDisposition = 'foreground-tab';
   const backgroundDisposition = 'background-tab';
   const baseOptions = {
+    autoHideMenuBar: true,
     blockExternalUrls: false,
     insecure: false,
     name: 'TEST_APP',
     targetUrl: originalURL,
     zoom: 1.0,
-  };
+  } as WindowOptions;
   const mockShowNavigationBlockedMessage: jest.SpyInstance =
     showNavigationBlockedMessage as jest.Mock;
   const mockCreateAboutBlank: jest.SpyInstance =

@@ -207,6 +207,7 @@ export type RawOptions = {
 };
 
 export type WindowOptions = {
+  autoHideMenuBar: boolean;
   blockExternalUrls: boolean;
   browserwindowOptions?: BrowserWindowOptions;
   insecure: boolean;
@@ -227,10 +228,11 @@ export function outputOptionsToWindowOptions(
 ): WindowOptions {
   return {
     ...options,
+    autoHideMenuBar: !options.showMenuBar,
+    insecure: options.insecure ?? false,
     tabbingIdentifier: generateTabbingIdentifierIfMissing
       ? options.tabbingIdentifier ?? randomUUID()
       : options.tabbingIdentifier,
-    insecure: options.insecure ?? false,
     zoom: options.zoom ?? 1.0,
   };
 }
