@@ -17,7 +17,7 @@
         "source-map-support": "^0.5.21"
       },
       "devDependencies": {
-        "electron": "^25.5.0"
+        "electron": "^25.7.0"
       }
     },
     "node_modules/@electron/get": {
@@ -93,9 +93,9 @@
       }
     },
     "node_modules/@types/node": {
-      "version": "18.17.4",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-18.17.4.tgz",
-      "integrity": "sha512-ATL4WLgr7/W40+Sp1WnNTSKbgVn6Pvhc/2RHAdt8fl6NsQyp4oPCi2eKcGOvA494bwf1K/W6nGgZ9TwDqvpjdw==",
+      "version": "18.17.11",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-18.17.11.tgz",
+      "integrity": "sha512-r3hjHPBu+3LzbGBa8DHnr/KAeTEEOrahkcL+cZc4MaBMTM+mk8LtXR+zw+nqfjuDZZzYTYgTcpHuP+BEQk069g==",
       "dev": true
     },
     "node_modules/@types/responselike": {
@@ -316,9 +316,9 @@
       "optional": true
     },
     "node_modules/electron": {
-      "version": "25.5.0",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-25.5.0.tgz",
-      "integrity": "sha512-w1DNj1LuAk0Vaas1rQ0pAkTe2gZ5YG75J27mC2m88y0G6Do5b5YoFDaF84fOGQHeQ4j8tC5LngSgWhbwmqDlrw==",
+      "version": "25.7.0",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-25.7.0.tgz",
+      "integrity": "sha512-P82EzYZ8k9J21x5syhXV7EkezDmEXwycReXnagfzS0kwepnrlWzq1aDIUWdNvzTdHobky4m/nYcL98qd73mEVA==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {

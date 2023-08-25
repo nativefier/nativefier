@@ -71,9 +71,8 @@ async function edgeUserAgent(
   platform: string,
   electronVersion: string,
 ): Promise<string> {
-  const chromeVersion = await getChromeVersionForElectronVersion(
-    electronVersion,
-  );
+  const chromeVersion =
+    await getChromeVersionForElectronVersion(electronVersion);
 
   return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeVersion} Safari/537.36 Edg/${chromeVersion}`;
 }
