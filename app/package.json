@@ -12,14 +12,14 @@
   ],
   "scripts": {},
   "dependencies": {
-    "electron-context-menu": "^3.1.1",
-    "electron-dl": "^3.2.1",
+    "electron-context-menu": "^3.6.1",
+    "electron-dl": "^3.5.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
-    "loglevel": "^1.7.1",
-    "source-map-support": "^0.5.19"
+    "loglevel": "^1.8.1",
+    "source-map-support": "^0.5.21"
   },
   "devDependencies": {
-    "electron": "^21.4.4"
+    "electron": "^25.5.0"
   }
 }

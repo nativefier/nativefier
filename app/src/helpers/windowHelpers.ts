@@ -13,6 +13,7 @@ import {
 import { getCSSToInject, isOSX, nativeTabsSupported } from './helpers';
 import * as log from './loggingHelper';
 import { TrayValue, WindowOptions } from '../../../shared/src/options/model';
+import { randomUUID } from 'crypto';
 
 const ZOOM_INTERVAL = 0.1;
 
@@ -73,7 +74,7 @@ export function createAboutBlankWindow(
     { ...options, show: false },
     setupWindow,
     'about:blank',
-    parent,
+    nativeTabsSupported() ? undefined : parent,
   );
   window.webContents.once('did-stop-loading', () => {
     if (window.webContents.getURL() === 'about:blank') {
@@ -90,11 +91,16 @@ export function createNewTab(
   setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
   url: string,
   foreground: boolean,
-  parent?: BrowserWindow,
 ): BrowserWindow | undefined {
-  log.debug('createNewTab', { url, foreground, parent });
+  const focusedWindow = BrowserWindow.getFocusedWindow();
+  log.debug('createNewTab', {
+    url,
+    foreground,
+    focusedWindow,
+  });
   return withFocusedWindow((focusedWindow) => {
-    const newTab = createNewWindow(options, setupWindow, url, parent);
+    const newTab = createNewWindow(options, setupWindow, url);
+    log.debug('createNewTab.withFocusedWindow', { focusedWindow, newTab });
     focusedWindow.addTabbedWindow(newTab);
     if (!foreground) {
       focusedWindow.focus();
@@ -109,9 +115,12 @@ export function createNewWindow(
   url: string,
   parent?: BrowserWindow,
 ): BrowserWindow {
-  log.debug('createNewWindow', { url, parent });
-  const window = new BrowserWindow({
+  log.debug('createNewWindow', {
+    url,
     parent,
+  });
+  const window = new BrowserWindow({
+    parent: nativeTabsSupported() ? undefined : parent,
     ...getDefaultWindowOptions(options),
   });
   setupWindow(options, window);
@@ -141,8 +150,11 @@ export function getDefaultWindowOptions(
   };
 
   const defaultOptions: BrowserWindowConstructorOptions = {
+    autoHideMenuBar: options.autoHideMenuBar,
     fullscreenable: true,
-    tabbingIdentifier: nativeTabsSupported() ? options.name : undefined,
+    tabbingIdentifier: nativeTabsSupported()
+      ? options.tabbingIdentifier ?? randomUUID()
+      : undefined,
     title: options.name,
     webPreferences: {
       javascript: true,

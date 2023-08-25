@@ -202,7 +202,8 @@ const setDockBadge = isOSX()
   ? (count?: number | string, bounce = false): void => {
       if (count !== undefined) {
         app.dock.setBadge(count.toString());
-        if (bounce && count > currentBadgeCount) app.dock.bounce();
+        if (bounce && typeof count === 'number' && count > currentBadgeCount)
+          app.dock.bounce();
         currentBadgeCount = typeof count === 'number' ? count : 0;
       }
     }
@@ -309,10 +310,10 @@ if (shouldQuit) {
   });
 }
 
-app.on('new-window-for-tab', () => {
-  log.debug('app.new-window-for-tab');
+app.on('new-window-for-tab', (event: Event) => {
+  log.debug('app.new-window-for-tab', { event });
   if (mainWindow) {
-    mainWindow.emit('new-tab');
+    mainWindow.emit('new-window-for-tab', event);
   }
 });
 
@@ -332,9 +333,10 @@ app.on(
     if (appArgs.basicAuthUsername && appArgs.basicAuthPassword) {
       callback(appArgs.basicAuthUsername, appArgs.basicAuthPassword);
     } else {
-      createLoginWindow(callback, mainWindow).catch((err) =>
-        log.error('createLoginWindow ERROR', err),
-      );
+      createLoginWindow(
+        callback,
+        // mainWindow
+      ).catch((err) => log.error('createLoginWindow ERROR', err));
     }
   },
 );

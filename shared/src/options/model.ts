@@ -1,4 +1,5 @@
-import { CreateOptions } from 'asar';
+import { CreateOptions } from '@electron/asar';
+import { randomUUID } from 'crypto';
 import * as electronPackager from 'electron-packager';
 
 export type TitleBarValue =
@@ -117,6 +118,7 @@ export type OutputOptions = NativefierOptions & {
   nativefierVersion: string;
   oldBuildWarningText: string;
   strictInternalUrls: boolean;
+  tabbingIdentifier?: string;
   targetUrl: string;
   userAgent?: string;
   zoom?: number;
@@ -205,6 +207,7 @@ export type RawOptions = {
 };
 
 export type WindowOptions = {
+  autoHideMenuBar: boolean;
   blockExternalUrls: boolean;
   browserwindowOptions?: BrowserWindowOptions;
   insecure: boolean;
@@ -213,6 +216,7 @@ export type WindowOptions = {
   name: string;
   proxyRules?: string;
   show?: boolean;
+  tabbingIdentifier?: string;
   targetUrl: string;
   userAgent?: string;
   zoom: number;
@@ -220,10 +224,15 @@ export type WindowOptions = {
 
 export function outputOptionsToWindowOptions(
   options: OutputOptions,
+  generateTabbingIdentifierIfMissing: boolean,
 ): WindowOptions {
   return {
     ...options,
+    autoHideMenuBar: !options.showMenuBar,
     insecure: options.insecure ?? false,
+    tabbingIdentifier: generateTabbingIdentifierIfMissing
+      ? options.tabbingIdentifier ?? randomUUID()
+      : options.tabbingIdentifier,
     zoom: options.zoom ?? 1.0,
   };
 }

@@ -2,8 +2,8 @@ import {
   dialog,
   BrowserWindow,
   Event,
-  NewWindowWebContentsEvent,
   WebContents,
+  HandlerDetails,
 } from 'electron';
 
 import { linkIsInternal, nativeTabsSupported, openExternal } from './helpers';
@@ -18,84 +18,64 @@ import {
 } from './windowHelpers';
 import { WindowOptions } from '../../../shared/src/options/model';
 
+type NewWindowHandlerResult = ReturnType<
+  Parameters<WebContents['setWindowOpenHandler']>[0]
+>;
+
 export function onNewWindow(
   options: WindowOptions,
   setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
-  event: NewWindowWebContentsEvent,
-  urlToGo: string,
-  frameName: string,
-  disposition:
-    | 'default'
-    | 'foreground-tab'
-    | 'background-tab'
-    | 'new-window'
-    | 'save-to-disk'
-    | 'other',
+  details: HandlerDetails,
   parent?: BrowserWindow,
-): Promise<void> {
+): NewWindowHandlerResult {
   log.debug('onNewWindow', {
-    event,
-    urlToGo,
-    frameName,
-    disposition,
-    parent,
+    details,
   });
-  const preventDefault = (newGuest?: BrowserWindow): void => {
-    log.debug('onNewWindow.preventDefault', { newGuest, event });
-    if (event.preventDefault) {
-      event.preventDefault();
-    }
-    if (newGuest) {
-      event.newGuest = newGuest;
-    }
-  };
   return onNewWindowHelper(
     options,
     setupWindow,
-    urlToGo,
-    disposition,
-    preventDefault,
-    parent,
+    details,
+    nativeTabsSupported() ? undefined : parent,
   );
 }
 
 export function onNewWindowHelper(
   options: WindowOptions,
   setupWindow: (options: WindowOptions, window: BrowserWindow) => void,
-  urlToGo: string,
-  disposition: string | undefined,
-  preventDefault: (newGuest?: BrowserWindow) => void,
+  details: HandlerDetails,
   parent?: BrowserWindow,
-): Promise<void> {
+): NewWindowHandlerResult {
   log.debug('onNewWindowHelper', {
     options,
-    urlToGo,
-    disposition,
-    preventDefault,
-    parent,
+    details,
   });
   try {
     if (
       !linkIsInternal(
         options.targetUrl,
-        urlToGo,
+        details.url,
         options.internalUrls,
         options.strictInternalUrls,
       )
     ) {
-      preventDefault();
       if (options.blockExternalUrls) {
-        return new Promise((resolve) => {
-          showNavigationBlockedMessage(
-            `Navigation to external URL blocked by options: ${urlToGo}`,
-          )
-            .then(() => resolve())
-            .catch((err: unknown) => {
-              throw err;
-            });
-        });
+        showNavigationBlockedMessage(
+          `Navigation to external URL blocked by options: ${details.url}`,
+        )
+          .then(() => {
+            // blockExternalURL(details.url).then(resolve).catch((err: unknown) => {
+            //   log.error('blockExternalURL', err);
+            // });
+          })
+          .catch((err: unknown) => {
+            throw err;
+          });
+        return { action: 'deny' };
       } else {
-        return openExternal(urlToGo);
+        openExternal(details.url).catch((err: unknown) => {
+          log.error('openExternal', err);
+        });
+        return { action: 'deny' };
       }
     }
     // Normally the following would be:
@@ -103,26 +83,25 @@ export function onNewWindowHelper(
     // But due to a bug we resolved in https://github.com/nativefier/nativefier/issues/1197
     // Some sites use about:blank#something to use as placeholder windows to fill
     // with content via JavaScript. So we'll stay specific for now...
-    else if (['about:blank', 'about:blank#blocked'].includes(urlToGo)) {
-      return Promise.resolve(
-        preventDefault(createAboutBlankWindow(options, setupWindow, parent)),
+    else if (['about:blank', 'about:blank#blocked'].includes(details.url)) {
+      createAboutBlankWindow(
+        options,
+        setupWindow,
+        nativeTabsSupported() ? undefined : parent,
       );
+      return { action: 'deny' };
     } else if (nativeTabsSupported()) {
-      return Promise.resolve(
-        preventDefault(
-          createNewTab(
-            options,
-            setupWindow,
-            urlToGo,
-            disposition === 'foreground-tab',
-            parent,
-          ),
-        ),
+      createNewTab(
+        options,
+        setupWindow,
+        details.url,
+        details.disposition === 'foreground-tab',
       );
+      return { action: 'deny' };
     }
-    return Promise.resolve(undefined);
+    return { action: 'allow' };
   } catch (err: unknown) {
-    return Promise.reject(err);
+    return { action: 'deny' };
   }
 }
 
