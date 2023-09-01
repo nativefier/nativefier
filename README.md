@@ -1,45 +1,30 @@
-# Nativefier
+# Nativefier - Transform Websites into Desktop Apps
+
+Are you tired of juggling multiple browser tabs to access your favorite web apps like Messenger or WhatsApp Web? Meet Nativefier, the practical tool that effortlessly turns any website into a "desktop app" with simplicity and efficiency.
 
 ![Example of Nativefier app in the macOS dock](.github/dock-screenshot.png)
 
-You want to make a native-looking wrapper for WhatsApp Web (or any web page).
-
-```bash
-nativefier 'web.whatsapp.com'
-```
+## Preview
 
 ![Walkthrough animation](.github/nativefier-walkthrough.gif)
 
-You're done.
-
 ## Introduction
 
-Nativefier is a command-line tool to easily create a “desktop app” for any web site
-with minimal fuss. Apps are wrapped by [Electron](https://www.electronjs.org/)
-(which uses Chromium under the hood) in an OS executable (`.app`, `.exe`, etc)
-usable on Windows, macOS and Linux.
+Nativefier is a powerful command-line utility designed to streamline the process of creating dedicated desktop applications for web services. It achieves this by wrapping web apps using Electron, which is essentially Chromium under the hood. This transformation results in executable files (.app, .exe, etc.) that are compatible with Windows, macOS, and Linux.
 
-I built this because I grew tired of having to Alt-Tab to my browser and then search
-through numerous open tabs when using Messenger or
-Whatsapp Web ([HN thread](https://news.ycombinator.com/item?id=10930718)). Nativefier features:
-
-- Automatically retrieval of app icon / name
-- Injection of custom JS & CSS
-- Many more, see the [API docs](API.md) or `nativefier --help`
+Gone are the days of endlessly searching for your web apps amidst a sea of browser tabs. Nativefier simplifies your digital life by encapsulating your web services in standalone applications.
 
 ## Installation
 
-Install Nativefier globally with `npm install -g nativefier` . Requirements:
+Before you embark on this web app transformation journey, ensure you have the following prerequisites:
 
-- macOS 10.13+ / Windows / Linux
-- [Node.js](https://nodejs.org/) ≥ 16.9 and npm ≥ 7.10
+- An operating system (macOS 10.13+, Windows, or Linux)
+- [Node.js](https://nodejs.org/) version 16.9 or higher and npm version 7.10 or higher
 
-Optional dependencies:
+If you want to enhance your web app experience further, consider these optional dependencies:
 
-- [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) to convert icons.
-  Be sure `convert` + `identify` or `gm` are in your `$PATH`.
-- [Wine](https://www.winehq.org/) to build Windows apps from non-Windows platforms.
-  Be sure `wine` is in your `$PATH`.
+- [ImageMagick](http://www.imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/) for converting icons. Make sure that `convert` and `identify` (or `gm`) are available in your `$PATH`.
+- [Wine](https://www.winehq.org/) to convert web apps into Windows applications from non-Windows platforms. Ensure that `wine` is accessible in your `$PATH`.
 
 <details>
   <summary>Or install with Docker (click to expand)</summary>
@@ -74,26 +59,28 @@ Optional dependencies:
 
 ## Usage
 
-To create an app for medium.com, simply `nativefier 'medium.com'`
+Creating a dedicated app for a website is incredibly straightforward. Just specify the website URL, like so:
 
-Nativefier will try to determine the app name, and well as other options that you
-can override. For example, to override the name, `nativefier --name 'My Medium App' 'medium.com'`
+```bash
+nativefier 'github.com'
+```
 
-**Read the [API docs](API.md) or run `nativefier --help`**
-to learn about command-line flags and configure your app.
+Nativefier is intelligent enough to attempt to discern the app's name. However, if you desire more control, you can override the name with a custom choice:
+
+```bash
+nativefier --name 'GitHub' 'github.com
+```
+
+For the adventurous souls, there's a wealth of customization options available in the [API documentation](API.md) and via `nativefier --help`. These options allow you to fine-tune your app's appearance and behavior.
 
 ## Troubleshooting
 
-**See [CATALOG.md](CATALOG.md) for site-specific ideas & workarounds contributed by the community**.
-
-If this doesn’t help, go look at our [issue tracker](https://github.com/nativefier/nativefier/issues).
+Encountering stubborn websites that resist being wrapped as apps? Don't fret. We've compiled a handy [CATALOG.md](CATALOG.md) with site-specific tips and workarounds contributed by the community. If you still face issues, our [issue tracker](https://github.com/nativefier/nativefier/issues) is where you can seek additional assistance.
 
 ## Development
 
-Help welcome on [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) and
-[feature requests](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request)!
+Are you a developer looking to contribute? We welcome your support wholeheartedly! Whether it's fixing [bugs](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Abug) or fulfilling [feature requests](https://github.com/nativefier/nativefier/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request), your efforts are appreciated. Consult our documentation for guidance: [Developer / build / hacking](HACKING.md), [API / flags](API.md), and stay updated with the [Changelog](CHANGELOG.md).
 
-Docs: [Developer / build / hacking](HACKING.md), [API / flags](API.md),
-[Changelog](CHANGELOG.md).
+## License
 
-License: [MIT](LICENSE.md).
+Nativefier is licensed under the [MIT License](LICENSE.md).
