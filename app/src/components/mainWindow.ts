@@ -150,6 +150,22 @@ export async function createMainWindow(
     mainWindow.show();
   });
 
+  ipcMain.on('window-minimize', () => {
+    mainWindow.minimize();
+  });
+
+  ipcMain.on('window-toggle-maximize', () => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.restore();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+
+  ipcMain.on('window-close', () => {
+    mainWindow.close();
+  })
+
   setupSessionInteraction(mainWindow);
   setupSessionPermissionHandler(mainWindow);
 

@@ -62,6 +62,12 @@ function setNotificationCallback(
   window.Notification = newNotify;
 }
 
+function exposeWindowControls() {
+  (<any>window).minimize = () => ipcRenderer.send('window-minimize');
+  (<any>window).toggleMaximize = () => ipcRenderer.send('window-toggle-maximize');
+  (<any>window).close = () => ipcRenderer.send('window-close');
+}
+
 async function getDisplayMedia(
   sourceId: number | string,
 ): Promise<MediaStream> {
@@ -326,6 +332,8 @@ function notifyNotificationClick(): void {
 // @ts-expect-error TypeScript thinks these are incompatible but they aren't
 setNotificationCallback(notifyNotificationCreate, notifyNotificationClick);
 setDisplayMediaPromise();
+
+exposeWindowControls();
 
 ipcRenderer.on('params', (event, message: string) => {
   log.debug('ipcRenderer.params', { event, message });
