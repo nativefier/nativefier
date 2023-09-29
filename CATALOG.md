@@ -62,6 +62,15 @@ nativefier 'https://docs.google.com/spreadsheets' \
   --user-agent firefox
 ```
 
+### ChatGPT
+
+Changing user agent is also necessary to get past login on openAI pages
+
+```sh
+nativefier 'chat.openai.com/chat' \
+   --user-agent firefox
+```
+
 ### Outlook
 
 ```sh
